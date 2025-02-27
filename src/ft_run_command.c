@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:46:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/02/27 13:49:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/02/27 15:06:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char *ft_run_command(char *line, char *envp[])
 	{
 		while (envp[i] != NULL)
 		{
-			if (ft_strncmp(envp[i], "PATH", 4) == 0)
+			if (ft_strncmp(envp[i], "PWD", 3) == 0)
 			{
 				ft_printf("%s\n", envp[i]);
 				return ("0");
