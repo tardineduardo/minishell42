@@ -17,5 +17,14 @@
 
 #include "../libs/libft/libft.h"
 
+typedef struct s_heredoc
+{
+	char	*heredoc_file;
+}			t_heredoc;
+
 char *ft_capture_command(void);
 char *ft_run_command(char *line);
+
+
+//heredoc
+char	*ft_hc_capture(char *hc_delim, t_list **hdocs);

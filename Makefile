@@ -2,7 +2,9 @@ MAIN =  src/minishell.c \
 		src/ft_capture_command.c \
 		src/ft_run_command.c \
 
-OBJS_SRC =	$(MAIN:.c=.o)
+HEREDOC =	src/heredocs.c \
+
+OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o)
 
 CC = cc
 RM = rm -f
