@@ -6,21 +6,27 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:20 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/02/28 14:42:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:45:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	ft_env(char *envp[], int fd)
+void	ft_env(char *ms_env[], char *variable_value, char *command, int fd)
 {
 	int	i;
 
-	i = 0;
-	(void)fd;
-	while (envp[i] != NULL)
+	if (variable_value == NULL && command == NULL)
 	{
-		ft_printf("%s\n", envp[i]);
-		i++;
+			i = 0;
+			while (ms_env[i] != NULL)
+			{
+				ft_dprintf(fd, "%s\n", ms_env[i]);
+				i++;
+			}
+	}
+	else if (variable_value != NULL && command == NULL)
+	{
+		
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:52:39 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/02/28 18:24:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:48:50 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,5 @@
 
 void	ft_echo(char *line, int fd)
 {
-	int	i;
-
-	(void)fd;
-	i = 4;
-	while (*line && i >= 0)
-	{
-		line++;
-		i--;
-	}
-	ft_printf("Minishell > %s\n", line);
+	ft_dprintf(fd, "%s\n", line);
 }
