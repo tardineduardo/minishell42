@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/07 14:00:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:10:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**ft_ms_env(char *envp[]);
 char	**ft_ms_env_add(char *env[], char *new_variable_value);
 
 void	ft_ms_env_update(char *env[], char *variable, char *new_value);
-void	ft_env(char *ms_env[], char *variable_value, char *command, int fd);
+void	ft_env(char *ms_env[], int fd);
 void	ft_pwd(char *ms_env[], int fd);
 void	ft_echo(char *line, int fd);
 void	ft_cd(char *ms_env[], char *path, int fd);

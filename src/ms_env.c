@@ -6,11 +6,32 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/07 14:01:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:13:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	ft_ms_env_item_index(char *ms_env[], char *variable)
+{
+	int		i;
+	int		item_index;
+	size_t	size_variable;
+
+	i = 0;
+	item_index = -1;
+	size_variable = ft_strlen(variable);
+	while (ms_env[i])
+	{
+		if (ft_strncmp(ms_env[i], variable, size_variable) == 0)
+		{
+			item_index = i;
+			break ;
+		}
+		i++;
+	}
+	return (item_index);
+}
 
 char	**ft_ms_env(char *envp[])
 {
@@ -51,15 +72,13 @@ char	**ft_ms_env(char *envp[])
 
 void	ft_ms_env_update(char *env[], char *variable, char *new_value)
 {
-	size_t	size_item;
 	char	*first_join;
 	char	*variable_value;
 	int		item_index;
 	int		i;
 	
 	i = 0;
-	item_index = -1;
-	size_item = ft_ms_env_item_index(env, variable);
+	item_index = ft_ms_env_item_index(env, variable);
 	first_join = ft_strjoin(variable, "=");
 	variable_value = ft_strjoin(first_join, new_value);
 	env[item_index] = variable_value;
@@ -119,25 +138,4 @@ char	**ft_ms_env_add(char *env[], char *new_variable_value)
 		free(env[env_size]);
 	free(env);
 	return (env_cpy);
-}
-
-int	ft_ms_env_item_index(char *ms_env[], char *variable)
-{
-	int		i;
-	int		item_index;
-	size_t	size_variable;
-
-	i = 0;
-	item_index = -1;
-	size_variable = ft_strlen(variable);
-	while (ms_env[i])
-	{
-		if (ft_strncmp(ms_env[i], variable, size_variable) == 0)
-		{
-			item_index = i;
-			break ;
-		}
-		i++;
-	}
-	return (item_index);
 }
