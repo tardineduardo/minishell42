@@ -6,13 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/07 17:08:14 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:10:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*ft_cd_path_treatement(char *ms_env[], char *path)
+char	*ft_cd_path_treatment(char *ms_env[], char *path)
 {
 	char	*new_path;
 	char	**result;
@@ -76,7 +76,7 @@ void	ft_cd(char *ms_env[], char *new_path, int fd)
 	(void)fd;
 	item_index = ft_ms_env_item_index(ms_env, "PWD");
 	old_path = ft_split_char(ms_env[item_index], '=');
-	final_path = ft_cd_path_treatement(ms_env, new_path);
+	final_path = ft_cd_path_treatment(ms_env, new_path);
 	ft_ms_env_update(ms_env, "PWD", final_path);
 	ft_ms_env_update(ms_env, "OLDPWD", old_path[1]);
 	free(old_path);
