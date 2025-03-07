@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/07 16:10:12 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:54:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ void	ft_cd(char *ms_env[], char *path, int fd);
 void	ft_exit(void);
 void	ft_export(char *line, int fd);
 //void	ft_unset(char *line, int fd);
+char	**ft_free_split(char **result, int i);
 
 #endif
