@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:46:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/06 15:50:45 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:29:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char *ft_run_command(char *line, char *ms_env[])
 			line++;
 			i--;
 		}
-		ft_cd(line);
+		ft_cd(ms_env, line, fd);
 	}
 	else if (ft_strncmp(line, "export", 6) == 0)
 		ft_export(line, fd);
