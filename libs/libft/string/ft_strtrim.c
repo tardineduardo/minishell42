@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 18:55:10 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/18 15:37:24 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/06 22:07:53 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,28 +78,27 @@ static char	*ft_copy(char *trimmed, char *start, size_t copy_len)
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	len;
-	size_t	copy_len;
 	char	*trimmed;
 	char	*start;
 	char	*end;
 
+	if(!s1 || s1[0] == '\0')
+		return (ft_calloc(1, sizeof(char)));
 	len = ft_strlen(s1);
 	start = ft_find_start((char *)s1, (char *)set, len);
 	end = ft_find_end((char *)s1, (char *)set, len);
 	if (start > end)
 	{
-		trimmed = malloc(sizeof(char));
+		trimmed = ft_calloc(1, sizeof(char));
 		if (trimmed == NULL)
 			return (NULL);
-		trimmed[0] = '\0';
 		return (trimmed);
 	}
 	else
 	{
-		copy_len = end - start;
-		trimmed = malloc((copy_len + 1) * sizeof(char) + 1);
+		trimmed = malloc((end - start + 1) * sizeof(char) + 1);
 		if (trimmed == NULL)
 			return (NULL);
-		return (ft_copy(trimmed, start, copy_len));
+		return (ft_copy(trimmed, start, end - start));
 	}
 }

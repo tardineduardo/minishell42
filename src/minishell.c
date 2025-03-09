@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/02/27 13:46:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/08 16:22:50 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,33 @@
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char	*line;
+	t_mem	*mem;
 
 	(void)argc;
 	(void)argv;
+	(void)envp;
+
+	mem = NULL;
+	ft_init_minishell_memory(&mem);
+
 	while (1)
 	{
-	
-		line = ft_capture_command();
-		//Deixa essa comigo. Depois eu vou expandir essa função para pegar
-		//heredocs e continuar a preencher o comando se a linha terminar com | 
-		if (!line)
-			break ;	
-		add_history(line);
-		ft_run_command(line, envp);
-		//@luiscarvalhofrade você pode começar a fazer essa função, considerando
-		//por exemplo if line == echo -> ft_echo(char *input, int fd). Pode
-		//começar pelos builtins mais simples, tipo, echo, pwd...
-		free(line);
+		mem->line = ft_capture_line();
+		if (!mem->line)
+			continue ;
+		add_history(mem->line);
+		ft_run_command(mem->line, &mem);
+		ft_clean_mem_loop(&mem);
 	}
-	rl_clear_history();
+
+	ft_clear_mem_and_exit(&mem);
 	return (0);
+}
+void ft_clean_mem_loop(t_mem **mem)
+{
+	if ((*mem)->hc_delim)
+		ft_free_and_null((void *)&(*mem)->hc_delim);
+	if ((*mem)->line)
+		ft_free_and_null((void *)&(*mem)->line);
+	return ;
 }

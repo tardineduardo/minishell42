@@ -1,46 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_and.c                                      :+:      :+:    :+:   */
+/*   ft_debug_print_array_of_ints.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/12 18:42:06 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 13:02:05 by eduribei         ###   ########.fr       */
+/*   Created: 2024/10/26 13:39:45 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/26 15:24:02 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-bool	ft_free_and_false(void **ptr)
+void	ft_debug_print_arr_ints(int *a, int len, bool lnbk, bool idx, int fd)
 {
-	if (*ptr)
-		free(*ptr);
-	*ptr = NULL;
-	return (false);
-}
+	int i;
 
-bool	ft_free_and_true(void **ptr)
-{
-	if (*ptr)
-		free(*ptr);
-	*ptr = NULL;
-	return (true);
-}
-
-void	*ft_free_and_null(void **ptr)
-{
-	if (*ptr)
-		free(*ptr);
-	*ptr = NULL;
-	return (NULL);
-}
-
-void	*ft_free_and_exit(void **ptr, char *msg, int errnum)
-{
-	if (*ptr)
-		free(*ptr);
-	*ptr = NULL;
-	ft_dprintf(STDERR_FILENO, msg);
-	exit(errnum);
+	i = 0;
+	while (i < len)
+	{
+		if (idx)
+			ft_dprintf(fd, "index[%i]: ", i);
+		ft_dprintf(fd, "%i", a[i]);
+		if (lnbk)
+			ft_dprintf(fd, "\n");
+		else
+		{
+			if (i != len - 1)
+			ft_dprintf(fd, ", ");
+		}
+		i++;
+	}
+	ft_dprintf(fd, "\n");
 }

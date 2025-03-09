@@ -1,0 +1,11 @@
+{
+   ignore_readline
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,indirect
+   fun:malloc
+   fun:xmalloc
+   fun:rl_*  # Suppress readline-related errors
+   fun:readline
+   fun:add_history
+   fun:history_list
+}
