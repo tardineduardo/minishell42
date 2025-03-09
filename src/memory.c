@@ -1,54 +1,61 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:22:50 by eduribei         ###   ########.fr       */
+/*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
+/*   Updated: 2025/03/08 16:27:38 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	main(int argc, char *argv[], char *envp[])
+void ft_init_minishell_memory(t_mem **mem)
 {
-	t_mem	*mem;
+	//malloc memory struct
+	*mem = malloc(sizeof(t_mem));
+	if (!(*mem))
+		exit(1);//improve error message and code
 
-	(void)argc;
-	(void)argv;
-	(void)envp;
 
-	mem = NULL;
-	ft_init_minishell_memory(&mem);
+	//nullify everything
+	(*mem)->line = NULL;
+	(*mem)->hc_delim = NULL;
+	(*mem)->hc_list = NULL;
+	(*mem)->hc_fpath_cap = NULL;
 
-	while (1)
-	{
-		mem->line = ft_capture_line();
-		if (!mem->line)
-			continue ;
-		add_history(mem->line);
-		ft_run_command(mem->line, &mem);
-		ft_clean_mem_loop(&mem);
-	}
+	
+	//Init evironment variables
 
-	ft_clear_mem_and_exit(&mem);
-	return (0);
 }
 
 
-
-
-
-void ft_clean_mem_loop(t_mem **mem)
+void ft_clear_mem_and_exit(t_mem **mem)
 {
+	//Free each pointer with the necessary functions
+	
 	if ((*mem)->hc_delim)
 		ft_free_and_null((void *)&(*mem)->hc_delim);
+
+	if ((*mem)->hc_list)
+	{
+		ft_lstclear(&(*mem)->hc_list, ft_hc_unlink_and_free);
+		ft_free_and_null((void *)&(*mem)->hc_list);
+	}
+
 	if ((*mem)->line)
 		ft_free_and_null((void *)&(*mem)->line);
-	return ;
+
+	free(*mem);
+
+	rl_clear_history();
 }
+
+
+
+
 
 
 

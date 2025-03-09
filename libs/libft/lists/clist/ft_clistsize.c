@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_run_command.c                                   :+:      :+:    :+:   */
+/*   ft_clistsize.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/05 21:51:31 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:29:51 by eduribei         ###   ########.fr       */
+/*   Created: 2024/10/18 19:39:36 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/18 20:03:29 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../libft.h"
 
-char *ft_run_command(char *line, t_mem **mem)
+int	ft_clstsize(t_list **tail)
 {
-	if (ft_strnstr(line, "<<", ft_strlen(line)))
-	{
-		(*mem)->hc_delim = ft_strtrim(line, " <");
-		ft_hc_capture(&(*mem)->hc_delim, &(*mem)->hc_list, mem);
-	}
-	else if (ft_strcmp(line, "exit") == 0)
-	{
-		ft_clear_mem_and_exit(mem);
-		exit(0);
-	}
+	int		counter;
+	t_list	*trav;
 
-	return (NULL);
+	if (*tail == NULL)
+		return (0);
+	trav = *tail;
+	counter = 1;
+	trav = trav->next;
+	while (trav != *tail)
+	{
+		counter++;
+		trav = trav->next;
+	}
+	return (counter);
 }
-

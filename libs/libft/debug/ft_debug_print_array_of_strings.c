@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_run_command.c                                   :+:      :+:    :+:   */
+/*   ft_debug_print_array_of_strings.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/05 21:51:31 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:29:51 by eduribei         ###   ########.fr       */
+/*   Created: 2024/05/12 18:49:43 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/26 13:50:38 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../libft.h"
 
-char *ft_run_command(char *line, t_mem **mem)
+void	ft_debug_print_array_of_strings(char **array, int fd)
 {
-	if (ft_strnstr(line, "<<", ft_strlen(line)))
-	{
-		(*mem)->hc_delim = ft_strtrim(line, " <");
-		ft_hc_capture(&(*mem)->hc_delim, &(*mem)->hc_list, mem);
-	}
-	else if (ft_strcmp(line, "exit") == 0)
-	{
-		ft_clear_mem_and_exit(mem);
-		exit(0);
-	}
+	int	a;
 
-	return (NULL);
+	a = 0;
+	while (array[a] != NULL)
+	{
+		ft_dprintf(fd, "[%i] %s\n", a, array[a]);
+		a++;
+	}
+	ft_dprintf(fd, "\n");
 }
-

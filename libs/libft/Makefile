@@ -90,7 +90,14 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lstmap.c \
 		lists/slist/ft_lstnew.c \
 		lists/slist/ft_lstsize.c \
+		lists/clist/ft_clistsize.c \
+		lists/dclist/ft_dclistsize.c \
 
+
+DEBUG =	debug/ft_debug_print_array_of_ints.c \
+		debug/ft_debug_print_array_of_strings.c \
+		debug/ft_debug_print_dclist.c \
+		debug/ft_debug_print_list.c \
 
 OBJS =	$(PRINT:.c=.o) \
 		$(CONV:.c=.o) \
@@ -104,12 +111,13 @@ OBJS =	$(PRINT:.c=.o) \
 		$(VALID:.c=.o) \
 		$(GNL:.c=.o) \
 		$(SORT:.c=.o) \
+		$(DEBUG:.c=.o) \
 
 CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = libft.a
 
