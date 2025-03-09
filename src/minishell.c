@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
 /*   Updated: 2025/03/08 16:22:50 by eduribei         ###   ########.fr       */
@@ -36,11 +36,6 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_clear_mem_and_exit(&mem);
 	return (0);
 }
-
-
-
-
-
 void ft_clean_mem_loop(t_mem **mem)
 {
 	if ((*mem)->hc_delim)
@@ -49,6 +44,3 @@ void ft_clean_mem_loop(t_mem **mem)
 		ft_free_and_null((void *)&(*mem)->line);
 	return ;
 }
-
-
-

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
 /*   Updated: 2025/03/08 15:50:58 by eduribei         ###   ########.fr       */
@@ -29,11 +29,9 @@ typedef struct s_mem
 char *ft_capture_line(void);
 char *ft_run_command(char *line, t_mem **mem);
 
-
 // heredocs
 char	*ft_hc_capture(char **hc_delim, t_list **hc_list, t_mem **mem);
 void	ft_hc_unlink_and_free(void *content); // needed for EXIT
-
 
 // erros and exits
 void	ft_init_minishell_memory(t_mem **mem);
