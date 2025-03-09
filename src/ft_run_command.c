@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:46:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/07 16:11:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/07 18:11:46 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 char *ft_run_command(char *line, char *ms_env[])
 {
-	int	i;
-	int	fd;
+	int		i;
+	int		fd;
+	char 	*variable_value = "MY_VAR=42";
 
 	i = 0;
 	fd = 0;
@@ -46,7 +47,15 @@ char *ft_run_command(char *line, char *ms_env[])
 		ft_cd(ms_env, line, fd);
 	}
 	else if (ft_strncmp(line, "export", 6) == 0)
-		ft_export(line, fd);
+	{
+		i = 6;
+		while (*line && i >= 0)
+		{
+			line++;
+			i--;
+		}
+		ft_export(ms_env, variable_value, fd);
+	}
 	// else if (ft_strncmp(line, "unset", 5) == 0)
 	// 	ft_unset(line, fd);
 	return ("0");
