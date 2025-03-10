@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:47 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/06 15:45:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:30:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,18 @@ char	**ft_free_split(char **result, int i)
 	return (NULL);
 }
 
-void	ft_pwd(char *ms_env[], int fd)
+void	ft_pwd(t_env **ms_env, int fd)
 {
-	int		i;
-	char	**result;
+	t_env	*current;
 
-	i = 0;
-	while (ms_env[i] != NULL)
+	current = *ms_env;
+	while (current)
 	{
-		if (ft_strncmp(ms_env[i], "PWD", 3) == 0)
+		if (current->variable && ft_strcmp(current->variable, "PWD") == 0)
 		{
-			result = ft_split_char(ms_env[i], '=');
-			ft_dprintf(fd, "%s\n", result[1]);
-			ft_free_split(result, 2);
+			ft_dprintf(fd, "%s\n", current->value);
 			break ;
 		}
-		i++;
+		current = current->next;
 	}
 }

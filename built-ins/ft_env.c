@@ -6,20 +6,22 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:20 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/07 16:07:39 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:13:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	ft_env(char *ms_env[], int fd)
+void	ft_env(t_env **ms_env, int fd)
 {
-	int	i;
+	t_env	*current;
 
-	i = 0;
-	while (ms_env[i] != NULL)
+	(void)fd;
+	current = *ms_env;
+	while (current)
 	{
-		ft_dprintf(fd, "%s\n", ms_env[i]);
-		i++;
+		// TODO: ft_printf and ft_dprintf from edu is not working properly, in the case below it prints twice the first arg.
+		printf("%s=%s\n", current->variable, current->value);
+		current = current->next;
 	}
 }

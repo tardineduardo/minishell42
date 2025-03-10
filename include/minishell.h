@@ -6,39 +6,42 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/10 10:16:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:43:58 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "../libs/libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# include "../libs/libft/libft.h"
 
-#include <assert.h>						// REMOVE LATER
-#include <stdlib.h>						// for malloc etc
-#include <readline/readline.h>			// for readline
-#include <readline/history.h>			// for history
+# include <assert.h>						// REMOVE LATER					// for malloc etc
+# include <readline/readline.h>			// for readline
+# include <readline/history.h>			// for history
+
+typedef struct s_env
+{
+	char			*variable;
+	char			*value;
+	bool			readonly;
+	struct s_env	*next;
+}			t_env;
 
 typedef struct s_mem
 {
 	t_list		*hc_list;
+	t_env		*ms_env;
 	char		*hc_delim;
 	char		*hc_fpath_cap;
 	char		*line;
 }				t_mem;
 
-typedef struct s_env
-{
-	char	*variable;
-	char	*value;
-	int		readonly;
-}			t_env;
+
 // main
 char *ft_capture_line(void);
 char *ft_run_command(char *line, t_mem **mem);
@@ -48,24 +51,29 @@ char	*ft_hc_capture(char **hc_delim, t_list **hc_list, t_mem **mem);
 void	ft_hc_unlink_and_free(void *content); // needed for EXIT
 
 // erros and exits
-void	ft_init_minishell_memory(t_mem **mem);
+void	ft_init_minishell_memory(t_mem **mem, char **envp);
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
 
-int		ft_ms_env_item_index(char *ms_env[], char *variable);
+//int		ft_ms_env_item_index(char *ms_env[], char *variable);
 
 char 	*ft_capture_command(void);
 //char 	*ft_run_command(char *line, char *envp[]);
-char	**ft_ms_env(char *envp[]);
+t_env	*ft_ms_env(char *envp[]);
 
-void	ft_ms_env_add(char *env[], char *new_variable_value);
-void	ft_ms_env_update(char *env[], char *variable, char *new_value);
-void	ft_env(char *ms_env[], int fd);
-void	ft_pwd(char *ms_env[], int fd);
+// ms_env
+void	ft_ms_env_add(t_env **ms_env, char *variable_value);
+void	ft_ms_env_update(t_env **ms_env, char *variable, char *value);
+void	ft_lstadd_back_env(t_env **lst, t_env *new);
+t_env	*ft_lstnew_env(char *variable, char *value);
+
+// built-ins
+void	ft_env(t_env **ms_env, int fd);
+void	ft_pwd(t_env **ms_env, int fd);
 void	ft_echo(char *line, int fd);
-void	ft_cd(char *ms_env[], char *path, int fd);
+void	ft_cd(t_env **ms_env, char *path, int fd);
 void	ft_exit(void);
-void	ft_export(char *ms_env[], char *variable_value, int fd);
+void	ft_export(t_env **ms_env, char *variable_value, int fd);
 //void	ft_unset(char *line, int fd);
 char	**ft_free_split(char **result, int i);
 

@@ -2,6 +2,7 @@ MAIN =  src/minishell.c \
 		src/ft_capture_line.c \
 		src/ft_run_command.c \
 		src/ms_env.c \
+		src/ms_env_lst_utils.c \
 		built-ins/ft_env.c \
 		built-ins/ft_pwd.c \
 		built-ins/ft_exit.c \

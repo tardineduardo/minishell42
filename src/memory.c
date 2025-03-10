@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:27:38 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:32:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void ft_init_minishell_memory(t_mem **mem)
+void ft_init_minishell_memory(t_mem **mem, char **envp)
 {
 	//malloc memory struct
 	*mem = malloc(sizeof(t_mem));
@@ -21,6 +21,7 @@ void ft_init_minishell_memory(t_mem **mem)
 
 
 	//nullify everything
+	(*mem)->ms_env = ft_ms_env(envp);
 	(*mem)->line = NULL;
 	(*mem)->hc_delim = NULL;
 	(*mem)->hc_list = NULL;
@@ -50,7 +51,8 @@ void ft_clear_mem_and_exit(t_mem **mem)
 
 	free(*mem);
 
-	rl_clear_history();
+	//rl_clear_history();
+	clear_history();
 }
 
 
