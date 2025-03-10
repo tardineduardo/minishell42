@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:47 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 15:30:07 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:19:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_pwd(t_env **ms_env, int fd)
 	current = *ms_env;
 	while (current)
 	{
-		if (current->variable && ft_strcmp(current->variable, "PWD") == 0)
+		if (ft_strcmp(current->variable, "PWD") == 0)
 		{
 			ft_dprintf(fd, "%s\n", current->value);
 			break ;

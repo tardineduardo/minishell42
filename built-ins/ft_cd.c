@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 15:25:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:19:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	ft_cd(t_env **ms_env, char *new_path, int fd)
 	current = *ms_env;
 	while (current)
 	{
-		if (current->variable && ft_strcmp(current->variable, "PWD") == 0)
+		if (ft_strcmp(current->variable, "PWD") == 0)
 		{
 			ft_ms_env_update(ms_env, "OLDPWD", current->value);
 			break ;
