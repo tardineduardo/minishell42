@@ -25,11 +25,11 @@ int	main(int argc, char *argv[], char *envp[])
 
 	while (1)
 	{
-		mem->line = ft_capture_line();
-		if (!mem->line)
+		ft_capture_line(&(mem->capture), &mem);
+		if (!mem->capture->line)
 			continue ;
-		add_history(mem->line);
-		ft_run_command(mem->line, &mem);
+		add_history(mem->capture->line);
+		ft_run_command(&mem, envp);
 		ft_clean_mem_loop(&mem);
 	}
 
@@ -38,9 +38,9 @@ int	main(int argc, char *argv[], char *envp[])
 }
 void ft_clean_mem_loop(t_mem **mem)
 {
-	if ((*mem)->hc_delim)
-		ft_free_and_null((void *)&(*mem)->hc_delim);
-	if ((*mem)->line)
-		ft_free_and_null((void *)&(*mem)->line);
+	if ((*mem)->heredoc->delim)
+		ft_free_and_null((void *)&(*mem)->heredoc->delim);
+	if ((*mem)->capture->line)
+		ft_free_and_null((void *)&(*mem)->capture->line);
 	return ;
 }

@@ -17,21 +17,38 @@
 #include <readline/readline.h>			// for readline
 #include <readline/history.h>			// for history
 
-typedef struct s_mem
+typedef struct 	s_hd_node
 {
-	t_list		*hc_list;
-	char		*hc_delim;
-	char		*hc_fpath_cap;
+	char		*fpath_node;
+}	t_hd_node;
+
+typedef struct	s_cap_mem
+{
 	char		*line;
-}				t_mem;
+	char		*trim;
+	char		*temp;
+}	t_cap_mem;
+
+typedef struct s_hd_mem
+{
+	t_list		*list;
+	char		*delim;
+	char		*fpath_cap;
+}	t_hd_mem;
+
+typedef struct	s_mem
+{
+	t_cap_mem	*capture;
+	t_hd_mem	*heredoc;
+}	t_mem;
 
 // main
-char *ft_capture_line(void);
-char *ft_run_command(char *line, t_mem **mem);
+char *ft_capture_line(t_cap_mem **cap, t_mem **mem);
+char *ft_run_command(t_mem **mem, char *envp[]);
 
 // heredocs
-char	*ft_hc_capture(char **hc_delim, t_list **hc_list, t_mem **mem);
-void	ft_hc_unlink_and_free(void *content); // needed for EXIT
+char	*ft_hc_capture(t_hd_mem **hd, t_mem **mem);
+void	ft_hd_unlink_and_free(void *content); // needed for EXIT
 
 // erros and exits
 void	ft_init_minishell_memory(t_mem **mem);

@@ -12,50 +12,76 @@
 
 #include "../include/minishell.h"
 
+void ft_clear_hd_mem(t_hd_mem **hdoc);
+void ft_clear_cap_mem(t_cap_mem **cap);
+
+
+
+
 void ft_init_minishell_memory(t_mem **mem)
 {
 	//malloc memory struct
 	*mem = malloc(sizeof(t_mem));
-	if (!(*mem))
-		exit(1);//improve error message and code
+	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
+	(*mem)->capture = malloc(sizeof(t_cap_mem));
 
+	//check for errors
+	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture)
+		exit(1);//improve error message and code	
 
 	//nullify everything
-	(*mem)->line = NULL;
-	(*mem)->hc_delim = NULL;
-	(*mem)->hc_list = NULL;
-	(*mem)->hc_fpath_cap = NULL;
+	(*mem)->capture->line = NULL;
+	(*mem)->heredoc->delim = NULL;
+	(*mem)->heredoc->list = NULL;
+	(*mem)->heredoc->fpath_cap = NULL;
 
-	
 	//Init evironment variables
-
+		//TODO Luis
 }
 
-
+//
 void ft_clear_mem_and_exit(t_mem **mem)
 {
-	//Free each pointer with the necessary functions
-	
-	if ((*mem)->hc_delim)
-		ft_free_and_null((void *)&(*mem)->hc_delim);
+	//Each part of the program has its own clear function
+	ft_clear_hd_mem(&(*mem)->heredoc);
+	ft_clear_cap_mem(&(*mem)->capture);
+	rl_clear_history();
+	free(*mem);
+	exit(0);
+}
 
-	if ((*mem)->hc_list)
+void ft_clear_hd_mem(t_hd_mem **hd)
+{
+	if ((*hd)->delim)
+		ft_free_and_null((void *)&(*hd)->delim);
+
+	if ((*hd)->list)
 	{
-		ft_lstclear(&(*mem)->hc_list, ft_hc_unlink_and_free);
-		ft_free_and_null((void *)&(*mem)->hc_list);
+		ft_lstclear(&(*hd)->list, ft_hd_unlink_and_free);
+		ft_free_and_null((void *)&(*hd)->list);
 	}
 
-	if ((*mem)->line)
-		ft_free_and_null((void *)&(*mem)->line);
-
-	free(*mem);
-
-	rl_clear_history();
+	if ((*hd)->fpath_cap)
+		ft_free_and_null((void *)&(*hd)->fpath_cap);
+	
+	free(*hd);
+	return ;
 }
 
 
+void ft_clear_cap_mem(t_cap_mem **cap)
+{
+	if ((*cap)->line)
+		ft_free_and_null((void *)&(*cap)->line);
 
+	if ((*cap)->trim)
+		ft_free_and_null((void *)&(*cap)->trim);
 
+	if ((*cap)->temp)
+		ft_free_and_null((void *)&(*cap)->temp);
 
+	free(*cap);
+	return ;
+}
 
 
