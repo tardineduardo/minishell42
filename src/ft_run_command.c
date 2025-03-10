@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:46:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/07 18:11:46 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:19:53 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,16 @@ char *ft_run_command(char *line, char *ms_env[])
 		ft_export(ms_env, variable_value, fd);
 	}
 	// else if (ft_strncmp(line, "unset", 5) == 0)
-	// 	ft_unset(line, fd);
-	return ("0");
+	// 	ft_unset(line, fd)
+  else if (ft_strnstr(line, "<<", ft_strlen(line)))
+	{
+		(*mem)->hc_delim = ft_strtrim(line, " <");
+		ft_hc_capture(&(*mem)->hc_delim, &(*mem)->hc_list, mem);
+	}
+	else if (ft_strcmp(line, "exit") == 0)
+	{
+		ft_clear_mem_and_exit(mem);
+		exit(0);
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 17:02:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/02/21 20:47:38 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/08 13:33:51 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_free_str_array(char **array_of_chars);
 void	ft_free(int total, ...);
-bool	ft_free_and_false(void *ptr);
-bool	ft_free_and_true(void *ptr);
-void	*ft_free_and_null(void *ptr);
-void	*ft_free_and_exit(void *ptr, char *msg, int errnum);
+bool	ft_free_and_false(void **ptr);
+bool	ft_free_and_true(void **ptr);
+void	*ft_free_and_null(void **ptr);
+void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
 
 // validations
 int		ft_isalnum(int c);
@@ -180,11 +180,18 @@ void	*ft_lstclear_null(t_list **lst, void (*del)(void*));
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
+void	ft_lstclear2(t_list **lst, void (*del)(void**));
+
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
+int		ft_clstsize(t_list **tail);
+int		ft_dclstsize(t_dll **tail);
+void	ft_debug_print_list(t_list **head, char *type, size_t offset);
+
+
 
 #endif

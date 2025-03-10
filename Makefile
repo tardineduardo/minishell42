@@ -1,5 +1,5 @@
 MAIN =  src/minishell.c \
-		src/ft_capture_command.c \
+		src/ft_capture_line.c \
 		src/ft_run_command.c \
 		src/ms_env.c \
 		built-ins/ft_env.c \
@@ -9,11 +9,15 @@ MAIN =  src/minishell.c \
 		built-ins/ft_cd.c \
 		built-ins/ft_export.c \
 
-OBJS_SRC =	$(MAIN:.c=.o)
+HEREDOC =	src/heredocs.c \
+
+MEMORY =	src/memory.c \
+
+OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o)
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 LIBFT_PATH = ./libs/libft
