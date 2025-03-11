@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:07:31 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 21:37:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 12:04:15 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_env	*ft_lstnew_env(char *variable, char *value)
 	a->variable = ft_strdup(variable);
     a->value = ft_strdup(value);
     a->readonly = false;
+	a->block_unset = false;
 	a->next = NULL;
 	return (a);
 }
@@ -55,7 +56,7 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 	}
 }
 
-void	ft_lstdelone_node_env(t_env **lst, char *variable)
+void	ft_lstdel_one_node_env(t_env **lst, char *variable)
 {
 	t_env	*current;
 	t_env	*prev;

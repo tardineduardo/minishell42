@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_space.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 15:18:57 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/23 15:04:46 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:48:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,6 @@ static size_t	c_substrs(char *s, char *set)
 	return (count_substrs);
 }
 
-static void	ft_free_if_error(char **results, size_t r_index)
-{
-	size_t	a;
-
-	a = 0;
-	while (a < r_index)
-	{
-		free(results[a]);
-		a++;
-	}
-	free(results);
-}
-
 static char	*ft_fill(char **results, char *start, size_t count, size_t r_index)
 {
 	results[r_index] = ft_calloc((count + 1), sizeof(char));
@@ -57,7 +44,7 @@ static char	*ft_fill(char **results, char *start, size_t count, size_t r_index)
 	}
 	else
 	{
-		ft_free_if_error(results, r_index);
+		ft_free_split(results, r_index);
 		return (NULL);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 17:02:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 13:33:51 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:45:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ char	*ft_strtok(char *string, char *set);
 char	*ft_strtok_r(char *input_str, char *delimiters, char **saveptr);
 char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
+void	ft_free_split(char **results, size_t r_index);
 
 // printing
 int		ft_putchar_fd(char c, int fd);

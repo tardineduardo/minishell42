@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/10 21:40:45 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 12:43:30 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_env
 	char			*variable;
 	char			*value;
 	bool			readonly;
+	bool			block_unset;
 	struct s_env	*next;
 }			t_env;
 
@@ -63,7 +64,7 @@ void	ft_ms_env_add(t_env **ms_env, char *variable_value);
 void	ft_ms_env_update(t_env **ms_env, char *variable, char *value);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 void	ft_unset(t_env **ms_env, char *variable, int fd);
-void	ft_lstdelone_node_env(t_env **lst, char *variable);
+void	ft_lstdel_one_node_env(t_env **lst, char *variable);
 t_env	*ft_lstnew_env(char *variable, char *value);
 
 // built-ins
@@ -74,6 +75,5 @@ void	ft_cd(t_env **ms_env, char *path, int fd);
 void	ft_exit(void);
 void	ft_export(t_env **ms_env, char *variable_value, int fd);
 void	ft_unset(t_env **ms_env, char *variable, int fd);
-char	**ft_free_split(char **result, int i);
 
 #endif
