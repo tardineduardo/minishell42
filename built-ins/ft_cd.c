@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 16:19:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:26:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +65,44 @@
 // 	return (new_path);
 // }
 
-void	ft_cd(t_env **ms_env, char *new_path, int fd)
+/*
+	**Mandatory: cd only with relative or absolute path**
+
+	run chdir and if the returned value is 0 (success), we also 
+	update OLDPWD and PWD from our copy of environment variables.
+	We also make a 'path treatment' to have it in the right format
+	to update PWD value (TODO).
+
+	In case of problem we print one of two custom msgs:
+	1. "bash: cd: $(new_path): No such file or directory"
+	2. "bash: cd: $(new_path): Permission denied"
+*/
+
+void	ft_cd(t_env **ms_env, char *new_path)
 {
 	t_env	*current;
 	//char	*final_path;
 
-	(void)fd;
 	current = *ms_env;
-	while (current)
+	if (chdir(new_path) == 0)
 	{
-		if (ft_strcmp(current->variable, "PWD") == 0)
+		while (current)
 		{
-			ft_ms_env_update(ms_env, "OLDPWD", current->value);
-			break ;
+			if (ft_strcmp(current->variable, "PWD") == 0)
+			{
+				ft_ms_env_update(ms_env, "OLDPWD", current->value);
+				break ;
+			}
+			current = current->next;
 		}
-		current = current->next;
+		//final_path = ft_cd_path_treatment(ms_env, new_path);
+		ft_ms_env_update(ms_env, "PWD", new_path);
 	}
-	//final_path = ft_cd_path_treatment(ms_env, new_path);
-	ft_ms_env_update(ms_env, "PWD", new_path);
+	else
+	{
+		if (errno == 2 || errno == 20)
+			ft_printf("bash: cd: %s: No such file or directory\n", new_path);
+		else if (errno == 13)
+			ft_printf("bash: cd: %s: Permission denied\n", new_path);
+	}
 }

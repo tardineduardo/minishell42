@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/11 12:43:30 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:27:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,16 @@ t_env	*ft_ms_env(char *envp[]);
 void	ft_ms_env_add(t_env **ms_env, char *variable_value);
 void	ft_ms_env_update(t_env **ms_env, char *variable, char *value);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
-void	ft_unset(t_env **ms_env, char *variable, int fd);
 void	ft_lstdel_one_node_env(t_env **lst, char *variable);
 t_env	*ft_lstnew_env(char *variable, char *value);
 
 // built-ins
-void	ft_env(t_env **ms_env, int fd);
-void	ft_pwd(t_env **ms_env, int fd);
-void	ft_echo(char *line, int fd);
-void	ft_cd(t_env **ms_env, char *path, int fd);
+void	ft_env(t_env **ms_env);
+void	ft_pwd(t_env **ms_env);
+void	ft_echo(char *line, bool flag);
+void	ft_cd(t_env **ms_env, char *path);
 void	ft_exit(void);
-void	ft_export(t_env **ms_env, char *variable_value, int fd);
-void	ft_unset(t_env **ms_env, char *variable, int fd);
+void	ft_export(t_env **ms_env, char *variable_value);
+void	ft_unset(t_env **ms_env, char *variable);
 
 #endif

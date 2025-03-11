@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:46:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 21:39:48 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:31:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 char *ft_run_command(char *line, t_mem **mem)
 {
 	int		i;
-	int		fd;
+	bool	flag = false;
 
 	i = 0;
-	fd = 0;
 	if (ft_strncmp(line, "env", 3) == 0)
-		ft_env(&(*mem)->ms_env, fd);
+		ft_env(&(*mem)->ms_env);
 	else if (ft_strcmp(line, "pwd") == 0)
-		ft_pwd(&(*mem)->ms_env, fd);
+		ft_pwd(&(*mem)->ms_env);
 	else if (ft_strcmp(line, "exit") == 0)
 		ft_exit();
 	else if (ft_strncmp(line, "echo", 4) == 0)
@@ -33,7 +32,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_echo(line, fd);
+		ft_echo(line, flag);
 	}
 	else if (ft_strncmp(line, "cd", 2) == 0)
 	{
@@ -43,7 +42,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_cd(&(*mem)->ms_env, line, fd);
+		ft_cd(&(*mem)->ms_env, line);
 	}
 	else if (ft_strncmp(line, "export", 6) == 0)
 	{
@@ -53,7 +52,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_export(&(*mem)->ms_env, line, fd);
+		ft_export(&(*mem)->ms_env, line);
 	}
 	else if (ft_strncmp(line, "unset", 5) == 0)
 	{
@@ -63,7 +62,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_unset(&(*mem)->ms_env, line, fd);
+		ft_unset(&(*mem)->ms_env, line);
 	}
   	else if (ft_strnstr(line, "<<", ft_strlen(line)))
 	{
