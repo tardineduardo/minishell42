@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:46:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 16:05:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 21:39:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,16 @@ char *ft_run_command(char *line, t_mem **mem)
 		}
 		ft_export(&(*mem)->ms_env, line, fd);
 	}
-	// else if (ft_strncmp(line, "unset", 5) == 0)
-	// 	ft_unset(line, fd)
+	else if (ft_strncmp(line, "unset", 5) == 0)
+	{
+		i = 5;
+		while (*line && i >= 0)
+		{
+			line++;
+			i--;
+		}
+		ft_unset(&(*mem)->ms_env, line, fd);
+	}
   	else if (ft_strnstr(line, "<<", ft_strlen(line)))
 	{
 		(*mem)->hc_delim = ft_strtrim(line, " <");

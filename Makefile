@@ -9,6 +9,7 @@ MAIN =  src/minishell.c \
 		built-ins/ft_echo.c \
 		built-ins/ft_cd.c \
 		built-ins/ft_export.c \
+		built-ins/ft_unset.c \
 
 HEREDOC =	src/heredocs.c \
 

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:07:31 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/10 15:04:33 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/10 21:37:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,32 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 	{
 		temp = ft_lstlast_env(*lst);
 		temp->next = new;
+	}
+}
+
+void	ft_lstdelone_node_env(t_env **lst, char *variable)
+{
+	t_env	*current;
+	t_env	*prev;
+
+	if (lst == NULL || *lst == NULL || variable == NULL)
+		return ;
+	current = *lst;
+	prev = NULL;
+	while (current)
+	{
+		if (ft_strcmp(current->variable, variable) == 0)
+		{
+			if (prev == NULL)
+				*lst = current->next;
+			else
+				prev->next = current->next;
+			free(current->variable);
+			free(current->value);
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
 	}
 }
