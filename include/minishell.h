@@ -22,6 +22,18 @@ typedef struct 	s_hd_node
 	char		*fpath_node;
 }	t_hd_node;
 
+//3.criar uma struct específica
+typedef struct 	s_tok_node
+{
+	char		*tokstr;
+}	t_tok_node;
+
+//1. Criar struct para sua seçao
+typedef struct	s_tok_mem
+{
+	t_list		*toklst;
+}	t_tok_mem;
+
 typedef struct	s_cap_mem
 {
 	char		*line;
@@ -36,15 +48,19 @@ typedef struct s_hd_mem
 	char		*fpath_cap;
 }	t_hd_mem;
 
+//2. Inlcuir a struct de memoria na principal
 typedef struct	s_mem
 {
 	t_cap_mem	*capture;
 	t_hd_mem	*heredoc;
+	t_tok_mem	*tokenize;
 }	t_mem;
 
 // main
 char *ft_capture_line(t_cap_mem **cap, t_mem **mem);
 char *ft_run_command(t_mem **mem, char *envp[]);
+//3.5 Incluir a nova funçao principal no header
+void *ft_hc_tokenize(t_tok_mem **tok, t_mem **mem);
 
 // heredocs
 char	*ft_hc_capture(t_hd_mem **hd, t_mem **mem);
