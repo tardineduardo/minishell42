@@ -29,6 +29,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!mem->capture->line)
 			continue ;
 		add_history(mem->capture->line);
+		ft_tokenize(mem->capture->line, &mem->tokenize, &mem);
 		ft_run_command(&mem, envp);
 		ft_clean_mem_loop(&mem);
 	}
@@ -42,5 +43,7 @@ void ft_clean_mem_loop(t_mem **mem)
 		ft_free_and_null((void *)&(*mem)->heredoc->delim);
 	if ((*mem)->capture->line)
 		ft_free_and_null((void *)&(*mem)->capture->line);
+	if ((*mem)->tokenize->toklst)
+		ft_free_and_null((void *)&(*mem)->tokenize->toklst);
 	return ;
 }

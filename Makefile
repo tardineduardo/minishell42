@@ -6,7 +6,10 @@ HEREDOC =	src/heredocs.c \
 
 MEMORY =	src/memory.c \
 
-OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o)
+TOKEN =		src/tokenize.c \
+
+
+OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o) $(TOKEN:.c=.o)
 
 CC = cc
 RM = rm -f

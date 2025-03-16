@@ -41,6 +41,7 @@ MEM = 	mem/ft_bzero.c \
 		mem/ft_calloc.c \
 		mem/ft_memcpy.c \
 		mem/ft_free_and.c \
+		mem/ft_memmove.c \
 
 STRING = string/ft_concatenate.c \
 		string/ft_concatenate_var.c \
@@ -60,6 +61,7 @@ STRING = string/ft_concatenate.c \
 		string/ft_strnstr.c \
 		string/ft_strrchr.c \
 		string/ft_strtrim.c \
+		string/ft_strtrim_overwrite.c \
 		string/ft_substr.c \
 		string/ft_count_char.c \
 		string/ft_strtok.c \

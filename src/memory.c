@@ -14,7 +14,7 @@
 
 void ft_clear_hd_mem(t_hd_mem **hdoc);
 void ft_clear_cap_mem(t_cap_mem **cap);
-
+void ft_clear_tok_mem(t_tok_mem **tok);
 
 
 void ft_init_minishell_memory(t_mem **mem)
@@ -23,23 +23,35 @@ void ft_init_minishell_memory(t_mem **mem)
 	*mem = malloc(sizeof(t_mem));
 	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
 	(*mem)->capture = malloc(sizeof(t_cap_mem));
-	//4. Init new mem struct
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
 
-
 	//check for errors
-	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture
-		//5. check errors
-		|| !(*mem)->tokenize)
+	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize)
 		exit(1);//improve error message and code	
 
-	//nullify everything
+	//set everything to NULL
 	(*mem)->capture->line = NULL;
+	(*mem)->capture->trim = NULL;
+	(*mem)->capture->temp = NULL;
 	(*mem)->heredoc->delim = NULL;
 	(*mem)->heredoc->list = NULL;
 	(*mem)->heredoc->fpath_cap = NULL;
-	//6. Init pointers to NULL
 	(*mem)->tokenize->toklst = NULL;
+	(*mem)->tokenize->tri_operator = NULL;
+	(*mem)->tokenize->dbl_operator = NULL;
+	(*mem)->tokenize->sgl_operator = NULL;
+	(*mem)->tokenize->last_of_list = NULL;
+	(*mem)->tokenize->new = NULL;
+	(*mem)->tokenize->node = NULL;
+	(*mem)->tokenize->sub_node = NULL;
+	(*mem)->tokenize->str = NULL;
+
+	//init operators
+	if (!ft_init_operators(&(*mem)->tokenize))
+		ft_clear_mem_and_exit(mem);
+
+
+
 
 
 	//Init evironment variables
@@ -52,7 +64,6 @@ void ft_clear_mem_and_exit(t_mem **mem)
 	//Each part of the program has its own clear function
 	ft_clear_hd_mem(&(*mem)->heredoc);
 	ft_clear_cap_mem(&(*mem)->capture);
-	//7. Create a function that clears all memory of that group
 	ft_clear_tok_mem(&(*mem)->tokenize);
 
 
