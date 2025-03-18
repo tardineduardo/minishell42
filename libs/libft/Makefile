@@ -42,6 +42,8 @@ MEM = 	mem/ft_bzero.c \
 		mem/ft_memcpy.c \
 		mem/ft_free_and.c \
 		mem/ft_memmove.c \
+		mem/ft_free_str_array.c \
+		mem/ft_free_and_null_str_array.c \
 
 STRING = string/ft_concatenate.c \
 		string/ft_concatenate_var.c \

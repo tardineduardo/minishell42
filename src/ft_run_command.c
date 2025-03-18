@@ -40,7 +40,7 @@ char *ft_run_command(t_mem **mem, char *envp[])
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
 		(*mem)->heredoc->delim = ft_strtrim((*mem)->capture->line, " <");
-		ft_hc_capture(&(*mem)->heredoc, mem);
+		ft_hc_capture(&(*mem)->heredoc);
 	}
 	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)
 	{

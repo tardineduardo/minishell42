@@ -25,11 +25,11 @@ int	main(int argc, char *argv[], char *envp[])
 
 	while (1)
 	{
-		ft_capture_line(&(mem->capture), &mem);
+		ft_capture_line(&(mem->capture));
 		if (!mem->capture->line)
 			continue ;
 		add_history(mem->capture->line);
-		ft_tokenize(mem->capture->line, &mem->tokenize, &mem);
+		ft_tokenize(mem->capture->line, &mem->tokenize);
 		ft_run_command(&mem, envp);
 		ft_clean_mem_loop(&mem);
 	}
@@ -39,11 +39,21 @@ int	main(int argc, char *argv[], char *envp[])
 }
 void ft_clean_mem_loop(t_mem **mem)
 {
+	if ((*mem)->tokenize->toklst)
+		ft_lstclear(&(*mem)->tokenize->toklst, ft_tok_free_node_in_list);
 	if ((*mem)->heredoc->delim)
 		ft_free_and_null((void *)&(*mem)->heredoc->delim);
 	if ((*mem)->capture->line)
 		ft_free_and_null((void *)&(*mem)->capture->line);
-	if ((*mem)->tokenize->toklst)
-		ft_free_and_null((void *)&(*mem)->tokenize->toklst);
+
+
+	if ((*mem)->tokenize->str)
+		ft_free_and_null((void *)&(*mem)->tokenize->str);
+	// if ((*mem)->tokenize->last_of_list)
+	// 	ft_tok_free_node_in_list((*mem)->tokenize->last_of_list);
+
+	// if ((*mem)->tokenize->node)
+	// 	ft_tok_free_node_in_list((*mem)->tokenize->node);
+
 	return ;
 }

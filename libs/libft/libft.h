@@ -101,6 +101,7 @@ void	ft_free(int total, ...);
 bool	ft_free_and_false(void **ptr);
 bool	ft_free_and_true(void **ptr);
 void	*ft_free_and_null(void **ptr);
+void	*ft_free_and_null_str_array(char ***array_of_strings);
 void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
 
 // validations

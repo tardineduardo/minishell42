@@ -36,14 +36,12 @@ Se houver qualquer erro na captura, o valor de retorno é NULL. Em caso de
 erro, toda a memória até então alocada e o prompt devolvido para o usuário.
 */
 
-char	*ft_hc_capture(t_hd_mem **hd, t_mem **mem)
+char	*ft_hc_capture(t_hd_mem **hd)
 {
 	static int	hc_count_int;
 	t_hd_node	*hc_node;
 	t_list		*hc_new;
 
-	assert(*mem);
-	assert(mem);
 	assert(*hd);
 	assert(hd);
 	

@@ -41,7 +41,7 @@ typedef struct 	s_hd_node
 typedef struct 	s_tok_node
 {
 	char		*tokstr;
-	t_tok_type	*type;
+	t_tok_type	type;
 	bool		double_quote;
 	bool		single_quote;
 }	t_tok_node;
@@ -57,7 +57,7 @@ typedef struct	s_tok_mem
 	t_tok_node	*last_of_toks;
 	t_list		*new;
 	t_tok_node	*node;
-	t_tok_node	*sub_node;
+	t_tok_node	*node2;
 	char		*str;
 }	t_tok_mem;
 
@@ -84,13 +84,13 @@ typedef struct	s_mem
 }	t_mem;
 
 // main
-char *ft_capture_line(t_cap_mem **cap, t_mem **mem);
+char *ft_capture_line(t_cap_mem **cap);
 char *ft_run_command(t_mem **mem, char *envp[]);
 //3.5 Incluir a nova funçao principal no header
-void	*ft_tokenize(char *line, t_tok_mem **tok, t_mem **mem);
+void	*ft_tokenize(char *line, t_tok_mem **tok);
 
 // heredocs
-char	*ft_hc_capture(t_hd_mem **hd, t_mem **mem);
+char	*ft_hc_capture(t_hd_mem **hd);
 void	ft_hd_unlink_and_free(void *content); // needed for EXIT
 
 // erros and exits
@@ -100,3 +100,5 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 
 //tokens
 void	*ft_init_operators(t_tok_mem **tok);
+void	ft_tok_free_node_in_list(void *content);
+

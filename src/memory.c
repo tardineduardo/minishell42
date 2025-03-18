@@ -21,13 +21,17 @@ void ft_init_minishell_memory(t_mem **mem)
 {
 	//malloc memory struct
 	*mem = malloc(sizeof(t_mem));
+	if (!(*mem))
+		exit(1);//improve error message and code
+
+
 	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
 	(*mem)->capture = malloc(sizeof(t_cap_mem));
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
 
 	//check for errors
 	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize)
-		exit(1);//improve error message and code	
+		exit(1);//improve error message and code
 
 	//set everything to NULL
 	(*mem)->capture->line = NULL;
@@ -43,7 +47,7 @@ void ft_init_minishell_memory(t_mem **mem)
 	(*mem)->tokenize->last_of_list = NULL;
 	(*mem)->tokenize->new = NULL;
 	(*mem)->tokenize->node = NULL;
-	(*mem)->tokenize->sub_node = NULL;
+	(*mem)->tokenize->node2 = NULL;
 	(*mem)->tokenize->str = NULL;
 
 	//init operators
@@ -72,6 +76,7 @@ void ft_clear_mem_and_exit(t_mem **mem)
 	exit(0);
 }
 
+
 void ft_clear_hd_mem(t_hd_mem **hd)
 {
 	if ((*hd)->delim)
@@ -90,7 +95,6 @@ void ft_clear_hd_mem(t_hd_mem **hd)
 	return ;
 }
 
-
 void ft_clear_cap_mem(t_cap_mem **cap)
 {
 	if ((*cap)->line)
@@ -105,13 +109,57 @@ void ft_clear_cap_mem(t_cap_mem **cap)
 	free(*cap);
 	return ;
 }
-
 //8. Write the function that clears the memory
 void ft_clear_tok_mem(t_tok_mem **tok)
 {
 	if ((*tok)->toklst)
-		ft_free_and_null((void *)&(*tok)->toklst);
+	{
+		ft_lstclear(&(*tok)->toklst, ft_tok_free_node_in_list);
+	//	ft_free_and_null((void *)&(*tok)->toklst);
+	}
+	if ((*tok)->tri_operator)
+		ft_free_str_array((*tok)->tri_operator); //FREE ARRAY OF STRINGS
+	if ((*tok)->dbl_operator)
+		ft_free_str_array((*tok)->dbl_operator);  //FREE ARRAY OF STRINGS
+	if ((*tok)->sgl_operator)
+		ft_free_and_null((void *)&(*tok)->sgl_operator);
+	if ((*tok)->str)
+		ft_free_and_null((void *)&(*tok)->str);
+	// if ((*tok)->node2)
+	//  	ft_free_and_null((void *)&(*tok)->node2);
+	// if ((*tok)->last_of_list)
+	// 	ft_free_and_null((void *)&(*tok)->last_of_list);
+	// if ((*tok)->new)
+	// 	ft_free_and_null((void *)&(*tok)->new);
+
 
 	free(*tok);
 	return ;
+}
+
+
+void *ft_init_operators(t_tok_mem **tok)
+{
+	if ((*tok)->tri_operator || (*tok)->dbl_operator || (*tok)->sgl_operator)
+		return (NULL);
+
+	(*tok)->tri_operator = malloc(2 * sizeof(char *));
+	(*tok)->dbl_operator = malloc(7 * sizeof(char *));
+	(*tok)->sgl_operator = ft_strdup("<>|&*()");
+
+	if (!(*tok)->tri_operator || !(*tok)->dbl_operator || !(*tok)->sgl_operator)
+		return (NULL);
+
+	(*tok)->tri_operator[0] = ft_strdup("<<<");
+	(*tok)->tri_operator[1] = NULL;
+	(*tok)->dbl_operator[0] = ft_strdup(">>");
+	(*tok)->dbl_operator[1] = ft_strdup("<<");
+	(*tok)->dbl_operator[2] = ft_strdup("&&");
+	(*tok)->dbl_operator[3] = ft_strdup("||");
+	(*tok)->dbl_operator[4] = ft_strdup("2>");
+	(*tok)->dbl_operator[5] = ft_strdup("&>");
+	(*tok)->dbl_operator[6] = NULL;
+	//protect
+
+	return (tok);
 }

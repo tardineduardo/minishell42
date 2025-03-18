@@ -13,10 +13,10 @@
 #include "../include/minishell.h"
 
 static void	*ft_cap_error(char *message, t_cap_mem **cap);
-static char	*ft_cap_input_loop(t_cap_mem **cap, t_mem **mem);
+static char	*ft_cap_input_loop(t_cap_mem **cap);
 
 
-char *ft_capture_line(t_cap_mem **cap, t_mem **mem)
+char *ft_capture_line(t_cap_mem **cap)
 {
 	(*cap)->line = readline("Minishell > ");
 
@@ -26,7 +26,7 @@ char *ft_capture_line(t_cap_mem **cap, t_mem **mem)
 	if (ft_strlen((*cap)->line) == 0)
 		return (NULL);
 
-	if (!ft_cap_input_loop(cap, mem))
+	if (!ft_cap_input_loop(cap))
 		return (ft_cap_error("line capture error", cap));
 
 
@@ -55,12 +55,10 @@ void	*ft_cap_syscall_error(char *message)
 
 
 
-char	*ft_cap_input_loop(t_cap_mem **cap, t_mem **mem)
+char	*ft_cap_input_loop(t_cap_mem **cap)
 {
 	assert(cap);
 	assert(*cap);
-
-	(void)mem;
 
 	while(1)
 	{
