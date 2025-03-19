@@ -88,8 +88,6 @@ void ft_clear_hd_mem(t_hd_mem **hd)
 		ft_free_and_null((void *)&(*hd)->list);
 	}
 
-	if ((*hd)->fpath_cap)
-		ft_free_and_null((void *)&(*hd)->fpath_cap);
 	
 	free(*hd);
 	return ;
