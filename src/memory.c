@@ -17,7 +17,7 @@ void ft_clear_cap_mem(t_cap_mem **cap);
 void ft_clear_tok_mem(t_tok_mem **tok);
 
 
-void ft_init_minishell_memory(t_mem **mem)
+void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
 	//malloc memory struct
 	*mem = malloc(sizeof(t_mem));
@@ -28,6 +28,10 @@ void ft_init_minishell_memory(t_mem **mem)
 	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
 	(*mem)->capture = malloc(sizeof(t_cap_mem));
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
+	
+	//-------LUIS
+	(*mem)->ms_env = ft_ms_env(envp);
+
 
 	//check for errors
 	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize)

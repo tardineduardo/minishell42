@@ -32,6 +32,15 @@ typedef enum e_tok_type
 }	t_tok_type;
 
 
+typedef struct s_env
+{
+	char			*variable;
+	char			*value;
+	bool			readonly;
+	bool			block_unset;
+	struct s_env	*next;
+}			t_env;
+
 typedef struct 	s_hd_node
 {
 	char		*fpath_node;
@@ -81,11 +90,12 @@ typedef struct	s_mem
 	t_cap_mem	*capture;
 	t_hd_mem	*heredoc;
 	t_tok_mem	*tokenize;
+	t_env		*ms_env;
 }	t_mem;
 
 // main
 char *ft_capture_line(t_cap_mem **cap);
-char *ft_run_command(t_mem **mem, char *envp[]);
+char *ft_run_command(char *line, t_mem **mem);
 //3.5 Incluir a nova funçao principal no header
 void	*ft_tokenize(char *line, t_tok_mem **tok);
 
@@ -94,7 +104,7 @@ char	*ft_hc_capture(t_hd_mem **hd);
 void	ft_hd_unlink_and_free(void *content); // needed for EXIT
 
 // erros and exits
-void	ft_init_minishell_memory(t_mem **mem);
+void	ft_init_minishell_memory(t_mem **mem, char **envp);
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
 
@@ -102,3 +112,24 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 void	*ft_init_operators(t_tok_mem **tok);
 void	ft_tok_free_node_in_list(void *content);
 
+
+
+
+//-------LUIS-----//
+t_env	*ft_ms_env(char *envp[]);
+
+// built-ins
+void	ft_env(t_env **ms_env);
+void	ft_pwd(t_env **ms_env);
+void	ft_echo(char *line, bool flag);
+void	ft_cd(t_env **ms_env, char *path);
+void	ft_exit(void);
+void	ft_export(t_env **ms_env, char *variable_value);
+void	ft_unset(t_env **ms_env, char *variable);
+
+// ms_env
+void	ft_ms_env_add(t_env **ms_env, char *variable_value);
+void	ft_ms_env_update(t_env **ms_env, char *variable, char *value);
+void	ft_lstadd_back_env(t_env **lst, t_env *new);
+void	ft_lstdel_one_node_env(t_env **lst, char *variable);
+t_env	*ft_lstnew_env(char *variable, char *value);

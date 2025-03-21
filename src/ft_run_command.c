@@ -12,30 +12,57 @@
 
 #include "../include/minishell.h"
 
-char *ft_run_command(t_mem **mem, char *envp[])
+char *ft_run_command(char *line, t_mem **mem)
 {
-	int	i;
+	int		i;
+	bool	flag = false;
 
 	i = 0;
-	if (ft_strcmp((*mem)->capture->line, "env") == 0)
+	if (ft_strncmp(line, "env", 3) == 0)
+		ft_env(&(*mem)->ms_env);
+	else if (ft_strcmp(line, "pwd") == 0)
+		ft_pwd(&(*mem)->ms_env);
+	else if (ft_strcmp(line, "exit") == 0)
+		ft_exit();
+	else if (ft_strncmp(line, "echo", 4) == 0)
 	{
-		while (envp[i] != NULL)
+		i = 4;
+		while (*line && i >= 0)
 		{
-			ft_printf("%s\n", envp[i]);
-			i++;
+			line++;
+			i--;
 		}
+		ft_echo(line, flag);
 	}
-	else if (ft_strcmp((*mem)->capture->line, "pwd") == 0)
+	else if (ft_strncmp(line, "cd", 2) == 0)
 	{
-		while (envp[i] != NULL)
+		i = 2;
+		while (*line && i >= 0)
 		{
-			if (ft_strncmp(envp[i], "PWD", 3) == 0)
-			{
-				ft_printf("%s\n", envp[i]);
-				return ("0");
-			}
-			i++;
+			line++;
+			i--;
 		}
+		ft_cd(&(*mem)->ms_env, line);
+	}
+	else if (ft_strncmp(line, "export", 6) == 0)
+	{
+		i = 6;
+		while (*line && i >= 0)
+		{
+			line++;
+			i--;
+		}
+		ft_export(&(*mem)->ms_env, line);
+	}
+	else if (ft_strncmp(line, "unset", 5) == 0)
+	{
+		i = 5;
+		while (*line && i >= 0)
+		{
+			line++;
+			i--;
+		}
+		ft_unset(&(*mem)->ms_env, line);
 	}
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
