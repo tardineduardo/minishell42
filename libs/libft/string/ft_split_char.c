@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_char.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:16:06 by eduribei          #+#    #+#             */
-/*   Updated: 2024/11/28 15:18:07 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:47:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static size_t	c_substrs(char *s, char c)
 	return (count_substrs);
 }
 
-static void	ft_free_if_error(char **results, size_t r_index)
+void	ft_free_split(char **results, size_t r_index)
 {
 	size_t	a;
 
@@ -51,7 +51,7 @@ static char	*ft_fill(char **results, char *start, size_t count, size_t r_index)
 	results[r_index] = ft_calloc((count + 1), sizeof(char));
 	if (results[r_index] == NULL)
 	{
-		ft_free_if_error(results, r_index);
+		ft_free_split(results, r_index);
 		return (NULL);
 	}
 	ft_memmove((char *)results[r_index], (char *)start, count);

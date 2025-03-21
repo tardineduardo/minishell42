@@ -1,12 +1,24 @@
 MAIN =  src/minishell.c \
 		src/ft_capture_line.c \
 		src/ft_run_command.c \
+		src/ms_env.c \
+		src/built-ins/ft_env.c \
+		src/built-ins/ft_pwd.c \
+		src/built-ins/ft_exit.c \
+		src/built-ins/ft_echo.c \
+		src/built-ins/ft_cd.c \
+		src/built-ins/ft_export.c \
+		src/built-ins/ft_unset.c \
+
 
 HEREDOC =	src/heredocs.c \
 
 MEMORY =	src/memory.c \
 
-OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o)
+TOKEN =		src/tokenize.c \
+
+
+OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o) $(TOKEN:.c=.o)
 
 CC = cc
 RM = rm -f

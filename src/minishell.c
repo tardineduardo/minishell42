@@ -21,15 +21,16 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)envp;
 
 	mem = NULL;
-	ft_init_minishell_memory(&mem);
+	ft_init_minishell_memory(&mem, envp);
 
 	while (1)
 	{
-		mem->line = ft_capture_line();
-		if (!mem->line)
+		ft_capture_line(&(mem->capture));
+		if (!mem->capture->line)
 			continue ;
-		add_history(mem->line);
-		ft_run_command(mem->line, &mem);
+		add_history(mem->capture->line);
+		ft_tokenize(mem->capture->line, &mem->tokenize);
+		ft_run_command(mem->capture->line, &mem);
 		ft_clean_mem_loop(&mem);
 	}
 
@@ -38,9 +39,16 @@ int	main(int argc, char *argv[], char *envp[])
 }
 void ft_clean_mem_loop(t_mem **mem)
 {
-	if ((*mem)->hc_delim)
-		ft_free_and_null((void *)&(*mem)->hc_delim);
-	if ((*mem)->line)
-		ft_free_and_null((void *)&(*mem)->line);
+	if ((*mem)->tokenize->toklst)
+		ft_lstclear(&(*mem)->tokenize->toklst, ft_tok_free_node_in_list);
+	if ((*mem)->heredoc->delim)
+		ft_free_and_null((void *)&(*mem)->heredoc->delim);
+	if ((*mem)->capture->line)
+		ft_free_and_null((void *)&(*mem)->capture->line);
+
+
+	if ((*mem)->tokenize->str)
+		ft_free_and_null((void *)&(*mem)->tokenize->str);
+
 	return ;
 }

@@ -101,6 +101,7 @@ void	ft_free(int total, ...);
 bool	ft_free_and_false(void **ptr);
 bool	ft_free_and_true(void **ptr);
 void	*ft_free_and_null(void **ptr);
+void	*ft_free_and_null_str_array(char ***array_of_strings);
 void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
 
 // validations
@@ -129,6 +130,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *str, int c);
 char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strtrim_overwrite(char *s1, char *set);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_concatenate_var(int num, ...);
 char	*ft_concatenate(char *s1, char *s2, char *s3);
@@ -137,6 +139,8 @@ char	*ft_strtok(char *string, char *set);
 char	*ft_strtok_r(char *input_str, char *delimiters, char **saveptr);
 char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
+void	ft_free_split(char **results, size_t r_index);
+
 
 // printing
 int		ft_putchar_fd(char c, int fd);
