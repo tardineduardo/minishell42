@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 15:50:58 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/21 22:21:24 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,32 @@ typedef struct s_hd_mem
 	char		*fpath_cap;
 }	t_hd_mem;
 
+
+typedef struct 	s_env_node
+{
+	char	*variable;
+	char	*value;
+	bool	readonly;
+	bool	block_unset;
+}	t_env_node;
+
+//DAR NULL EM MEMORY NAS NOVAS!
+typedef struct s_env_mem
+{
+	t_list		*envlist;
+	t_env_node	*env_cpy;
+	t_env_node	*new_node;
+	char		**result;
+}	t_env_mem;
+
+
 //2. Inlcuir a struct de memoria na principal
 typedef struct	s_mem
 {
 	t_cap_mem	*capture;
 	t_hd_mem	*heredoc;
 	t_tok_mem	*tokenize;
+	t_env_mem	*environs;
 	t_env		*ms_env;
 }	t_mem;
 

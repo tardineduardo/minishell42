@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:27:38 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/21 22:18:37 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void ft_clear_hd_mem(t_hd_mem **hdoc);
 void ft_clear_cap_mem(t_cap_mem **cap);
 void ft_clear_tok_mem(t_tok_mem **tok);
-
+void ft_clear_env_mem(t_env_mem **env);
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
@@ -28,13 +28,13 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
 	(*mem)->capture = malloc(sizeof(t_cap_mem));
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
+	(*mem)->environs = malloc(sizeof(t_env_mem));
 	
-	//-------LUIS
-	(*mem)->ms_env = ft_ms_env(envp);
 
-
+	
 	//check for errors
-	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize)
+	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize
+		|| !(*mem)->environs)
 		exit(1);//improve error message and code
 
 	//set everything to NULL
@@ -53,17 +53,23 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize->node = NULL;
 	(*mem)->tokenize->node2 = NULL;
 	(*mem)->tokenize->str = NULL;
+//------------------------------------------------
+	(*mem)->environs->envlist = NULL;
+
+
+	//temp
+	(*mem)->ms_env = ft_ms_env(envp);
+
 
 	//init operators
 	if (!ft_init_operators(&(*mem)->tokenize))
 		ft_clear_mem_and_exit(mem);
 
+	//init environs -------LUIS
+	// if (!ft_init_environs(&(*mem)->environs))
+	// 	ft_clear_mem_and_exit(mem);
 
 
-
-
-	//Init evironment variables
-		//TODO Luis
 }
 
 //
@@ -73,7 +79,7 @@ void ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_hd_mem(&(*mem)->heredoc);
 	ft_clear_cap_mem(&(*mem)->capture);
 	ft_clear_tok_mem(&(*mem)->tokenize);
-
+	ft_clear_env_mem(&(*mem)->environs);
 
 	rl_clear_history();
 	free(*mem);
@@ -115,10 +121,7 @@ void ft_clear_cap_mem(t_cap_mem **cap)
 void ft_clear_tok_mem(t_tok_mem **tok)
 {
 	if ((*tok)->toklst)
-	{
 		ft_lstclear(&(*tok)->toklst, ft_tok_free_node_in_list);
-	//	ft_free_and_null((void *)&(*tok)->toklst);
-	}
 	if ((*tok)->tri_operator)
 		ft_free_str_array((*tok)->tri_operator); //FREE ARRAY OF STRINGS
 	if ((*tok)->dbl_operator)
@@ -127,17 +130,22 @@ void ft_clear_tok_mem(t_tok_mem **tok)
 		ft_free_and_null((void *)&(*tok)->sgl_operator);
 	if ((*tok)->str)
 		ft_free_and_null((void *)&(*tok)->str);
-	// if ((*tok)->node2)
-	//  	ft_free_and_null((void *)&(*tok)->node2);
-	// if ((*tok)->last_of_list)
-	// 	ft_free_and_null((void *)&(*tok)->last_of_list);
-	// if ((*tok)->new)
-	// 	ft_free_and_null((void *)&(*tok)->new);
-
 
 	free(*tok);
 	return ;
 }
+
+void ft_clear_env_mem(t_env_mem **env)
+{
+	if ((*env)->envlist)
+		// ft_lstclear(&(*env)->envlist, ft_env_free_node_in_list);
+
+	free(*env);
+	return ;
+}
+
+
+
 
 
 void *ft_init_operators(t_tok_mem **tok)

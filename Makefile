@@ -1,24 +1,29 @@
-MAIN =  src/minishell.c \
-		src/ft_capture_line.c \
-		src/ft_run_command.c \
-		src/environ.c \
-		src/built-ins/ft_env.c \
-		src/built-ins/ft_pwd.c \
-		src/built-ins/ft_exit.c \
-		src/built-ins/ft_echo.c \
-		src/built-ins/ft_cd.c \
-		src/built-ins/ft_export.c \
-		src/built-ins/ft_unset.c \
+MAIN 		=  	src/minishell.c \
+
+READLINE 	=	src/ft_capture_line.c \
+
+HEREDOC 	=	src/heredocs.c \
+
+EXECUTE 	=	src/ft_run_command.c \
+
+MEMORY 		=	src/memory.c \
+
+TOKEN 		=	src/tokenize.c \
+
+ENVIRON 	=	src/environs.c \
+
+BUILTIN 	=	src/built-ins/ft_env.c \
+				src/built-ins/ft_pwd.c \
+				src/built-ins/ft_exit.c \
+				src/built-ins/ft_echo.c \
+				src/built-ins/ft_cd.c \
+				src/built-ins/ft_export.c \
+				src/built-ins/ft_unset.c \
 
 
-HEREDOC =	src/heredocs.c \
 
-MEMORY =	src/memory.c \
-
-TOKEN =		src/tokenize.c \
-
-
-OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o) $(TOKEN:.c=.o)
+OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o) $(TOKEN:.c=.o) \
+			$(ENVIRON:.c=.o) $(EXECUTE:.c=.o) $(READLINE:.c=.o) $(BUILTIN:.c=.o)
 
 CC = cc
 RM = rm -f
