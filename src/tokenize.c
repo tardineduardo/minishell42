@@ -179,6 +179,8 @@ void	*ft_tokenize_error(char *message, t_tok_mem **tok)
 	return (NULL);
 }
 
+
+// DUAS FUNCOES IGUAIS, APAGAR UMA
 void ft_tok_node_free(void *content)
 {
 	t_tok_node	*node;
@@ -191,6 +193,7 @@ void ft_tok_node_free(void *content)
 	ft_free_and_null((void *)&node);
 }
 
+// DUAS FUNCOES IGUAIS, APAGAR UMA
 void	ft_tok_free_node_in_list(void *content)
 {
 	t_tok_node	*tok_node;

@@ -42,7 +42,7 @@ void	ft_export(t_env **ms_env, char *variable_value)
 		{
 			if (current->block_unset == false && current->readonly == false)
 			{
-				ft_ms_env_update(ms_env, result[0], result[1]);
+				ft_ms_env_update_export(ms_env, result[0], result[1]);
 				ft_free_split(result, 2);
 				return ;
 			}
@@ -51,4 +51,37 @@ void	ft_export(t_env **ms_env, char *variable_value)
 	}
 	ft_free_split(result, 2);
 	ft_ms_env_add(ms_env, variable_value);
+}
+
+void	ft_ms_env_add(t_env **ms_env, char *variable_value)
+{
+	char	**result;
+	t_env	*new_node;
+
+	if (!ms_env || !variable_value)
+		return ;
+	result = ft_split_char(variable_value, '=');
+	new_node = ft_lstnew_env(result[0], result[1]);
+	ft_lstadd_back_env(ms_env, new_node);
+	ft_free_split(result, 1);	
+}
+
+
+void	ft_ms_env_update_export(t_env **ms_env, char *variable, char *value)
+{
+	t_env	*current;
+
+	if (!ms_env || !variable || !value)
+		return ;
+	current = *ms_env;
+	while (current)
+	{
+		if (ft_strcmp(current->variable, variable) == 0)
+		{
+			free(current->value);
+			current->value = ft_strdup(value);
+			return ;
+		}
+		current = current->next;
+	}
 }

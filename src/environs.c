@@ -1,28 +1,78 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environs.c                                         :+:      :+:    :+:   */
+/*   environs_NEW.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/22 11:27:37 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/22 11:39:46 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+void	ft_env_block_unset(t_list **envlist);
+void	ft_env_readonly(t_list **envlist);
+
+
+
+//errors
+void		*ft_env_syscall_error(char *message);
+void		*ft_env_error(char *message, t_env_mem **env);
+void		ft_env_node_free(void *content);
+
+
+//nodes and lists
+t_env_node	*ft_init_env_node(char *variable, char *value);
+t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
+
+
+//------------ NEW ----------------------------------------
+t_list	*ft_init_environs(t_env_mem **env, char **envp)
+{
+	assert(env);
+	assert(*env);
+	if (!envp || !(* envp))
+		return (NULL);
+	while (*envp != NULL)
+	{
+		(*env)->result = ft_split_char(*envp, '=');
+		if (!(*env)->result)
+			return (ft_env_error("Envp split error", env));
+		if ((*env)->result[1])
+			(*env)->new_node = ft_init_env_node((*env)->result[0], (*env)->result[1]);
+		else
+			(*env)->new_node = ft_init_env_node((*env)->result[0], "");
+		if (!(*env)->new_node)
+			return (ft_env_error("Init node error", env));
+		if(!ft_add_to_envlist(&(*env)->envlist, (*env)->new_node))
+			return (ft_env_error("Add to envlist error", env));
+		ft_free_and_null_str_array(&(*env)->result);
+		envp++;
+	}
+	ft_env_readonly(&(*env)->envlist);
+	ft_env_block_unset(&(*env)->envlist);
+	return ((*env)->envlist);
+}
+
+
 /*
 	Need to understand what set of variables are readonly
 	All the ones listed below are or readonly or blocked_unset
 */
-static void	ft_ms_env_readonly(t_env **ms_env)
+void	ft_env_readonly(t_list **envlist)
 {
-	t_env	*current;
+	assert(envlist);
+	assert(*envlist);
 
-	current = *ms_env;
-	while (current)
+	t_list		*trav;
+	t_env_node	*current;
+
+	trav = *envlist;
+	while (trav)
 	{
+		current = (t_env_node *)(* envlist)->content;
 		if (ft_strcmp(current->variable, "PWD") == 0)
 			current->readonly = true;
 		else if (ft_strcmp(current->variable, "OLDPWD") == 0)
@@ -39,20 +89,25 @@ static void	ft_ms_env_readonly(t_env **ms_env)
 			current->readonly = true;
 		else if (ft_strcmp(current->variable, "PPID") == 0)
 			current->readonly = true;
-		current = current->next;
+		trav = trav->next;
 	}
 }
 /*
 	Need to understand what set of variables are 'blocked' to unset
 	All the ones listed below are or readonly or blocked_unset
 */
-static void	ft_ms_env_block_unset(t_env **ms_env)
+void	ft_env_block_unset(t_list **envlist)
 {
-	t_env	*current;
+	assert(envlist);
+	assert(*envlist);
 
-	current = *ms_env;
-	while (current)
+	t_list		*trav;
+	t_env_node	*current;
+
+	trav = *envlist;
+	while (trav)
 	{
+		current = (t_env_node *)(* envlist)->content;
 		if (ft_strcmp(current->variable, "PWD") == 0)
 			current->block_unset = true;
 		else if (ft_strcmp(current->variable, "OLDPWD") == 0)
@@ -69,181 +124,82 @@ static void	ft_ms_env_block_unset(t_env **ms_env)
 			current->block_unset = true;
 		else if (ft_strcmp(current->variable, "PPID") == 0)
 			current->block_unset = true;
-		current = current->next;
-	}
-}
-/*
-	update all nodes from our recently created linked list 
-	with the real values of readonly and blocked_unset bools
-	values
-*/
-static void	ft_ms_env_update_bools(t_env **ms_env)
-{
-	if (!ms_env)
-		return ;
-	ft_ms_env_readonly(ms_env);
-	ft_ms_env_block_unset(ms_env);
-}
-
-/*
-	We receive the array of pointers of chars with all
-	the environment variables from main ft when start 
-	the program and save it on a linked list where each
-	node has specific infos necessary to handle this list.
-	(vide Struct t_env).
-*/
-
-
-t_env	*ft_ms_env(char **envp)
-{
-	t_env	*env_cpy;
-	t_env	*new_node;
-	char	**result;
-
-	if (!envp)
-		return (NULL);
-	env_cpy = NULL;
-	while (*envp != NULL)
-	{
-		result = ft_split_char(*envp, '=');
-		// Nem sempre vai ter alguma informacao depois do '='
-		if (result[1])
-			new_node = ft_lstnew_env(result[0], result[1]);
-		else
-			new_node = ft_lstnew_env(result[0], "");
-		if (!new_node)
-		{
-			ft_free_split(result, 2);
-			return NULL;
-		}
-		ft_lstadd_back_env(&env_cpy, new_node);
-		ft_free_split(result, 2);
-		envp++;
-	}
-	ft_ms_env_update_bools(&env_cpy);
-	return (env_cpy);
-}
-
-
-
-
-
-
-/*
-	search inside our linked list with all env vars one specific and 
-	when finds it update the value also passed as a parameter.
-*/
-void	ft_ms_env_update(t_env **ms_env, char *variable, char *value)
-{
-	t_env	*current;
-
-	if (!ms_env || !variable || !value)
-		return ;
-	current = *ms_env;
-	while (current)
-	{
-		if (ft_strcmp(current->variable, variable) == 0)
-		{
-			free(current->value);
-			current->value = ft_strdup(value);
-			return ;
-		}
-		current = current->next;
-	}
-}
-
-/*
-	Add to the end of the linked list a new node with a variable_value.
-	Inside the ft, we manage to split the variable and save it properly
-	in a node.
-
-	QUESTION: is it better to receive one unique variable_value parameter
-	or reveice them separated? the responsability is from the tokenization
-	or is from the ms_env_add?
-*/
-void	ft_ms_env_add(t_env **ms_env, char *variable_value)
-{
-	char	**result;
-	t_env	*new_node;
-
-	if (!ms_env || !variable_value)
-		return ;
-	result = ft_split_char(variable_value, '=');
-	new_node = ft_lstnew_env(result[0], result[1]);
-	ft_lstadd_back_env(ms_env, new_node);
-	ft_free_split(result, 1);	
-}
-
-
-
-
-t_env	*ft_lstnew_env(char *variable, char *value)
-{
-	t_env	*a;
-
-	a = malloc(sizeof(t_env));
-	if (!a)
-		return (NULL);
-	a->variable = ft_strdup(variable);
-    a->value = ft_strdup(value);
-    a->readonly = false;
-	a->block_unset = false;
-	a->next = NULL;
-	return (a);
-}
-
-t_env	*ft_lstlast_env(t_env *lst)
-{
-	t_env	*trav;
-
-	if (lst == NULL)
-		return (NULL);
-	trav = lst;
-	while (trav->next != NULL)
 		trav = trav->next;
-	return (trav);
-}
-
-void	ft_lstadd_back_env(t_env **lst, t_env *new)
-{
-	t_env	*temp;
-
-	if (lst == NULL || new == NULL)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-	}
-	else
-	{
-		temp = ft_lstlast_env(*lst);
-		temp->next = new;
 	}
 }
 
-void	ft_lstdel_one_node_env(t_env **lst, char *variable)
-{
-	t_env	*current;
-	t_env	*prev;
 
-	if (lst == NULL || *lst == NULL || variable == NULL)
+
+
+
+
+
+
+
+//----------- NODES and LISTS ----------------
+
+t_env_node	*ft_init_env_node(char *variable, char *value)
+{
+	t_env_node *new;
+
+	new = malloc(sizeof(t_env_node));
+	if (!new)
+		return (ft_env_syscall_error("Init node malloc error"));
+	new->variable = ft_strdup(variable);
+    new->value = ft_strdup(value);
+    new->readonly = false;
+	new->block_unset = false;
+	return (new);
+}
+
+t_list	*ft_add_to_envlist(t_list **envlist, t_env_node *new_node)
+{
+	t_list *new_envlist_node;
+
+	new_envlist_node = ft_lstnew(new_node);
+	if (!(new_envlist_node))
+		return (NULL);
+
+	ft_lstadd_back(envlist, new_envlist_node);
+	return (*envlist);
+}
+
+
+
+
+// --------------- ERRORS --------------------
+
+void	*ft_env_syscall_error(char *message)
+{
+	ft_dprintf(STDERR_FILENO, "%s: %s [%i]\n", message, strerror(errno), errno);
+	return (NULL);
+}
+
+void	*ft_env_error(char *message, t_env_mem **env)
+{
+	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
+
+	if ((*env)->envlist)
+		ft_lstclear(&(*env)->envlist, ft_env_node_free);
+	if ((*env)->new_node)
+		ft_env_node_free(&(*env)->new_node);
+	if ((*env)->result)
+		ft_free_and_null_str_array(&(*env)->result);
+	ft_free_and_null((void *)env);
+	return (NULL);
+}
+
+
+void ft_env_node_free(void *content)
+{
+	t_env_node	*node;
+
+	if (!content)
 		return ;
-	current = *lst;
-	prev = NULL;
-	while (current)
-	{
-		if (ft_strcmp(current->variable, variable) == 0)
-		{
-			if (prev == NULL)
-				*lst = current->next;
-			else
-				prev->next = current->next;
-			free(current->variable);
-			free(current->value);
-			free(current);
-			return ;
-		}
-		prev = current;
-		current = current->next;
-	}
+	node = (t_env_node *)content;
+	if (node->variable)
+		ft_free_and_null((void *)&node->variable);
+	if (node->value)
+		ft_free_and_null((void *)&node->value);
+	ft_free_and_null((void *)&node);
 }

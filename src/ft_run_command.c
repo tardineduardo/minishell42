@@ -44,26 +44,26 @@ char *ft_run_command(char *line, t_mem **mem)
 		}
 		ft_cd(&(*mem)->ms_env, line);
 	}
-	else if (ft_strncmp(line, "export", 6) == 0)
-	{
-		i = 6;
-		while (*line && i >= 0)
-		{
-			line++;
-			i--;
-		}
-		ft_export(&(*mem)->ms_env, line);
-	}
-	else if (ft_strncmp(line, "unset", 5) == 0)
-	{
-		i = 5;
-		while (*line && i >= 0)
-		{
-			line++;
-			i--;
-		}
-		ft_unset(&(*mem)->ms_env, line);
-	}
+	// else if (ft_strncmp(line, "export", 6) == 0)
+	// {
+	// 	i = 6;
+	// 	while (*line && i >= 0)
+	// 	{
+	// 		line++;
+	// 		i--;
+	// 	}
+	// 	ft_export(&(*mem)->ms_env, line);
+	// }
+	// else if (ft_strncmp(line, "unset", 5) == 0)
+	// {
+	// 	i = 5;
+	// 	while (*line && i >= 0)
+	// 	{
+	// 		line++;
+	// 		i--;
+	// 	}
+	// 	ft_unset(&(*mem)->ms_env, line);
+	// }
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
 		(*mem)->heredoc->delim = ft_strtrim((*mem)->capture->line, " <");

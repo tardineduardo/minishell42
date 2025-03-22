@@ -12,18 +12,29 @@ TOKEN 		=	src/tokenize.c \
 
 ENVIRON 	=	src/environs.c \
 
+OPERATORS 	=	src/operators.c \
+
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
 				src/built-ins/ft_exit.c \
 				src/built-ins/ft_echo.c \
 				src/built-ins/ft_cd.c \
-				src/built-ins/ft_export.c \
-				src/built-ins/ft_unset.c \
+#				src/built-ins/ft_unset.c \				
+#				src/built-ins/ft_export.c \
 
 
 
-OBJS_SRC =	$(MAIN:.c=.o) $(HEREDOC:.c=.o) $(MEMORY:.c=.o) $(TOKEN:.c=.o) \
-			$(ENVIRON:.c=.o) $(EXECUTE:.c=.o) $(READLINE:.c=.o) $(BUILTIN:.c=.o)
+
+OBJS_SRC =	$(MAIN:.c=.o) \
+			$(HEREDOC:.c=.o) \
+			$(MEMORY:.c=.o) \
+			$(TOKEN:.c=.o) \
+			$(ENVIRON:.c=.o) \
+			$(EXECUTE:.c=.o) \
+			$(READLINE:.c=.o) \
+			$(BUILTIN:.c=.o) \
+			$(OPERATORS:.c=.o) \
+
 
 CC = cc
 RM = rm -f

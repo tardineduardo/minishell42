@@ -90,13 +90,13 @@ void	ft_cd(t_env **ms_env, char *new_path)
 		{
 			if (ft_strcmp(current->variable, "PWD") == 0)
 			{
-				ft_ms_env_update(ms_env, "OLDPWD", current->value);
+				ft_ms_env_update_cd(ms_env, "OLDPWD", current->value);
 				break ;
 			}
 			current = current->next;
 		}
 		//final_path = ft_cd_path_treatment(ms_env, new_path);
-		ft_ms_env_update(ms_env, "PWD", new_path);
+		ft_ms_env_update_cd(ms_env, "PWD", new_path);
 	}
 	else
 	{
@@ -104,5 +104,25 @@ void	ft_cd(t_env **ms_env, char *new_path)
 			ft_printf("bash: cd: %s: No such file or directory\n", new_path);
 		else if (errno == 13)
 			ft_printf("bash: cd: %s: Permission denied\n", new_path);
+	}
+}
+
+
+void	ft_ms_env_update_cd(t_env **ms_env, char *variable, char *value)
+{
+	t_env	*current;
+
+	if (!ms_env || !variable || !value)
+		return ;
+	current = *ms_env;
+	while (current)
+	{
+		if (ft_strcmp(current->variable, variable) == 0)
+		{
+			free(current->value);
+			current->value = ft_strdup(value);
+			return ;
+		}
+		current = current->next;
 	}
 }

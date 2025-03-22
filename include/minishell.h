@@ -98,7 +98,6 @@ typedef struct 	s_env_node
 typedef struct s_env_mem
 {
 	t_list		*envlist;
-	t_env_node	*env_cpy;
 	t_env_node	*new_node;
 	char		**result;
 }	t_env_mem;
@@ -133,6 +132,13 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 void	*ft_init_operators(t_tok_mem **tok);
 void	ft_tok_free_node_in_list(void *content);
 
+//environs
+t_list	*ft_init_environs(t_env_mem **env, char **envp);
+void	ft_env_node_free(void *content);
+
+//operators
+void *ft_init_operators(t_tok_mem **tok);
+
 
 
 
@@ -150,7 +156,5 @@ void	ft_unset(t_env **ms_env, char *variable);
 
 // ms_env
 void	ft_ms_env_add(t_env **ms_env, char *variable_value);
-void	ft_ms_env_update(t_env **ms_env, char *variable, char *value);
-void	ft_lstadd_back_env(t_env **lst, t_env *new);
-void	ft_lstdel_one_node_env(t_env **lst, char *variable);
-t_env	*ft_lstnew_env(char *variable, char *value);
+void	ft_ms_env_update_export(t_env **ms_env, char *variable, char *value);
+void	ft_ms_env_update_cd(t_env **ms_env, char *variable, char *value);

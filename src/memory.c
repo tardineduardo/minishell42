@@ -24,13 +24,10 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	if (!(*mem))
 		exit(1);//improve error message and code
 
-
 	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
 	(*mem)->capture = malloc(sizeof(t_cap_mem));
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
 	(*mem)->environs = malloc(sizeof(t_env_mem));
-	
-
 	
 	//check for errors
 	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize
@@ -55,25 +52,21 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize->str = NULL;
 //------------------------------------------------
 	(*mem)->environs->envlist = NULL;
-
-
-	//temp
-	(*mem)->ms_env = ft_ms_env(envp);
-
+	(*mem)->environs->new_node = NULL;
+	(*mem)->environs->result = NULL;
 
 	//init operators
 	if (!ft_init_operators(&(*mem)->tokenize))
 		ft_clear_mem_and_exit(mem);
 
 	//init environs -------LUIS
-	// if (!ft_init_environs(&(*mem)->environs))
-	// 	ft_clear_mem_and_exit(mem);
-
+	if (!ft_init_environs(&(*mem)->environs, envp))
+		ft_clear_mem_and_exit(mem);
 
 }
 
 //
-void ft_clear_mem_and_exit(t_mem **mem)
+void	ft_clear_mem_and_exit(t_mem **mem)
 {
 	//Each part of the program has its own clear function
 	ft_clear_hd_mem(&(*mem)->heredoc);
@@ -87,23 +80,20 @@ void ft_clear_mem_and_exit(t_mem **mem)
 }
 
 
-void ft_clear_hd_mem(t_hd_mem **hd)
+void	ft_clear_hd_mem(t_hd_mem **hd)
 {
 	if ((*hd)->delim)
 		ft_free_and_null((void *)&(*hd)->delim);
-
 	if ((*hd)->list)
 	{
 		ft_lstclear(&(*hd)->list, ft_hd_unlink_and_free);
 		ft_free_and_null((void *)&(*hd)->list);
 	}
-
-	
 	free(*hd);
 	return ;
 }
 
-void ft_clear_cap_mem(t_cap_mem **cap)
+void	ft_clear_cap_mem(t_cap_mem **cap)
 {
 	if ((*cap)->line)
 		ft_free_and_null((void *)&(*cap)->line);
@@ -117,8 +107,8 @@ void ft_clear_cap_mem(t_cap_mem **cap)
 	free(*cap);
 	return ;
 }
-//8. Write the function that clears the memory
-void ft_clear_tok_mem(t_tok_mem **tok)
+
+void	ft_clear_tok_mem(t_tok_mem **tok)
 {
 	if ((*tok)->toklst)
 		ft_lstclear(&(*tok)->toklst, ft_tok_free_node_in_list);
@@ -135,41 +125,13 @@ void ft_clear_tok_mem(t_tok_mem **tok)
 	return ;
 }
 
-void ft_clear_env_mem(t_env_mem **env)
+void	ft_clear_env_mem(t_env_mem **env)
 {
 	if ((*env)->envlist)
-		// ft_lstclear(&(*env)->envlist, ft_env_free_node_in_list);
-
+		ft_lstclear(&(*env)->envlist, ft_env_node_free);
+	if ((*env)->new_node)
+		ft_env_node_free(&(*env)->new_node);
+	if ((*env)->result)
+		ft_free_and_null_str_array(&(*env)->result);
 	free(*env);
-	return ;
-}
-
-
-
-
-
-void *ft_init_operators(t_tok_mem **tok)
-{
-	if ((*tok)->tri_operator || (*tok)->dbl_operator || (*tok)->sgl_operator)
-		return (NULL);
-
-	(*tok)->tri_operator = malloc(2 * sizeof(char *));
-	(*tok)->dbl_operator = malloc(7 * sizeof(char *));
-	(*tok)->sgl_operator = ft_strdup("<>|&*()");
-
-	if (!(*tok)->tri_operator || !(*tok)->dbl_operator || !(*tok)->sgl_operator)
-		return (NULL);
-
-	(*tok)->tri_operator[0] = ft_strdup("<<<");
-	(*tok)->tri_operator[1] = NULL;
-	(*tok)->dbl_operator[0] = ft_strdup(">>");
-	(*tok)->dbl_operator[1] = ft_strdup("<<");
-	(*tok)->dbl_operator[2] = ft_strdup("&&");
-	(*tok)->dbl_operator[3] = ft_strdup("||");
-	(*tok)->dbl_operator[4] = ft_strdup("2>");
-	(*tok)->dbl_operator[5] = ft_strdup("&>");
-	(*tok)->dbl_operator[6] = NULL;
-	//protect
-
-	return (tok);
 }
