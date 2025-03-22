@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/21 22:35:01 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/22 11:27:37 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,42 +94,6 @@ static void	ft_ms_env_update_bools(t_env **ms_env)
 */
 
 
-t_list	*ft_init_environs(t_env_mem **env, char **envp)
-{
-	assert(env);
-	assert(*env);
-
-	if (!envp || !(* envp))
-		return (NULL);
-
-	while (*envp != NULL)
-	{
-		(*env)->result = ft_split_char(*envp, '=');
-		// Nem sempre vai ter alguma informacao depois do '='
-		if (result[1])
-			new_node = ft_lstnew_env(result[0], result[1]);
-		else
-			new_node = ft_lstnew_env(result[0], "");
-		if (!new_node)
-		{
-			ft_free_split(result, 2);
-			return NULL;
-		}
-		ft_lstadd_back_env(&env_cpy, new_node);
-		ft_free_split(result, 2);
-		envp++;
-	}
-	ft_ms_env_update_bools(&env_cpy);
-	return (env_cpy);
-
-
-
-
-}
-
-
-
-
 t_env	*ft_ms_env(char **envp)
 {
 	t_env	*env_cpy;
@@ -159,6 +123,11 @@ t_env	*ft_ms_env(char **envp)
 	ft_ms_env_update_bools(&env_cpy);
 	return (env_cpy);
 }
+
+
+
+
+
 
 /*
 	search inside our linked list with all env vars one specific and 
