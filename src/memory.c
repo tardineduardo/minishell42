@@ -129,8 +129,6 @@ void	ft_clear_env_mem(t_env_mem **env)
 {
 	if ((*env)->envlist)
 		ft_lstclear(&(*env)->envlist, ft_env_node_free);
-	if ((*env)->new_node)
-		ft_env_node_free(&(*env)->new_node);
 	if ((*env)->result)
 		ft_free_and_null_str_array(&(*env)->result);
 	free(*env);

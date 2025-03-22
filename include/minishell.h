@@ -146,7 +146,7 @@ void *ft_init_operators(t_tok_mem **tok);
 t_env	*ft_ms_env(char *envp[]);
 
 // built-ins
-void	ft_env(t_env **ms_env);
+void	ft_env(t_list *envlist);
 void	ft_pwd(t_env **ms_env);
 void	ft_echo(char *line, bool flag);
 void	ft_cd(t_env **ms_env, char *path);

@@ -19,11 +19,9 @@ char *ft_run_command(char *line, t_mem **mem)
 
 	i = 0;
 	if (ft_strncmp(line, "env", 3) == 0)
-		ft_env(&(*mem)->ms_env);
+		ft_env((*mem)->environs->envlist);
 	else if (ft_strcmp(line, "pwd") == 0)
 		ft_pwd(&(*mem)->ms_env);
-	else if (ft_strcmp(line, "exit") == 0)
-		ft_exit();
 	else if (ft_strncmp(line, "echo", 4) == 0)
 	{
 		i = 4;
@@ -70,9 +68,7 @@ char *ft_run_command(char *line, t_mem **mem)
 		ft_hc_capture(&(*mem)->heredoc);
 	}
 	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)
-	{
 		ft_clear_mem_and_exit(mem);
-		exit(0);
-	}
+
 	return (NULL);
 }

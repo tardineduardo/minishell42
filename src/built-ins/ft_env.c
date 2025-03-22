@@ -17,15 +17,18 @@
 	Implementation: iterate through our linked list with all
 	environment variables and print the pair VAR_NAME=VALUE.
 */
-void	ft_env(t_env **ms_env)
+void	ft_env(t_list *envlist)
 {
-	t_env	*current;
+	t_list		*trav;
+	t_env_node	*current;
 
-	current = *ms_env;
-	while (current)
+	trav = envlist;
+	
+	while (trav)
 	{
+		current = (t_env_node *)trav->content;
 		// TODO: ft_printf and ft_dprintf from edu is not working properly, in the case below it prints twice the first arg.
-		ft_printf("%s=%s\n", current->variable, current->value);
-		current = current->next;
+		ft_dprintf(1, "%s=%s\n", current->variable, current->value);
+		trav = trav->next;
 	}
 }

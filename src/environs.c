@@ -175,6 +175,11 @@ void	*ft_env_syscall_error(char *message)
 	return (NULL);
 }
 
+
+
+
+
+
 void	*ft_env_error(char *message, t_env_mem **env)
 {
 	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
@@ -203,3 +208,4 @@ void ft_env_node_free(void *content)
 		ft_free_and_null((void *)&node->value);
 	ft_free_and_null((void *)&node);
 }
+
