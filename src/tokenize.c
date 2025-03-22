@@ -224,19 +224,51 @@ void ft_debug_list(t_list **head)
 	t_list *trav;
 
 	trav = *head;
-	ft_printf("HEAD --> ");
+	ft_printf(GREY "HEAD --> " RESET);
 
 	if (!trav)
 	{
-		ft_printf("NULL\n");
+		ft_printf(GREY "NULL\n" RESET);
 		return ;
 	}
 
 	while (trav)
 	{
-		ft_printf("[%s] --> ", ((t_tok_node *)trav->content)->tokstr);
+		char *tokstr = ((t_tok_node *)trav->content)->tokstr;
+
+		ft_printf(GREY "[" RESET);
+
+		if (ft_strcmp("<<<", tokstr) == 0
+			|| ft_strcmp(">>", tokstr) == 0
+			|| ft_strcmp("<<", tokstr) == 0
+			|| ft_strcmp("2>", tokstr) == 0
+			|| ft_strcmp("&>", tokstr) == 0
+			|| ft_strcmp(">", tokstr) == 0
+			|| ft_strcmp("<", tokstr) == 0)
+		{
+			ft_printf(BRIGHT_BLUE "%s" RESET, tokstr);
+		}
+		else if (ft_strcmp("|", tokstr) == 0)
+		{
+			ft_printf(YELLOW "%s" RESET, tokstr);
+		}
+		else if (ft_strcmp("&", tokstr) == 0
+			|| ft_strcmp("*", tokstr) == 0
+			|| ft_strcmp("&&", tokstr) == 0
+			|| ft_strcmp("||", tokstr) == 0
+			|| ft_strcmp("(", tokstr) == 0
+			|| ft_strcmp(")", tokstr) == 0)
+		{
+			ft_printf(BRIGHT_MAGENTA "%s" RESET, tokstr);
+		}
+		else
+		{
+			ft_printf(GREEN "%s" RESET, tokstr);
+		}
+
+		ft_printf(GREY "] " RESET);
 		trav = trav->next;
 	}
-	ft_printf("NULL\n");
+	ft_printf(GREY "NULL\n" RESET);
 
 }
