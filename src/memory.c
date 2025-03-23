@@ -43,9 +43,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->heredoc->list = NULL;
 	(*mem)->heredoc->fpath_cap = NULL;
 	(*mem)->tokenize->toklst = NULL;
-	(*mem)->tokenize->tri_operator = NULL;
-	(*mem)->tokenize->dbl_operator = NULL;
-	(*mem)->tokenize->sgl_operator = NULL;
+	(*mem)->tokenize->operators = NULL;
 	(*mem)->tokenize->last_of_list = NULL;
 	(*mem)->tokenize->new = NULL;
 	(*mem)->tokenize->node = NULL;
@@ -114,12 +112,8 @@ void	ft_clear_tok_mem(t_tok_mem **tok)
 {
 	if ((*tok)->toklst)
 		ft_lstclear(&(*tok)->toklst, ft_del_token_node);
-	if ((*tok)->tri_operator)
-		ft_free_str_array((*tok)->tri_operator); //FREE ARRAY OF STRINGS
-	if ((*tok)->dbl_operator)
-		ft_free_str_array((*tok)->dbl_operator);  //FREE ARRAY OF STRINGS
-	if ((*tok)->sgl_operator)
-		ft_free_and_null((void *)&(*tok)->sgl_operator);
+	if ((*tok)->operators)
+		ft_free_str_array((*tok)->operators); //FREE ARRAY OF STRINGS
 	if ((*tok)->str)
 		ft_free_and_null((void *)&(*tok)->str);
 

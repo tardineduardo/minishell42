@@ -4,9 +4,7 @@ void		*ft_tokenize_error(char *message, t_tok_mem **tok);
 t_tok_exit	ft_nodesplit(t_list **head, t_tok_mem **tok);
 t_tok_exit	ft_detach_node(t_tok_mem **tok, int token_limit);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
-bool		ft_is_tri_operator(char *str, t_tok_mem **tok);
-bool		ft_is_dbl_operator(char *str, t_tok_mem **tok);
-bool 		ft_is_sgl_operator(char *str, t_tok_mem **tok);
+bool	ft_is_operator(char *str, t_tok_mem **tok, size_t *len);
 int			ft_find_word_limit(char *str);
 void		ft_tok_node_free(void *content);
 void		ft_debug_list(t_list **head);
@@ -93,67 +91,88 @@ t_tok_exit	ft_detach_node(t_tok_mem **tok, int token_limit)
 int	ft_find_token_limit(char *str, t_tok_mem **tok)
 {
 	int	i;
+	size_t len;
 
+	len = 0;
 	i = 0;
 	while(str[i] && !ft_isspace(str[i]))
 	{
-		if (ft_is_tri_operator(&str[i], tok))
-			return (i + 3);
-		else if (ft_is_dbl_operator(&str[i], tok))
-			return (i + 2);
-		else if (ft_is_sgl_operator(&str[i], tok))
-			return (i + 1);
-		else
-			if (ft_is_sgl_operator(&str[i + 1], tok)) 
-				return (i + 1);
+		if (ft_is_operator(&str[i], tok, &len))
+		{
+			if (len == 2 || len == 3)
+				return (i + len);
 			else
-				i++;
+				if (ft_is_operator(&str[i + 1], tok, &len)) 
+					return (i + len);
+				else
+					i++;
+		}
 	}
 	return (i);
 }
 
-	
-bool	ft_is_tri_operator(char *str, t_tok_mem **tok)
+
+
+bool	ft_is_operator(char *str, t_tok_mem **tok, size_t *len)
 {
 	int	i;
 
 	i = 0;
-	while((*tok)->tri_operator[i])
+	while((*tok)->operators[i])
 	{
-		if (ft_strncmp(&str[0], (*tok)->tri_operator[i], 3) == 0)
+		*len = ft_strlen((*tok)->operators[i]);
+		if (ft_strncmp(&str[0], (*tok)->operators[i], *len) == 0)
+		{
 			return (true);
+		}
 		i++;
 	}
 	return (false);
 }
 
-bool	ft_is_dbl_operator(char *str, t_tok_mem **tok)
-{
-	int	i;
 
-	i = 0;
-	while((*tok)->dbl_operator[i])
-	{
-		if (ft_strncmp(&str[0], (*tok)->dbl_operator[i], 2) == 0)
-			return (true);
-		i++;
-	}
-	return (false);
-}
 
-bool ft_is_sgl_operator(char *str, t_tok_mem **tok)
-{
-	int	i;
+// bool	ft_is_tri_operator(char *str, t_tok_mem **tok)
+// {
+// 	int	i;
 
-	i = 0;
-	while((*tok)->sgl_operator[i])
-	{
-		if (ft_strchr((*tok)->sgl_operator, str[0]))
-			return (true);
-		i++;
-	}
-	return (false);
-}
+// 	i = 0;
+// 	while((*tok)->tri_operator[i])
+// 	{
+// 		if (ft_strncmp(&str[0], (*tok)->tri_operator[i], 3) == 0)
+// 			return (true);
+// 		i++;
+// 	}
+// 	return (false);
+// }
+
+// bool	ft_is_dbl_operator(char *str, t_tok_mem **tok)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while((*tok)->dbl_operator[i])
+// 	{
+// 		if (ft_strncmp(&str[0], (*tok)->dbl_operator[i], 2) == 0)
+// 			return (true);
+// 		i++;
+// 	}
+// 	return (false);
+// }
+
+// bool ft_is_sgl_operator(char *str, t_tok_mem **tok)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while((*tok)->sgl_operator[i])
+// 	{
+// 		if (ft_strchr((*tok)->sgl_operator, str[0]))
+// 			return (true);
+// 		i++;
+// 	}
+// 	return (false);
+// }
 
 
 int	ft_find_word_limit(char *str)

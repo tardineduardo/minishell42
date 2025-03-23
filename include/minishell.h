@@ -46,9 +46,7 @@ typedef struct 	s_env_node
 typedef struct	s_tok_mem
 {
 	t_list		*toklst;
-	char		**tri_operator;
-	char		**dbl_operator;
-	char		*sgl_operator;
+	char		**operators;
 	t_list		*last_of_list;
 	t_tok_node	*last_of_toks;
 	t_list		*new;
