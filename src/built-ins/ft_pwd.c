@@ -21,18 +21,20 @@
 	our linked list until it finds PWD and print it without
 	variable name PWD or '=' operator.
 */
-void	ft_pwd(t_env **ms_env)
+void	ft_pwd(t_list **envlist)
 {
-	t_env	*current;
+	t_list		*trav;
+	t_env_node	*current;
 
-	current = *ms_env;
-	while (current)
+	trav = *envlist;
+	while (trav)
 	{
+		current = (t_env_node *)trav->content;
 		if (ft_strcmp(current->variable, "PWD") == 0)
 		{
 			ft_printf("%s\n", current->value);
 			break ;
 		}
-		current = current->next;
+		trav = trav->next;
 	}
 }

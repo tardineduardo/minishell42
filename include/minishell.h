@@ -147,14 +147,14 @@ t_env	*ft_ms_env(char *envp[]);
 
 // built-ins
 void	ft_env(t_list *envlist);
-void	ft_pwd(t_env **ms_env);
+void	ft_pwd(t_list **envlist);
 void	ft_echo(char *line, bool flag);
-void	ft_cd(t_env **ms_env, char *path);
+void	ft_cd(t_list **envlist, char *new_path);
 void	ft_exit(void);
-void	ft_export(t_env **ms_env, char *variable_value);
-void	ft_unset(t_env **ms_env, char *variable);
+void	ft_export(t_list *envlist, char *variable_value);
+void	ft_unset(t_env_mem **env, char *variable);
 
 // ms_env
 void	ft_ms_env_add(t_env **ms_env, char *variable_value);
 void	ft_ms_env_update_export(t_env **ms_env, char *variable, char *value);
-void	ft_ms_env_update_cd(t_env **ms_env, char *variable, char *value);
+void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);

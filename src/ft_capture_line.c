@@ -35,7 +35,7 @@ char *ft_capture_line(t_cap_mem **cap)
 }
 
 
-static void	*ft_cap_error(char *message, t_cap_mem **cap)
+void	*ft_cap_error(char *message, t_cap_mem **cap)
 {
 	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
 

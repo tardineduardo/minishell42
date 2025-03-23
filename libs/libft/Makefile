@@ -94,6 +94,7 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lstmap.c \
 		lists/slist/ft_lstnew.c \
 		lists/slist/ft_lstsize.c \
+		lists/slist/ft_lst_remove_node.c \
 		lists/clist/ft_clistsize.c \
 		lists/dclist/ft_dclistsize.c \
 

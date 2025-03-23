@@ -27,7 +27,6 @@ void	ft_env(t_list *envlist)
 	while (trav)
 	{
 		current = (t_env_node *)trav->content;
-		// TODO: ft_printf and ft_dprintf from edu is not working properly, in the case below it prints twice the first arg.
 		ft_dprintf(1, "%s=%s\n", current->variable, current->value);
 		trav = trav->next;
 	}

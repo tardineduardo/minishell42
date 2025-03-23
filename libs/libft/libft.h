@@ -193,7 +193,8 @@ void	*ft_lstclear_null(t_list **lst, void (*del)(void*));
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
-void	ft_lstclear2(t_list **lst, void (*del)(void**));
+void	ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*));
+
 
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));

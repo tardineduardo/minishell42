@@ -21,7 +21,7 @@ char *ft_run_command(char *line, t_mem **mem)
 	if (ft_strncmp(line, "env", 3) == 0)
 		ft_env((*mem)->environs->envlist);
 	else if (ft_strcmp(line, "pwd") == 0)
-		ft_pwd(&(*mem)->ms_env);
+		ft_pwd(&(*mem)->environs->envlist);
 	else if (ft_strncmp(line, "echo", 4) == 0)
 	{
 		i = 4;
@@ -40,7 +40,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_cd(&(*mem)->ms_env, line);
+		ft_cd(&(*mem)->environs->envlist, line);
 	}
 	// else if (ft_strncmp(line, "export", 6) == 0)
 	// {
@@ -52,16 +52,16 @@ char *ft_run_command(char *line, t_mem **mem)
 	// 	}
 	// 	ft_export(&(*mem)->ms_env, line);
 	// }
-	// else if (ft_strncmp(line, "unset", 5) == 0)
-	// {
-	// 	i = 5;
-	// 	while (*line && i >= 0)
-	// 	{
-	// 		line++;
-	// 		i--;
-	// 	}
-	// 	ft_unset(&(*mem)->ms_env, line);
-	// }
+	else if (ft_strncmp(line, "unset", 5) == 0)
+	{
+		i = 5;
+		while (*line && i >= 0)
+		{
+			line++;
+			i--;
+		}
+		ft_unset(&(*mem)->environs, line);
+	}
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
 		(*mem)->heredoc->delim = ft_strtrim((*mem)->capture->line, " <");

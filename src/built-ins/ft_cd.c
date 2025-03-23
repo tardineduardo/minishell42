@@ -78,25 +78,28 @@
 	2. "bash: cd: $(new_path): Permission denied"
 */
 
-void	ft_cd(t_env **ms_env, char *new_path)
-{
-	t_env	*current;
-	//char	*final_path;
+void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
-	current = *ms_env;
+
+void	ft_cd(t_list **envlist, char *new_path)
+{
+	t_list 	*trav;
+	t_env_node	*current;
+
+	trav = *envlist;
 	if (chdir(new_path) == 0)
 	{
-		while (current)
+		while (trav)
 		{
+			current = (t_env_node *)trav->content;
 			if (ft_strcmp(current->variable, "PWD") == 0)
 			{
-				ft_ms_env_update_cd(ms_env, "OLDPWD", current->value);
+				ft_ms_env_update_cd(envlist, "OLDPWD", current->value);
 				break ;
 			}
-			current = current->next;
+			trav = trav->next;
 		}
-		//final_path = ft_cd_path_treatment(ms_env, new_path);
-		ft_ms_env_update_cd(ms_env, "PWD", new_path);
+		ft_ms_env_update_cd(envlist, "PWD", new_path);
 	}
 	else
 	{
@@ -108,21 +111,25 @@ void	ft_cd(t_env **ms_env, char *new_path)
 }
 
 
-void	ft_ms_env_update_cd(t_env **ms_env, char *variable, char *value)
+void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value)
 {
-	t_env	*current;
+	t_list *trav;
+	t_env_node *current;
 
-	if (!ms_env || !variable || !value)
+	if (!envlist || !variable || !value)
 		return ;
-	current = *ms_env;
-	while (current)
+	
+	
+	trav = *envlist;
+	while (trav)
 	{
+		current = (t_env_node *)trav->content;
 		if (ft_strcmp(current->variable, variable) == 0)
 		{
 			free(current->value);
 			current->value = ft_strdup(value);
 			return ;
 		}
-		current = current->next;
+		trav = trav->next;
 	}
 }

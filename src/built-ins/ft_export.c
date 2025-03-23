@@ -29,28 +29,31 @@
 			appears that are not on the call of env. Create a bool inside t_env
 			to mark with it is exported or not?
 */
-void	ft_export(t_env **ms_env, char *variable_value)
+void	ft_export(t_list **envlist, char *variable_value)
 {
 	char	**result;
-	t_env	*current;
+	t_list	*trav;
+	t_env_node	*current;
 
-	current = *ms_env;
+
+	trav = *envlist;
 	result = ft_split_char(variable_value, '=');
-	while (current)
+	while (trav)
 	{
+		current = (t_env_node *)trav->content;
 		if (ft_strcmp(current->variable, result[0]) == 0)
 		{
 			if (current->block_unset == false && current->readonly == false)
 			{
-				ft_ms_env_update_export(ms_env, result[0], result[1]);
+				ft_ms_env_update_export(envlist, result[0], result[1]);
 				ft_free_split(result, 2);
 				return ;
 			}
 		}
-		current = current->next;
+		trav = trav->next;
 	}
-	ft_free_split(result, 2);
-	ft_ms_env_add(ms_env, variable_value);
+	ft_free_and_null_str_array(&result);
+	ft_ms_env_add(envlist, variable_value);
 }
 
 void	ft_ms_env_add(t_env **ms_env, char *variable_value)
@@ -67,21 +70,25 @@ void	ft_ms_env_add(t_env **ms_env, char *variable_value)
 }
 
 
-void	ft_ms_env_update_export(t_env **ms_env, char *variable, char *value)
+void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value)
 {
-	t_env	*current;
+	t_list *trav;
+	t_env_node *current;
 
-	if (!ms_env || !variable || !value)
+	if (!envlist || !variable || !value)
 		return ;
-	current = *ms_env;
-	while (current)
+	
+	
+	trav = *envlist;
+	while (trav)
 	{
+		current = (t_env_node *)trav->content;
 		if (ft_strcmp(current->variable, variable) == 0)
 		{
 			free(current->value);
 			current->value = ft_strdup(value);
 			return ;
 		}
-		current = current->next;
+		trav = trav->next;
 	}
 }
