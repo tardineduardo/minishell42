@@ -227,7 +227,7 @@ void ft_debug_list(t_list **head)
 	t_list *trav;
 
 	trav = *head;
-	ft_printf(GREY "HEAD --> " RESET);
+	ft_printf(GREY "HEAD -> " RESET);
 
 	if (!trav)
 	{
@@ -269,7 +269,7 @@ void ft_debug_list(t_list **head)
 			ft_printf(GREEN "%s" RESET, tokstr);
 		}
 
-		ft_printf(GREY "] " RESET);
+		ft_printf(GREY "] -> " RESET);
 		trav = trav->next;
 	}
 	ft_printf(GREY "NULL\n" RESET);

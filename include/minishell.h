@@ -133,7 +133,7 @@ void	*ft_init_operators(t_tok_mem **tok);
 void	ft_tok_free_node_in_list(void *content);
 
 //environs
-t_list	*ft_init_environs(t_env_mem **env, char **envp);
+void	*ft_init_environs(t_env_mem **env, char **envp);
 void	ft_env_node_free(void *content);
 
 //operators
@@ -151,10 +151,10 @@ void	ft_pwd(t_list **envlist);
 void	ft_echo(char *line, bool flag);
 void	ft_cd(t_list **envlist, char *new_path);
 void	ft_exit(void);
-void	ft_export(t_list *envlist, char *variable_value);
+void	ft_export(t_list **envlist, char *variable_value);
 void	ft_unset(t_env_mem **env, char *variable);
 
 // ms_env
-void	ft_ms_env_add(t_env **ms_env, char *variable_value);
-void	ft_ms_env_update_export(t_env **ms_env, char *variable, char *value);
+void	ft_ms_env_add(t_list **envlist, char *variable_value);
+void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);

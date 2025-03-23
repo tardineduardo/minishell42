@@ -29,12 +29,12 @@ t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
 
 
 //------------ NEW ----------------------------------------
-t_list	*ft_init_environs(t_env_mem **env, char **envp)
+void	*ft_init_environs(t_env_mem **env, char **envp)
 {
-	assert(env);
-	assert(*env);
-	if (!envp || !(* envp))
+	if (!envp)
 		return (NULL);
+	if (!(*envp))
+		return (envp); // I'm just returning a valid pointer. 
 	while (*envp != NULL)
 	{
 		(*env)->result = ft_split_char(*envp, '=');
@@ -64,7 +64,6 @@ t_list	*ft_init_environs(t_env_mem **env, char **envp)
 void	ft_env_readonly(t_list **envlist)
 {
 	assert(envlist);
-	assert(*envlist);
 
 	t_list		*trav;
 	t_env_node	*current;
@@ -99,7 +98,7 @@ void	ft_env_readonly(t_list **envlist)
 void	ft_env_block_unset(t_list **envlist)
 {
 	assert(envlist);
-	assert(*envlist);
+//	assert(*envlist);
 
 	t_list		*trav;
 	t_env_node	*current;

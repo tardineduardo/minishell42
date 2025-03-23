@@ -21,6 +21,14 @@
 	our linked list until it finds PWD and print it without
 	variable name PWD or '=' operator.
 */
+
+//@luiscarvalhofrade eu estava estudando o export e fazendo uns testes com 
+//a nova environs.c e descobri que o bash reseta a variável PWD toda vez
+//que é inicializado usando a função getcwd(). Eu estava testando o que
+//acontecia quando o Minishell tinha que inicializar sem nenhuma variável
+//herdada do parent (rodando "env -i ./minishell"). Daí mesmo isso seja feito,
+//o bash tem pelos menos a PWD 
+
 void	ft_pwd(t_list **envlist)
 {
 	t_list		*trav;

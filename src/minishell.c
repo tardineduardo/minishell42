@@ -18,8 +18,6 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
-	(void)envp;
-
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
 

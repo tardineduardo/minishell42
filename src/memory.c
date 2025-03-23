@@ -61,8 +61,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 
 	//init environs -------LUIS
 	if (!ft_init_environs(&(*mem)->environs, envp))
-		ft_clear_mem_and_exit(mem);
-
+		ft_clear_mem_and_exit(mem);		
 }
 
 //
