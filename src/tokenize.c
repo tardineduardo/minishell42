@@ -194,7 +194,7 @@ void ft_tok_node_free(void *content)
 }
 
 // DUAS FUNCOES IGUAIS, APAGAR UMA
-void	ft_tok_free_node_in_list(void *content)
+void	ft_del_token_node(void *content)
 {
 	t_tok_node	*tok_node;
 

@@ -1,10 +1,10 @@
 MAIN 		=  	src/minishell.c \
 
-READLINE 	=	src/ft_capture_line.c \
+READLINE 	=	src/readline.c \
 
 HEREDOC 	=	src/heredocs.c \
 
-EXECUTE 	=	src/ft_run_command.c \
+EXECUTE 	=	src/execute.c \
 
 MEMORY 		=	src/memory.c \
 

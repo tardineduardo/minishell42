@@ -23,7 +23,7 @@ int		ft_hc_init_file(char **fpath_cap);
 
 // errors
 void	*ft_hd_syscall_error(char *message);
-void	ft_hd_unlink_and_free(void *content);
+void	ft_del_heredoc_node(void *content);
 void	*ft_hc_cap_error(char *message, t_hd_mem **hd);
 
 /*
@@ -36,7 +36,7 @@ Se houver qualquer erro na captura, o valor de retorno é NULL. Em caso de
 erro, toda a memória até então alocada e o prompt devolvido para o usuário.
 */
 
-char	*ft_hc_capture(t_hd_mem **hd)
+char	*ft_heredoc(t_hd_mem **hd)
 {
 	static int	hc_count_int;
 	t_hd_node	*hc_node;
@@ -56,7 +56,7 @@ char	*ft_hc_capture(t_hd_mem **hd)
 
 		/* Sucesso? Então vamos criar um node de t_hd_nodes para armazenar
 		o caminho do arquivo que vamos abrir na fase de execução. A cada vez
-		que a ft_hc_capture é chamada, um node é acrescentado na lista. 
+		que a ft_heredoc é chamada, um node é acrescentado na lista. 
 		Quando terminarmos de executar todos os comandos, precisamos limpar
 		a lista de heredos, assim como a ft_hc_cap_error já faz em caso
 		de erro.  */
@@ -71,10 +71,10 @@ char	*ft_hc_capture(t_hd_mem **hd)
 		Para usarmos a função da libft, a gente precisa fazer typecasting
 		toda hora que vamos mandar manda um node para lista ou ler o 
 		content de um node que pegamos da lista (ver como isso é feito
-		também na ft_hd_unlink_and_free) */
+		também na ft_del_heredoc_node) */
 	ft_lstadd_back(&(*hd)->list, hc_new);
 
-		/* Incrementamos o static count. Quando a ft_hc_capture for chamada
+		/* Incrementamos o static count. Quando a ft_heredoc for chamada
 		de novo, o contador não zero. Depois preciso dar um jeito de
 		zerar esse contador depois da fase de execução - ou vou precisar
 		retirar minha verificação de maxint dos erros... */
@@ -275,7 +275,7 @@ void	*ft_hd_syscall_error(char *message)
 	return (NULL);
 }
 
-void	ft_hd_unlink_and_free(void *content)
+void	ft_del_heredoc_node(void *content)
 {
 	t_hd_node	*hc_node;
 
@@ -304,7 +304,7 @@ void	*ft_hc_cap_error(char *message, t_hd_mem **hd)
 	if ((*hd)->fpath_cap)
 		ft_free_and_null((void *)&(*hd)->fpath_cap);
 
-	ft_lstclear(&(*hd)->list, ft_hd_unlink_and_free);
+	ft_lstclear(&(*hd)->list, ft_del_heredoc_node);
 
 	return (NULL);
 }

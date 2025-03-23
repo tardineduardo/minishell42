@@ -23,12 +23,12 @@ int	main(int argc, char *argv[], char *envp[])
 
 	while (1)
 	{
-		ft_capture_line(&(mem->capture));
+		ft_readline(&(mem->capture));
 		if (!mem->capture->line)
 			continue ;
 		add_history(mem->capture->line);
 		ft_tokenize(mem->capture->line, &mem->tokenize);
-		ft_run_command(mem->capture->line, &mem);
+		ft_execute(mem->capture->line, &mem);
 		ft_clean_mem_loop(&mem);
 	}
 
@@ -38,7 +38,7 @@ int	main(int argc, char *argv[], char *envp[])
 void ft_clean_mem_loop(t_mem **mem)
 {
 	if ((*mem)->tokenize->toklst)
-		ft_lstclear(&(*mem)->tokenize->toklst, ft_tok_free_node_in_list);
+		ft_lstclear(&(*mem)->tokenize->toklst, ft_del_token_node);
 	if ((*mem)->heredoc->delim)
 		ft_free_and_null((void *)&(*mem)->heredoc->delim);
 	if ((*mem)->capture->line)

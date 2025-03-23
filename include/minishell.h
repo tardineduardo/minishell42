@@ -18,45 +18,31 @@
 #include <readline/history.h>			// for history
 
 
-typedef enum e_tok_exit
-{
-	SUC,
-	END,
-	ERR,
-}	t_tok_exit;
-
-typedef enum e_tok_type
-{
-	OPERATOR,
-	WORD,
-
-}	t_tok_type;
-
-
-typedef struct s_env
-{
-	char			*variable;
-	char			*value;
-	bool			readonly;
-	bool			block_unset;
-	struct s_env	*next;
-}			t_env;
+//------------- STRUCTS DOS NODES DE CADA ÁREA --------------
 
 typedef struct 	s_hd_node
 {
 	char		*fpath_node;
 }	t_hd_node;
 
-//3.criar uma struct específica
 typedef struct 	s_tok_node
 {
 	char		*tokstr;
-	t_tok_type	type;
 	bool		double_quote;
 	bool		single_quote;
 }	t_tok_node;
 
-//1. Criar struct para sua seçao
+typedef struct 	s_env_node
+{
+	char	*variable;
+	char	*value;
+	bool	readonly;
+	bool	block_unset;
+}	t_env_node;
+
+
+//------------- STRUCTS DA MEMÓRIA DE CADA ÁREA --------------
+
 typedef struct	s_tok_mem
 {
 	t_list		*toklst;
@@ -85,16 +71,6 @@ typedef struct s_hd_mem
 	char		*fpath_cap;
 }	t_hd_mem;
 
-
-typedef struct 	s_env_node
-{
-	char	*variable;
-	char	*value;
-	bool	readonly;
-	bool	block_unset;
-}	t_env_node;
-
-//DAR NULL EM MEMORY NAS NOVAS!
 typedef struct s_env_mem
 {
 	t_list		*envlist;
@@ -103,47 +79,54 @@ typedef struct s_env_mem
 }	t_env_mem;
 
 
-//2. Inlcuir a struct de memoria na principal
+//------------- STRUCT PRINCPAL DE MEMÓRIA --------------
+
 typedef struct	s_mem
 {
 	t_cap_mem	*capture;
 	t_hd_mem	*heredoc;
 	t_tok_mem	*tokenize;
 	t_env_mem	*environs;
-	t_env		*ms_env;
 }	t_mem;
 
+
+//------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
+
+typedef enum e_tok_exit
+{
+	SUC,
+	END,
+	ERR,
+}	t_tok_exit;
+
+
 // main
-char *ft_capture_line(t_cap_mem **cap);
-char *ft_run_command(char *line, t_mem **mem);
-//3.5 Incluir a nova funçao principal no header
-void	*ft_tokenize(char *line, t_tok_mem **tok);
+void	ft_init_minishell_memory(t_mem **mem, char **envp);
+char	*ft_readline(t_cap_mem **cap);
+char	*ft_execute(char *line, t_mem **mem);
+
 
 // heredocs
-char	*ft_hc_capture(t_hd_mem **hd);
-void	ft_hd_unlink_and_free(void *content); // needed for EXIT
-
-// erros and exits
-void	ft_init_minishell_memory(t_mem **mem, char **envp);
-void	ft_clean_mem_loop(t_mem **mem);
-void	ft_clear_mem_and_exit(t_mem **mem);
+char	*ft_heredoc(t_hd_mem **hd);
+void	ft_del_heredoc_node(void *content); // needed for EXIT
 
 //tokens
+void	*ft_tokenize(char *line, t_tok_mem **tok);
 void	*ft_init_operators(t_tok_mem **tok);
-void	ft_tok_free_node_in_list(void *content);
+void	ft_del_token_node(void *content);
 
 //environs
 void	*ft_init_environs(t_env_mem **env, char **envp);
-void	ft_env_node_free(void *content);
+void	ft_del_env_node(void *content);
 
 //operators
 void *ft_init_operators(t_tok_mem **tok);
 
+// erros and exits
+void	ft_clean_mem_loop(t_mem **mem);
+void	ft_clear_mem_and_exit(t_mem **mem);
 
 
-
-//-------LUIS-----//
-t_env	*ft_ms_env(char *envp[]);
 
 // built-ins
 void	ft_env(t_list *envlist);
@@ -152,9 +135,9 @@ void	ft_echo(char *line, bool flag);
 void	ft_cd(t_list **envlist, char *new_path);
 void	ft_exit(void);
 void	ft_export(t_list **envlist, char *variable_value);
-void	ft_unset(t_env_mem **env, char *variable);
+void	ft_unset(t_list **envlist, char *variable);
 
-// ms_env
+// built-ins helpers
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
 void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);

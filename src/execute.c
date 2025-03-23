@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_run_command.c                                   :+:      :+:    :+:   */
+/*   ft_execute.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-char *ft_run_command(char *line, t_mem **mem)
+char *ft_execute(char *line, t_mem **mem)
 {
 	int		i;
 	bool	flag = false;
@@ -60,12 +60,12 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_unset(&(*mem)->environs, line);
+		ft_unset(&(*mem)->environs->envlist, line);
 	}
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
 		(*mem)->heredoc->delim = ft_strtrim((*mem)->capture->line, " <");
-		ft_hc_capture(&(*mem)->heredoc);
+		ft_heredoc(&(*mem)->heredoc);
 	}
 	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)
 		ft_clear_mem_and_exit(mem);

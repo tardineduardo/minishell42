@@ -47,12 +47,12 @@
 // }
 
 
-void	ft_unset(t_env_mem **env, char *variable)
+void	ft_unset(t_list **envlist, char *variable)
 {
 	t_list		*trav;
 	t_env_node	*current;
 
-	trav = (*env)->envlist;
+	trav = *envlist;
 
 	if (ft_strchr(variable, '=') != NULL)
 		return ;
@@ -63,7 +63,7 @@ void	ft_unset(t_env_mem **env, char *variable)
 		{
 			if (current->readonly == false && current->block_unset == false)
 				// criei uma nova função para a libft.
-				ft_lst_remove_node(&(*env)->envlist, trav, ft_env_node_free);
+				ft_lst_remove_node(envlist, trav, ft_del_env_node);
 			else if (current->readonly == true)
 				ft_printf("Error: cannot unset readonly variable\n");
 			// @luiscarvalhofrade não está faltando uma condição aqui?
