@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 17:02:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/02/21 20:47:38 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/21 20:38:15 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,23 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-# define RESET   "\033[0m"
-# define RED     "\033[31m"
-# define GREEN   "\033[32m"
-# define YELLOW  "\033[33m"
-# define BLUE    "\033[34m"
-# define MAGENTA "\033[35m"
-# define CYAN    "\033[36m"
-# define WHITE   "\033[37m"
+# define RESET       "\033[0m"
+
+# define RED         "\033[31m"
+# define GREEN       "\033[32m"
+# define YELLOW      "\033[33m"
+# define BLUE        "\033[34m"
+# define MAGENTA     "\033[35m"
+# define CYAN        "\033[36m"
+# define WHITE       "\033[37m"
+# define GREY        "\033[90m" 
+# define BRIGHT_RED     "\033[91m"
+# define BRIGHT_GREEN   "\033[92m"
+# define BRIGHT_YELLOW  "\033[93m"
+# define BRIGHT_BLUE    "\033[94m"
+# define BRIGHT_MAGENTA "\033[95m"
+# define BRIGHT_CYAN    "\033[96m"
+# define BRIGHT_WHITE   "\033[97m"
 
 //TYPEDEFS
 typedef struct s_list
@@ -98,10 +107,11 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_free_str_array(char **array_of_chars);
 void	ft_free(int total, ...);
-bool	ft_free_and_false(void *ptr);
-bool	ft_free_and_true(void *ptr);
-void	*ft_free_and_null(void *ptr);
-void	*ft_free_and_exit(void *ptr, char *msg, int errnum);
+bool	ft_free_and_false(void **ptr);
+bool	ft_free_and_true(void **ptr);
+void	*ft_free_and_null(void **ptr);
+void	*ft_free_and_null_str_array(char ***array_of_strings);
+void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
 
 // validations
 int		ft_isalnum(int c);
@@ -129,6 +139,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *str, int c);
 char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strtrim_overwrite(char *s1, char *set);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_concatenate_var(int num, ...);
 char	*ft_concatenate(char *s1, char *s2, char *s3);
@@ -137,6 +148,8 @@ char	*ft_strtok(char *string, char *set);
 char	*ft_strtok_r(char *input_str, char *delimiters, char **saveptr);
 char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
+void	ft_free_split(char **results, size_t r_index);
+
 
 // printing
 int		ft_putchar_fd(char c, int fd);
@@ -180,11 +193,19 @@ void	*ft_lstclear_null(t_list **lst, void (*del)(void*));
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
+void	ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*));
+
+
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
+int		ft_clstsize(t_list **tail);
+int		ft_dclstsize(t_dll **tail);
+void	ft_debug_print_list(t_list **head, char *type, size_t offset);
+
+
 
 #endif

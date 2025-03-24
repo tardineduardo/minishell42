@@ -41,6 +41,9 @@ MEM = 	mem/ft_bzero.c \
 		mem/ft_calloc.c \
 		mem/ft_memcpy.c \
 		mem/ft_free_and.c \
+		mem/ft_memmove.c \
+		mem/ft_free_str_array.c \
+		mem/ft_free_and_null_str_array.c \
 
 STRING = string/ft_concatenate.c \
 		string/ft_concatenate_var.c \
@@ -60,6 +63,7 @@ STRING = string/ft_concatenate.c \
 		string/ft_strnstr.c \
 		string/ft_strrchr.c \
 		string/ft_strtrim.c \
+		string/ft_strtrim_overwrite.c \
 		string/ft_substr.c \
 		string/ft_count_char.c \
 		string/ft_strtok.c \
@@ -90,7 +94,15 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lstmap.c \
 		lists/slist/ft_lstnew.c \
 		lists/slist/ft_lstsize.c \
+		lists/slist/ft_lst_remove_node.c \
+		lists/clist/ft_clistsize.c \
+		lists/dclist/ft_dclistsize.c \
 
+
+DEBUG =	debug/ft_debug_print_array_of_ints.c \
+		debug/ft_debug_print_array_of_strings.c \
+		debug/ft_debug_print_dclist.c \
+		debug/ft_debug_print_list.c \
 
 OBJS =	$(PRINT:.c=.o) \
 		$(CONV:.c=.o) \
@@ -104,12 +116,13 @@ OBJS =	$(PRINT:.c=.o) \
 		$(VALID:.c=.o) \
 		$(GNL:.c=.o) \
 		$(SORT:.c=.o) \
+		$(DEBUG:.c=.o) \
 
 CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = libft.a
 

@@ -1,12 +1,44 @@
-MAIN =  src/minishell.c \
-		src/ft_capture_command.c \
-		src/ft_run_command.c \
+MAIN 		=  	src/minishell.c \
 
-OBJS_SRC =	$(MAIN:.c=.o)
+READLINE 	=	src/readline.c \
+
+HEREDOC 	=	src/heredocs.c \
+
+EXECUTE 	=	src/execute.c \
+
+MEMORY 		=	src/memory.c \
+
+TOKEN 		=	src/tokenize.c \
+
+ENVIRON 	=	src/environs.c \
+
+OPERATORS 	=	src/operators.c \
+
+BUILTIN 	=	src/built-ins/ft_env.c \
+				src/built-ins/ft_pwd.c \
+				src/built-ins/ft_exit.c \
+				src/built-ins/ft_echo.c \
+				src/built-ins/ft_cd.c \
+				src/built-ins/ft_unset.c \
+				src/built-ins/ft_export.c \
+
+
+
+
+OBJS_SRC =	$(MAIN:.c=.o) \
+			$(HEREDOC:.c=.o) \
+			$(MEMORY:.c=.o) \
+			$(TOKEN:.c=.o) \
+			$(ENVIRON:.c=.o) \
+			$(EXECUTE:.c=.o) \
+			$(READLINE:.c=.o) \
+			$(BUILTIN:.c=.o) \
+			$(OPERATORS:.c=.o) \
+
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 LIBFT_PATH = ./libs/libft
