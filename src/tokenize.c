@@ -179,6 +179,8 @@ void	*ft_tokenize_error(char *message, t_tok_mem **tok)
 	return (NULL);
 }
 
+
+// DUAS FUNCOES IGUAIS, APAGAR UMA
 void ft_tok_node_free(void *content)
 {
 	t_tok_node	*node;
@@ -191,7 +193,8 @@ void ft_tok_node_free(void *content)
 	ft_free_and_null((void *)&node);
 }
 
-void	ft_tok_free_node_in_list(void *content)
+// DUAS FUNCOES IGUAIS, APAGAR UMA
+void	ft_del_token_node(void *content)
 {
 	t_tok_node	*tok_node;
 
@@ -224,19 +227,51 @@ void ft_debug_list(t_list **head)
 	t_list *trav;
 
 	trav = *head;
-	ft_printf("HEAD --> ");
+	ft_printf(GREY "HEAD -> " RESET);
 
 	if (!trav)
 	{
-		ft_printf("NULL\n");
+		ft_printf(GREY "NULL\n" RESET);
 		return ;
 	}
 
 	while (trav)
 	{
-		ft_printf("[%s] --> ", ((t_tok_node *)trav->content)->tokstr);
+		char *tokstr = ((t_tok_node *)trav->content)->tokstr;
+
+		ft_printf(GREY "[" RESET);
+
+		if (ft_strcmp("<<<", tokstr) == 0
+			|| ft_strcmp(">>", tokstr) == 0
+			|| ft_strcmp("<<", tokstr) == 0
+			|| ft_strcmp("2>", tokstr) == 0
+			|| ft_strcmp("&>", tokstr) == 0
+			|| ft_strcmp(">", tokstr) == 0
+			|| ft_strcmp("<", tokstr) == 0)
+		{
+			ft_printf(BRIGHT_BLUE "%s" RESET, tokstr);
+		}
+		else if (ft_strcmp("|", tokstr) == 0)
+		{
+			ft_printf(YELLOW "%s" RESET, tokstr);
+		}
+		else if (ft_strcmp("&", tokstr) == 0
+			|| ft_strcmp("*", tokstr) == 0
+			|| ft_strcmp("&&", tokstr) == 0
+			|| ft_strcmp("||", tokstr) == 0
+			|| ft_strcmp("(", tokstr) == 0
+			|| ft_strcmp(")", tokstr) == 0)
+		{
+			ft_printf(BRIGHT_MAGENTA "%s" RESET, tokstr);
+		}
+		else
+		{
+			ft_printf(GREEN "%s" RESET, tokstr);
+		}
+
+		ft_printf(GREY "] -> " RESET);
 		trav = trav->next;
 	}
-	ft_printf("NULL\n");
+	ft_printf(GREY "NULL\n" RESET);
 
 }

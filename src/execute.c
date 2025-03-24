@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_run_command.c                                   :+:      :+:    :+:   */
+/*   ft_execute.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,18 +12,16 @@
 
 #include "../include/minishell.h"
 
-char *ft_run_command(char *line, t_mem **mem)
+char *ft_execute(char *line, t_mem **mem)
 {
 	int		i;
 	bool	flag = false;
 
 	i = 0;
 	if (ft_strncmp(line, "env", 3) == 0)
-		ft_env(&(*mem)->ms_env);
+		ft_env((*mem)->environs->envlist);
 	else if (ft_strcmp(line, "pwd") == 0)
-		ft_pwd(&(*mem)->ms_env);
-	else if (ft_strcmp(line, "exit") == 0)
-		ft_exit();
+		ft_pwd(&(*mem)->environs->envlist);
 	else if (ft_strncmp(line, "echo", 4) == 0)
 	{
 		i = 4;
@@ -42,7 +40,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_cd(&(*mem)->ms_env, line);
+		ft_cd(&(*mem)->environs->envlist, line);
 	}
 	else if (ft_strncmp(line, "export", 6) == 0)
 	{
@@ -52,7 +50,7 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_export(&(*mem)->ms_env, line);
+		ft_export(&(*mem)->environs->envlist, line);
 	}
 	else if (ft_strncmp(line, "unset", 5) == 0)
 	{
@@ -62,17 +60,15 @@ char *ft_run_command(char *line, t_mem **mem)
 			line++;
 			i--;
 		}
-		ft_unset(&(*mem)->ms_env, line);
+		ft_unset(&(*mem)->environs->envlist, line);
 	}
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
 		(*mem)->heredoc->delim = ft_strtrim((*mem)->capture->line, " <");
-		ft_hc_capture(&(*mem)->heredoc);
+		ft_heredoc(&(*mem)->heredoc);
 	}
 	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)
-	{
 		ft_clear_mem_and_exit(mem);
-		exit(0);
-	}
+
 	return (NULL);
 }

@@ -21,9 +21,9 @@ void	*ft_free_and_null_str_array(char ***array_of_strings)
 	a = 0;
 	while ((*array_of_strings)[a])
 	{
-		ft_free_and_null((void *)&(*array_of_strings[a]));
+		ft_free_and_null((void **)&(*array_of_strings)[a]);
 		a++;
 	}
-	ft_free_and_null((void *)&(*array_of_strings));
+	ft_free_and_null((void **)array_of_strings);
 	return (NULL);
 }

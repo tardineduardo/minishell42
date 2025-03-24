@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_capture_line.c                               :+:      :+:    :+:   */
+/*   ft_readline.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -16,9 +16,9 @@ static void	*ft_cap_error(char *message, t_cap_mem **cap);
 static char	*ft_cap_input_loop(t_cap_mem **cap);
 
 
-char *ft_capture_line(t_cap_mem **cap)
+char *ft_readline(t_cap_mem **cap)
 {
-	(*cap)->line = readline("Minishell > ");
+	(*cap)->line = readline(YELLOW "Minishell> " RESET);
 
 	if (!(*cap)->line)
 		return (ft_cap_error("readline error", cap));
@@ -35,7 +35,7 @@ char *ft_capture_line(t_cap_mem **cap)
 }
 
 
-static void	*ft_cap_error(char *message, t_cap_mem **cap)
+void	*ft_cap_error(char *message, t_cap_mem **cap)
 {
 	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
 
