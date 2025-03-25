@@ -121,6 +121,9 @@ int		ft_isdigit(int c);
 int		ft_isprint(int c);
 int		ft_isspace(int c);
 bool	ft_is_line_empty(char *s);
+bool	ft_is_single_quote(char *c);
+bool	ft_is_double_quote(char *c);
+
 
 // strings
 char	**ft_split_char(char const *s, char c);

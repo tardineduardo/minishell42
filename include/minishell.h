@@ -18,6 +18,22 @@
 #include <readline/history.h>			// for history
 
 
+//------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
+
+typedef enum e_tok_exit
+{
+	SUC,
+	END,
+	ERR,
+}	t_tok_exit;
+
+typedef enum e_quote
+{
+	SINGLE,
+	DOUBLE,
+	OFF
+}	t_quote;
+
 //------------- STRUCTS DOS NODES DE CADA ÁREA --------------
 
 typedef struct 	s_hd_node
@@ -53,6 +69,7 @@ typedef struct	s_tok_mem
 	t_tok_node	*node;
 	t_tok_node	*node2;
 	char		*str;
+	t_quote		quote;
 }	t_tok_mem;
 
 typedef struct	s_cap_mem
@@ -88,15 +105,10 @@ typedef struct	s_mem
 }	t_mem;
 
 
-//------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
 
-typedef enum e_tok_exit
-{
-	SUC,
-	END,
-	ERR,
-}	t_tok_exit;
 
+
+typedef bool	(*t_is_quote_func)(char *c);
 
 // main
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
