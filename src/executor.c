@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 08:21:19 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/25 09:05:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:49:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,25 @@ char **ft_ms_env_arr(t_list **ms_env)
 	int			lst_size;
 	int			i;
 
-	lst_size = ft_lstsize(ms_env);
+	if (!ms_env || !*ms_env)
+    	return (NULL);
+	lst_size = ft_lstsize(*ms_env);
 	ms_env_cpy = (char **)calloc(sizeof(char *), (lst_size + 1));
 	i = 0;
 	current = *ms_env;
 	while (current)
 	{
 		cur_ms_env_node = current->content;
-		temp_key_sign = ft_strjoin(cur_ms_env_node->variable, '=');
+		temp_key_sign = ft_strjoin(cur_ms_env_node->variable, "=");
 		temp_key_value = ft_strjoin(temp_key_sign, cur_ms_env_node->value);
+		free(temp_key_sign);
 		ms_env_cpy[i] = temp_key_value;
 		i++;
 		current = current->next;
 	}
 	return (ms_env_cpy);
 }
-
+//--------------------------------error control
 void	fork_error(pid_t pid)
 {
 	if (pid == -1)
@@ -88,6 +91,7 @@ void	execve_free_error(int execve)
 	}
 }
 
+//-------------------------------------input and output handlers 
 /*
 	this function iterates through all input redirects, but 
 	only reads from the last, exactly like it works on bash
@@ -98,6 +102,8 @@ int	file_input_handler(t_list **input_lst)
 	t_list			*cur_node_input;
 	t_input_node	*last_input;
 
+	if (!input_lst || !*input_lst)
+    	return (-1);
 	cur_node_input = *input_lst;
 	while(cur_node_input->next)
 		cur_node_input = cur_node_input->next;
@@ -118,6 +124,8 @@ int file_output_handler(t_list **output_lst)
 	t_list			*cur_node_output;
 	t_output_node	*cur_output;
 
+	if (!output_lst || !*output_lst)
+    	return (-1);
 	cur_node_output = *output_lst;
 	while (cur_node_output)
 	{
@@ -145,6 +153,7 @@ int file_output_handler(t_list **output_lst)
 	return (0);
 }
 
+//------------------------------------------fds control
 void	fd_pipe(int i, int num_cmds, int pipefd_0, int pipefd_1, int fd_in)
 {
 	if (i > 0) // If not the first command, read from previous pipe
@@ -167,7 +176,7 @@ void	fd_input_redir(t_list **input_lst)
 	if (*input_lst != NULL) // if redirect input, read from the input source
 	{
 		input_redirect_fd = file_input_handler(input_lst);
-		if (input_redirect_fd > 0)
+		if (input_redirect_fd >= 0)
 		{
 			dup2(input_redirect_fd, STDIN_FILENO);
 			close(input_redirect_fd);
@@ -182,13 +191,15 @@ void	fd_output_redir(t_list **output_lst)
 	if (*output_lst != NULL) // if redirect output, write to the output source
 	{
 		output_redirect_fd = file_output_handler(output_lst);
-		if (output_redirect_fd > 0)
+		if (output_redirect_fd >= 0)
 		{
 			dup2(output_redirect_fd, STDOUT_FILENO);
 			close(output_redirect_fd);
 		}
 	}
 }
+
+//-----------------------------------------------execution part: builtins and exeternal functions
 /*
 	When passing information to execve, we need to be sure
 	that the path that we have is correct or we will incur
@@ -227,7 +238,7 @@ bool	is_built_in(char **cmd_arr)
 	else
 		return (false);
 }
-void	executor_built_in(t_list **ms_env, char **cmd_arr)
+void	executor_built_in(char **cmd_arr, t_list **ms_env)
 {
 	if (!cmd_arr || !cmd_arr[0])
 	{
@@ -258,23 +269,26 @@ void	command_executor(t_list **ms_env, t_command_node *cmd)
 
 	cmd_arr = cmd->cmd_arr;
 	if (is_built_in(cmd_arr[0]))
-		executor_built_in(ms_env, cmd_arr);
+		executor_built_in(cmd_arr, ms_env);
 	else
 		executor_external_cmd(cmd_arr, ms_env);
 }
 
+//-------------------------------------------------brings everything together
 int	multiple_pipes(t_list **cmd_lst, t_list **ms_env)
 {
-	t_list		*current_node;
+	t_list			*current_node;
 	t_command_node	*cur_cmd;
-	pid_t		cpid;
-	int			pipefd[2];
-	int			fd_in = 0; // Initialize file descriptor for input
-	size_t		num_cmds = 3;
-	size_t		i = 0;
-	int			status;
+	pid_t			cpid;
+	int				pipefd[2];
+	int				fd_in; // Initialize file descriptor for input
+	int				num_cmds;
+	int				i = 0;
+	int				status;
 
+	fd_in = 0;
 	current_node = *cmd_lst;
+	num_cmds = ft_lstsize(*cmd_lst);
 	while (i < num_cmds && current_node)
 	{
 		if (i < num_cmds - 1)
@@ -297,5 +311,5 @@ int	multiple_pipes(t_list **cmd_lst, t_list **ms_env)
 		i++;
 	}
 	while (waitpid(cpid, &status, 0) > 0); // Parent waits for all children
-	return (WEXITSTATUS(status)); // TODo maybe this part isnt working properly, probably only the last status is returned
+	return (WEXITSTATUS(status)); // TODO maybe this part isnt working properly, probably only the last status is returned
 }
