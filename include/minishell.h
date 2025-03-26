@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/25 09:32:08 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:51:53 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_output_node
 	bool	create;
 }			t_output_node;
 
-typedef struct s_command_node
+typedef struct s_cmd_node
 {
 	t_list	*cmd_lst;
 	char	**cmd_arr;
@@ -62,8 +62,7 @@ typedef struct s_command_node
 	t_list	*heredoc_lst;
 	t_list	*o_concat;
 	int		err;
-}			t_command_node;
-
+}			t_cmd_node;
 
 //------------- STRUCTS DA MEMÓRIA DE CADA ÁREA --------------
 
