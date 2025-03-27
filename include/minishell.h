@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/26 10:51:53 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 13:28:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,3 +164,5 @@ void	ft_unset(t_list **envlist, char *variable);
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
 void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
+
+int 	excution_prom(t_list **content);

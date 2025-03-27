@@ -22,8 +22,13 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
-
-
+STUDY_MATERIAL =	src/libminishell/external_commands/cmd_treatment.c \
+					src/libminishell/external_commands/exec_external_cmd.c \
+					src/libminishell/bridge.c \
+					src/libminishell/exec_built_in.c \
+					src/libminishell/execution.c \
+					src/libminishell/fork_pipe.c \
+					src/libminishell/redirections.c 
 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
@@ -34,7 +39,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
-
+			$(STUDY_MATERIAL:.c=.o)
 
 CC = cc
 RM = rm -f
