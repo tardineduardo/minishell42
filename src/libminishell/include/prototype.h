@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prototype.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/03/27 16:36:27 by luide-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PROTOTYPE_H
 # define PROTOTYPE_H
 
@@ -70,7 +82,7 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
 void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
 
 // execution
-int	ft_prompt_execution(t_list **ms_env, t_list **cmd);
+int		ft_prompt_execution(t_list **ms_env, t_list **cmd);
 
 void	pipefd_control(int i, int num_cmds, int pipefd_0, int pipefd_1, int fd_in);
 void	fd_input_redir(t_list **input_lst);

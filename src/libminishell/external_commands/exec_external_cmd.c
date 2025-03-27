@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_external_cmd.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 16:33:54 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/03/27 16:35:44 by luide-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/prototype.h"
 
-char **ft_ms_env_arr(t_list **ms_env)
+char	**ft_ms_env_arr(t_list **ms_env)
 {
 	t_env_node	*cur_ms_env_node;
 	t_list		*current;
@@ -11,7 +23,7 @@ char **ft_ms_env_arr(t_list **ms_env)
 	int			i;
 
 	if (!ms_env || !*ms_env)
-    	return (NULL);
+		return (NULL);
 	lst_size = ft_lstsize(*ms_env);
 	ms_env_cpy = (char **)calloc(sizeof(char *), (lst_size + 1));
 	i = 0;

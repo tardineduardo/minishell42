@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 16:33:40 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/03/27 16:38:53 by luide-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./include/prototype.h"
 
 void	pipefd_control(int i, int num_cmds, int pipefd_0, int pipefd_1, int fd_in)
@@ -16,17 +28,17 @@ void	pipefd_control(int i, int num_cmds, int pipefd_0, int pipefd_1, int fd_in)
 		dup2(pipefd_1, STDOUT_FILENO);
 		close(pipefd_1);
 	}
-	close(pipefd_0);  // Close unused read end
+	close(pipefd_0);// Close unused read end
 }
 
 int	file_input_handler(t_list **input_lst)
 {
-	int		fd;
-	t_list	*cur_node_input;
+	int				fd;
+	t_list			*cur_node_input;
 	t_input_node	*last_input;
 
 	cur_node_input = *input_lst;
-	while(cur_node_input->next)
+	while (cur_node_input->next)
 		cur_node_input = cur_node_input->next;
 	last_input = cur_node_input->content;
 	if (access(last_input->name, F_OK) != 0)
@@ -40,13 +52,13 @@ int	file_input_handler(t_list **input_lst)
 		perror("fd in");
 		exit(EXIT_FAILURE);
 	}
-	return (fd);                 
+	return (fd);              
 }
 
 int file_output_handler(t_list **output_lst)
 {
-	int			fd;
-	t_list		*cur_node_output;
+	int				fd;
+	t_list			*cur_node_output;
 	t_output_node	*cur_output;
 
 	cur_node_output = *output_lst;

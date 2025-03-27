@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 16:33:18 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/03/27 16:42:35 by luide-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./include/prototype.h"
 
 void	ft_command_executor(t_list **ms_env, t_cmd_node	*cur_cmd)
@@ -11,8 +23,6 @@ void	ft_command_executor(t_list **ms_env, t_cmd_node	*cur_cmd)
 		exec_built_in(ms_env, cur_cmd);
 	else
 		exec_external_cmd(ms_env, cur_cmd);
-	perror("cmd exec");
-	exit(EXIT_FAILURE);
 }
 
 int	ft_prompt_execution(t_list **ms_env, t_list **cmd)

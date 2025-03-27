@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_built_in.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 16:33:28 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/03/27 16:39:44 by luide-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./include/prototype.h"
 
 bool	is_built_in(char **cmd_arr)
 {
-	if (ft_strncmp(cmd_arr[0], "pwd", 3) == 0 ||
-			ft_strncmp(cmd_arr[0], "echo", 4) == 0 ||
-			ft_strncmp(cmd_arr[0], "env", 3) == 0 ||
-			ft_strncmp(cmd_arr[0], "cd", 2) == 0 ||
-			ft_strncmp(cmd_arr[0], "export", 5) == 0 ||
-			ft_strncmp(cmd_arr[0], "unset", 5) == 0 ||
+	if (ft_strncmp(cmd_arr[0], "pwd", 3) == 0 || \
+			ft_strncmp(cmd_arr[0], "echo", 4) == 0 || \
+			ft_strncmp(cmd_arr[0], "env", 3) == 0 || \
+			ft_strncmp(cmd_arr[0], "cd", 2) == 0 || \
+			ft_strncmp(cmd_arr[0], "export", 5) == 0 || \
+			ft_strncmp(cmd_arr[0], "unset", 5) == 0 || \
 			ft_strncmp(cmd_arr[0], "exit", 4) == 0)
 		return (true);
 	else
