@@ -4,7 +4,11 @@ void	pipefd_control(int i, int num_cmds, int pipefd_0, int pipefd_1, int fd_in)
 {
 	if (i > 0) // If not the first command, read from previous pipe
 	{
-		dup2(fd_in, STDIN_FILENO);
+		if (dup2(fd_in, STDIN_FILENO) == -1)
+		{
+			perror("dup2 input");
+			exit(EXIT_FAILURE);
+		}
 		close(fd_in);
 	}
 	if (i < num_cmds - 1) // If not the last command, write to next pipe
@@ -31,8 +35,11 @@ int	file_input_handler(t_list **input_lst)
 		exit(EXIT_FAILURE);
 	}
 	fd = open(last_input->name, O_RDONLY);
-	perror("fd in");
-	exit(EXIT_FAILURE);                                        
+	if (fd == -1)
+	{
+		perror("fd in");
+		exit(EXIT_FAILURE);
+	}
 	return (fd);                 
 }
 
@@ -75,6 +82,7 @@ int file_output_handler(t_list **output_lst)
 		*/
 		if (cur_node_output->next == NULL)
 			return (fd);
+		close(fd);
 		cur_node_output = cur_node_output->next;
 	}
 	return (0);

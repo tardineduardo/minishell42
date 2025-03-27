@@ -35,10 +35,11 @@ int	ft_prompt_execution(t_list **ms_env, t_list **cmd)
 	cmds_counter = ft_lstsize(*cmd);
 	cur_node = *cmd;
 	i = 0;
-	pipefd = ft_pipe_control();
 	while (i < cmds_counter)
 	{
 		cur_cmd = cur_node->content;
+		if (i < cmds_counter - 1)
+    		pipefd = ft_pipe_control();
 		cpid = ft_fork_control();
 		if (cpid == 0)
 		{
@@ -47,10 +48,11 @@ int	ft_prompt_execution(t_list **ms_env, t_list **cmd)
 			fd_output_redir(&cur_cmd->output_lst);
 			ft_command_executor(ms_env, cur_cmd);
 		}
-		if (i > 0) // Parent process
+		if (i > 0) // Close previous read end
 			close(fd_in);
-		fd_in = pipefd[0]; // Store read end for next command
-		close(pipefd[1]);  // Close write end
+		fd_in = pipefd[0]; // Update for next iteration
+		if (i < cmds_counter - 1)
+			close(pipefd[1]); // Close write end after use
 		cur_node = cur_node->next;
 		i++;
 	}

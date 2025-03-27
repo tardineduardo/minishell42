@@ -85,7 +85,7 @@ int excution_prom(t_list **content)
 		exit(EXIT_FAILURE);
 	}
 
-	cmd->cmd_arr = (char **)malloc(3 * sizeof(char *));
+	cmd->cmd_arr = (char **)malloc(2 * sizeof(char *));
 	cmd2->cmd_arr = (char **)malloc(2 * sizeof(char *));
 	cmd3->cmd_arr = (char **)malloc(3 * sizeof(char *));
 	if (!cmd->cmd_arr || !cmd2->cmd_arr || !cmd3->cmd_arr)
@@ -131,9 +131,9 @@ int excution_prom(t_list **content)
 	output_lst = output_lst_node1;
 	//initializing cmds
 	cmd->cmd_arr[0] = "cat";
-	cmd->cmd_arr[1] = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
-	cmd->cmd_arr[2] = NULL;
-	cmd->input_lst = NULL;
+	//cmd->cmd_arr[1] = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
+	cmd->cmd_arr[1] = NULL;
+	cmd->input_lst = input_lst;
 	cmd->output_lst = NULL;
 	cmd->heredoc_lst = NULL;
 

@@ -4,7 +4,7 @@ int	*ft_pipe_control(void)
 {	
 	int	*pipefd;
 
-	pipefd = (int *)malloc(sizeof(int *) * 2);
+	pipefd = (int *)malloc(sizeof(int) * 2);
     if (!pipefd || pipe(pipefd) == -1)
     {
         perror("pipe");
