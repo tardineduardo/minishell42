@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:18 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 16:42:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:41:43 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_command_executor(t_list **ms_env, t_cmd_node	*cur_cmd)
 		perror("cmd or ms_env: cmd executor");
 		exit(EXIT_FAILURE);
 	}
-	if (is_built_in(cur_cmd->cmd_arr))
+	if (is_built_in(cur_cmd))
 		exec_built_in(ms_env, cur_cmd);
 	else
 		exec_external_cmd(ms_env, cur_cmd);
@@ -48,13 +48,14 @@ int	ft_prompt_execution(t_list **ms_env, t_list **cmd)
 	while (i < cmds_counter)
 	{
 		cur_cmd = cur_node->content;
-		if (i < cmds_counter - 1)
-    		pipefd = ft_pipe_control();
+		if (i < cmds_counter - 1 && cmds_counter > 1)
+			pipefd = ft_pipe_control();
 		cpid = ft_fork_control();
 		if (cpid == 0)
 		{
 			fd_input_redir(&cur_cmd->input_lst);
-			pipefd_control(i, cmds_counter, pipefd[0], pipefd[1], fd_in);
+			if (cmds_counter > 1)
+				pipefd_control(i, cmds_counter, pipefd[0], pipefd[1], fd_in);
 			fd_output_redir(&cur_cmd->output_lst);
 			ft_command_executor(ms_env, cur_cmd);
 		}

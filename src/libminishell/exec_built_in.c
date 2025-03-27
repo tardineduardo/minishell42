@@ -6,14 +6,17 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:28 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 16:39:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:40:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/prototype.h"
 
-bool	is_built_in(char **cmd_arr)
+bool	is_built_in(t_cmd_node	*cur_cmd)
 {
+	char	**cmd_arr;
+
+	cmd_arr = cur_cmd->cmd_arr;
 	if (ft_strncmp(cmd_arr[0], "pwd", 3) == 0 || \
 			ft_strncmp(cmd_arr[0], "echo", 4) == 0 || \
 			ft_strncmp(cmd_arr[0], "env", 3) == 0 || \
