@@ -8,6 +8,7 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_tok_node_free(void *content);
 void		ft_debug_list(t_list **head);
+bool	ft_tok_is_end_quote(char *c, t_tok_mem **tok);
 
 
 
@@ -51,6 +52,7 @@ t_tok_exit	ft_nodesplit(t_list **head, t_tok_mem **tok)
 	(*tok)->str = ft_strdup((*tok)->last_of_toks->tokstr);
 	//protect
 
+	//limit = last character of the string
 	token_limit = ft_find_token_limit((*tok)->str, tok);
 
 	detach_exit = ft_detach_node(tok, token_limit);
@@ -99,7 +101,7 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 		if (ft_isspace(str[i]))
 			break ;
 		if (ft_is_single_quote(&str[i]) || ft_is_double_quote(&str[i]))
-			return (i += ft_find_word_limit(tok, &str[i]));
+			return (i + (ft_find_word_limit(tok, &str[i])));
 		if (ft_is_operator(&str[i], tok, &operator_len))
 			return (i + operator_len);
 		i++;
@@ -109,33 +111,44 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 
 int			ft_find_word_limit(t_tok_mem **tok, char *str)
 {
-	int					i;
-	t_is_quote_func		is_closing_quote;
+	int	i;
 
 	if (str[0] == '\'')
-	{
 		(*tok)->quote = SINGLE;
-		is_closing_quote = ft_is_single_quote;
-	}
-	else
-	{
+	else if (str[0] == '\"')	
 		(*tok)->quote = DOUBLE;
-		is_closing_quote = ft_is_double_quote;
-	}
+
 	i = 1;
 	while (str[i])
 	{
-		if (is_closing_quote(&str[i]) && (str[i + 1] == '\0' ||
-			ft_isspace(str[i + 1]) || ft_is_operator(&str[i + 1], tok, NULL)))
-			break ;
+		if ((ft_is_single_quote(&str[i]) && (*tok)->quote == SINGLE) || (ft_is_double_quote(&str[i]) && (*tok)->quote == DOUBLE))
+			(*tok)->quote = OFF;
+		else if ((ft_is_single_quote(&str[i]) && (*tok)->quote == OFF))
+			(*tok)->quote = SINGLE;
+		else if ((ft_is_double_quote(&str[i]) && (*tok)->quote == OFF))
+			(*tok)->quote = DOUBLE;
+		else if ((ft_isspace(str[i]) || ft_is_operator((&str[i]), tok, NULL)) && (*tok)->quote == OFF)
+			return (i);
 		i++;
 	}
-	return (i + 1); // include closing quote
+	return (i);
+	// esse retorno nunca deverá ocorrer pois será validado se as aspas estao
+	// em número par e nao intercaladas. 
 }
 
 
+//FUNCIONA MAS TRATAR ESSE CASO DEPOIS:
+/*
+Minishell> "o"'o o'"''"|''>'ou't
+HEAD -> ["o"'o o'"''"|''>'ou't] -> NULL
+HEAD -> ["o"'o o'"''"] -> [|''>'ou't] -> NULL
+HEAD -> ["o"'o o'"''"] -> [|] -> [''>'ou't] -> NULL
+HEAD -> ["o"'o o'"''"] -> [|] -> [''] -> [>'ou't] -> NULL
+HEAD -> ["o"'o o'"''"] -> [|] -> [''] -> [>] -> ['ou't] -> NULL
 
+[''] ---- caso um node vazio seja criado, precia ser removido 
 
+*/
 
 
 
@@ -203,6 +216,57 @@ void	ft_del_token_node(void *content)
 
 	ft_free_and_null((void *)&tok_node);
 }
+
+
+// bool	ft_tok_is_end_quote(char *c, t_tok_mem **tok)
+// {
+// 	if (*c == '\"')
+// 	{
+// 		if ((*tok)->quote == DOUBLE)
+// 		{
+// 			(*tok)->quote = OFF;	
+// 			return (true);
+// 		}
+// 	}
+// 	if (*c == '\'')
+// 	{
+// 		if ((*tok)->quote == SINGLE)
+// 		{
+// 			(*tok)->quote = OFF;	
+// 			return (true);
+// 		}
+// 	}	
+// 	return (false);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
