@@ -6,17 +6,14 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:28 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 18:40:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:16:58 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/prototype.h"
 
-bool	is_built_in(t_cmd_node	*cur_cmd)
+bool	is_built_in(char **cmd_arr)
 {
-	char	**cmd_arr;
-
-	cmd_arr = cur_cmd->cmd_arr;
 	if (ft_strncmp(cmd_arr[0], "pwd", 3) == 0 || \
 			ft_strncmp(cmd_arr[0], "echo", 4) == 0 || \
 			ft_strncmp(cmd_arr[0], "env", 3) == 0 || \
@@ -29,11 +26,8 @@ bool	is_built_in(t_cmd_node	*cur_cmd)
 		return (false);
 }
 
-void	exec_built_in(t_list **ms_env, t_cmd_node *cmd)
+void	exec_built_in(t_list **ms_env, char	**cmd_arr)
 {
-	char	**cmd_arr;
-
-	cmd_arr = cmd->cmd_arr;
 	if (!cmd_arr || !cmd_arr[0])
 	{
 		perror("cmd_arr built-in executor");

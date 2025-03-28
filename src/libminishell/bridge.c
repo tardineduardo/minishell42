@@ -288,7 +288,7 @@ int excution_prom(t_list **content)
 	output_lst_node2->next = NULL;
 	output_lst = output_lst_node1;
 	//initializing cmds
-	cmd->cmd_arr[0] = "cat";
+	cmd->cmd_arr[0] = "pwd";
 	//cmd->cmd_arr[1] = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
 	cmd->cmd_arr[1] = NULL;
 	cmd->input_lst = input_lst;
