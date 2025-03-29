@@ -23,11 +23,11 @@ int	main(int argc, char *argv[], char *envp[])
 
 	while (1)
 	{
-		ft_readline(&(mem->capture));
+		ft_readline(&(mem->capture), &(mem->tokenize), &(mem->heredoc));
 		if (!mem->capture->line)
 			continue ;
 		add_history(mem->capture->line);
-		ft_tokenize(mem->capture->line, &mem->tokenize);
+		//ft_tokenize(mem->capture->line, &mem->tokenize);
 		ft_execute(mem->capture->line, &mem);
 		ft_clean_mem_loop(&mem);
 	}

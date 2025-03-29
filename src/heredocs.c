@@ -13,7 +13,7 @@
 #include "../include/minishell.h"
 
 char	*ft_hc_create_file(int *hc_count_int, char **fpath_cap);
-char	*ft_hc_input_loop(char **delim, char **fpath_cap);
+char	*ft_hc_input_loop(char **delim, char **fpath_cap, t_list **envlist);
 
 // ft_hc_create_file helpers
 bool	ft_hc_break_condition(char *hc_input, char *delim);
@@ -36,7 +36,7 @@ Se houver qualquer erro na captura, o valor de retorno é NULL. Em caso de
 erro, toda a memória até então alocada e o prompt devolvido para o usuário.
 */
 
-char	*ft_heredoc(t_hd_mem **hd)
+char	*ft_heredoc(t_hd_mem **hd, t_list **envlist)
 {
 	static int	hc_count_int;
 	t_hd_node	*hc_node;
@@ -51,7 +51,7 @@ char	*ft_heredoc(t_hd_mem **hd)
 		return (ft_hc_cap_error("hc_capture: path error\n", hd));
 
 		/* depois iniciamos a captura dos de cada comando em um loop */
-	if (!ft_hc_input_loop(&(*hd)->delim, &(*hd)->fpath_cap))
+	if (!ft_hc_input_loop(&(*hd)->delim, &(*hd)->fpath_cap, envlist))
 		return (ft_hc_cap_error("hc_capture: loop error\n", hd));
 
 		/* Sucesso? Então vamos criar um node de t_hd_nodes para armazenar
@@ -175,24 +175,25 @@ void	*ft_write_to_file(char **hc_input, char **fpath_cap, int hc_loop_count)
 }
 
 
-char	*ft_hc_input_loop(char **delim, char **fpath_cap)
+char	*ft_hc_input_loop(char **delim, char **fpath_cap, t_list **envlist)
 {
 	int			hc_loop_count;
 	char		*hc_input;
-
-	assert(delim);
-	assert(fpath_cap);
+	char		*temp;
 
 	hc_loop_count = 0;
 	while(1)
 	{
 		hc_input = readline("> ");
 		if (!hc_input)
-			return (ft_hd_syscall_error("heredoc readline error"));
-
-		if (ft_hc_break_condition(hc_input, *delim))
+			return (NULL);
+		temp = hc_input;
+		hc_input = ft_expand_string(hc_input, HEREDOC, envlist);
+		ft_free_and_null((void *)&temp);
+		if (!hc_input)
+			return (NULL);
+		if (ft_hc_break_condition(hc_input, *delim)) 	// Criei como função separada para poder exapndir depois
 			break ;
-		
 		if (!ft_write_to_file(&hc_input, fpath_cap, hc_loop_count))
 			return (NULL);
 		hc_loop_count++;

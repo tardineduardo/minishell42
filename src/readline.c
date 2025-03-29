@@ -13,12 +13,15 @@
 #include "../include/minishell.h"
 
 static void	*ft_cap_error(char *message, t_cap_mem **cap);
-static char	*ft_cap_input_loop(t_cap_mem **cap);
+char	*ft_cap_input_loop(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd);
 
-
-char *ft_readline(t_cap_mem **cap)
+char	*ft_readline(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd)
 {
 	(*cap)->line = readline(YELLOW "Minishell> " RESET);
+
+	// AS ASPAS PRECISAM SER VALIDADAS AQUI!
+	// A TOKENIZAÇÃO ATUAL NÃO ACEITA ASPAS INCOMLETAS (# ímpar) OU INTERCALADAS.
+	// MAS ACEITA ASPAS SEM CONTEÚDO DENTRO.
 
 	if (!(*cap)->line)
 		return (ft_cap_error("readline error", cap));
@@ -26,7 +29,7 @@ char *ft_readline(t_cap_mem **cap)
 	if (ft_strlen((*cap)->line) == 0)
 		return (NULL);
 
-	if (!ft_cap_input_loop(cap))
+	if (!ft_cap_input_loop(cap, tok, hd))
 		return (ft_cap_error("line capture error", cap));
 
 
@@ -55,7 +58,7 @@ void	*ft_cap_syscall_error(char *message)
 
 
 
-char	*ft_cap_input_loop(t_cap_mem **cap)
+char	*ft_cap_input_loop(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd)
 {
 	assert(cap);
 	assert(*cap);
@@ -65,6 +68,9 @@ char	*ft_cap_input_loop(t_cap_mem **cap)
 		(*cap)->trim = ft_strtrim((*cap)->line, " \t");
 		if (!(*cap)->trim)
 			return (ft_cap_error("strtrim error", cap));
+
+		ft_tokenize((*cap)->trim, tok, hd);
+
 
 		if ((*cap)->trim[ft_strlen((*cap)->trim) - 1] == '|')
 		{
@@ -82,6 +88,8 @@ char	*ft_cap_input_loop(t_cap_mem **cap)
 		ft_free_and_null((void *)&(*cap)->trim);
 		break ;
 	}
+
+
 	return ((*cap)->line);
 
 

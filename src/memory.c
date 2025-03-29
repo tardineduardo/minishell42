@@ -12,10 +12,14 @@
 
 #include "../include/minishell.h"
 
+void *ft_intit_empty_toklist(t_tok_mem **tok);
+
+
 void ft_clear_hd_mem(t_hd_mem **hdoc);
 void ft_clear_cap_mem(t_cap_mem **cap);
 void ft_clear_tok_mem(t_tok_mem **tok);
 void ft_clear_env_mem(t_env_mem **env);
+void ft_clear_exp_mem(t_exp_mem **tok);
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
@@ -29,10 +33,12 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->capture = malloc(sizeof(t_cap_mem));
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
 	(*mem)->environs = malloc(sizeof(t_env_mem));
+	(*mem)->expand = malloc(sizeof(t_exp_mem));
+
 	
 	//check for errors ---------------------------------------------------------
 	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize
-		|| !(*mem)->environs)
+		|| !(*mem)->environs || !(*mem)->expand)
 		exit(1);//improve error message and code
 
 	//set everything to NULL ---------------------------------------------------
@@ -47,11 +53,14 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize->last_of_list = NULL;
 	(*mem)->tokenize->new = NULL;
 	(*mem)->tokenize->node = NULL;
-	(*mem)->tokenize->node2 = NULL;
 	(*mem)->tokenize->str = NULL;
 	(*mem)->environs->envlist = NULL;
 	(*mem)->environs->new_node = NULL;
 	(*mem)->environs->result = NULL;
+	(*mem)->expand->i = 0;
+	(*mem)->expand->new = NULL;
+	(*mem)->expand->quote = OFF;
+
 
 	//init operators -----------------------------------------------------------
 	if (!ft_init_operators(&(*mem)->tokenize))
@@ -60,7 +69,35 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	//init environs ------------------------------------------------------------
 	if (!ft_init_environs(&(*mem)->environs, envp))
 		ft_clear_mem_and_exit(mem);		
+
 }
+
+
+
+
+
+
+// VOU USAR DEPOIS!	
+// init empty token list ----------------------------------------------------
+// if (!ft_intit_empty_toklist(&(*mem)->tokenize))
+// 	ft_clear_mem_and_exit(mem);
+
+// VOU USAR DEPOIS
+// void *ft_intit_empty_toklist(t_tok_mem **tok)
+// {
+// 	(*tok)->node = malloc(sizeof(t_tok_node));
+// 	if (!(*tok)->node)
+// 		return (NULL);
+// 	(*tok)->node->tokstr = ft_strdup("");
+// 	(*tok)->new = ft_lstnew((*tok)->node);
+// 	//protect
+// 	//protect
+// 	ft_lstadd_back(&(*tok)->toklst, (*tok)->new);
+// 	return ((*tok)->toklst);
+// }
+
+
+
 
 // FUNCÃO PRINCIPAL DE ENCERRAMENTO DO MINISHELL -------------------------------
 void	ft_clear_mem_and_exit(t_mem **mem)
@@ -70,6 +107,7 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_cap_mem(&(*mem)->capture);
 	ft_clear_tok_mem(&(*mem)->tokenize);
 	ft_clear_env_mem(&(*mem)->environs);
+	ft_clear_exp_mem(&(*mem)->expand);
 
 
 	rl_clear_history();
@@ -128,5 +166,14 @@ void	ft_clear_env_mem(t_env_mem **env)
 	if ((*env)->result)
 		ft_free_and_null_str_array(&(*env)->result);
 	free(*env);
+	return ;
+}
+
+
+void	ft_clear_exp_mem(t_exp_mem **exp)
+{
+	if ((*exp)->new)
+		ft_free_and_null((void *)&(*exp)->new);
+	free(*exp);
 	return ;
 }

@@ -8,24 +8,34 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_tok_node_free(void *content);
 void		ft_debug_list(t_list **head);
-bool	ft_tok_is_end_quote(char *c, t_tok_mem **tok);
+bool		ft_tok_is_end_quote(char *c, t_tok_mem **tok);
+void	*ft_append_toknode(char *line, t_list **toklist);
 
 
 
-void	*ft_tokenize(char *line, t_tok_mem **tok) // esse é o melhor?
+/*
+
+EU ME ODEIOOOOOOOOO
+BURROOOOOOOOO
+BURROOOOOOOOO
+REESCREVER ESTA MERDA JUNTANDO NODE + STRING
+(VAI FICAR COM A METADE DO TAMANHO)
+
+*/
+
+
+
+
+
+
+void	*ft_tokenize(char *line, t_tok_mem **tok, t_hd_mem **hd) // esse é o melhor?
 {
+	(void)hd;
 	t_tok_exit	tok_exit;
 
-	(*tok)->node = malloc(sizeof(t_tok_node));
-	//protect
-	//protect
-	if (!(*tok)->node)
-		return (ft_tokenize_error("ft_tokenize: malloc error\n", tok));
-	(*tok)->node->tokstr = ft_strtrim(line, " \t");
-	(*tok)->new = ft_lstnew((*tok)->node);
-	//protect
-	//protect
-	ft_lstadd_back(&(*tok)->toklst, (*tok)->new);
+	if (!ft_append_toknode(line, &(*tok)->toklst))
+		return (ft_tokenize_error("ft_tokenize: append error\n", tok));
+
 	while (1)
 	{
 		ft_debug_list(&(*tok)->toklst);
@@ -36,6 +46,24 @@ void	*ft_tokenize(char *line, t_tok_mem **tok) // esse é o melhor?
 			break ;
 	}
 	return ((*tok)->toklst);
+}
+
+
+
+void	*ft_append_toknode(char *line, t_list **toklist)
+{
+	t_tok_node *new;
+	t_list 		*append;
+
+	new = malloc(sizeof(t_tok_node));
+	if (!new)
+		return (NULL);
+	new->tokstr = ft_strdup(line);
+	append = ft_lstnew(new);
+	//protect
+	//protect
+	ft_lstadd_back(toklist, append);
+	return (toklist);
 }
 
 
@@ -136,23 +164,6 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str)
 	// em número par e nao intercaladas. 
 }
 
-
-//FUNCIONA MAS TRATAR ESSE CASO DEPOIS:
-/*
-Minishell> "o"'o o'"''"|''>'ou't
-HEAD -> ["o"'o o'"''"|''>'ou't] -> NULL
-HEAD -> ["o"'o o'"''"] -> [|''>'ou't] -> NULL
-HEAD -> ["o"'o o'"''"] -> [|] -> [''>'ou't] -> NULL
-HEAD -> ["o"'o o'"''"] -> [|] -> [''] -> [>'ou't] -> NULL
-HEAD -> ["o"'o o'"''"] -> [|] -> [''] -> [>] -> ['ou't] -> NULL
-
-[''] ---- caso um node vazio seja criado, precia ser removido 
-
-*/
-
-
-
-	
 bool	ft_is_operator(char *str, t_tok_mem **tok, int *operator_len)
 {
 	int		i;
@@ -218,33 +229,17 @@ void	ft_del_token_node(void *content)
 }
 
 
-// bool	ft_tok_is_end_quote(char *c, t_tok_mem **tok)
+
+
+
+
+
+
+
+// void *ft_is_string_empty(char *string)
 // {
-// 	if (*c == '\"')
-// 	{
-// 		if ((*tok)->quote == DOUBLE)
-// 		{
-// 			(*tok)->quote = OFF;	
-// 			return (true);
-// 		}
-// 	}
-// 	if (*c == '\'')
-// 	{
-// 		if ((*tok)->quote == SINGLE)
-// 		{
-// 			(*tok)->quote = OFF;	
-// 			return (true);
-// 		}
-// 	}	
-// 	return (false);
+// 	//TODO
 // }
-
-
-
-
-
-
-
 
 
 
