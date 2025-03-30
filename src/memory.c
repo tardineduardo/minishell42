@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/21 22:18:37 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/30 20:12:07 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize->new = NULL;
 	(*mem)->tokenize->node = NULL;
 	(*mem)->tokenize->str = NULL;
+	(*mem)->tokenize->remain = NULL;
 	(*mem)->environs->envlist = NULL;
 	(*mem)->environs->new_node = NULL;
 	(*mem)->environs->result = NULL;

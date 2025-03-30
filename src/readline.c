@@ -13,6 +13,7 @@
 #include "../include/minishell.h"
 
 void	*ft_cap_error(char *message, t_cap_mem **cap);
+bool	ft_line_is_incomplete(char *s);
 void	*ft_first_tokenize(t_mem **mem);
 char	*ft_cap_input_loop(t_mem **mem);
 
@@ -62,46 +63,47 @@ void	*ft_first_tokenize(t_mem **mem)
 
 char	*ft_cap_input_loop(t_mem **mem)
 {
-	t_cap_mem *cap;
+	t_cap_mem	*cap;
+	t_tok_mem	*tok;
 
 	cap = (*mem)->capture;
-
+	tok = (*mem)->tokenize;
 	while(1)
 	{
-		cap->trim = ft_strtrim(cap->line, " \t");
-		if (!cap->trim)
-			return (NULL);
-	
-		if (cap->trim[ft_strlen(cap->trim) - 1] == '|')
+		if (ft_line_is_incomplete(cap->line))
 		{
-			ft_free_and_null((void *)&cap->trim);
-			cap->append = (readline("> "));
+			cap->append = (readline(YELLOW "append > " RESET));
 			if (!ft_tokenize(cap->append, mem))
 				return (NULL);
 			cap->temp = cap->line;
 			cap->line = ft_strjoin(cap->line, cap->append);
-			ft_free_and_null((void *)&cap->trim);
-			if (!cap->line)
-			{
-				ft_free_and_null((void *)&cap->temp);
-				return (NULL);
-			}
-			ft_free_and_null((void *)&cap->temp);
+			free (cap->temp);
+			if (!tok->remain)
+				break;
 			ft_free_and_null((void *)&cap->append);
-
 			continue ;
 		}
-		ft_free_and_null((void *)&cap->trim);
 		ft_free_and_null((void *)&cap->append);
-
 		break ;
 	}
 	return (cap->line);
-
-
-
-
 }
+
+
+bool	ft_line_is_incomplete(char *s)
+{
+	char *new;
+
+	new = ft_strtrim(s, " \t");
+	if (new[ft_strlen(new)] == '|')
+	{
+		free(new);
+		return (true);
+	}
+	return (false);
+}
+
+
 // void	*ft_cap_error(char *message, t_cap_mem **cap)
 // {
 // 	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
@@ -119,3 +121,7 @@ char	*ft_cap_input_loop(t_mem **mem)
 // 	ft_dprintf(STDERR_FILENO, "%s: %s [%i]\n", message, strerror(errno), errno);
 // 	return (NULL);
 // }
+
+
+
+//if (((t_tok_node *)(ft_lstlast(tok->toklst)->content))->tokstr[0] == '|')

@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:24:03 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/30 19:15:02 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ char	*ft_hc_input_loop(char **delim, char **fpath_cap, t_list **envlist)
 	hc_loop_count = 0;
 	while(1)
 	{
-		hc_input = readline("> ");
+		hc_input = readline(BLUE "heredoc > " RESET);
 		if (!hc_input)
 			return (NULL);
 		temp = hc_input;

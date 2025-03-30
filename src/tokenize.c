@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 
-t_tok_exit	ft_tokenize_next(char *line, t_list **toklist, t_tok_mem **tok);
-t_tok_exit	ft_append_new_toknode(char *line, t_list **toklist, int token_limit);
+t_tok_exit	ft_tokenize_next(char **remain, t_tok_mem **tok);
+t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
@@ -15,10 +15,10 @@ void	*ft_tokenize(char *line, t_mem **mem)
 
 	tok = (*mem)->tokenize;
 
+	tok->remain = line;
 	while (1)
 	{
-		ft_debug_list(&tok->toklst);
-		exit_status = ft_tokenize_next(line, &tok->toklst, &tok);
+		exit_status = ft_tokenize_next(&tok->remain, &tok);
 		if (exit_status == ERROR)
 			return (NULL);
 		if (exit_status == END)
@@ -31,20 +31,16 @@ void	*ft_tokenize(char *line, t_mem **mem)
 
 
 
-
-
-
-
-t_tok_exit	ft_tokenize_next(char *line, t_list **toklist, t_tok_mem **tok)
+t_tok_exit	ft_tokenize_next(char **remain, t_tok_mem **tok)
 {
 	int			token_limit;
 	t_tok_exit	detach_exit;
 
 
 	//limit = last character of the string
-	token_limit = ft_find_token_limit(line, tok);
+	token_limit = ft_find_token_limit((*remain), tok);
 
-	detach_exit = ft_append_new_toknode(line, toklist, token_limit);
+	detach_exit = ft_append_new_toknode(remain, tok, token_limit);
 	if (detach_exit == ERROR)
 		return (ERROR);
 	if (detach_exit == END)
@@ -53,14 +49,15 @@ t_tok_exit	ft_tokenize_next(char *line, t_list **toklist, t_tok_mem **tok)
 }
 
 
-t_tok_exit	ft_append_new_toknode(char *line, t_list **toklist, int token_limit)
+t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit)
 {
 	t_tok_node	*toknode;
 	t_list		*append;
 
 	char *new_string;
-		
-	new_string = ft_substr(line, 0, token_limit);
+
+	new_string = ft_substr((*remain), 0, token_limit);
+	
 	toknode = malloc(sizeof(t_tok_node));
 	if (!toknode)
 		return (ERROR);
@@ -68,8 +65,18 @@ t_tok_exit	ft_append_new_toknode(char *line, t_list **toklist, int token_limit)
 	append = ft_lstnew(toknode);
 	if (!append)
 		return (ERROR);
-	ft_lstadd_back(toklist, append);
-	if (ft_strlen(line) == (size_t)token_limit)
+	ft_lstadd_back(&(*tok)->toklst, append);
+	(*remain) = ft_strdup(&(*remain)[token_limit]);
+
+
+	
+
+	ft_debug_list(&(*tok)->toklst);
+	ft_printf(GREY " {%s}\n" RESET, *remain);
+
+
+	ft_strtrim_overwrite(remain, "\t ");
+	if (!(*remain)[0])
 		return (END);
 	return (CONTINUE);
 }
@@ -77,9 +84,9 @@ t_tok_exit	ft_append_new_toknode(char *line, t_list **toklist, int token_limit)
 
 int	ft_find_token_limit(char *str, t_tok_mem **tok)
 {
-	int	i;
-	int	operator_len;
-
+	int		i;
+	int		operator_len;
+	
 	i = 0;
 	while (str[i])
 	{
@@ -253,6 +260,6 @@ void ft_debug_list(t_list **head)
 		ft_printf(GREY "] -> " RESET);
 		trav = trav->next;
 	}
-	ft_printf(GREY "NULL\n" RESET);
+	ft_printf(GREY "NULL" RESET);
 
 }

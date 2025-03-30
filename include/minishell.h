@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/22 11:37:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/03/30 20:03:43 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct	s_tok_mem
 	t_tok_node	*node;
 	char		*str;
 	t_quote		quote;
+	char		*remain;
 }	t_tok_mem;
 
 
