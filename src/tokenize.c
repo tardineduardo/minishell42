@@ -129,9 +129,16 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 		if (ft_isspace(str[i]))
 			break ;
 		if (ft_is_single_quote(&str[i]) || ft_is_double_quote(&str[i]))
-			return (i + (ft_find_word_limit(tok, &str[i])));
+		{
+			i += ft_find_word_limit(tok, &str[i]);
+			continue ;
+		}
 		if (ft_is_operator(&str[i], tok, &operator_len))
-			return (i + operator_len);
+		{
+			if (i == 0)
+				return (operator_len); // operator at start
+			return (i); // operator found later, split before it
+		}
 		i++;
 	}
 	return (i);
