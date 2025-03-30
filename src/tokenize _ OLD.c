@@ -1,50 +1,100 @@
 #include "../include/minishell.h"
 
-t_tok_exit	ft_tokenize_next(char *line, t_list **toklist, t_tok_mem **tok);
-t_tok_exit	ft_append_new_toknode(char *line, t_list **toklist, int token_limit);
+void		*ft_tokenize_error(char *message, t_tok_mem **tok);
+t_tok_exit	ft_nodesplit(t_list **head, t_tok_mem **tok);
+t_tok_exit	ft_detach_node(t_tok_mem **tok, int token_limit);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
+void		ft_debug_list(t_list **head);
+bool		ft_tok_is_end_quote(char *c, t_tok_mem **tok);
+void		*ft_append_toknode(char *line, t_list **toklist);
 
 
-void	*ft_tokenize(char *line, t_mem **mem)
+
+/*
+
+EU ME ODEIOOOOOOOOO
+BURROOOOOOOOO
+BURROOOOOOOOO
+REESCREVER ESTA MERDA JUNTANDO NODE + STRING
+(VAI FICAR COM A METADE DO TAMANHO)
+
+*/
+
+// t_cap_mem *cap;
+// t_env_mem *env;
+// t_tok_mem *tok;
+// t_hd_mem *hd;
+
+// cap = (*mem)->capture;
+// env = (*mem)->environs;
+// tok = (*mem)->tokenize;
+// hd = (*mem)->heredoc;
+
+
+
+
+void	*ft_tokenize(char *line, t_mem **mem) // esse é o melhor?
 {
-	t_tok_mem	*tok;
-	t_tok_exit	exit_status;
+	t_tok_mem *tok;
 
 	tok = (*mem)->tokenize;
+	
+	t_tok_exit	tok_exit;
+
+	if (!ft_append_toknode(line, &tok->toklst))
+		return (NULL);
 
 	while (1)
 	{
 		ft_debug_list(&tok->toklst);
-		exit_status = ft_tokenize_next(line, &tok->toklst, &tok);
-		if (exit_status == ERROR)
+		tok_exit = ft_nodesplit(&tok->toklst, &tok);
+		if (tok_exit == ERROR)
 			return (NULL);
-		if (exit_status == END)
+		if (tok_exit == END)
 			break ;
-		if (exit_status == CONTINUE)      //condição desnecessária, apenas para clareza
-			continue ;	
 	}
 	return (mem);
 }
 
 
 
+void	*ft_append_toknode(char *line, t_list **toklist)
+{
+	t_tok_node *new;
+	t_list 		*append;
+
+	new = malloc(sizeof(t_tok_node));
+	if (!new)
+		return (NULL);
+	new->tokstr = ft_strdup(line);
+	append = ft_lstnew(new);
+	//protect
+	//protect
+	ft_lstadd_back(toklist, append);
+	return (toklist);
+}
 
 
 
-
-t_tok_exit	ft_tokenize_next(char *line, t_list **toklist, t_tok_mem **tok)
+t_tok_exit	ft_nodesplit(t_list **head, t_tok_mem **tok)
 {
 	int			token_limit;
 	t_tok_exit	detach_exit;
 
+	(*tok)->last_of_list = ft_lstlast(*head);
+	(*tok)->last_of_toks = (t_tok_node *)(*tok)->last_of_list->content;
+	if ((*tok)->str )
+		ft_free_and_null((void *)&(*tok)->str);
+	(*tok)->str = ft_strdup((*tok)->last_of_toks->tokstr);
+	//protect
 
 	//limit = last character of the string
-	token_limit = ft_find_token_limit(line, tok);
+	token_limit = ft_find_token_limit((*tok)->str, tok);
 
-	detach_exit = ft_append_new_toknode(line, toklist, token_limit);
+	detach_exit = ft_detach_node(tok, token_limit);
 	if (detach_exit == ERROR)
 		return (ERROR);
 	if (detach_exit == END)
@@ -53,24 +103,28 @@ t_tok_exit	ft_tokenize_next(char *line, t_list **toklist, t_tok_mem **tok)
 }
 
 
-t_tok_exit	ft_append_new_toknode(char *line, t_list **toklist, int token_limit)
+t_tok_exit	ft_detach_node(t_tok_mem **tok, int token_limit)
 {
-	t_tok_node	*toknode;
-	t_list		*append;
+	char *new_string1;
+	char *new_string2;
 
-	char *new_string;
-		
-	new_string = ft_substr(line, 0, token_limit);
-	toknode = malloc(sizeof(t_tok_node));
-	if (!toknode)
-		return (ERROR);
-	toknode->tokstr = new_string;
-	append = ft_lstnew(toknode);
-	if (!append)
-		return (ERROR);
-	ft_lstadd_back(toklist, append);
-	if (ft_strlen(line) == (size_t)token_limit)
+	(*tok)->last_of_toks = (t_tok_node *)ft_lstlast((*tok)->toklst)->content;
+	if (ft_strlen((*tok)->last_of_toks->tokstr) == (size_t)token_limit)
 		return (END);
+
+	new_string1 = ft_substr((*tok)->last_of_toks->tokstr, 0, token_limit);
+	new_string2 = ft_strdup(&(*tok)->last_of_toks->tokstr[token_limit]);
+	new_string2 = ft_strtrim_overwrite(new_string2, " \t");
+	
+	if ((*tok)->last_of_toks->tokstr)
+		ft_free_and_null((void *)&(*tok)->last_of_toks->tokstr);
+	free((*tok)->last_of_toks->tokstr);
+	(*tok)->last_of_toks->tokstr = new_string1;
+	(*tok)->node = malloc(sizeof(t_tok_node));
+	(*tok)->node->tokstr = new_string2;
+	(*tok)->new = ft_lstnew((*tok)->node);
+	ft_lstadd_back(&(*tok)->toklst, (*tok)->new);
+	
 	return (CONTINUE);
 }
 
@@ -93,8 +147,8 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 		if (ft_is_operator(&str[i], tok, &operator_len))
 		{
 			if (i == 0)
-				return (operator_len);
-			return (i);
+				return (operator_len); // operator at start
+			return (i); // operator found later, split before it
 		}
 		i++;
 	}
@@ -147,6 +201,21 @@ bool	ft_is_operator(char *str, t_tok_mem **tok, int *operator_len)
 	}
 	return (false);
 }
+
+
+void	*ft_tokenize_error(char *message, t_tok_mem **tok)
+{
+	assert(message);
+	assert(tok);
+
+	if((*tok)->toklst)
+	{
+		ft_lstclear(&(*tok)->toklst, ft_del_token_node);
+		ft_free_and_null((void *)&(*tok)->toklst);
+	}
+	return (NULL);
+}
+
 
 
 void	ft_del_token_node(void *content)

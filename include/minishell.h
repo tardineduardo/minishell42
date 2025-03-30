@@ -22,9 +22,9 @@
 
 typedef enum e_tok_exit
 {
-	SUC,
+	CONTINUE,
 	END,
-	ERR,
+	ERROR,
 }	t_tok_exit;
 
 typedef enum e_quote
@@ -89,7 +89,7 @@ typedef struct	s_cap_mem
 	char		*line;
 	char		*trim;
 	char		*temp;
-	char		*new;
+	char		*append;
 }	t_cap_mem;
 
 typedef struct s_hd_mem
@@ -176,4 +176,4 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 
 //DEBUG - REMOVER DEPOIS
-void ft_debug_list(t_list **head);
+void		ft_debug_list(t_list **head);

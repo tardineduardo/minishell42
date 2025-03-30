@@ -14,9 +14,7 @@
 
 void	*ft_cap_error(char *message, t_cap_mem **cap);
 void	*ft_first_tokenize(t_mem **mem);
-
 char	*ft_cap_input_loop(t_mem **mem);
-
 
 // t_cap_mem *cap;
 // t_env_mem *env;
@@ -28,8 +26,6 @@ char	*ft_cap_input_loop(t_mem **mem);
 // tok = (*mem)->tokenize;
 // hd = (*mem)->heredoc;
 
-
-//char	*ft_readline(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd)
 void	*ft_readline(t_mem **mem)
 {
 	t_cap_mem	*cap;
@@ -64,28 +60,6 @@ void	*ft_first_tokenize(t_mem **mem)
 	return (mem);
 }
 
-
-
-void	*ft_cap_error(char *message, t_cap_mem **cap)
-{
-	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
-
-	if ((*cap)->line)
-		ft_free_and_null((void *)&(*cap)->line);
-	if ((*cap)->trim)
-		ft_free_and_null((void *)&(*cap)->trim);
-	return (NULL);
-}
-
-
-void	*ft_cap_syscall_error(char *message)
-{
-	ft_dprintf(STDERR_FILENO, "%s: %s [%i]\n", message, strerror(errno), errno);
-	return (NULL);
-}
-
-
-
 char	*ft_cap_input_loop(t_mem **mem)
 {
 	t_cap_mem *cap;
@@ -101,9 +75,11 @@ char	*ft_cap_input_loop(t_mem **mem)
 		if (cap->trim[ft_strlen(cap->trim) - 1] == '|')
 		{
 			ft_free_and_null((void *)&cap->trim);
-			cap->new = (readline("> "));
+			cap->append = (readline("> "));
+			if (!ft_tokenize(cap->append, mem))
+				return (NULL);
 			cap->temp = cap->line;
-			cap->line = ft_strjoin(cap->line, cap->new);			
+			cap->line = ft_strjoin(cap->line, cap->append);
 			ft_free_and_null((void *)&cap->trim);
 			if (!cap->line)
 			{
@@ -111,16 +87,35 @@ char	*ft_cap_input_loop(t_mem **mem)
 				return (NULL);
 			}
 			ft_free_and_null((void *)&cap->temp);
+			ft_free_and_null((void *)&cap->append);
+
 			continue ;
 		}
 		ft_free_and_null((void *)&cap->trim);
+		ft_free_and_null((void *)&cap->append);
+
 		break ;
 	}
-
-
 	return (cap->line);
 
 
 
 
 }
+// void	*ft_cap_error(char *message, t_cap_mem **cap)
+// {
+// 	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
+
+// 	if ((*cap)->line)
+// 		ft_free_and_null((void *)&(*cap)->line);
+// 	if ((*cap)->trim)
+// 		ft_free_and_null((void *)&(*cap)->trim);
+// 	return (NULL);
+// }
+
+
+// void	*ft_cap_syscall_error(char *message)
+// {
+// 	ft_dprintf(STDERR_FILENO, "%s: %s [%i]\n", message, strerror(errno), errno);
+// 	return (NULL);
+// }

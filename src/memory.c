@@ -45,6 +45,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->capture->line = NULL;
 	(*mem)->capture->trim = NULL;
 	(*mem)->capture->temp = NULL;
+	(*mem)->capture->append = NULL;
 	(*mem)->heredoc->delim = NULL;
 	(*mem)->heredoc->list = NULL;
 	(*mem)->heredoc->fpath_cap = NULL;
