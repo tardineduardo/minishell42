@@ -89,6 +89,7 @@ typedef struct	s_cap_mem
 	char		*line;
 	char		*trim;
 	char		*temp;
+	char		*new;
 }	t_cap_mem;
 
 typedef struct s_hd_mem
@@ -129,7 +130,7 @@ typedef struct	s_mem
 
 // main
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
-char	*ft_readline(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd);
+void	*ft_readline(t_mem **mem);
 char	*ft_execute(char *line, t_mem **mem);
 
 
@@ -138,7 +139,7 @@ char	*ft_heredoc(t_hd_mem **hd, t_list **envlist);
 void	ft_del_heredoc_node(void *content); // needed for EXIT
 
 //tokens
-void	*ft_tokenize(char *line, t_tok_mem **tok, t_hd_mem **hd);
+void	*ft_tokenize(char *line, t_mem **mem);
 void	*ft_init_operators(t_tok_mem **tok);
 void	ft_del_token_node(void *content);
 

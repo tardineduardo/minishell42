@@ -12,30 +12,58 @@
 
 #include "../include/minishell.h"
 
-static void	*ft_cap_error(char *message, t_cap_mem **cap);
-char	*ft_cap_input_loop(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd);
+void	*ft_cap_error(char *message, t_cap_mem **cap);
+void	*ft_first_tokenize(t_mem **mem);
 
-char	*ft_readline(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd)
+char	*ft_cap_input_loop(t_mem **mem);
+
+
+// t_cap_mem *cap;
+// t_env_mem *env;
+// t_tok_mem *tok;
+// t_hd_mem *hd;
+
+// cap = (*mem)->capture;
+// env = (*mem)->environs;
+// tok = (*mem)->tokenize;
+// hd = (*mem)->heredoc;
+
+
+//char	*ft_readline(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd)
+void	*ft_readline(t_mem **mem)
 {
-	(*cap)->line = readline(YELLOW "Minishell> " RESET);
+	t_cap_mem	*cap;
 
-	// AS ASPAS PRECISAM SER VALIDADAS AQUI!
-	// A TOKENIZAÇÃO ATUAL NÃO ACEITA ASPAS INCOMLETAS (# ímpar) OU INTERCALADAS.
-	// MAS ACEITA ASPAS SEM CONTEÚDO DENTRO.
-
-	if (!(*cap)->line)
-		return (ft_cap_error("readline error", cap));
-
-	if (ft_strlen((*cap)->line) == 0)
+	cap = (*mem)->capture;
+	cap->line = readline(YELLOW "Minishell> " RESET);
+	if (!cap->line)
+		return (NULL);
+	if (ft_strlen(cap->line) == 0)
+		return (NULL);
+	if (!ft_first_tokenize(mem))
+		return (NULL);
+	if (!ft_cap_input_loop(mem))
 		return (NULL);
 
-	if (!ft_cap_input_loop(cap, tok, hd))
-		return (ft_cap_error("line capture error", cap));
-
-
-	add_history((*cap)->line);
-	return ((*cap)->line);
+	add_history(cap->line);
+	return (mem);
 }
+
+void	*ft_first_tokenize(t_mem **mem)
+{
+	t_cap_mem	*cap;
+	t_tok_mem	*tok;
+
+	cap = (*mem)->capture;
+	tok = (*mem)->tokenize;
+
+	if (tok->toklst)
+		return (mem);
+	if (!ft_tokenize(cap->line, mem))
+		return (NULL);
+	return (mem);
+}
+
 
 
 void	*ft_cap_error(char *message, t_cap_mem **cap)
@@ -58,39 +86,39 @@ void	*ft_cap_syscall_error(char *message)
 
 
 
-char	*ft_cap_input_loop(t_cap_mem **cap, t_tok_mem **tok, t_hd_mem **hd)
+char	*ft_cap_input_loop(t_mem **mem)
 {
-	assert(cap);
-	assert(*cap);
+	t_cap_mem *cap;
+
+	cap = (*mem)->capture;
 
 	while(1)
 	{
-		(*cap)->trim = ft_strtrim((*cap)->line, " \t");
-		if (!(*cap)->trim)
-			return (ft_cap_error("strtrim error", cap));
-
-		ft_tokenize((*cap)->trim, tok, hd);
-
-
-		if ((*cap)->trim[ft_strlen((*cap)->trim) - 1] == '|')
+		cap->trim = ft_strtrim(cap->line, " \t");
+		if (!cap->trim)
+			return (NULL);
+	
+		if (cap->trim[ft_strlen(cap->trim) - 1] == '|')
 		{
-			ft_free_and_null((void *)&(*cap)->trim);
-			(*cap)->temp = (*cap)->line;
-			(*cap)->line = ft_strjoin((*cap)->line, (readline("> ")));			
-			if (!(*cap)->line)
+			ft_free_and_null((void *)&cap->trim);
+			cap->new = (readline("> "));
+			cap->temp = cap->line;
+			cap->line = ft_strjoin(cap->line, cap->new);			
+			ft_free_and_null((void *)&cap->trim);
+			if (!cap->line)
 			{
-				ft_free_and_null((void *)&(*cap)->temp);
+				ft_free_and_null((void *)&cap->temp);
 				return (NULL);
 			}
-			ft_free_and_null((void *)&(*cap)->temp);
+			ft_free_and_null((void *)&cap->temp);
 			continue ;
 		}
-		ft_free_and_null((void *)&(*cap)->trim);
+		ft_free_and_null((void *)&cap->trim);
 		break ;
 	}
 
 
-	return ((*cap)->line);
+	return (cap->line);
 
 
 

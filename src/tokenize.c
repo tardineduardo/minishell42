@@ -23,29 +23,40 @@ REESCREVER ESTA MERDA JUNTANDO NODE + STRING
 
 */
 
+// t_cap_mem *cap;
+// t_env_mem *env;
+// t_tok_mem *tok;
+// t_hd_mem *hd;
+
+// cap = (*mem)->capture;
+// env = (*mem)->environs;
+// tok = (*mem)->tokenize;
+// hd = (*mem)->heredoc;
 
 
 
 
-
-void	*ft_tokenize(char *line, t_tok_mem **tok, t_hd_mem **hd) // esse é o melhor?
+void	*ft_tokenize(char *line, t_mem **mem) // esse é o melhor?
 {
-	(void)hd;
+	t_tok_mem *tok;
+
+	tok = (*mem)->tokenize;
+	
 	t_tok_exit	tok_exit;
 
-	if (!ft_append_toknode(line, &(*tok)->toklst))
-		return (ft_tokenize_error("ft_tokenize: append error\n", tok));
+	if (!ft_append_toknode(line, &tok->toklst))
+		return (NULL);
 
 	while (1)
 	{
-		ft_debug_list(&(*tok)->toklst);
-		tok_exit = ft_nodesplit(&(*tok)->toklst, tok);
+		ft_debug_list(&tok->toklst);
+		tok_exit = ft_nodesplit(&tok->toklst, &tok);
 		if (tok_exit == ERR)
-			return (ft_tokenize_error("ft_tokenize: split error\n", tok));
+			return (NULL);
 		if (tok_exit == END)
 			break ;
 	}
-	return ((*tok)->toklst);
+	return (mem);
 }
 
 
