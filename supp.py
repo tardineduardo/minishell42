@@ -10,11 +10,11 @@ def replace_valgrind_blocks_inplace(filepath):
         filepath (str): Path to the text file.
     """
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
         
         # Pattern that only matches blocks containing 'readline'
-        readline_pattern = r"(^|\n)(==\d+==\s*\n==\d+==(?:(?!\n==\d+==\s*(?:\n|$)).)*?libreadline\.so\.8\.0(?:(?!\n==\d+==\s*(?:\n|$)).)*?)(?=\n==\d+==\s*(?:\n|$))"
+        readline_pattern = r"(^|\n)(==\d+==\s*\n==\d+==(?:(?!\n==\d+==\s*(?:\n|$)).)*?libreadline\.so(?:\.\d+)*(?:(?!\n==\d+==\s*(?:\n|$)).)*?)(?=\n==\d+==\s*(?:\n|$))"
         
         def replace_func(match):
             # If match started with a newline, preserve it
@@ -22,7 +22,7 @@ def replace_valgrind_blocks_inplace(filepath):
                 return '\n'
             # If at start of file, return empty string
             return ''
-        
+
         # Delete readline blocks while preserving necessary newlines
         cleaned_content = re.sub(readline_pattern, replace_func, content, flags=re.MULTILINE|re.DOTALL)
         
