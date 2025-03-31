@@ -59,8 +59,6 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 */
 void	ft_env_readonly(t_list **envlist)
 {
-	assert(envlist);
-
 	t_list		*trav;
 	t_env_node	*current;
 
@@ -93,9 +91,6 @@ void	ft_env_readonly(t_list **envlist)
 */
 void	ft_env_block_unset(t_list **envlist)
 {
-	assert(envlist);
-//	assert(*envlist);
-
 	t_list		*trav;
 	t_env_node	*current;
 
@@ -170,25 +165,15 @@ void	*ft_env_syscall_error(char *message)
 	return (NULL);
 }
 
-
-
-
-
-
 void	*ft_env_error(char *message, t_env_mem **env)
 {
 	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
-
-	if ((*env)->envlist)
-		ft_lstclear(&(*env)->envlist, ft_del_env_node);
-	if ((*env)->new_node)
-		ft_del_env_node(&(*env)->new_node);
-	if ((*env)->result)
-		ft_free_and_null_str_array(&(*env)->result);
+	ft_lstclear(&(*env)->envlist, ft_del_env_node);
+	ft_del_env_node(&(*env)->new_node);
+	ft_free_and_null_str_array(&(*env)->result);
 	ft_free_and_null((void *)env);
 	return (NULL);
 }
-
 
 void ft_del_env_node(void *content)
 {
@@ -197,10 +182,7 @@ void ft_del_env_node(void *content)
 	if (!content)
 		return ;
 	node = (t_env_node *)content;
-	if (node->variable)
-		ft_free_and_null((void *)&node->variable);
-	if (node->value)
-		ft_free_and_null((void *)&node->value);
+	ft_free_and_null((void *)&node->variable);
+	ft_free_and_null((void *)&node->value);
 	ft_free_and_null((void *)&node);
 }
-

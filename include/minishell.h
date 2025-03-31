@@ -140,7 +140,7 @@ char	*ft_heredoc(t_hd_mem **hd, t_list **envlist);
 void	ft_del_heredoc_node(void *content); // needed for EXIT
 
 //tokens
-void	*ft_tokenize(char *line, t_mem **mem);
+void	*ft_tokenize(char **line, t_mem **mem);
 void	*ft_init_operators(t_tok_mem **tok);
 void	ft_del_token_node(void *content);
 

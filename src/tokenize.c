@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-t_tok_exit	ft_tokenize_next(char **remain, t_tok_mem **tok);
+t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok);
 t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
@@ -8,30 +8,28 @@ bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
 
 
-void	*ft_tokenize(char *line, t_mem **mem)
+void	*ft_tokenize(char **line, t_mem **mem)
 {
 	t_tok_mem	*tok;
 	t_tok_exit	exit_status;
 
 	tok = (*mem)->tokenize;
-
-	tok->remain = line;
+	tok->remain = ft_strdup(*line);
 	while (1)
 	{
-		exit_status = ft_tokenize_next(&tok->remain, &tok);
+		exit_status = ft_tokenize_remain(&tok->remain, &tok);
 		if (exit_status == ERROR)
 			return (NULL);
 		if (exit_status == END)
 			break ;
-		if (exit_status == CONTINUE)      //condição desnecessária, apenas para clareza
-			continue ;	
 	}
+	ft_free_and_null((void *)&tok->remain);
 	return (mem);
 }
 
 
 
-t_tok_exit	ft_tokenize_next(char **remain, t_tok_mem **tok)
+t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
 {
 	int			token_limit;
 	t_tok_exit	detach_exit;
@@ -66,8 +64,11 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	if (!append)
 		return (ERROR);
 	ft_lstadd_back(&(*tok)->toklst, append);
-	(*remain) = ft_strdup(&(*remain)[token_limit]);
 
+
+	char *temp = (*remain);
+	(*remain) = ft_strdup(&(*remain)[token_limit]);
+	ft_free_and_null((void *)&temp);
 
 	
 
@@ -165,8 +166,8 @@ void	ft_del_token_node(void *content)
 
 	tok_node = (t_tok_node *)content;
 
-	if (tok_node->tokstr)
-		ft_free_and_null((void *)&tok_node->tokstr);
+//	if (tok_node->tokstr)
+	ft_free_and_null((void *)&tok_node->tokstr);
 
 	ft_free_and_null((void *)&tok_node);
 }

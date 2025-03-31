@@ -38,9 +38,6 @@ int	main(int argc, char *argv[], char *envp[])
 	return (0);
 }
 
-
-
-
 void ft_clean_mem_loop(t_mem **mem)
 {
 	t_cap_mem *cap;
@@ -51,13 +48,11 @@ void ft_clean_mem_loop(t_mem **mem)
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
 
-	if (tok->toklst)
-		ft_lstclear(&tok->toklst, ft_del_token_node);
-	if (hd->delim)
-		ft_free_and_null((void *)&hd->delim);
-	if (cap->line)
-		ft_free_and_null((void *)&cap->line);
-	if (tok->str)
-		ft_free_and_null((void *)&tok->str);
+	ft_lstclear(&tok->toklst, ft_del_token_node);
+	ft_free_and_null((void *)&hd->delim);
+	ft_free_and_null((void *)&cap->line);
+	ft_free_and_null((void *)&tok->str);
+	ft_free_and_null((void *)&tok->remain);
+	
 	return ;
 }
