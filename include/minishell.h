@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/27 13:28:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/30 15:42:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,17 @@ typedef struct 	s_env_node
 
 typedef struct s_input_node
 {
-	t_list	*input_lst;
 	char	*name;
 }			t_input_node;
 
 typedef struct s_output_node
 {
-	t_list	*output_lst;
 	char	*name;
 	bool	create;
 }			t_output_node;
 
 typedef struct s_cmd_node
 {
-	t_list	*cmd_lst;
 	char	**cmd_arr;
 	t_list	*input_lst;
 	t_list	*output_lst;

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:48 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/28 15:24:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:44:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,8 @@ char	*get_right_path(char **path_options, char *cmd_binary)
 	{
 		test_path = ft_strjoin(path_options[i], "/");
 		test_path = ft_strjoin(test_path, cmd_binary);
-		if (access(test_path, F_OK) == 0)
-		{
-			if (access(test_path, X_OK) == 0)
-				return (test_path);
-		}
+		if (access(test_path, F_OK | X_OK) == 0)
+			return (test_path);
 		free(test_path);
 		i++;
 	}
@@ -68,11 +65,8 @@ char	*get_right_path(char **path_options, char *cmd_binary)
 
 bool	is_already_executable(char *cmd_arr)
 {
-	if (access(cmd_arr, F_OK) == 0)
-	{
-		if (access(cmd_arr, X_OK) == 0)
-			return (true);
-	}
+	if (access(cmd_arr, F_OK | X_OK) == 0)
+		return (true);
 	return (false);
 }
 

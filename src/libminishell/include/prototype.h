@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 18:41:16 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/03/30 15:46:13 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int		*ft_pipe_control(void);
 pid_t	ft_fork_control(void);
 
 // exec_built-ins
-bool	is_built_in(t_cmd_node	*cur_cmd);
-void	exec_built_in(t_list **ms_env, t_cmd_node *cmd);
+bool	is_built_in(char **cur_arr);
+void	exec_built_in(t_list **ms_env, char **cmd_arr);
 
 // cmd_treatment
 char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
