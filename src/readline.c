@@ -92,14 +92,19 @@ char	*ft_cap_input_loop(t_mem **mem)
 
 bool	ft_line_is_incomplete(char *s)
 {
-	char *new;
+	char	*new;
+	size_t	len;
 
 	new = ft_strtrim(s, " \t");
-	if (new[ft_strlen(new)] == '|')
+	if (!new)
+		return (false);
+	len = ft_strlen(new);
+	if (len > 0 && new[len - 1] == '|')
 	{
 		free(new);
 		return (true);
 	}
+	free(new);
 	return (false);
 }
 
