@@ -11,71 +11,100 @@ It can be used for variable expansion from both heredocs and tokens, taking
 All memory used during ft_expand_string's execution is allocated and freed 
 within the function—except for the returned string.
 */
-char *ft_expand_string(char *string, t_exp_mode mode, t_list **envlist)
+char *ft_expand_string(char *string, t_list **envlist, t_mem **mem)
 {
-	(void)mode;
-	(void)envlist;
-	return (ft_strdup(string));
+	char *new;
+	t_exp_mem *exp;
 
+	if (!ft_strlen(string) || !(*envlist))
+	{
+		new = ft_calloc(1, sizeof(char));
+		return (new);
+	}
+	if (exp->mode == HEREDOC)
+		exp->mode == ft_heredoc_normal_or_quoted(string);
+	if (exp->mode == HEREDOC_NORMAL)
+		return (ft_expand_string_heredoc_normal(string, envlist, mem));
+	else if (exp->mode == HEREDOC_QUOTED)
+		return (ft_expand_string_heredoc_quoted(string, mem));
+	else if (exp->mode == TOKEN)
+		return (ft_expand_string_token(string, envlist, mem));
+	ft_printf("Error: invalid expansion mode\n");
+	return (NULL);
+}
+
+
+
+t_exp_mode	ft_heredoc_normal_or_quoted(char *s)
+{
+	int	a;
+	int	escapecount;
+
+	a = 0;
+	while (s[a])
+	{
+		if (a == 0 && (s[a] == '\'' || s[a] == '\"'))
+			return (HEREDOC_QUOTED);
+		if (s[a] == '\'' || s[a] == '\"')
+		{
+			escapecount = 0;
+			while (a > 0 && s[a - 1 - escapecount] == '\\')
+				escapecount++;
+			if (escapecount % 2 == 0)
+				return (HEREDOC_QUOTED);
+		}
+		a++;
+	}
+	return (HEREDOC_NORMAL);
+}
+
+
+
+char *ft_expand_string_heredoc_normal(char *s, t_list **envlist, t_mem **mem)
+{
+	int		i;
+	int		j;
+	char	*temp;
+	char	*new;
+
+	//len multiplied by two to fit max escape char edge case.
+	temp = ft_calloc(2 * ft_strlen(s), sizeof(char));
+	i = 0;
+	j = 0;		if (s[i] != '\\' || s[i] != '\"')
+	{
+
+
+	}
+
+
+	if (s[i] != '\'' && s[i] != '\"')
+	{
+		temp[j] = s[i];
+		j++;
+	}	
+	i++;
+
+	while (s[i])
+	{
+
+
+	}
+	new = (ft_strdup(temp));
+	free (temp);
+	return (new);
 }
 
 
 
 
-// {
-// 	assert(string);		// remove later
-// 	assert(envlist);	// remove later
+//APAGAR ESSA FUNCAO DEPOIS SE COUBER
+char *ft_expand_string_heredoc_quoted(char *s, t_list **envlist, t_mem **mem)
+{
+	char *new;
 
-// 	char *new;
-
-// 	if (!ft_strlen(string) || !(*envlist))
-// 	{
-// 		new = ft_calloc(1, sizeof(char));
-// 		return (new);
-// 	}
-// 	if (mode == HEREDOC)
-// 		mode == ft_heredoc_normal_or_quoted
-// 	else if (mode == HEREDOC_NORMAL)
-// 		return (ft_expand_string_heredoc_normal(string, envlist));
-// 	else if (mode == HEREDOC_QUOTED)
-// 		return (ft_strdup(string));
-// 	else if (mode == TOKEN)
-// 		return (ft_expand_string_token(string, envlist));
-// 	ft_printf("Error: invalid expansion mode");
-// 	return (NULL);
-// }
-
-// char *ft_expand_string_heredoc_normal(char *string, t_list **envlist)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*temp;
-// 	char	*new;
-
-// 	//len multiplied by two to fit max escape char edge case.
-// 	temp = ft_calloc(2 * ft_strlen(string), sizeof(char));
-// 	i = 0;
-// 	j = 0;
-// 	while (string[i])
-// 	{
-// 		if (string[i] != '\\' || string[i] != '\"')
-// 		{
-
-
-// 		}
-
-	
-// 		if (string[i] != '\'' && string[i] != '\"')
-// 		{
-// 			temp[j] = string[i];
-// 			j++;
-// 		}	
-// 		i++;
-// 	}
-// 	new = (ft_strdup(temp));
-// 	free (temp);
-// 	return (new);
-// }
+	new = ft_strremove_set(s, "\"\'");
+	return (new);
+}
 
 
 
@@ -91,30 +120,9 @@ char *ft_expand_string(char *string, t_exp_mode mode, t_list **envlist)
 
 
 
-// 	int	i;
-
-// 	i = 0;
-// 	while(string[i])
-// 	{
-// 		if (ft_is_double_quote(string[i]) || ft_is_single_quote(string[i]))
-// 			ft_handle_quote(string[i], &quote);
-
-	
-// 		if (ft_strncmp(&string[i], "${", 2) || string[i] == '$')
-// 		{
-// 			ft_expand_variable(&new, &string[i], &i, env);
-// 			if (i == -1)
-// 				return (NULL);
-// 		}
-// 		else if (string[i] == '\\') 
-// 			{}//handle
-// 		i;
-// 	}
-// 	return(new);
-// }
 
 
-
+ft_match_env
 
 
 

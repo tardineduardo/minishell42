@@ -113,6 +113,7 @@ typedef struct s_exp_mem
 	int		i;
 	char	*new;
 	t_quote	quote;
+	t_exp_mode mode;
 }	t_exp_mem;
 
 
@@ -157,8 +158,7 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 
 
 //expand
-char *ft_expand_string(char *string, t_exp_mode mode, t_list **envlist);
-
+char *ft_expand_string(char *string, t_list **envlist, t_mem **mem);
 
 
 // built-ins

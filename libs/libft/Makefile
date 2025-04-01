@@ -70,6 +70,7 @@ STRING = string/ft_concatenate.c \
 		string/ft_strtok_r.c \
 		string/ft_fn_to_str.c \
 		string/ft_cat.c	\
+		string/ft_strremove_set.c \
 
 VALID =	valid/ft_isalnum.c \
 		valid/ft_isalpha.c \
