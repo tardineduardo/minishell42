@@ -9,6 +9,7 @@ EXECUTE 	=	src/execute.c \
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
+				src/expand.c \
 
 ENVIRON 	=	src/environs.c \
 

@@ -29,13 +29,16 @@ static char	*ft_find_end(char *s, char *set, size_t len)
 	return &s[i - 1];
 }
 
-char	*ft_strtrim_overwrite(char *s1, char *set)
+char	*ft_strtrim_overwrite(char **s, char *set)
 {
 	size_t	len;
 	size_t	new_len;
 	char	*start;
 	char	*end;
+	char	*s1;
 
+
+	s1 = *s;
 	if (!s1 || !set)
 		return (NULL);
 	if (*s1 == '\0')
