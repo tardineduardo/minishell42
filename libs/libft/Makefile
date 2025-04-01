@@ -78,6 +78,8 @@ VALID =	valid/ft_isalnum.c \
 		valid/ft_isprint.c \
 		valid/ft_isspace.c \
 		valid/ft_is_line_empty.c \
+		valid/ft_is_single_quote.c \
+		valid/ft_is_double_quote.c \
 
 SORT =	sort/ft_sort_int_array_bubble.c
 

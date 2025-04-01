@@ -12,79 +12,74 @@
 
 #include "../include/minishell.h"
 
-static void	*ft_cap_error(char *message, t_cap_mem **cap);
-static char	*ft_cap_input_loop(t_cap_mem **cap);
+void	*ft_cap_error(char *message, t_cap_mem **cap);
+bool	ft_line_is_incomplete(char *s);
+void	*ft_first_tokenize(t_mem **mem);
+char	*ft_cap_input_loop(t_mem **mem);
 
 
-char *ft_readline(t_cap_mem **cap)
+void	*ft_readline(t_mem **mem)
 {
-	(*cap)->line = readline(YELLOW "Minishell> " RESET);
+	t_cap_mem	*cap;
 
-	if (!(*cap)->line)
-		return (ft_cap_error("readline error", cap));
-
-	if (ft_strlen((*cap)->line) == 0)
+	cap = (*mem)->capture;
+	cap->line = readline(YELLOW "Minishell> " RESET);
+	if (!cap->line)
+		return (NULL);
+	if (ft_strlen(cap->line) == 0)
+		return (NULL);
+	if (!ft_tokenize(&cap->line, mem))
+		return (NULL);
+	if (!ft_cap_input_loop(mem))
 		return (NULL);
 
-	if (!ft_cap_input_loop(cap))
-		return (ft_cap_error("line capture error", cap));
-
-
-	add_history((*cap)->line);
-	return ((*cap)->line);
+	add_history(cap->line);
+	return (mem);
 }
 
-
-void	*ft_cap_error(char *message, t_cap_mem **cap)
+char	*ft_cap_input_loop(t_mem **mem)
 {
-	ft_dprintf(STDERR_FILENO, "Minishell: %s\n", message);
+	t_cap_mem	*cap;
+	t_tok_mem	*tok;
 
-	if ((*cap)->line)
-		ft_free_and_null((void *)&(*cap)->line);
-	if ((*cap)->trim)
-		ft_free_and_null((void *)&(*cap)->trim);
-	return (NULL);
-}
-
-
-void	*ft_cap_syscall_error(char *message)
-{
-	ft_dprintf(STDERR_FILENO, "%s: %s [%i]\n", message, strerror(errno), errno);
-	return (NULL);
-}
-
-
-
-char	*ft_cap_input_loop(t_cap_mem **cap)
-{
-	assert(cap);
-	assert(*cap);
-
+	cap = (*mem)->capture;
+	tok = (*mem)->tokenize;
 	while(1)
 	{
-		(*cap)->trim = ft_strtrim((*cap)->line, " \t");
-		if (!(*cap)->trim)
-			return (ft_cap_error("strtrim error", cap));
-
-		if ((*cap)->trim[ft_strlen((*cap)->trim) - 1] == '|')
+		if (ft_line_is_incomplete(cap->line))
 		{
-			ft_free_and_null((void *)&(*cap)->trim);
-			(*cap)->temp = (*cap)->line;
-			(*cap)->line = ft_strjoin((*cap)->line, (readline("> ")));			
-			if (!(*cap)->line)
-			{
-				ft_free_and_null((void *)&(*cap)->temp);
+			cap->append = (readline(YELLOW "append > " RESET));
+			if (!ft_tokenize(&cap->append, mem))
 				return (NULL);
-			}
-			ft_free_and_null((void *)&(*cap)->temp);
+			cap->temp = cap->line;
+			cap->line = ft_strjoin(cap->line, cap->append);
+			ft_free_and_null((void *)&cap->temp);
+			if (!tok->remain)
+				break;
+			ft_free_and_null((void *)&cap->append);
 			continue ;
 		}
-		ft_free_and_null((void *)&(*cap)->trim);
+		ft_free_and_null((void *)&tok->remain);	
 		break ;
 	}
-	return ((*cap)->line);
+	return (cap->line);
+}
 
 
+bool	ft_line_is_incomplete(char *s)
+{
+	char	*new;
+	size_t	len;
 
-
+	new = ft_strtrim(s, " \t");
+	if (!new)
+		return (false);
+	len = ft_strlen(new);
+	if (len > 0 && new[len - 1] == '|')
+	{
+		free(new);
+		return (true);
+	}
+	free(new);
+	return (false);
 }

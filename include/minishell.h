@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 15:42:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:23:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,32 @@
 #include <stdlib.h>						// for malloc etc
 #include <readline/readline.h>			// for readline
 #include <readline/history.h>			// for history
+
+
+//------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
+
+typedef enum e_tok_exit
+{
+	CONTINUE,
+	END,
+	ERROR,
+}	t_tok_exit;
+
+typedef enum e_quote
+{
+	SINGLE,
+	DOUBLE,
+	OFF
+}	t_quote;
+
+typedef enum e_exp_mode
+{
+	TOKEN,
+	HEREDOC,
+	HEREDOC_NORMAL,
+	HEREDOC_QUOTED,	
+}	t_exp_mode;
+
 
 
 //------------- STRUCTS DOS NODES DE CADA ÁREA --------------
@@ -66,22 +92,25 @@ typedef struct s_cmd_node
 typedef struct	s_tok_mem
 {
 	t_list		*toklst;
-	char		**tri_operator;
-	char		**dbl_operator;
-	char		*sgl_operator;
+	char		**operators;
 	t_list		*last_of_list;
 	t_tok_node	*last_of_toks;
 	t_list		*new;
 	t_tok_node	*node;
-	t_tok_node	*node2;
 	char		*str;
+	t_quote		quote;
+	char		*remain;
 }	t_tok_mem;
+
+
+
 
 typedef struct	s_cap_mem
 {
 	char		*line;
 	char		*trim;
 	char		*temp;
+	char		*append;
 }	t_cap_mem;
 
 typedef struct s_hd_mem
@@ -99,6 +128,14 @@ typedef struct s_env_mem
 }	t_env_mem;
 
 
+typedef struct s_exp_mem
+{
+	int		i;
+	char	*new;
+	t_quote	quote;
+}	t_exp_mem;
+
+
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
 
 typedef struct	s_mem
@@ -106,32 +143,24 @@ typedef struct	s_mem
 	t_cap_mem	*capture;
 	t_hd_mem	*heredoc;
 	t_tok_mem	*tokenize;
+	t_exp_mem	*expand;
 	t_env_mem	*environs;
 }	t_mem;
 
 
-//------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
-
-typedef enum e_tok_exit
-{
-	SUC,
-	END,
-	ERR,
-}	t_tok_exit;
-
 
 // main
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
-char	*ft_readline(t_cap_mem **cap);
+void	*ft_readline(t_mem **mem);
 char	*ft_execute(char *line, t_mem **mem);
 
 
 // heredocs
-char	*ft_heredoc(t_hd_mem **hd);
+char	*ft_heredoc(t_hd_mem **hd, t_list **envlist);
 void	ft_del_heredoc_node(void *content); // needed for EXIT
 
 //tokens
-void	*ft_tokenize(char *line, t_tok_mem **tok);
+void	*ft_tokenize(char **line, t_mem **mem);
 void	*ft_init_operators(t_tok_mem **tok);
 void	ft_del_token_node(void *content);
 
@@ -145,6 +174,10 @@ void *ft_init_operators(t_tok_mem **tok);
 // erros and exits
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
+
+
+//expand
+char *ft_expand_string(char *string, t_exp_mode mode, t_list **envlist);
 
 
 
@@ -163,3 +196,6 @@ void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 int 	excution_prom(t_list **content);
+
+//DEBUG - REMOVER DEPOIS
+void		ft_debug_list(t_list **head);

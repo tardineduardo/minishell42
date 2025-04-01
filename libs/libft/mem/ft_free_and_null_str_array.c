@@ -16,7 +16,7 @@ void	*ft_free_and_null_str_array(char ***array_of_strings)
 {
 	int	a;
 
-	if (!(**array_of_strings))
+	if (!array_of_strings || !*array_of_strings || !**array_of_strings)
 		return (NULL);
 	a = 0;
 	while ((*array_of_strings)[a])
