@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/30 15:46:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:01:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,14 @@
 // 	t_list	*o_concat;
 // 	int		err;
 // }			t_cmd_node;
+
+typedef struct s_ast
+{
+	bool			cmd;
+	bool			operator;
+	struct s_ast	*right;
+	struct s_ast	*left;
+}					t_ast;
 
 // fork_pipe
 int		*ft_pipe_control(void);
