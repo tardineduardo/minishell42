@@ -6,13 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:09 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 16:33:12 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:16:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/prototype.h"
 
-int	*ft_pipe_control(void)
+int	*ft_pipe_run(void)
 {	
 	int	*pipefd;
 

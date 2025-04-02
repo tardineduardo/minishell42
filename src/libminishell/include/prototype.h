@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/02 15:16:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:16:58 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ typedef struct s_ast_tree
 }						t_ast_tree;
 
 // fork_pipe
-int		*ft_pipe_control(void);
+int		*ft_pipe_run(void);
 pid_t	ft_fork_control(void);
 
 // exec_built-ins
