@@ -183,8 +183,6 @@ int excution_prom(t_list **content)
 	return (0);
 }
 
-// #include "./include/prototype.h"
-
 // int excution_prom(t_list **content)
 // {
 // 	t_cmd_node	*cmd;

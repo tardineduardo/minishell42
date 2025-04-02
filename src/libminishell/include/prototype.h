@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/01 12:01:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 11:02:24 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,30 @@
 // 	int		err;
 // }			t_cmd_node;
 
+typedef enum e_type
+{
+	NONE,
+	PIPE,
+	LIMITER,
+	CMD,
+	ARG,
+	FD,
+	BRACKET_O,
+	BRACKET_C,
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	HEREDOC_IN,
+	APPEND,
+	OPERATOR_OR,
+	OPERATOR_AND
+}	t_type;
+
 typedef struct s_ast
 {
 	bool			cmd;
 	bool			operator;
+	int				type;
+	int 			inherited_type;
 	struct s_ast	*right;
 	struct s_ast	*left;
 }					t_ast;
@@ -92,8 +112,6 @@ void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
 // execution
 int		ft_prompt_execution(t_list **ms_env, t_list **cmd);
 
-void	pipefd_control(int i, int num_cmds, int pipefd_0, int pipefd_1, int fd_in);
-void	fd_input_redir(t_list **input_lst);
-void	fd_output_redir(t_list **output_lst);
+void	pipe_fd_control(int i, int num_cmds, t_list **input_lst, t_list **output_lst, int pipefd_0, int pipefd_1, int fd_in);
 
 #endif

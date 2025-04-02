@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:48 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/31 15:44:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 11:51:35 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ char	*get_right_path(char **path_options, char *cmd_binary)
 	num_options = ft_count_items(path_options);
 	while (i < num_options)
 	{
-		test_path = ft_strjoin(path_options[i], "/");
-		test_path = ft_strjoin(test_path, cmd_binary);
+		test_path = ft_concatenate(path_options[i], "/", cmd_binary);
 		if (access(test_path, F_OK | X_OK) == 0)
 			return (test_path);
 		free(test_path);
@@ -81,6 +80,8 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
 		right_option = get_right_path(path_options, cmd_arr[0]);
 		if (!right_option)
 		{
+			if (path_options != NULL)
+				ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
 			free(right_option);
 			// perror("path option");
 			// exit(EXIT_FAILURE);
@@ -88,6 +89,7 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
 		else
 		{
 			cmd_arr[0] = ft_strdup(right_option);
+			ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
 			free(right_option);
 		}
 	}

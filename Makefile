@@ -29,7 +29,7 @@ STUDY_MATERIAL =	src/libminishell/external_commands/cmd_treatment.c \
 					src/libminishell/exec_built_in.c \
 					src/libminishell/execution.c \
 					src/libminishell/fork_pipe.c \
-					src/libminishell/redirections.c 
+					src/libminishell/fd_control.c 
 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \

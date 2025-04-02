@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:28:08 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:06:44 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@
 			a warning msg;
 			b. If the VAR_NAME does not exists, append the KEY=VALUE to our
 			linked list with all other environment variables
-		2. export
+		2. export VAR_NAME TODO
+			Creates a variable, but it doenst become visible, only when 
+			we pass a value to the variable it becomes visible. 
+		3. export
 			Passing only the command export, we need to print a list of all 
 			the exported variables TODO: how to identify if a env var is 
 			exported or not? running the command on real bash some vars
