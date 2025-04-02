@@ -6,13 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:18 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/28 16:31:42 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:19:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/prototype.h"
 
-void	ft_command_executor(t_list **ms_env, t_cmd_node	*cur_cmd)
+void	exec_command(t_list **ms_env, t_cmd_node	*cur_cmd)
 {
 	char	**cmd_arr;
 
@@ -28,7 +28,7 @@ void	ft_command_executor(t_list **ms_env, t_cmd_node	*cur_cmd)
 		exec_external_cmd(ms_env, cur_cmd);
 }
 
-int	ft_prompt_execution(t_list **ms_env, t_list **cmd)
+int	exec_pipeline(t_list **ms_env, t_list **cmd)
 {
 	pid_t	cpid;
 	int		*pipefd;
@@ -56,13 +56,13 @@ int	ft_prompt_execution(t_list **ms_env, t_list **cmd)
 		cpid = ft_fork_control();
 		if (cpid == 0)
 		{
-			if (!is_built_in(&cur_cmd->cmd_arr[0]))// need to implement a if where only external command are acceptable to redirect of input
-				fd_input_redir(&cur_cmd->input_lst);
+			// if (!is_built_in(&cur_cmd->cmd_arr[0]))// need to implement a if where only external command are acceptable to redirect of input
+			// 	fd_input_redir(&cur_cmd->input_lst);
 			if (cmds_counter > 1)
-				pipefd_control(i, cmds_counter, pipefd[0], pipefd[1], fd_in);
-			if (!is_built_in(&cur_cmd->cmd_arr[0]))
-				fd_output_redir(&cur_cmd->output_lst);
-			ft_command_executor(ms_env, cur_cmd);
+				pipe_fd_control(i, cmds_counter, &cur_cmd->input_lst, &cur_cmd->output_lst, pipefd[0], pipefd[1], fd_in);
+			// if (!is_built_in(&cur_cmd->cmd_arr[0]))
+			// 	fd_output_redir(&cur_cmd->output_lst);
+			exec_command(ms_env, cur_cmd);
 		}
 		if (i > 0) // Close previous read end
 			close(fd_in);

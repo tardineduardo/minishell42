@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/02 11:02:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:16:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,18 +82,17 @@ typedef enum e_type
 	HEREDOC_IN,
 	APPEND,
 	OPERATOR_OR,
-	OPERATOR_AND
+	OPERATOR_AND,
+	SUBSHELL
 }	t_type;
 
-typedef struct s_ast
+typedef struct s_ast_tree
 {
-	bool			cmd;
-	bool			operator;
-	int				type;
-	int 			inherited_type;
-	struct s_ast	*right;
-	struct s_ast	*left;
-}					t_ast;
+	t_cmd_node			*cmd;
+	int					type;
+	struct s_ast_tree	*right;
+	struct s_ast_tree	*left;
+}						t_ast_tree;
 
 // fork_pipe
 int		*ft_pipe_control(void);
@@ -110,7 +109,7 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
 void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
 
 // execution
-int		ft_prompt_execution(t_list **ms_env, t_list **cmd);
+int		exec_pipeline(t_list **ms_env, t_list **cmd);
 
 void	pipe_fd_control(int i, int num_cmds, t_list **input_lst, t_list **output_lst, int pipefd_0, int pipefd_1, int fd_in);
 
