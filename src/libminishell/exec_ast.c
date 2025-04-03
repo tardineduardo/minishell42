@@ -36,6 +36,6 @@ int exec_ast(t_list **ms_env, t_ast_tree **node)
 		}
 	}
 	else if ((*node)->type = PIPE)
-		return (exec_pipeline(ms_env, node));  // Your existing pipe logic
+		return (exec_pipe(ms_env, node));  // Your existing pipe logic
     return (1);
 }

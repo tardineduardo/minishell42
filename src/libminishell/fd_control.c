@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/02 16:14:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:31:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,22 +92,21 @@ void	fd_output_redir(t_list **output_lst)
 	}
 }
 
-void pipe_fd_control(int i, int num_cmds, t_list **input_lst, t_list **output_lst, 
-	int pipefd_0, int pipefd_1, int fd_in)
+void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2])
 {
-	if (input_lst != NULL && *input_lst != NULL)  
-		fd_input_redir(input_lst);
-	else if (i > 0)
+	if (cur_cmd->input_lst != NULL)  
+		fd_input_redir(&cur_cmd->input_lst);
+	else if (pipe_data->i > 0)
 	{
-		dup2(fd_in, STDIN_FILENO);
-		close(fd_in);
+		dup2(pipe_data->fd_next, STDIN_FILENO);
+		close(pipe_data->fd_next);
 	}
-	if (output_lst != NULL && *output_lst != NULL) 
-		fd_output_redir(output_lst);
-	else if (i < num_cmds - 1)
+	if (cur_cmd->output_lst != NULL) 
+		fd_output_redir(&cur_cmd->output_lst);
+	else if (pipe_data->i < pipe_data->num_cmds - 1)
 	{
-		dup2(pipefd_1, STDOUT_FILENO);
-		close(pipefd_1);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
 	}
-	close(pipefd_0);
+	close(pipefd[0]);
 }

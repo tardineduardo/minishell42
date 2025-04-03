@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/02 16:16:58 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:30:29 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,13 @@ typedef enum e_type
 	SUBSHELL
 }	t_type;
 
+typedef struct s_pipe_control
+{
+	int i;
+	int	num_cmds;
+	int	fd_next;
+}		t_pipe_control;
+
 typedef struct s_ast_tree
 {
 	t_cmd_node			*cmd;
@@ -109,8 +116,8 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
 void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
 
 // execution
-int		exec_pipeline(t_list **ms_env, t_list **cmd);
+int		exec_pipe(t_list **ms_env, t_list **cmd);
 
-void	pipe_fd_control(int i, int num_cmds, t_list **input_lst, t_list **output_lst, int pipefd_0, int pipefd_1, int fd_in);
+void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2]);
 
 #endif

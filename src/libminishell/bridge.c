@@ -158,7 +158,7 @@ int excution_prom(t_list **content)
 	cmd_node3->next = NULL;
 
 	cmd_lst = cmd_node1;
-	result = exec_pipeline(content, &cmd_lst);
+	result = exec_pipe(content, &cmd_lst);
 	printf("result: %d\n", result);
 
 	// Free memory

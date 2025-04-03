@@ -1,20 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 16:33:18 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/02 18:23:28 by luide-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "./include/prototype.h"
 
-void	exec_command(t_list **ms_env, t_cmd_node	*cur_cmd)
+void	exec_pipe_command(t_pipe_control *pipe_data, int pipefd[2], t_list **ms_env, t_cmd_node *cur_cmd)
 {
 	char	**cmd_arr;
+	pid_t	cpid;
 
 	cmd_arr = cur_cmd->cmd_arr;
 	if (!cur_cmd || !ms_env)
@@ -22,53 +11,50 @@ void	exec_command(t_list **ms_env, t_cmd_node	*cur_cmd)
 		perror("cmd or ms_env: cmd executor");
 		exit(EXIT_FAILURE);
 	}
-	if (is_built_in(cmd_arr))
-		exec_built_in(ms_env, cmd_arr);
-	else
-		exec_external_cmd(ms_env, cur_cmd);
+	cpid = ft_fork_control();
+	if (cpid == 0)
+	{
+		pipe_fd_control(pipe_data, cur_cmd, pipefd);
+		if (is_built_in(cmd_arr))
+			exec_built_in(ms_env, cmd_arr);
+		else
+			exec_external_cmd(ms_env, cur_cmd);
+	}
+	if (pipe_data->i > 0) // Close previous read end
+		close(pipe_data->fd_next);
+	pipe_data->fd_next = pipefd[0]; // Update for next iteration
+	if (pipe_data->i < pipe_data->num_cmds - 1)
+		close(pipefd[1]); // Close write end after use
 }
 
-int	exec_pipeline(t_list **ms_env, t_list **cmd)
+int	exec_pipe(t_list **ms_env, t_list **cmd)
 {
-	pid_t	cpid;
-	int		*pipefd;
-	int		status;
-	int		cmds_counter;
-	int		i;
-	int		fd_in;
-	t_cmd_node	*cur_cmd;
-	t_list		*cur_node;
+	int				*pipefd;
+	int				status;
+	t_cmd_node		*cur_cmd;
+	t_list			*cur_node;
+	t_pipe_control	*pipe_data;
 
-	fd_in = 0;
+	pipe_data = (t_pipe_control *)malloc(sizeof(t_pipe_control));
+	if (!pipe_data)
+		return (1);
+	pipe_data->fd_next = 0;
 	if (!cmd || !ms_env)
 	{
 		perror("cmd or ms_env: exec pipeline");
 		exit(EXIT_FAILURE);
 	}
-	cmds_counter = ft_lstsize(*cmd);
+	pipe_data->num_cmds = ft_lstsize(*cmd);
 	cur_node = *cmd;
-	i = 0;
-	while (i < cmds_counter)
+	pipe_data->i = 0;
+	while (pipe_data->i < pipe_data->num_cmds)
 	{
 		cur_cmd = cur_node->content;
-		if (i < cmds_counter - 1 && cmds_counter > 1)
-			pipefd = ft_pipe_run();
-		cpid = ft_fork_control();
-		if (cpid == 0)
-		{
-			if (cmds_counter > 1)
-				pipe_fd_control(i, cmds_counter, &cur_cmd->input_lst, &cur_cmd->output_lst, pipefd[0], pipefd[1], fd_in);
-			exec_command(ms_env, cur_cmd);
-		}
-		if (i > 0) // Close previous read end
-			close(fd_in);
-		fd_in = pipefd[0]; // Update for next iteration
-		if (i < cmds_counter - 1)
-			close(pipefd[1]); // Close write end after use
+		pipefd = ft_pipe_run();
+		exec_pipe_command(pipe_data, pipefd, ms_env, cur_cmd);
 		cur_node = cur_node->next;
-		i++;
+		pipe_data->i++;
 	}
-	// make this part below a separate function, now only the last status is returned.
 	while (waitpid(-1, &status, 0) > 0)
 	if (WIFEXITED(status))
     	return (WEXITSTATUS(status));
