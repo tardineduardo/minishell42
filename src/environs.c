@@ -199,26 +199,23 @@ void ft_del_env_node(void *content)
 
 void *ft_lst_sort_strlen(t_list **head)
 {
-	t_list	*low;
-	t_list	*sorted;
-	int		len;
+    t_list *low;
+    t_list *sorted;
 
-	sorted = malloc(sizeof(t_list));
-	if (!(*head) || !sorted)
-		return (NULL);
+    if (!head || !*head)
+        return (NULL);
 
-	sorted = NULL;
-	len = ft_lstsize(*head);
-	while (len >= 0)
-	{
-		low = ft_find_lowest(*head);
-		ft_lstadd_front(&sorted, low);
-		ft_lst_remove_node(head, low, ft_del_env_node);
-		len--;
-	}
-	ft_free_and_null((void *)&(*head));
-	*head = sorted;
-	return(head);
+    sorted = NULL;
+
+    while (*head)
+    {
+        ft_printf("\n\n\n_________________START________________");
+        low = ft_find_lowest(*head);
+        ft_lst_remove_node(head, low, NULL);
+        ft_lstadd_front(&sorted, low);
+    }
+    *head = sorted;
+    return (head);
 }
 
 t_list *ft_find_lowest(t_list *head)
@@ -237,7 +234,10 @@ t_list *ft_find_lowest(t_list *head)
      while (current)
      {
           env_current = (t_env_node *)current->content;
-          if (ft_strlen(env_current->variable) < ft_strlen(env_low->variable))
+      
+		 ft_printf("CURR:%s, LOW: %s\n", env_current->variable, env_low->variable);
+		
+		  if (ft_strlen(env_current->variable) < ft_strlen(env_low->variable))
           {
                lowest = current;
                env_low = (t_env_node *)lowest->content;

@@ -24,6 +24,7 @@ void ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*))
 	if (trav == NULL)
 		return ;
 	prev->next = trav->next;
-	(*del)((void *)trav->content);
+	if (del)
+		(*del)((void *)trav->content);
 	free(trav);
 }
