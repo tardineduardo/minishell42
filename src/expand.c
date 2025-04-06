@@ -10,7 +10,21 @@ It can be used for variable expansion from both heredocs and tokens, taking
 
 All memory used during ft_expand_string's execution is allocated and freed 
 within the function—except for the returned string.
+
+I need a double pointer to envlist because I'm going to put the envlist in
+order before expansion.
 */
+
+
+
+char *ft_expand_string(char *string, t_list **envlist, t_mem **mem)
+{
+	(void)mem;
+	(void)envlist;
+	return(string);
+}
+
+/*
 char *ft_expand_string(char *string, t_list **envlist, t_mem **mem)
 {
 	char *new;
@@ -70,7 +84,8 @@ char *ft_expand_string_heredoc_normal(char *s, t_list **envlist, t_mem **mem)
 	//len multiplied by two to fit max escape char edge case.
 	temp = ft_calloc(2 * ft_strlen(s), sizeof(char));
 	i = 0;
-	j = 0;		if (s[i] != '\\' || s[i] != '\"')
+	j = 0;		
+	if (s[i] != '\\' || s[i] != '\"')
 	{
 
 
@@ -120,13 +135,4 @@ char *ft_expand_string_heredoc_quoted(char *s, t_list **envlist, t_mem **mem)
 
 
 
-
-
-ft_match_env
-
-
-
-
-
-
-
+*/

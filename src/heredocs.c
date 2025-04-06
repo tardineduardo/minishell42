@@ -13,7 +13,7 @@
 #include "../include/minishell.h"
 
 char	*ft_hd_create_file(int *hc_count_int, char **fpath_cap);
-char	*ft_hd_input_loop(char **delim, char **fpath_cap, t_list **envlist);
+char	*ft_hd_input_loop(char **delim, char **fpath_cap, t_list **envlist, t_mem **mem);
 bool	ft_hd_break_condition(char *hc_input, char *delim);
 void	*ft_hd_write_to_file(char **hc_input, char **fpath_cap, int hc_loop_count);
 char	*ft_hd_validate_path(char **fpath_cap, int *hc_count_int);
@@ -21,15 +21,17 @@ int		ft_hd_init_file(char **fpath_cap);
 void	ft_del_heredoc_node(void *content);
 
 
-char	*ft_heredoc(t_hd_mem **hd, t_list **envlist)
+char	*ft_heredoc(t_mem **mem, t_hd_mem **hd, t_list **envlist)
 {
 	static int	hc_count_int;
 	t_hd_node	*hc_node;
 	t_list		*hc_new;
 
+
+
 	if (!ft_hd_create_file(&hc_count_int, &(*hd)->fpath_cap))
 		return (NULL);
-	if (!ft_hd_input_loop(&(*hd)->delim, &(*hd)->fpath_cap, envlist))
+	if (!ft_hd_input_loop(&(*hd)->delim, &(*hd)->fpath_cap, envlist, mem))
 		return (NULL);
 	hc_node = malloc(sizeof(t_hd_node));
 	if (!hc_node)
@@ -86,7 +88,8 @@ void	*ft_hd_write_to_file(char **hc_input, char **fpath_cap, int hc_loop_count)
 	return (*fpath_cap);
 }
 
-char	*ft_hd_input_loop(char **delim, char **fpath_cap, t_list **envlist)
+//simplificar esse prototipo
+char	*ft_hd_input_loop(char **delim, char **fpath_cap, t_list **envlist, t_mem **mem)
 {
 	int			hc_loop_count;
 	char		*hc_input;
@@ -99,7 +102,7 @@ char	*ft_hd_input_loop(char **delim, char **fpath_cap, t_list **envlist)
 		if (!hc_input)
 			return (NULL);
 		temp = hc_input;
-		hc_input = ft_expand_string(hc_input, HEREDOC, envlist);
+		hc_input = ft_expand_string(hc_input, envlist, mem);
 		ft_free_and_null((void *)&temp);
 		if (!hc_input)
 			return (NULL);

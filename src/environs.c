@@ -12,6 +12,10 @@
 
 #include "../include/minishell.h"
 
+t_list *ft_find_lowest(t_list *head);
+void *ft_lst_sort_strlen(t_list **head);
+
+
 void	ft_env_block_unset(t_list **envlist);
 void	ft_env_readonly(t_list **envlist);
 
@@ -49,6 +53,7 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 	}
 	ft_env_readonly(&(*env)->envlist);
 	ft_env_block_unset(&(*env)->envlist);
+	ft_lst_sort_strlen(&(*env)->envlist);
 	return ((*env)->envlist);
 }
 
@@ -185,4 +190,59 @@ void ft_del_env_node(void *content)
 	ft_free_and_null((void *)&node->variable);
 	ft_free_and_null((void *)&node->value);
 	ft_free_and_null((void *)&node);
+}
+
+
+
+
+
+
+void *ft_lst_sort_strlen(t_list **head)
+{
+	t_list	*low;
+	t_list	*sorted;
+	int		len;
+
+	sorted = malloc(sizeof(t_list));
+	if (!(*head) || !sorted)
+		return (NULL);
+
+	sorted = NULL;
+	len = ft_lstsize(*head);
+	while (len >= 0)
+	{
+		low = ft_find_lowest(*head);
+		ft_lstadd_front(&sorted, low);
+		ft_lst_remove_node(head, low, ft_del_env_node);
+		len--;
+	}
+	ft_free_and_null((void *)&(*head));
+	*head = sorted;
+	return(head);
+}
+
+t_list *ft_find_lowest(t_list *head)
+{
+     t_list *lowest;
+     t_list *current;
+     t_env_node *env_low;
+     t_env_node *env_current;
+
+     if (!head)
+          return (NULL);
+
+     lowest = head;
+     env_low = (t_env_node *)lowest->content;
+     current = head->next;
+     while (current)
+     {
+          env_current = (t_env_node *)current->content;
+          if (ft_strlen(env_current->variable) < ft_strlen(env_low->variable))
+          {
+               lowest = current;
+               env_low = (t_env_node *)lowest->content;
+          }
+          current = current->next;
+     }
+     return (lowest);
 }

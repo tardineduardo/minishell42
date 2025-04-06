@@ -137,7 +137,7 @@ char	*ft_execute(char *line, t_mem **mem);
 
 
 // heredocs
-char	*ft_heredoc(t_hd_mem **hd, t_list **envlist);
+char	*ft_heredoc(t_mem **mem, t_hd_mem **hd, t_list **envlist);
 void	ft_del_heredoc_node(void *content); // needed for EXIT
 
 //tokens
