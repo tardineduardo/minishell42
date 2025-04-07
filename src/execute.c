@@ -65,6 +65,7 @@ char *ft_execute(char *line, t_mem **mem)
 	else if (ft_strnstr((*mem)->capture->line, "<<", ft_strlen((*mem)->capture->line)))
 	{
 		(*mem)->heredoc->delim = ft_strtrim((*mem)->capture->line, " <");
+		(*mem)->heredoc->delim = ft_expand_string_heredoc_delimiter((*mem)->heredoc->delim, mem);
 		ft_heredoc(mem, &(*mem)->heredoc, &(*mem)->environs->envlist);
 	}
 	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)

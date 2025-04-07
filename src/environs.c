@@ -53,7 +53,6 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 	}
 	ft_env_readonly(&(*env)->envlist);
 	ft_env_block_unset(&(*env)->envlist);
-	ft_lst_sort_strlen(&(*env)->envlist);
 	return ((*env)->envlist);
 }
 
@@ -194,55 +193,3 @@ void ft_del_env_node(void *content)
 
 
 
-
-
-
-void *ft_lst_sort_strlen(t_list **head)
-{
-    t_list *low;
-    t_list *sorted;
-
-    if (!head || !*head)
-        return (NULL);
-
-    sorted = NULL;
-
-    while (*head)
-    {
-        ft_printf("\n\n\n_________________START________________");
-        low = ft_find_lowest(*head);
-        ft_lst_remove_node(head, low, NULL);
-        ft_lstadd_front(&sorted, low);
-    }
-    *head = sorted;
-    return (head);
-}
-
-t_list *ft_find_lowest(t_list *head)
-{
-     t_list *lowest;
-     t_list *current;
-     t_env_node *env_low;
-     t_env_node *env_current;
-
-     if (!head)
-          return (NULL);
-
-     lowest = head;
-     env_low = (t_env_node *)lowest->content;
-     current = head->next;
-     while (current)
-     {
-          env_current = (t_env_node *)current->content;
-      
-		 ft_printf("CURR:%s, LOW: %s\n", env_current->variable, env_low->variable);
-		
-		  if (ft_strlen(env_current->variable) < ft_strlen(env_low->variable))
-          {
-               lowest = current;
-               env_low = (t_env_node *)lowest->content;
-          }
-          current = current->next;
-     }
-     return (lowest);
-}

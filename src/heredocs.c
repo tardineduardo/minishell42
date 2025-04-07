@@ -21,12 +21,13 @@ int		ft_hd_init_file(char **fpath_cap);
 void	ft_del_heredoc_node(void *content);
 
 
-char	*ft_heredoc(t_mem **mem, t_hd_mem **hd, t_list **envlist)
+char	*ft_heredoc(char *delim, t_mem **mem) //t_hd_mem **hd, t_list **envlist)
 {
 	static int	hc_count_int;
 	t_hd_node	*hc_node;
 	t_list		*hc_new;
-
+	t_hd_mem 
+// PAREI AQUI. PRECISO REFAZER O HEREDOC TODO E LIMPAR A LOGICA DE PROTOTIPOS
 
 
 	if (!ft_hd_create_file(&hc_count_int, &(*hd)->fpath_cap))
@@ -75,6 +76,7 @@ void	*ft_hd_write_to_file(char **hc_input, char **fpath_cap, int hc_loop_count)
 		return (NULL);
 	}
 
+
 	// handle the first line and line breaks
 	if (hc_loop_count != 0)
 		ft_dprintf(hc_temp_file, "\n");
@@ -95,17 +97,26 @@ char	*ft_hd_input_loop(char **delim, char **fpath_cap, t_list **envlist, t_mem *
 	char		*hc_input;
 	char		*temp;
 
+	(void)envlist;
+	(void)mem;
 	hc_loop_count = 0;
 	while(1)
 	{
-		hc_input = readline(BLUE "heredoc > " RESET);
+		//Essa parte aqui ajuda a visualizar qual o delimitador esperado.
+		char *prompt = ft_concatenate("heredoc [", *delim, "] >");
+		ft_printf(BLUE "");
+		hc_input = readline(prompt);
+		ft_printf(RESET "");
 		if (!hc_input)
 			return (NULL);
 		temp = hc_input;
-		hc_input = ft_expand_string(hc_input, envlist, mem);
 		ft_free_and_null((void *)&temp);
 		if (!hc_input)
 			return (NULL);
+
+		//LEAAAAAAAK	
+		hc_input = ft_expand_string_heredoc_input(hc_input, mem);
+
 		if (ft_strcmp(*delim, hc_input) == 0)
 			break ;
 		if (!ft_hd_write_to_file(&hc_input, fpath_cap, hc_loop_count))

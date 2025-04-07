@@ -153,6 +153,7 @@ char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
 void	ft_free_split(char **results, size_t r_index); //?
 char	*ft_strremove_set(char *str, char *set);
+char *ft_insert_into_string(char **base, char *insert, char *base_delimiter);
 
 
 
@@ -198,9 +199,8 @@ void	*ft_lstclear_null(t_list **lst, void (*del)(void*));
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
-void	ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*));
-
-
+void	ft_lst_destroy_node(t_list **head, t_list *node, void (*del)(void*));
+void	ft_lst_unlink_node(t_list **head, t_list *node);
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstlast(t_list *lst);
@@ -210,6 +210,7 @@ int		ft_lstsize(t_list *lst);
 int		ft_clstsize(t_list **tail);
 int		ft_dclstsize(t_dll **tail);
 void	ft_debug_print_list(t_list **head, char *type, size_t offset);
+t_list	*ft_lstcopy(t_list *source);
 
 
 

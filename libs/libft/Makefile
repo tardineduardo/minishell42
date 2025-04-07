@@ -71,6 +71,7 @@ STRING = string/ft_concatenate.c \
 		string/ft_fn_to_str.c \
 		string/ft_cat.c	\
 		string/ft_strremove_set.c \
+		string/ft_insert_into_string.c \
 
 VALID =	valid/ft_isalnum.c \
 		valid/ft_isalpha.c \
@@ -97,9 +98,11 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lstmap.c \
 		lists/slist/ft_lstnew.c \
 		lists/slist/ft_lstsize.c \
-		lists/slist/ft_lst_remove_node.c \
+		lists/slist/ft_lst_destroy_node.c \
+		lists/slist/ft_lst_unlink_node.c \
 		lists/clist/ft_clistsize.c \
 		lists/dclist/ft_dclistsize.c \
+		lists/slist/ft_lstcopy.c \
 
 
 DEBUG =	debug/ft_debug_print_array_of_ints.c \

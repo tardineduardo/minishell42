@@ -1,7 +1,9 @@
 
 #include "../../libft.h"
 
-void ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*))
+/* removes node from a list and frees it (the node and its content).
+del can be NULL if no content inside the node needs to be freed. */
+void ft_lst_destroy_node(t_list **head, t_list *node, void (*del)(void*))
 {
 	t_list	*trav;
 	t_list	*prev;
@@ -11,7 +13,8 @@ void ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*))
 	if (*head == node)
 	{
 		*head = node->next;
-		(*del)((void *)node->content);
+		if (del)
+			(*del)((void *)node->content);
 		free(node);
 		return ;
 	}

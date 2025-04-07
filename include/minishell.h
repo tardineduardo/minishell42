@@ -39,7 +39,8 @@ typedef enum e_exp_mode
 	TOKEN,
 	HEREDOC,
 	HEREDOC_NORMAL,
-	HEREDOC_QUOTED,	
+	HEREDOC_QUOTED,
+	HEREDOC_DELIMITER,
 }	t_exp_mode;
 
 
@@ -98,6 +99,7 @@ typedef struct s_hd_mem
 	t_list		*list;
 	char		*delim;
 	char		*fpath_cap;
+	t_exp_mode	mode;
 }	t_hd_mem;
 
 typedef struct s_env_mem
@@ -110,10 +112,12 @@ typedef struct s_env_mem
 
 typedef struct s_exp_mem
 {
-	int		i;
+	int		a;
+	int		b;
+	char	*raw;
 	char	*new;
-	t_quote	quote;
-	t_exp_mode mode;
+	t_exp_mode	hd_mode;
+
 }	t_exp_mem;
 
 
@@ -158,7 +162,8 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 
 
 //expand
-char *ft_expand_string(char *string, t_list **envlist, t_mem **mem);
+char	*ft_expand_string_heredoc_delimiter(char *string, t_mem **mem);
+char	*ft_expand_string_heredoc_input(char *string, t_mem **mem);
 
 
 // built-ins
