@@ -44,7 +44,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->capture->append = NULL;
 	(*mem)->heredoc->delim = NULL;
 	(*mem)->heredoc->list = NULL;
-	(*mem)->heredoc->fpath_cap = NULL;
+	(*mem)->heredoc->filepath = NULL;
 	(*mem)->tokenize->toklst = NULL;
 	(*mem)->tokenize->operators = NULL;
 	(*mem)->tokenize->last_of_list = NULL;

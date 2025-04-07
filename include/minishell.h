@@ -49,7 +49,7 @@ typedef enum e_exp_mode
 
 typedef struct 	s_hd_node
 {
-	char		*fpath_node;
+	char		*fpath;
 }	t_hd_node;
 
 typedef struct 	s_tok_node
@@ -97,8 +97,14 @@ typedef struct	s_cap_mem
 typedef struct s_hd_mem
 {
 	t_list		*list;
+	t_list		*new;
+	t_hd_node	*node;
+
 	char		*delim;
-	char		*fpath_cap;
+	char		*filepath;
+	char		*looptemp;
+	char		*loopinput;
+
 	t_exp_mode	mode;
 }	t_hd_mem;
 
@@ -141,7 +147,7 @@ char	*ft_execute(char *line, t_mem **mem);
 
 
 // heredocs
-char	*ft_heredoc(t_mem **mem, t_hd_mem **hd, t_list **envlist);
+char	*ft_heredoc(char *delim, t_mem **mem);
 void	ft_del_heredoc_node(void *content); // needed for EXIT
 
 //tokens
