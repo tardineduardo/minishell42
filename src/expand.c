@@ -1,38 +1,67 @@
 #include "../include/minishell.h"
 
-void	ft_update_quote_flag_delimiter(char c, t_quote *quote);
-void	ft_copy_to_new_delimiter(char *s, char **new);
-char	*ft_expand_string_heredoc_delimiter(char *string, t_mem **mem);
-void	*ft_get_env_var(char **string, t_exp_mem *exp, t_mem **mem);
-void	*ft_expand(t_exp_mem **exp, t_mem **mem);
-void	ft_update_quote_flag_input(char c, t_quote *quote);
-void	*ft_copy_to_new_input(t_exp_mem **exp, t_mem **mem);
-char	*ft_expand_string_heredoc_input(char *string, t_mem **mem);
-void	*ft_lst_sort_strlen(t_list **head);
-t_list	*ft_find_lowest(t_list *head);
-t_exp_mode	ft_heredoc_normal_or_quoted(char *s);
+//expansão do delimitador (apenas as aspas são tratadas)
+void		ft_exp_hd_delim_copy_to_new_str(char *s, char **new);
+t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s);
+char		*ft_exp_hd_delim(char *string, t_mem **mem);
+
+//expansão do input do heredoc
+char		*ft_exp_hd_input_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+void		*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem);
+void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
+bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+bool		ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp);
+void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
+char		*ft_exp_hd_input(char *string, t_mem **mem);
+
+//expansão do token
+
+//funções compartilhadas
+void		ft_exp_update_quote_flag(char c, t_quote *quote);
+void		*ft_exp_lst_sort_strlen(t_list **head);
+t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
 
 
 
-// char *ft_expand_string(char *string, t_list **envlist, t_mem **mem)
-// {
-// 	(void)mem;
-// 	(void)envlist;
-// 	return(string);
-// }
 
-void	ft_update_quote_flag_delimiter(char c, t_quote *quote)
+
+
+
+/*
+▗▖ ▗▖▗▄▄▄     ▗▄▄▄ ▗▄▄▄▖▗▖   ▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖▗▄▄▄▖▗▄▄▄▖▗▄▄▖ 
+▐▌ ▐▌▐▌  █    ▐▌  █▐▌   ▐▌     █  ▐▛▚▞▜▌  █    █  ▐▌   ▐▌ ▐▌
+▐▛▀▜▌▐▌  █    ▐▌  █▐▛▀▀▘▐▌     █  ▐▌  ▐▌  █    █  ▐▛▀▀▘▐▛▀▚▖
+▐▌ ▐▌▐▙▄▄▀    ▐▙▄▄▀▐▙▄▄▖▐▙▄▄▖▗▄█▄▖▐▌  ▐▌▗▄█▄▖  █  ▐▙▄▄▖▐▌ ▐▌  */
+
+// Essa função vai me dizer se o heredoc será literal ou com expansão, baseado
+// na presença ou não de aspas. As aspas com escape precisam ser descartadas.
+// A função NÃO considera a hipótese de aspas não fechadas, esse caso deve ser
+// tratado antes da etapa de expansão. Ou seja, na assim é identificado um único
+// caso de aspas, simples ou duplas, a função retorna o modo "HERDOC_QUOTED".
+t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s)
 {
-	if (c == '\'' && *quote == OFF)
-		*quote = SINGLE;
-	else if (c == '\"' && *quote == OFF)
-		*quote = DOUBLE;
-	else if (c == '\'' && *quote == SINGLE)
-		*quote = OFF;
-	else if (c == '\"' && *quote == DOUBLE)
-		*quote = OFF;
+	int	a;
+	int	escapecount;
+
+	a = 0;
+	while (s[a])
+	{
+		if (a == 0 && (s[a] == '\'' || s[a] == '\"'))
+			return (HEREDOC_QUOTED);
+		if (s[a] == '\'' || s[a] == '\"')
+		{
+			escapecount = 0;
+			while (a > 0 && s[a - 1 - escapecount] == '\\')
+				escapecount++;
+			if (escapecount % 2 == 0)
+				return (HEREDOC_QUOTED);
+		}
+		a++;
+	}
+	return (HEREDOC_EXPAND);
 }
-void	ft_copy_to_new_delimiter(char *s, char **new)
+
+void	ft_exp_hd_delim_copy_to_new_str(char *s, char **new)
 {
 	int		a;
 	int		b;
@@ -45,7 +74,7 @@ void	ft_copy_to_new_delimiter(char *s, char **new)
 	while (s[a])
 	{
 		prev = quote;
-		ft_update_quote_flag_delimiter(s[a], &quote);
+		ft_exp_update_quote_flag(s[a], &quote);
 		if (quote != prev)
 		{
 			a++;
@@ -56,7 +85,8 @@ void	ft_copy_to_new_delimiter(char *s, char **new)
 	//(*new)[b] = '\0'; tirei pq uso calloc, ver se quebra
 	return ;
 }
-char	*ft_expand_string_heredoc_delimiter(char *string, t_mem **mem)
+
+char	*ft_exp_hd_delim(char *string, t_mem **mem)
 {
 	char *new;
 	t_exp_mem *exp;
@@ -73,15 +103,19 @@ char	*ft_expand_string_heredoc_delimiter(char *string, t_mem **mem)
 }
 
 
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 
-char	*ft_replace_in_string(char **base, char *insert,
-	size_t index, size_t len_to_replace)
+
+
+
+
+
+/*
+▗▖ ▗▖▗▄▄▄     ▗▄▄▄▖▗▖  ▗▖▗▄▄▖ ▗▖ ▗▖▗▄▄▄▖
+▐▌ ▐▌▐▌  █      █  ▐▛▚▖▐▌▐▌ ▐▌▐▌ ▐▌  █  
+▐▛▀▜▌▐▌  █      █  ▐▌ ▝▜▌▐▛▀▘ ▐▌ ▐▌  █  
+▐▌ ▐▌▐▙▄▄▀    ▗▄█▄▖▐▌  ▐▌▐▌   ▝▚▄▞▘  █   */
+
+char	*ft_exp_hd_input_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace)
 {
 	char	*new;
 	size_t	base_len;
@@ -105,8 +139,7 @@ char	*ft_replace_in_string(char **base, char *insert,
 	return (new);
 }
 
-
-void	*ft_insert_env_var(t_exp_mem **exp, t_mem **mem)
+void	*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem)
 {
 	t_list		*sorted;
 	t_list		*trav;
@@ -135,10 +168,7 @@ void	*ft_insert_env_var(t_exp_mem **exp, t_mem **mem)
 	return ((*exp)->raw);
 }
 
-
-
-
-void	*ft_expand(t_exp_mem **exp, t_mem **mem)
+void	*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
 	// int a;
 	// int b;
@@ -156,48 +186,34 @@ void	*ft_expand(t_exp_mem **exp, t_mem **mem)
 	// 	return(ft_increment_and_get_pid(exp));
 	// if (raw[a] == '$' && raw[a + 1] == '?')
 	// 	return(ft_increment_get_exit_code(exp));
-	return (ft_insert_env_var(exp, mem));
+	return (ft_exp_hd_input_find_variable(exp, mem));
 ;
 }
 
-void	ft_update_quote_flag_input(char c, t_quote *quote)
-{
-	if (c == '\'' && *quote == OFF)
-		*quote = SINGLE;
-	else if (c == '\"' && *quote == OFF)
-		*quote = DOUBLE;
-	else if (c == '\'' && *quote == SINGLE)
-		*quote = OFF;
-	else if (c == '\"' && *quote == DOUBLE)
-		*quote = OFF;
-}
-
-int	ft_try_expand_variable(t_exp_mem **exp, t_mem **mem)
+bool	ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 {
 	if ((*exp)->raw[(*exp)->a] == '$' && (*exp)->raw[(*exp)->a + 1])
 	{
-		if (!ft_expand(exp, mem))
-			return (0);
-		if ((*exp)->raw[(*exp)->a] == '$') // expansão falhou, $ ainda está lá
-		{
-			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
-		}
-		return (1);
+		if (!ft_exp_hd_input_handle_dollar_sign(exp, mem))						//ERRRO NA EXPANSAO
+			return (false);														//ERRRO NA EXPANSAO
+		if ((*exp)->raw[(*exp)->a] == '$')										//VARIAVEL NAO ENCONTRADA
+			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];				//'$' É COPIADO PARA A NOVA STRING
+		return (true);															//VARIAVEL EXPANDIDA COM SUCESSO
 	}
-	return (0);
+	return (false);																//'$' NAO ENCONTRADO, OU NO FIM DA STRING
 }
 
-int	ft_handle_backslash_end(t_exp_mem **exp)
+bool	ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp)
 {
 	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\0')
 	{
 		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
-		return (1);
+		return (true);
 	}
-	return (0);
+	return (false);
 }
 
-void	*ft_copy_to_new_input(t_exp_mem **exp, t_mem **mem)
+void	*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
 	t_quote	prev;
@@ -206,7 +222,7 @@ void	*ft_copy_to_new_input(t_exp_mem **exp, t_mem **mem)
 	while ((*exp)->raw[(*exp)->a])
 	{
 		prev = quote;
-		ft_update_quote_flag_input((*exp)->raw[(*exp)->a], &quote);
+		ft_exp_update_quote_flag((*exp)->raw[(*exp)->a], &quote);
 		if (quote != prev)
 		{
 			(*exp)->a++;
@@ -225,12 +241,11 @@ void	*ft_copy_to_new_input(t_exp_mem **exp, t_mem **mem)
 	return ((*exp)->new);
 }
 
-
 /* 1) AQUI ENTRA A STRING ASSIM QUE É DIGITADA NO HEREDOC. Podemos checar se
 a sring deve ser tratada literalmente ou com expansão por exp->hd_mode, que é
 definida em ft_expand_string_heredoc_delimiter/ft_heredoc_normal_or_quoted
 na hora de tratar as aspas do delimiter. */
-char	*ft_expand_string_heredoc_input(char *string, t_mem **mem)
+char	*ft_exp_hd_input(char *string, t_mem **mem)
 {
 	t_exp_mem	*exp;
 
@@ -255,7 +270,7 @@ char	*ft_expand_string_heredoc_input(char *string, t_mem **mem)
 	/* Aqui tem um problema, pois depois que eu chamo ft_copy_to_new_input
 	o valor de exp->new é exatamente igual ao de string. Pode ser um erro
 	de pointers e escopo, ou talvez uma variável trocada por engano. */
-	if(!ft_copy_to_new_input(&exp, mem))
+	if(!ft_exp_hd_input_copy_to_new_str(&exp, mem))
 		return (NULL);
 
 	return (exp->new);;
@@ -267,6 +282,12 @@ char	*ft_expand_string_heredoc_input(char *string, t_mem **mem)
 
 
 
+/*
+▗▄▄▄▖▗▄▖ ▗▖ ▗▖▗▄▄▄▖▗▖  ▗▖
+  █ ▐▌ ▐▌▐▌▗▞▘▐▌   ▐▛▚▖▐▌
+  █ ▐▌ ▐▌▐▛▚▖ ▐▛▀▀▘▐▌ ▝▜▌
+  █ ▝▚▄▞▘▐▌ ▐▌▐▙▄▄▖▐▌  ▐▌ */                         
+                         
 
 
 
@@ -276,38 +297,15 @@ char	*ft_expand_string_heredoc_input(char *string, t_mem **mem)
 
 
 
-// Essa função vai me dizer se o heredoc será literal ou com expansão, baseado
-// na presença ou não de aspas. As aspas com escape precisam ser descartadas.
-// A função NÃO considera a hipótese de aspas não fechadas, esse caso deve ser
-// tratado antes da etapa de expansão. Ou seja, na assim é identificado um único
-// caso de aspas, simples ou duplas, a função retorna o modo "HERDOC_QUOTED".
-t_exp_mode	ft_heredoc_normal_or_quoted(char *s)
-{
-	int	a;
-	int	escapecount;
-
-	a = 0;
-	while (s[a])
-	{
-		if (a == 0 && (s[a] == '\'' || s[a] == '\"'))
-			return (HEREDOC_QUOTED);
-		if (s[a] == '\'' || s[a] == '\"')
-		{
-			escapecount = 0;
-			while (a > 0 && s[a - 1 - escapecount] == '\\')
-				escapecount++;
-			if (escapecount % 2 == 0)
-				return (HEREDOC_QUOTED);
-		}
-		a++;
-	}
-	return (HEREDOC_EXPAND);
-}
 
 
+/*
+▗▄▄▖▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▄▄▄▖▗▄▄▄ 
+▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌  █
+ ▝▀▚▖▐▛▀▜▌▐▛▀▜▌▐▛▀▚▖▐▛▀▀▘▐▌  █
+▗▄▄▞▘▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖▐▙▄▄▀ */                              
 
-
-void *ft_lst_sort_strlen(t_list **to_sort)
+void	*ft_exp_lst_sort_strlen(t_list **to_sort)
 {
     t_list *low;
     t_list *sorted;
@@ -327,7 +325,7 @@ void *ft_lst_sort_strlen(t_list **to_sort)
     return (*to_sort);
 }
 
-t_list *ft_find_lowest(t_list *head)
+t_list	*ft_exp_lst_sort_strlen_find_lowest(t_list *head)
 {
      t_list *lowest;
      t_list *current;
@@ -351,4 +349,16 @@ t_list *ft_find_lowest(t_list *head)
           current = current->next;
      }
      return (lowest);
+}
+
+void	ft_exp_update_quote_flag(char c, t_quote *quote)
+{
+	if (c == '\'' && *quote == OFF)
+		*quote = SINGLE;
+	else if (c == '\"' && *quote == OFF)
+		*quote = DOUBLE;
+	else if (c == '\'' && *quote == SINGLE)
+		*quote = OFF;
+	else if (c == '\"' && *quote == DOUBLE)
+		*quote = OFF;
 }

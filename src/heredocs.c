@@ -29,7 +29,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 
 	hd = (*mem)->heredoc;
 	env = (*mem)->environs;
-	hd->delim = ft_expand_string_heredoc_delimiter(delimiter, mem);
+	hd->delim = ft_exp_hd_delim(delimiter, mem);
 	if (!hd->delim)
 		return (NULL);
 	if (!ft_hd_create_file(&hd_count_int, &hd->filepath))
@@ -119,13 +119,12 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		if (!hd->loopinput)
 			return (NULL);
 
-		//LEAAAAAAAK	
-
+		// Primeiro compara, SÓ DEPOIS expande.
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
 
-		//PRIMEIRO 
-		hd->loopinput = ft_expand_string_heredoc_input(hd->loopinput, mem);
+		//Aqui tem um leak, depois arrumo. 
+		hd->loopinput = ft_exp_hd_input(hd->loopinput, mem);
 
 		if (hd->loopinput)
 			if (!ft_hd_write_to_file(hd_loop_count, mem))
