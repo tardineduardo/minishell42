@@ -153,7 +153,6 @@ char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
 void	ft_free_split(char **results, size_t r_index); //?
 char	*ft_strremove_set(char *str, char *set);
-char *ft_insert_into_string(char **base, char *insert, char *base_delimiter);
 
 
 

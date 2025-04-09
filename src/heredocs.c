@@ -18,6 +18,7 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem);
 char	*ft_hd_validate_path(char **filepath, int *hd_count_int);
 int		ft_hd_init_file(char **filepath);
 void	ft_del_heredoc_node(void *content);
+void	ft_reset_exp(t_mem **mem);
 
 
 char	*ft_heredoc(char *delimiter, t_mem **mem)
@@ -119,13 +120,18 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 			return (NULL);
 
 		//LEAAAAAAAK	
-		hd->loopinput = ft_expand_string_heredoc_input(hd->loopinput, mem);
 
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
-		if (!ft_hd_write_to_file(hd_loop_count, mem))
-			return (NULL);
+
+		//PRIMEIRO 
+		hd->loopinput = ft_expand_string_heredoc_input(hd->loopinput, mem);
+
+		if (hd->loopinput)
+			if (!ft_hd_write_to_file(hd_loop_count, mem))
+				return (NULL);
 		hd_loop_count++;
+		ft_reset_exp(mem);
 	}
 	ft_free_and_null((void *)&hd->loopinput);
 	return (hd->filepath);
@@ -193,4 +199,20 @@ void	ft_del_heredoc_node(void *content)
 		ft_free_and_null((void *)&hd_node->fpath);
 	}
 	ft_free_and_null((void *)&hd_node);
+}
+
+
+
+void	ft_reset_exp(t_mem **mem)
+{
+	t_exp_mem *exp;
+
+	exp = (*mem)->expand;
+
+	exp->a = 0;
+	exp->b = 0;
+	exp->new = NULL;
+	exp->raw = NULL;
+
+
 }

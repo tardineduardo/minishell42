@@ -36,9 +36,9 @@ typedef enum e_quote
 
 typedef enum e_exp_mode
 {
+	NONE,
 	TOKEN,
-	HEREDOC,
-	HEREDOC_NORMAL,
+	HEREDOC_EXPAND,
 	HEREDOC_QUOTED,
 	HEREDOC_DELIMITER,
 }	t_exp_mode;
