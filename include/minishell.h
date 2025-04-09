@@ -189,3 +189,26 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
+
+
+
+//expansão do delimitador (apenas as aspas são tratadas)
+void		ft_exp_hd_delim_copy_to_new_str(char *s, char **new);
+t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s);
+char		*ft_exp_hd_delim(char *string, t_mem **mem);
+
+//expansão do input do heredoc
+char		*ft_exp_hd_input_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+void		*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem);
+void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
+bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+bool		ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp);
+void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
+char		*ft_exp_hd_input(char *string, t_mem **mem);
+
+//expansão do token
+
+//funções compartilhadas
+void		ft_exp_update_quote_flag(char c, t_quote *quote);
+void		*ft_exp_lst_sort_strlen(t_list **head);
+t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);

@@ -97,8 +97,8 @@ char	*ft_exp_hd_delim(char *string, t_mem **mem)
 	new = ft_calloc(ft_strlen(string) + 1, sizeof(char));
 	if (!new)
 		return (NULL);
-	ft_copy_to_new_delimiter(string, &new);
-	exp->hd_mode = ft_heredoc_normal_or_quoted(string);
+	ft_exp_hd_delim_copy_to_new_str(string, &new);
+	exp->hd_mode = ft_exp_hd_delim_normal_or_quoted(string);
 	return (new);
 }
 
@@ -153,7 +153,7 @@ void	*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem)
 	sorted = ft_lstcopy((*mem)->environs->envlist);
 	if (!sorted)
 		return (NULL);
-	ft_lst_sort_strlen(&sorted);
+	ft_exp_lst_sort_strlen(&sorted);
 	trav = sorted;
 	while (trav)
 	{
@@ -164,7 +164,7 @@ void	*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem)
 		trav = trav->next;
 	}
 	if (trav)
-		ft_replace_in_string(&(*exp)->raw, node->value, (*exp)->a, len + 1);
+	ft_exp_hd_input_insert_var_in_string(&(*exp)->raw, node->value, (*exp)->a, len + 1);
 	return ((*exp)->raw);
 }
 
@@ -230,9 +230,9 @@ void	*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 		}
 		if ((*exp)->hd_mode == HEREDOC_EXPAND)
 		{
-			if (ft_try_expand_variable(exp, mem))
+			if (ft_exp_hd_input_try_to_expand_variable(exp, mem))
 				continue;
-			if (ft_handle_backslash_end(exp))
+			if (ft_exp_hd_input_handle_backslash_end(exp))
 				continue;
 		}
 		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
@@ -317,7 +317,7 @@ void	*ft_exp_lst_sort_strlen(t_list **to_sort)
 
     while (*to_sort)
     {
-        low = ft_find_lowest(*to_sort);
+        low = ft_exp_lst_sort_strlen_find_lowest(*to_sort);
         ft_lst_unlink_node(to_sort, low);
         ft_lstadd_front(&sorted, low);
     }
