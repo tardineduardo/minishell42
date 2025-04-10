@@ -110,8 +110,8 @@ int excution_prom(t_list **content)
 		exit(EXIT_FAILURE);
 	}
 	// creating the input list. It is connected with the first node from cmds
-	input_node1->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
-	input_node2->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test2.txt";
+	input_node1->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/input_test.txt";
+	input_node2->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/input_test2.txt";
 	// connecting t_input to content from t_list node and connecting t_list nodes
 	input_lst_node1->content = (t_input_node *)input_node1;
 	input_lst_node1->next = input_lst_node2;
@@ -119,9 +119,9 @@ int excution_prom(t_list **content)
 	input_lst_node2->next = NULL;
 	input_lst = input_lst_node1;
 	// creating the output list. It is connect with the last node from cmds
-	output_node1->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/output_test.txt";
+	output_node1->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/output_test.txt";
 	output_node1->create = true;
-	output_node2->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/output_test2.txt";
+	output_node2->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/output_test2.txt";
 	output_node2->create = true;
 	//connecting t_ouput to content from t_list and connecting t_list nodes
 	output_lst_node1->content = (t_output_node *)output_node1;
@@ -131,7 +131,7 @@ int excution_prom(t_list **content)
 	output_lst = output_lst_node1;
 	//initializing cmds
 	cmd->cmd_arr[0] = "cat";
-	//cmd->cmd_arr[1] = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
+	//cmd->cmd_arr[1] = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/input_test.txt";
 	cmd->cmd_arr[1] = NULL;
 	cmd->input_lst = input_lst;
 	cmd->output_lst = NULL;
@@ -266,8 +266,8 @@ int excution_prom(t_list **content)
 // 		exit(EXIT_FAILURE);
 // 	}
 // 	// creating the input list. It is connected with the first node from cmds
-// 	input_node1->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
-// 	input_node2->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test2.txt";
+// 	input_node1->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/input_test.txt";
+// 	input_node2->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/input_test2.txt";
 // 	// connecting t_input to content from t_list node and connecting t_list nodes
 // 	input_lst_node1->content = (t_input_node *)input_node1;
 // 	input_lst_node1->next = input_lst_node2;
@@ -275,9 +275,9 @@ int excution_prom(t_list **content)
 // 	input_lst_node2->next = NULL;
 // 	input_lst = input_lst_node1;
 // 	// creating the output list. It is connect with the last node from cmds
-// 	output_node1->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/output_test.txt";
+// 	output_node1->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/output_test.txt";
 // 	output_node1->create = true;
-// 	output_node2->name = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/output_test2.txt";
+// 	output_node2->name = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/output_test2.txt";
 // 	output_node2->create = true;
 // 	//connecting t_ouput to content from t_list and connecting t_list nodes
 // 	output_lst_node1->content = (t_output_node *)output_node1;
@@ -287,7 +287,7 @@ int excution_prom(t_list **content)
 // 	output_lst = output_lst_node1;
 // 	//initializing cmds
 // 	cmd->cmd_arr[0] = "pwd";
-// 	//cmd->cmd_arr[1] = "/nfs/homes/luide-ca/common-core-github/minishell-github-edu/src/auxiliary_files/input_test.txt";
+// 	//cmd->cmd_arr[1] = "/Users/luisf./Code/common-core/minishell-oficial-repo/src/auxiliary_files/input_test.txt";
 // 	cmd->cmd_arr[1] = NULL;
 // 	cmd->input_lst = input_lst;
 // 	cmd->output_lst = output_lst;
