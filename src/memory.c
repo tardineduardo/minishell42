@@ -55,11 +55,11 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->environs->envlist = NULL;
 	(*mem)->environs->new_node = NULL;
 	(*mem)->environs->result = NULL;
-	(*mem)->expand->new = NULL;
 	(*mem)->expand->a = 0;
 	(*mem)->expand->b = 0;
-	(*mem)->expand->raw = NULL;
-	(*mem)->expand->new = NULL;
+	(*mem)->expand->raw = "";
+	(*mem)->expand->new = "";
+	(*mem)->expand->sortedvars = NULL;
 
 	//init operators -----------------------------------------------------------
 	if (!ft_init_operators(&(*mem)->tokenize))

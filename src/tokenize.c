@@ -6,6 +6,7 @@ int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
+void		ft_expand_toklist(t_list **toklst, t_mem **mem);
 
 
 void	*ft_tokenize(char **line, t_mem **mem)
@@ -24,8 +25,32 @@ void	*ft_tokenize(char **line, t_mem **mem)
 			break ;
 	}
 	ft_free_and_null((void *)&tok->remain);
+	ft_expand_toklist(&tok->toklst, mem);
+	ft_debug_list(&tok->toklst);
+	ft_printf("\n");
+
 	return (mem);
 }
+
+
+
+void ft_expand_toklist(t_list **toklst, t_mem **mem)
+{
+	char	*temp;
+	t_list	*trav;
+	t_tok_node	*tok_node;
+
+	trav = *toklst;
+	while (trav)
+	{
+		tok_node = (t_tok_node *)trav->content;
+		temp = tok_node->tokstr;
+		tok_node->tokstr = ft_exp_token(tok_node->tokstr, mem);
+		ft_free_and_null((void *)&temp);
+		trav = trav->next;
+	}
+}
+
 
 
 

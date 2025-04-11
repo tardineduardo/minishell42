@@ -6,21 +6,12 @@ t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s);
 char		*ft_exp_hd_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
-char		*ft_exp_hd_input_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
-void		*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem);
+char		*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+void		*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem);
 void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
-bool		ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp);
 void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char		*ft_exp_hd_input(char *string, t_mem **mem);
-
-//expansão do token
-
-//funções compartilhadas
-void		ft_exp_update_quote_flag(char c, t_quote *quote);
-void		*ft_exp_lst_sort_strlen(t_list **head);
-t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
-
 
 
 
@@ -94,11 +85,15 @@ char	*ft_exp_hd_delim(char *string, t_mem **mem)
 	exp = (*mem)->expand;
 	if (!ft_strlen(string))
 		return (ft_strdup(""));
-	new = ft_calloc(ft_strlen(string) + 1, sizeof(char));
+	new = ft_calloc(ft_strlen(string) + 100, sizeof(char));
 	if (!new)
 		return (NULL);
 	ft_exp_hd_delim_copy_to_new_str(string, &new);
 	exp->hd_mode = ft_exp_hd_delim_normal_or_quoted(string);
+
+	// DO I NEED THIS HERE?
+	// ft_reset_exp(mem);
+
 	return (new);
 }
 
@@ -115,58 +110,7 @@ char	*ft_exp_hd_delim(char *string, t_mem **mem)
 ▐▛▀▜▌▐▌  █      █  ▐▌ ▝▜▌▐▛▀▘ ▐▌ ▐▌  █  
 ▐▌ ▐▌▐▙▄▄▀    ▗▄█▄▖▐▌  ▐▌▐▌   ▝▚▄▞▘  █   */
 
-char	*ft_exp_hd_input_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace)
-{
-	char	*new;
-	size_t	base_len;
-	size_t	insert_len;
 
-	if (!base || !*base || !insert)
-		return (NULL);
-	base_len = ft_strlen(*base);
-	insert_len = ft_strlen(insert);
-	new = ft_calloc(base_len - len_to_replace + insert_len + 1,
-		sizeof(char));
-	if (!new)
-		return (NULL);
-	ft_strlcpy(new, *base, index + 1);
-	ft_strlcpy(new + index, insert, insert_len + 1);
-	ft_strlcpy(new + index + insert_len,
-	*base + index + len_to_replace,
-	base_len - index - len_to_replace + 1);
-	free(*base);
-	*base = new;
-	return (new);
-}
-
-void	*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem)
-{
-	t_list		*sorted;
-	t_list		*trav;
-	t_env_node	*node;
-	size_t		len;
-	char		*str;
-
-	str = &(*exp)->raw[(*exp)->a];
-	if (!str || str[0] != '$' || str[1] == '\0')
-		return (NULL);
-	sorted = ft_lstcopy((*mem)->environs->envlist);
-	if (!sorted)
-		return (NULL);
-	ft_exp_lst_sort_strlen(&sorted);
-	trav = sorted;
-	while (trav)
-	{
-		node = (t_env_node *)trav->content;
-		len = ft_strlen(node->variable);
-		if (ft_strncmp(&str[1], node->variable, len) == 0)
-			break ;
-		trav = trav->next;
-	}
-	if (trav)
-	ft_exp_hd_input_insert_var_in_string(&(*exp)->raw, node->value, (*exp)->a, len + 1);
-	return ((*exp)->raw);
-}
 
 void	*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
@@ -186,22 +130,23 @@ void	*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 	// 	return(ft_increment_and_get_pid(exp));
 	// if (raw[a] == '$' && raw[a + 1] == '?')
 	// 	return(ft_increment_get_exit_code(exp));
-	return (ft_exp_hd_input_find_variable(exp, mem));
-;
+	return (ft_exp_find_variable(exp, mem));
 }
 
 bool	ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 {
 	if ((*exp)->raw[(*exp)->a] == '$' && (*exp)->raw[(*exp)->a + 1])
 	{
-		if (!ft_exp_hd_input_handle_dollar_sign(exp, mem))						//ERRRO NA EXPANSAO
-			return (false);														//ERRRO NA EXPANSAO
-		if ((*exp)->raw[(*exp)->a] == '$')										//VARIAVEL NAO ENCONTRADA
-			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];				//'$' É COPIADO PARA A NOVA STRING
-		return (true);															//VARIAVEL EXPANDIDA COM SUCESSO
+		if (!ft_exp_hd_input_handle_dollar_sign(exp, mem))//ERRRO NA EXPANSAO
+			return (false);//ERRRO NA EXPANSAO
+		if ((*exp)->raw[(*exp)->a] == '$')//VARIAVEL NAO ENCONTRADA
+			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		return (true);//VARIAVEL EXPANDIDA COM SUCESSO
 	}
-	return (false);																//'$' NAO ENCONTRADO, OU NO FIM DA STRING
+	return (false);
 }
+
+
 
 bool	ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp)
 {
@@ -241,13 +186,14 @@ void	*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 	return ((*exp)->new);
 }
 
-/* 1) AQUI ENTRA A STRING ASSIM QUE É DIGITADA NO HEREDOC. Podemos checar se
+/* 1 AQUI ENTRA A STRING ASSIM QUE É DIGITADA NO HEREDOC. Podemos checar se
 a sring deve ser tratada literalmente ou com expansão por exp->hd_mode, que é
 definida em ft_expand_string_heredoc_delimiter/ft_heredoc_normal_or_quoted
 na hora de tratar as aspas do delimiter. */
 char	*ft_exp_hd_input(char *string, t_mem **mem)
 {
 	t_exp_mem	*exp;
+	char		*toreturn;
 
 	//Primeiro checo se a string é NULL, o que é um caso de erro.
 	if (!string)
@@ -261,7 +207,7 @@ char	*ft_exp_hd_input(char *string, t_mem **mem)
 	para facilitar a limpeza de memória e reduzir o número de linhas. */
 	exp = (*mem)->expand;
 	exp->raw = ft_strdup(string);
-	exp->new = ft_calloc(1, sizeof(char));
+	exp->new = ft_calloc(100, sizeof(char));
 	/* Alocando apenas uma string vazia para new para poder passar essa
 	variável para outras funções. O tamanho de new será definido depois, de
 	acordo com o length do valor da variável. */
@@ -273,7 +219,10 @@ char	*ft_exp_hd_input(char *string, t_mem **mem)
 	if(!ft_exp_hd_input_copy_to_new_str(&exp, mem))
 		return (NULL);
 
-	return (exp->new);;
+	toreturn = ft_strdup(exp->new);
+	//PROTECT
+	ft_reset_exp(mem);
+	return (toreturn);
 }
 
 
@@ -282,12 +231,6 @@ char	*ft_exp_hd_input(char *string, t_mem **mem)
 
 
 
-/*
-▗▄▄▄▖▗▄▖ ▗▖ ▗▖▗▄▄▄▖▗▖  ▗▖
-  █ ▐▌ ▐▌▐▌▗▞▘▐▌   ▐▛▚▖▐▌
-  █ ▐▌ ▐▌▐▛▚▖ ▐▛▀▀▘▐▌ ▝▜▌
-  █ ▝▚▄▞▘▐▌ ▐▌▐▙▄▄▖▐▌  ▐▌ */                         
-                         
 
 
 
@@ -299,66 +242,21 @@ char	*ft_exp_hd_input(char *string, t_mem **mem)
 
 
 
-/*
-▗▄▄▖▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▄▄▄▖▗▄▄▄ 
-▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌  █
- ▝▀▚▖▐▛▀▜▌▐▛▀▜▌▐▛▀▚▖▐▛▀▀▘▐▌  █
-▗▄▄▞▘▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖▐▙▄▄▀ */                              
 
-void	*ft_exp_lst_sort_strlen(t_list **to_sort)
-{
-    t_list *low;
-    t_list *sorted;
 
-    if (!to_sort || !*to_sort)
-        return (NULL);
 
-    sorted = NULL;
 
-    while (*to_sort)
-    {
-        low = ft_exp_lst_sort_strlen_find_lowest(*to_sort);
-        ft_lst_unlink_node(to_sort, low);
-        ft_lstadd_front(&sorted, low);
-    }
-    *to_sort = sorted;
-    return (*to_sort);
-}
 
-t_list	*ft_exp_lst_sort_strlen_find_lowest(t_list *head)
-{
-     t_list *lowest;
-     t_list *current;
-     t_env_node *env_low;
-     t_env_node *env_current;
 
-     if (!head)
-          return (NULL);
 
-     lowest = head;
-     env_low = (t_env_node *)lowest->content;
-     current = head->next;
-     while (current)
-     {
-          env_current = (t_env_node *)current->content;
-		  if (ft_strlen(env_current->variable) < ft_strlen(env_low->variable))
-          {
-               lowest = current;
-               env_low = (t_env_node *)lowest->content;
-          }
-          current = current->next;
-     }
-     return (lowest);
-}
 
-void	ft_exp_update_quote_flag(char c, t_quote *quote)
-{
-	if (c == '\'' && *quote == OFF)
-		*quote = SINGLE;
-	else if (c == '\"' && *quote == OFF)
-		*quote = DOUBLE;
-	else if (c == '\'' && *quote == SINGLE)
-		*quote = OFF;
-	else if (c == '\"' && *quote == DOUBLE)
-		*quote = OFF;
-}
+
+
+
+
+
+
+
+
+
+

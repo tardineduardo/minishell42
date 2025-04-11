@@ -67,6 +67,7 @@ char *ft_execute(char *line, t_mem **mem)
 	{
 		delim = ft_strtrim((*mem)->capture->line, " <");
 		ft_heredoc(delim, mem);
+		free(delim);
 	}
 	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)
 		ft_clear_mem_and_exit(mem);

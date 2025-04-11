@@ -29,9 +29,9 @@ typedef enum e_tok_exit
 
 typedef enum e_quote
 {
+	OFF,
 	SINGLE,
 	DOUBLE,
-	OFF
 }	t_quote;
 
 typedef enum e_exp_mode
@@ -122,6 +122,7 @@ typedef struct s_exp_mem
 	int		b;
 	char	*raw;
 	char	*new;
+	t_list	*sortedvars;
 	t_exp_mode	hd_mode;
 
 }	t_exp_mem;
@@ -198,8 +199,8 @@ t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s);
 char		*ft_exp_hd_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
-char		*ft_exp_hd_input_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
-void		*ft_exp_hd_input_find_variable(t_exp_mem **exp, t_mem **mem);
+char		*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+void		*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem);
 void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
 bool		ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp);
@@ -207,6 +208,11 @@ void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char		*ft_exp_hd_input(char *string, t_mem **mem);
 
 //expansão do token
+char	*ft_exp_token(char *string, t_mem **mem);
+void	ft_reset_exp(t_mem **mem);
+bool	ft_exp_token_is_quote_escaped(char *s, int index);
+void	ft_exp_update_quote_flag_escaped(char *c, t_quote *quote, int index);
+
 
 //funções compartilhadas
 void		ft_exp_update_quote_flag(char c, t_quote *quote);
