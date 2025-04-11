@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:54 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/28 15:32:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:11:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,6 @@ void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd)
 	cmd_arr = cmd->cmd_arr;
 	cmd_arr = update_cmd_arr(ms_env, cmd_arr);
 	ms_env_arr = ft_ms_env_arr(ms_env);
-	/*
-		Studying about if is necessary to pass environ when calling execve, I understood
-		that if I pass the binary with the right path (or the first arg from execve) it isnt
-		necessary to pass environ (or the third param from execve) TODO: align this with edu
-	*/
 	if (execve(cmd_arr[0], cmd_arr, ms_env_arr) == -1)
 	{
 		//perror(cmd_arr[0]);

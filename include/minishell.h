@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/01 14:23:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/11 16:15:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,16 +135,21 @@ typedef struct s_exp_mem
 	t_quote	quote;
 }	t_exp_mem;
 
+typedef struct s_org_tok_mem
+{
+	t_list	*org_toklst;
+}		t_org_tok_mem;
 
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
 
 typedef struct	s_mem
 {
-	t_cap_mem	*capture;
-	t_hd_mem	*heredoc;
-	t_tok_mem	*tokenize;
-	t_exp_mem	*expand;
-	t_env_mem	*environs;
+	t_cap_mem		*capture;
+	t_hd_mem		*heredoc;
+	t_tok_mem		*tokenize;
+	t_exp_mem		*expand;
+	t_env_mem		*environs;
+	t_org_tok_mem	*org_tokenize;
 }	t_mem;
 
 
@@ -199,3 +204,7 @@ int 	excution_prom(t_list **content);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
+
+int	ft_ast_create(t_mem **mem);
+
+void	ft_del_org_token_node(void *content);

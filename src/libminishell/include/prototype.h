@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:36:03 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/03 15:30:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/11 14:43:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,21 +69,11 @@
 
 typedef enum e_type
 {
-	NONE,
-	PIPE,
-	LIMITER,
-	CMD,
-	ARG,
-	FD,
-	BRACKET_O,
-	BRACKET_C,
-	REDIRECT_IN,
-	REDIRECT_OUT,
-	HEREDOC_IN,
-	APPEND,
-	OPERATOR_OR,
 	OPERATOR_AND,
-	SUBSHELL
+	OPERATOR_OR,
+	PAREN_O,
+	PAREN_C,
+	PIPE,
 }	t_type;
 
 typedef struct s_pipe_control
@@ -117,7 +107,7 @@ void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
 
 // execution
 int		exec_pipe(t_list **ms_env, t_list **cmd);
-
+void	exec_pipe_cmd(t_pipe_control *pipe_data, int pipefd[2], t_list **ms_env, t_cmd_node *cur_cmd);
 void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2]);
 
 #endif

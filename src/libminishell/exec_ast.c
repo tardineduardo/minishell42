@@ -9,13 +9,13 @@ int exec_ast(t_list **ms_env, t_ast_tree **node)
 	else if ((*node)->type = OPERATOR_AND)
 	{
 		if (exec_ast(ms_env, (*node)->left) == 0)
-			return exec_ast(ms_env, (*node)->right);
+			return (exec_ast(ms_env, (*node)->right));
 		return (1);
 	}
 	else if ((*node)->type = OPERATOR_OR)
 	{
 		if (exec_ast(ms_env, (*node)->left) != 0)
-			return exec_ast(ms_env, (*node)->right);
+			return (exec_ast(ms_env, (*node)->right));
 		return (0);
 	}
 	else if ((*node)->type = SUBSHELL)
@@ -36,6 +36,6 @@ int exec_ast(t_list **ms_env, t_ast_tree **node)
 		}
 	}
 	else if ((*node)->type = PIPE)
-		return (exec_pipe(ms_env, node));  // Your existing pipe logic
+		return (exec_pipe(ms_env, node));
     return (1);
 }

@@ -1,6 +1,28 @@
 #include "./include/prototype.h"
 
-void	exec_pipe_command(t_pipe_control *pipe_data, int pipefd[2], t_list **ms_env, t_cmd_node *cur_cmd)
+int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd)
+{
+	char	**cmd_arr;
+
+	cmd_arr = cur_cmd->cmd_arr;
+	if (!cur_cmd || !ms_env)
+	{
+		perror("cmd or ms_env: cmd executor");
+		exit(EXIT_FAILURE);
+	}
+	if (is_built_in(cmd_arr))
+	{
+		exec_built_in(ms_env, cmd_arr);
+		return (0);
+	}
+	else
+	{
+		exec_external_cmd(ms_env, cur_cmd);
+		return (0);
+	}
+}
+
+void	exec_pipe_cmd(t_pipe_control *pipe_data, int pipefd[2], t_list **ms_env, t_cmd_node *cur_cmd)
 {
 	char	**cmd_arr;
 	pid_t	cpid;
@@ -51,7 +73,7 @@ int	exec_pipe(t_list **ms_env, t_list **cmd)
 	{
 		cur_cmd = cur_node->content;
 		pipefd = ft_pipe_run();
-		exec_pipe_command(pipe_data, pipefd, ms_env, cur_cmd);
+		exec_pipe_cmd(pipe_data, pipefd, ms_env, cur_cmd);
 		cur_node = cur_node->next;
 		pipe_data->i++;
 	}
