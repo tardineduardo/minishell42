@@ -27,7 +27,7 @@ char		*ft_exp_hd_input(char *string, t_mem **mem);
 // Essa função vai me dizer se o heredoc será literal ou com expansão, baseado
 // na presença ou não de aspas. As aspas com escape precisam ser descartadas.
 // A função NÃO considera a hipótese de aspas não fechadas, esse caso deve ser
-// tratado antes da etapa de expansão. Ou seja, na assim é identificado um único
+// tratado antes da etapa de expansão. Ou seja, assim que é identificado um único
 // caso de aspas, simples ou duplas, a função retorna o modo "HERDOC_QUOTED".
 t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s)
 {
@@ -212,10 +212,6 @@ char	*ft_exp_hd_input(char *string, t_mem **mem)
 	variável para outras funções. O tamanho de new será definido depois, de
 	acordo com o length do valor da variável. */
 		
-
-	/* Aqui tem um problema, pois depois que eu chamo ft_copy_to_new_input
-	o valor de exp->new é exatamente igual ao de string. Pode ser um erro
-	de pointers e escopo, ou talvez uma variável trocada por engano. */
 	if(!ft_exp_hd_input_copy_to_new_str(&exp, mem))
 		return (NULL);
 

@@ -103,7 +103,6 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 
 	hd =(*mem)->heredoc;
 	(void)envlist;
-	(void)mem;
 	hd_loop_count = 0;
 	while(1)
 	{
@@ -116,7 +115,6 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		if (!hd->loopinput)
 			return (NULL);
 		hd->looptemp = hd->loopinput;
-//		ft_free_and_null((void *)&hd->looptemp);
 		if (!hd->loopinput)
 			return (NULL);
 
@@ -124,7 +122,6 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
 
-		//Aqui tem um leak, depois arrumo. 
 		hd->loopinput = ft_exp_hd_input(hd->loopinput, mem);
 
 		if (hd->loopinput)

@@ -50,7 +50,7 @@ void	*ft_exp_token_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 
 bool	ft_exp_token_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 {
-	if (ft_exp_token_is_dollar_sign_escaped((*exp)->raw, (*exp)->a))
+	if (ft_exp_token_is_dollar_sign_escaped((*exp)->raw, (*exp)->a)) //O ERRO ESTA AQUI
 	{
 		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
 		return (false);
@@ -94,7 +94,33 @@ bool	ft_exp_token_is_dollar_sign_escaped(char *s, int index)
 		}
 		a++;
 	}
-	return (true);
+	return (true); // AQUI ESTÁ O ERRO
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+/////// AQUI
+
 }
 
 bool	ft_exp_token_is_closing_quote(t_exp_mem **exp, t_quote *quote)
@@ -122,25 +148,19 @@ bool	ft_exp_token_is_quote_escaped(char *s, int index)
 	int	a;
 	int	escapecount;
 
-	// essa funçao nao checa erro, s nao pode ser NULL, index tem que ser
-	// maior ou igual a 0 e menor que o length de s.
 	if (index == 0)
+		return (false);
+	if (s[index] != '\'' && s[index] != '\"')
 		return (false);
 
 	a = index;
-	while (s[a])
-	{
-		if (s[a] == '\'' || s[a] == '\"')
-		{
-			escapecount = 0;
-			while (a > 0 && s[a - 1 - escapecount] == '\\')
-				escapecount++;
-			if (escapecount % 2 == 0)
-				return (false);
-		}
-		a++;
-	}
-	return (true);
+	escapecount = 0;
+	while (a > 0 && s[a - 1 - escapecount] == '\\')
+		escapecount++;
+
+	if (escapecount % 2 == 1)
+		return (true);
+	return (false);
 }
 
 
@@ -225,7 +245,9 @@ void	*ft_exp_token_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 			continue;
 		if (ft_handle_not_quoted(exp, mem))
 			continue;
-		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->b++;
+		(*exp)->a++;
 	}
 	(*exp)->new[(*exp)->b] = '\0';
 	return ((*exp)->new);
