@@ -18,7 +18,7 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem);
 char	*ft_hd_validate_path(char **filepath, int *hd_count_int);
 int		ft_hd_init_file(char **filepath);
 void	ft_del_heredoc_node(void *content);
-void	ft_reset_exp(t_mem **mem);
+void	reset(t_mem **mem);
 
 
 char	*ft_heredoc(char *delimiter, t_mem **mem)
@@ -29,7 +29,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 
 	hd = (*mem)->heredoc;
 	env = (*mem)->environs;
-	hd->delim = ft_exp_hd_delim(delimiter, mem);
+	hd->delim = hd_delim(delimiter, mem);
 	if (!hd->delim)
 		return (NULL);
 	if (!ft_hd_create_file(&hd_count_int, &hd->filepath))
@@ -121,7 +121,7 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
 
-		hd->loopinput = ft_exp_hd_input(hd->loopinput, mem);
+		hd->loopinput = hd_input(hd->loopinput, mem);
 
 		if (hd->loopinput)
 			if (!ft_hd_write_to_file(hd_loop_count, mem))

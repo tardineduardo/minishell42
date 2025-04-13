@@ -27,14 +27,14 @@ typedef enum e_tok_exit
 	TOK_ERROR,
 }	t_tok_exit;
 
-typedef enum e_exp_status
+typedef enum e_exit
 {
-	EXP_ERROR,
-	EXP_SUCCESS,
-	EXP_VAR_FOUND,
-	EXP_VAR_NOT_FOUND,
-	EXP_EMPTY_VARS,
-} t_exp_status;
+	ERROR,
+	SUCCESS,
+	VARIABLE_FOUND,
+	VARIABLE_NOT_FOUND,
+	EMPTY_VARIABLE_LIST,
+} t_exit;
 
 typedef enum e_quote
 {
@@ -131,6 +131,7 @@ typedef struct s_exp_mem
 	int		b;
 	char	*raw;
 	char	*new;
+	bool	error;
 	char	*value;
 	t_list	*sortedvars;
 	t_exp_mode	hd_mode;
@@ -204,28 +205,28 @@ void		ft_debug_list(t_list **head);
 
 
 //expansão do delimitador (apenas as aspas são tratadas)
-void		ft_exp_hd_delim_copy_to_new_str(char *s, char **new);
-t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s);
-char		*ft_exp_hd_delim(char *string, t_mem **mem);
+void		hd_delim_copy_to_new_str(char *s, char **new);
+t_exp_mode	hd_delim_normal_or_quoted(char *s);
+char		*hd_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
-char		*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
-char	*ft_exp_remove_var_from_string(char **s, size_t index);
+t_exit	insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+t_exit	remove_var_from_string(char **s, size_t index);
 
-t_exp_status	ft_exp_get_variable_value(char *dollar, char **value, t_mem **mem);
-void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
-bool		ft_exp_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
-bool		ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp);
-void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
-char		*ft_exp_hd_input(char *string, t_mem **mem);
+t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
+//void		*hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+bool		handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
+bool		hd_input_handle_backslash_end(t_exp_mem **exp);
+void		*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
+char		*hd_input(char *string, t_mem **mem);
 
 //expansão do token
 char	*ft_expand_token(char *string, t_mem **mem);
-void	ft_reset_exp(t_mem **mem);
+void	reset(t_mem **mem);
 
 
 //funções compartilhadas
-void		*ft_exp_lst_sort_strlen(t_list **head);
-t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
-void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index);
-t_list	*ft_lstcopy_and_rsort_by_len(t_list *source);
+void		*lst_sort_strlen(t_list **head);
+t_list		*lst_sort_strlen_find_lowest(t_list *head);
+void	update_quote_flag(char *s, t_quote *quote, int index);
+t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted);

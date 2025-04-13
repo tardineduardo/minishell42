@@ -60,6 +60,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->expand->raw = NULL;
 	(*mem)->expand->new = NULL;
 	(*mem)->expand->value = NULL;
+	(*mem)->expand->error = false;
 	(*mem)->expand->sortedvars = NULL;
 
 	//init operators -----------------------------------------------------------

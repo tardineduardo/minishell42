@@ -1,21 +1,25 @@
 #include "../include/minishell.h"
 
 //expansão do token
-void	*ft_expt_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
+void	*copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char	*ft_expand_token(char *string, t_mem **mem);
-bool	ft_expt_handle_backslash(t_exp_mem **exp);
-bool	ft_exp_is_char_escaped(char *string, char c, int a);
-bool	ft_expt_is_closing_quote(char c, t_quote *quote);
-t_exp_status	ft_expt_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
+bool	handle_backslash(t_exp_mem **exp);
+bool	is_char_escaped(char *string, int a);
+bool	is_closing_quote(char c, t_quote *quote);
+t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted);
 
 //funções compartilhadas
-void		*ft_exp_lst_sort_strlen(t_list **head);
-t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
-void		ft_reset_exp(t_mem **mem);
-t_exp_status	ft_exp_get_variable_value(char *dollar, char **value, t_mem **mem);
-char	*ft_exp_remove_var_from_string(char **s, size_t index);
-bool	ft_exp_is_char_escaped(char *string, char c, int a);
-void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index);
+void	*lst_sort_strlen(t_list **head);
+t_list	*lst_sort_strlen_find_lowest(t_list *head);
+void	reset(t_mem **mem);
+t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
+t_exit	remove_var_from_string(char **s, size_t index);
+void	update_quote_flag(char *s, t_quote *quote, int index);
+void	skip_char(t_exp_mem **exp);
+void	copy_char(t_exp_mem **exp);
+
+
 
 /*
 ▗▄▄▄▖▗▄▖ ▗▖ ▗▖▗▄▄▄▖▗▖  ▗▖
@@ -30,40 +34,48 @@ void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index);
 
 
 
-t_exp_status	ft_expt_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
+
+
+
+t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 {
-	char *value;
+	char **value;
+	t_exit exit;
+
 
 	//TODO HERE: OTHER $ CASES, LIKE $$, $? etc
 
-	value = ft_exp_get_variable_value(&(*exp)->raw[(*exp)->a], &(*exp)->value, mem);
-	if (value)
-	{
-		ft_exp_insert_var_in_string(&(*exp)->raw, value, (*exp)->a, ft_strlen(value) + 1);
-		return (EXP_VAR_FOUND);
-	}
+	value = &(*exp)->value;
+	exit = get_variable_value(&(*exp)->raw[(*exp)->a], value, mem);
+	
+	if (exit == VARIABLE_FOUND)
+		return (insert_var_in_string(&(*exp)->raw, *value, (*exp)->a, ft_strlen(*value) + 1));
+	else if(exit == VARIABLE_NOT_FOUND)
+		return (remove_var_from_string(&(*exp)->raw, (*exp)->a));
 	else
-	{
-		ft_exp_remove_var_from_string(&(*exp)->raw, (*exp)->a);
-		return (EXP_VAR_NOT_FOUND);
-	}	
+		return (ERROR);	
 }
 
 
-bool	ft_exp_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
+bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
-	if (ft_exp_is_char_escaped((*exp)->raw, '$', (*exp)->a))
+	t_exit exit;
+
+	if (is_char_escaped((*exp)->raw, (*exp)->a))
 	{
-		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		copy_char(exp);
 		return (false);
 	}
 	if ((*exp)->raw[(*exp)->a] == '$' && (*exp)->raw[(*exp)->a + 1])
 	{
-		if (ft_expt_handle_dollar_sign(exp, mem) == EXP_ERROR) //ERRRO NA EXPANSAO
-			return (false);//ERRRO NA EXPANSAO
-		if ((*exp)->raw[(*exp)->a] == '$')//VARIAVEL NAO ENCONTRADA
-			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
-		return (true);//VARIAVEL EXPANDIDA COM SUCESSO
+		exit = try_to_expand_variable(exp, mem);
+
+		if (exit == ERROR)	 									//ERRRO NA EXPANSAO
+		{
+			(*exp)->error = true;								//ERRRO NA EXPANSAO
+			return (false);										//ERRRO NA EXPANSAO
+		}
+		return (true);
 	}
 	return (false);
 }
@@ -76,7 +88,7 @@ bool	ft_exp_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 
 
 
-bool	ft_expt_is_closing_quote(char c, t_quote *quote)
+bool	is_closing_quote(char c, t_quote *quote)
 {
 	if (c == '\'' && *quote == Q_SINGLE)
 	{
@@ -94,12 +106,12 @@ bool	ft_expt_is_closing_quote(char c, t_quote *quote)
 
 
 
-bool	ft_expt_handle_backslash(t_exp_mem **exp)
+bool	handle_backslash(t_exp_mem **exp)
 {
 	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\\')
 	{
-		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
-		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		copy_char(exp);
+		copy_char(exp);
 		return (true);
 	}
 	return (false);
@@ -109,47 +121,47 @@ bool	ft_skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev)
 {
 	if (*quote != *prev)
 	{
-		(*exp)->a++;
+		skip_char(exp);
 		return (true);
 	}
 	return (false);
 }
 
-bool	ft_handle_single_quote(t_exp_mem **exp, t_quote quote)
+bool	handle_single_quote(t_exp_mem **exp, t_quote quote)
 {
 	if (quote == Q_SINGLE)
 	{
-		while (!ft_expt_is_closing_quote((*exp)->raw[(*exp)->a], &quote))
-			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		while (!is_closing_quote((*exp)->raw[(*exp)->a], &quote))
+			copy_char(exp);
 		return (true);
 	}
 	return (false);
 }
 
-bool	ft_handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
+bool	handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
 {
 	if (quote == Q_DOUBLE)
 	{
-		if (ft_exp_try_to_expand_variable(exp, mem))
+		if (handle_dollar_sign(exp, mem))
 			return (true);
-		if (ft_expt_handle_backslash(exp))
+		if (handle_backslash(exp))
 			return (true);
-		if (ft_expt_is_closing_quote((*exp)->raw[(*exp)->a], &quote)) //testar isso
+		if (is_closing_quote((*exp)->raw[(*exp)->a], &quote)) //testar isso
 		{
-			(*exp)->a++;
+			skip_char(exp);
 			return (true);
 		}
-		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		copy_char(exp);
 		return (true);
 	}
 	return (false);
 }
 
-bool	ft_handle_not_quoted(t_exp_mem **exp, t_mem **mem)
+bool	handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 {
-	if (ft_exp_try_to_expand_variable(exp, mem))
+	if (handle_dollar_sign(exp, mem))
 		return (true);
-	if (ft_expt_handle_backslash(exp))
+	if (handle_backslash(exp))
 		return (true);
 	return (false);
 }
@@ -159,7 +171,7 @@ bool	ft_handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 
 
 
-void	*ft_expt_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
+void	*copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
 	t_quote	prev;
@@ -167,19 +179,19 @@ void	*ft_expt_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 	quote = Q_OFF;
 	while ((*exp)->raw[(*exp)->a])
 	{
+		if ((*exp)->error)
+			return (NULL);	
 		prev = quote;
-		ft_exp_update_quote_flag_escaped((*exp)->raw, &quote, (*exp)->a);
+		update_quote_flag((*exp)->raw, &quote, (*exp)->a);
 		if (ft_skip_if_quote_changed(exp, &quote, &prev))
 			continue;
-		if (ft_handle_single_quote(exp, quote))
+		if (handle_single_quote(exp, quote))
 			continue;
-		if (ft_handle_double_quote(exp, mem, quote))
+		if (handle_double_quote(exp, mem, quote))
 			continue;
-		if (ft_handle_not_quoted(exp, mem))
+		if (handle_not_quoted(exp, mem))
 			continue;
-		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
-		(*exp)->b++;
-		(*exp)->a++;
+		copy_char(exp);
 	}
 	(*exp)->new[(*exp)->b] = '\0';
 	return ((*exp)->new);
@@ -210,12 +222,12 @@ char	*ft_expand_token(char *string, t_mem **mem)
 	acordo com o length do valor da variável. */
 
 
-	if(!ft_expt_copy_to_new_str(&exp, mem))
+	if(!copy_to_new_str(&exp, mem))
 		return (NULL);
 
 	toreturn = ft_strdup(exp->new);	
 	//PROTECT
-	ft_reset_exp(mem);
+	reset(mem);
 	return (toreturn);
 }
 
@@ -247,7 +259,7 @@ char	*ft_expand_token(char *string, t_mem **mem)
  ▝▀▚▖▐▛▀▜▌▐▛▀▜▌▐▛▀▚▖▐▛▀▀▘▐▌  █
 ▗▄▄▞▘▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖▐▙▄▄▀ */                              
 
-void	*ft_exp_lst_sort_strlen(t_list **to_sort)
+void	*lst_sort_strlen(t_list **to_sort)
 {
     t_list *low;
     t_list *sorted;
@@ -259,7 +271,7 @@ void	*ft_exp_lst_sort_strlen(t_list **to_sort)
 
     while (*to_sort)
     {
-        low = ft_exp_lst_sort_strlen_find_lowest(*to_sort);
+        low = lst_sort_strlen_find_lowest(*to_sort);
         ft_lst_unlink_node(to_sort, low);
         ft_lstadd_front(&sorted, low);
     }
@@ -267,7 +279,7 @@ void	*ft_exp_lst_sort_strlen(t_list **to_sort)
     return (*to_sort);
 }
 
-t_list	*ft_exp_lst_sort_strlen_find_lowest(t_list *head)
+t_list	*lst_sort_strlen_find_lowest(t_list *head)
 {
      t_list *lowest;
      t_list *current;
@@ -294,22 +306,22 @@ t_list	*ft_exp_lst_sort_strlen_find_lowest(t_list *head)
 }
 
 
-t_exp_status	*ft_exp_get_variable_value(char *dollar, char **value, t_mem **mem)
+t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 {
-	assert(dollar);
-	assert(value);
-	assert(*value);	
-	
 	t_list		*trav;
 	t_env_node	*node;
-	t_list		*sortedvars;
-	
+	t_list		*sortedvars; // was t_list **sortedvars
+
 	sortedvars = (*mem)->expand->sortedvars;
+
 	if (!dollar || dollar[0] != '$' || dollar[1] == '\0')
-		return (EXP_ERROR);
-	sortedvars = ft_lstcopy_and_rsort_by_len((*mem)->environs->envlist, &sortedvars);
+		return (ERROR);
+
+	ft_lstcopy_and_rsort_by_len((*mem)->environs->envlist, &sortedvars);
+
 	if (!sortedvars)
-		return (EXP_ERROR); //Considera que sempre haverá pelo menos uma variável de ambiente
+		return (ERROR);
+
 	trav = sortedvars;
 	while (trav)
 	{
@@ -321,20 +333,18 @@ t_exp_status	*ft_exp_get_variable_value(char *dollar, char **value, t_mem **mem)
 	if (trav)
 	{
 		*value = ft_strdup(node->value);
-		return(EXP_VAR_FOUND);
+		return (VARIABLE_FOUND);
 	}
 	else
 	{
-		return (EXP_VAR_NOT_FOUND);
+		return (VARIABLE_NOT_FOUND);
 	}
 }
 
-bool	ft_exp_is_char_escaped(char *string, char c, int a)
+
+bool	is_char_escaped(char *string, int a)
 {
 	int	escapecount;
-
-	if (string[a] != c)
-		return (false);
 
 	if (a <= 0)
 		return (false);
@@ -353,14 +363,14 @@ bool	ft_exp_is_char_escaped(char *string, char c, int a)
 }
 
 
-void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index)
+void	update_quote_flag(char *s, t_quote *quote, int index)
 {
 	char c;
 
 	c = s[index];
 	if (!ft_isquote(c))
 		return ;
-	if(!ft_exp_is_char_escaped(s, c, index))
+	if(!is_char_escaped(s, index))
 	{
 		if (c == '\'' && *quote == Q_OFF)
 			*quote = Q_SINGLE;
@@ -375,31 +385,27 @@ void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index)
 }
 
 
-char	*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace)
+t_exit	insert_var_in_string(char **base, char *insert, size_t index, size_t varlen)
 {
-	char	*new;
-	size_t	base_len;
-	size_t	insert_len;
+	char *prefix;
+	char *suffix;
+	char *new;
 
-	if (!base || !*base || !insert)
-		return (NULL);
-	base_len = ft_strlen(*base);
-	insert_len = ft_strlen(insert);
-	new = ft_calloc(base_len - len_to_replace + insert_len + 100,
-		sizeof(char));
-	if (!new)
-		return (NULL);
-	ft_strlcpy(new, *base, index + 1);
-	ft_strlcpy(new + index, insert, insert_len + 1);
-	ft_strlcpy(new + index + insert_len,
-	*base + index + len_to_replace,
-	base_len - index - len_to_replace + 1);
+	prefix = ft_substr(*base, 0, index);
+	suffix = ft_substr(*base, index + varlen, ft_strlen(*base) - index - varlen);
+
+	if (!prefix || !suffix)
+		return (ERROR);
+
+	new = ft_concatenate_var(3, prefix, insert, suffix);
+	free(suffix);
+	free(prefix);
 	ft_free_and_null((void *)&(*base));
 	*base = new;
-	return (new);
+	return (VARIABLE_FOUND);
 }
 
-char	*ft_exp_remove_var_from_string(char **s, size_t index)
+t_exit	remove_var_from_string(char **s, size_t index)
 {
 	size_t 	a;
 
@@ -410,7 +416,7 @@ char	*ft_exp_remove_var_from_string(char **s, size_t index)
 
 	ft_strlcpy(&(*s)[index], &(*s)[index + a + 1], ft_strlen(&(*s)[index]));
 
-	return (*s);
+	return (VARIABLE_NOT_FOUND);
 }
 
 
@@ -423,7 +429,7 @@ char	*ft_exp_remove_var_from_string(char **s, size_t index)
 ▐▛▀▚▖▐▛▀▀▘ ▝▀▚▖▐▛▀▀▘  █      ▐▛▀▜▌▐▌ ▝▜▌▐▌  █    ▐▛▀▀▘▐▛▀▚▖▐▛▀▀▘▐▛▀▀▘
 ▐▌ ▐▌▐▙▄▄▖▗▄▄▞▘▐▙▄▄▖  █      ▐▌ ▐▌▐▌  ▐▌▐▙▄▄▀    ▐▌   ▐▌ ▐▌▐▙▄▄▖▐▙▄▄▖*/
 
-void	ft_reset_exp(t_mem **mem)
+void	reset(t_mem **mem)
 {
 	t_exp_mem *exp;
 
@@ -434,8 +440,8 @@ void	ft_reset_exp(t_mem **mem)
 	ft_free_and_null((void *)&exp->new);
 	ft_free_and_null((void *)&exp->raw);
 	ft_free_and_null((void *)&exp->value);
+	exp->error = false;
 	ft_lstclear(&exp->sortedvars, NULL);
-
 }
 
 
@@ -443,30 +449,31 @@ void	ft_reset_exp(t_mem **mem)
 
 
 
-t_exp_status	*ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted)
+t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted)
 {
 	t_list	*trav;
 	t_list	*new_node;
 
 	if (!source)
-		return (EXP_EMPTY_VARS);
-	if (!sorted || !*sorted)
-		return (EXP_ERROR);
+		return (EMPTY_VARIABLE_LIST);
+	if (!sorted)
+		return (ERROR);
 
 	trav = source;
 	while (trav)
 	{
-		new_node = ft_lstnew(trav->content);
+		new_node = ft_lstnew(trav->content);  //TEM QUE DAR FREE NISSO
 		if (!new_node)
 		{
-			ft_lstclear(&(*sorted), free);
-			return (EXP_ERROR);
+			ft_lstclear(sorted, free);
+			*sorted = NULL;
+			return (ERROR);
 		}
-		ft_lstadd_back(&(*sorted), new_node);
+		ft_lstadd_back(sorted, new_node);
 		trav = trav->next;
 	}
-	ft_exp_lst_sort_strlen(sorted);
-	return (EXP_SUCCESS);
+	lst_sort_strlen(sorted);
+	return (SUCCESS);
 }
 
 
@@ -480,7 +487,7 @@ t_exp_status	*ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted)
 
 
 
-bool	ft_expt_is_quote_escaped(char *s, int a)
+bool	is_quote_escaped(char *s, int a)
 {
 	int	escapecount;
 
@@ -514,4 +521,16 @@ bool	ft_expt_is_quote_escaped(char *s, int a)
 
 
 
+void	copy_char(t_exp_mem **exp)
+{
+	(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+	(*exp)->b++;
+	(*exp)->a++;
+	return ;
+}
 
+void skip_char(t_exp_mem **exp)
+{
+	(*exp)->a++;
+	return ;
+}
