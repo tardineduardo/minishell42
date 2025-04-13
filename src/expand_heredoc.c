@@ -7,9 +7,9 @@ char		*ft_exp_hd_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
 char		*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
-void		*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem);
+t_exp_status	ft_exp_get_variable_value(char *dollar, char **value, t_mem **mem);
 void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
-bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+bool		ft_exp_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
 void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char		*ft_exp_hd_input(char *string, t_mem **mem);
 
@@ -37,19 +37,19 @@ t_exp_mode	ft_exp_hd_delim_normal_or_quoted(char *s)
 	a = 0;
 	while (s[a])
 	{
-		if (a == 0 && (s[a] == '\'' || s[a] == '\"'))
-			return (HEREDOC_QUOTED);
-		if (s[a] == '\'' || s[a] == '\"')
+		if (a == 0 && (ft_isquote(s[a])))
+			return (M_HD_EXPAND);
+		if (ft_isquote(s[a]))
 		{
 			escapecount = 0;
 			while (a > 0 && s[a - 1 - escapecount] == '\\')
 				escapecount++;
 			if (escapecount % 2 == 0)
-				return (HEREDOC_QUOTED);
+				return (M_HD_QUOTED);
 		}
 		a++;
 	}
-	return (HEREDOC_EXPAND);
+	return (M_HD_EXPAND);
 }
 
 void	ft_exp_hd_delim_copy_to_new_str(char *s, char **new)
@@ -59,7 +59,7 @@ void	ft_exp_hd_delim_copy_to_new_str(char *s, char **new)
 	t_quote	quote;
 	t_quote	prev;
 
-	quote = OFF;
+	quote = Q_OFF;
 	a = 0;
 	b = 0;
 	while (s[a])
@@ -85,7 +85,7 @@ char	*ft_exp_hd_delim(char *string, t_mem **mem)
 	exp = (*mem)->expand;
 	if (!ft_strlen(string))
 		return (ft_strdup(""));
-	new = ft_calloc(ft_strlen(string) + 100, sizeof(char));
+	new = ft_calloc(ft_strlen(string) * 2 + 1, sizeof(char));
 	if (!new)
 		return (NULL);
 	ft_exp_hd_delim_copy_to_new_str(string, &new);
@@ -112,39 +112,8 @@ char	*ft_exp_hd_delim(char *string, t_mem **mem)
 
 
 
-void	*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
-{
-	// int a;
-	// int b;
-	// char *new;
-	// char *raw;
 
-	// new = (*exp)->new;
-	// raw = (*exp)->raw;
-	// a = (*exp)->a;
-	// b = (*exp)->b;
 
-	// if (raw[a] == '\\' && raw[a + 1] == '\\')
-	// 	return(ft_increment_and_copy_slashes(exp, mem, 2));
-	// if (raw[a] == '$' && raw[a + 1] == '$')
-	// 	return(ft_increment_and_get_pid(exp));
-	// if (raw[a] == '$' && raw[a + 1] == '?')
-	// 	return(ft_increment_get_exit_code(exp));
-	return (ft_exp_find_variable(exp, mem));
-}
-
-bool	ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
-{
-	if ((*exp)->raw[(*exp)->a] == '$' && (*exp)->raw[(*exp)->a + 1])
-	{
-		if (!ft_exp_hd_input_handle_dollar_sign(exp, mem))//ERRRO NA EXPANSAO
-			return (false);//ERRRO NA EXPANSAO
-		if ((*exp)->raw[(*exp)->a] == '$')//VARIAVEL NAO ENCONTRADA
-			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
-		return (true);//VARIAVEL EXPANDIDA COM SUCESSO
-	}
-	return (false);
-}
 
 
 
@@ -163,7 +132,7 @@ void	*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 	t_quote	quote;
 	t_quote	prev;
 
-	quote = OFF;
+	quote = Q_OFF;
 	while ((*exp)->raw[(*exp)->a])
 	{
 		prev = quote;
@@ -173,9 +142,9 @@ void	*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 			(*exp)->a++;
 			continue;
 		}
-		if ((*exp)->hd_mode == HEREDOC_EXPAND)
+		if ((*exp)->hd_mode == M_HD_EXPAND)
 		{
-			if (ft_exp_hd_input_try_to_expand_variable(exp, mem))
+			if (ft_exp_try_to_expand_variable(exp, mem))
 				continue;
 			if (ft_exp_hd_input_handle_backslash_end(exp))
 				continue;
@@ -207,11 +176,9 @@ char	*ft_exp_hd_input(char *string, t_mem **mem)
 	para facilitar a limpeza de memória e reduzir o número de linhas. */
 	exp = (*mem)->expand;
 	exp->raw = ft_strdup(string);
-	exp->new = ft_calloc(100, sizeof(char));
-	/* Alocando apenas uma string vazia para new para poder passar essa
-	variável para outras funções. O tamanho de new será definido depois, de
-	acordo com o length do valor da variável. */
-		
+	exp->new = ft_calloc(ft_strlen(string) * 2 + 1, sizeof(char));
+	//PROTECT
+	
 	if(!ft_exp_hd_input_copy_to_new_str(&exp, mem))
 		return (NULL);
 

@@ -22,25 +22,34 @@
 
 typedef enum e_tok_exit
 {
-	CONTINUE,
-	END,
-	ERROR,
+	TOK_CONTINUE,
+	TOK_END,
+	TOK_ERROR,
 }	t_tok_exit;
+
+typedef enum e_exp_status
+{
+	EXP_ERROR,
+	EXP_SUCCESS,
+	EXP_VAR_FOUND,
+	EXP_VAR_NOT_FOUND,
+	EXP_EMPTY_VARS,
+} t_exp_status;
 
 typedef enum e_quote
 {
-	OFF,
-	SINGLE,
-	DOUBLE,
+	Q_OFF,
+	Q_SINGLE,
+	Q_DOUBLE,
 }	t_quote;
 
 typedef enum e_exp_mode
 {
-	NONE,
-	TOKEN,
-	HEREDOC_EXPAND,
-	HEREDOC_QUOTED,
-	HEREDOC_DELIMITER,
+	M_OFF,
+	M_TOKEN,
+	M_HD_EXPAND,
+	M_HD_QUOTED,
+	M_HD_DELIMITER,
 }	t_exp_mode;
 
 
@@ -122,6 +131,7 @@ typedef struct s_exp_mem
 	int		b;
 	char	*raw;
 	char	*new;
+	char	*value;
 	t_list	*sortedvars;
 	t_exp_mode	hd_mode;
 
@@ -202,9 +212,9 @@ char		*ft_exp_hd_delim(char *string, t_mem **mem);
 char		*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
 char	*ft_exp_remove_var_from_string(char **s, size_t index);
 
-void		*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem);
+t_exp_status	ft_exp_get_variable_value(char *dollar, char **value, t_mem **mem);
 void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
-bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+bool		ft_exp_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
 bool		ft_exp_hd_input_handle_backslash_end(t_exp_mem **exp);
 void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char		*ft_exp_hd_input(char *string, t_mem **mem);
@@ -212,10 +222,10 @@ char		*ft_exp_hd_input(char *string, t_mem **mem);
 //expansão do token
 char	*ft_expand_token(char *string, t_mem **mem);
 void	ft_reset_exp(t_mem **mem);
-bool	ft_expt_is_quote_escaped(char *s, int index);
 
 
 //funções compartilhadas
 void		*ft_exp_lst_sort_strlen(t_list **head);
 t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
 void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index);
+t_list	*ft_lstcopy_and_rsort_by_len(t_list *source);

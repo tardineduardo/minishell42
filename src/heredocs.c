@@ -108,10 +108,9 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 	{
 		//Essa parte aqui ajuda a visualizar qual o delimitador esperado.
 		char *prompt = ft_concatenate("heredoc [", hd->delim, "] >");
-		ft_printf(BLUE "");
-		hd->loopinput = readline(prompt);
+		ft_printf(BLUE "%s" RESET, prompt);
+		hd->loopinput = readline(" ");
 		free(prompt);
-		ft_printf(RESET "");
 		if (!hd->loopinput)
 			return (NULL);
 		hd->looptemp = hd->loopinput;
