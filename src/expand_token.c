@@ -1,14 +1,11 @@
 #include "../include/minishell.h"
 
 //expansão do token
-void	*ft_exp_token_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
-char	*ft_exp_token(char *string, t_mem **mem);
-bool	ft_exp_token_handle_backslash(t_exp_mem **exp);
-bool	ft_exp_token_is_dollar_sign_escaped(char *s, int index);
-bool	ft_exp_token_is_closing_quote(t_exp_mem **exp, t_quote *quote);
-
-
-
+void	*ft_expt_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
+char	*ft_expand_token(char *string, t_mem **mem);
+bool	ft_expt_handle_backslash(t_exp_mem **exp);
+bool	ft_expt_is_char_escaped(char *string, char c, int a);
+bool	ft_expt_is_closing_quote(char c, t_quote *quote);
 
 
 
@@ -20,13 +17,7 @@ bool	ft_exp_token_is_closing_quote(t_exp_mem **exp, t_quote *quote);
 
 
 
-//TODOS os outros backslashes além de \\ e do \ no final da string eu vou
-// tratar antes de validar as aspas ou o dollar sign (vendo se a soma de barras
-//é par ou impar.
-
-
-
-void	*ft_exp_token_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
+void	*ft_expt_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
 	// int a;
 	// int b;
@@ -45,19 +36,20 @@ void	*ft_exp_token_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 	// if (raw[a] == '$' && raw[a + 1] == '?')
 	// 	return(ft_increment_get_exit_code(exp));
 	return (ft_exp_find_variable(exp, mem));
+
 }
 
 
-bool	ft_exp_token_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
+bool	ft_expt_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 {
-	if (ft_exp_token_is_dollar_sign_escaped((*exp)->raw, (*exp)->a)) //O ERRO ESTA AQUI
+	if (ft_expt_is_char_escaped((*exp)->raw, '$', (*exp)->a))
 	{
 		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
 		return (false);
 	}
 	if ((*exp)->raw[(*exp)->a] == '$' && (*exp)->raw[(*exp)->a + 1])
 	{
-		if (!ft_exp_token_handle_dollar_sign(exp, mem))//ERRRO NA EXPANSAO
+		if (!ft_expt_handle_dollar_sign(exp, mem))//ERRRO NA EXPANSAO
 			return (false);//ERRRO NA EXPANSAO
 		if ((*exp)->raw[(*exp)->a] == '$')//VARIAVEL NAO ENCONTRADA
 			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
@@ -67,104 +59,52 @@ bool	ft_exp_token_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 }
 
 
-bool	ft_exp_token_is_dollar_sign_escaped(char *s, int index)
+
+
+bool	ft_expt_is_quote_escaped(char *s, int a)
 {
-	assert(s != NULL);
-
-	//assert(index >= 0 && index < (int)ft_strlen(s));
-
-	int	a;
 	int	escapecount;
 
-	// essa funçao nao checa erro, s nao pode ser NULL, index tem que ser
-	// maior ou igual a 0 e menor que o length de s.
-	if (index == 0)
+	if (s[a] != '\'' && s[a] != '\"')
 		return (false);
 
-	a = index;
-	while (s[a])
-	{
-		if (s[a] == '$')
-		{
-			escapecount = 0;
-			while (a > 0 && s[a - 1 - escapecount] == '\\')
-				escapecount++;
-			if (escapecount % 2 == 0)
-				return (false);
-		}
-		a++;
-	}
-	return (true); // AQUI ESTÁ O ERRO
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-/////// AQUI
-
-}
-
-bool	ft_exp_token_is_closing_quote(t_exp_mem **exp, t_quote *quote)
-{
-	if ((*exp)->raw[(*exp)->a] == '\'' && *quote == SINGLE)
-	{
-		*quote = OFF;
-		(*exp)->a++;
-		return (true);
-	}
-	else if ((*exp)->raw[(*exp)->a] == '\"' && *quote == DOUBLE)
-	{
-		*quote = OFF;
-		(*exp)->a++;
-		return (true);
-	}
-	return (false);
-}
-
-bool	ft_exp_token_is_quote_escaped(char *s, int index)
-{
-	assert(s != NULL);
-	assert(index >= 0 && index < (int)ft_strlen(s));
-
-	int	a;
-	int	escapecount;
-
-	if (index == 0)
-		return (false);
-	if (s[index] != '\'' && s[index] != '\"')
+	if (a <= 0)
 		return (false);
 
-	a = index;
 	escapecount = 0;
-	while (a > 0 && s[a - 1 - escapecount] == '\\')
-		escapecount++;
-
-	if (escapecount % 2 == 1)
-		return (true);
+	while (a > 0)
+	{
+		if (s[a - 1] == '\\')
+			escapecount++;
+		if (escapecount % 2 == 1)
+			return (true);
+		a--;
+	}
 	return (false);
 }
 
 
-bool	ft_exp_token_handle_backslash(t_exp_mem **exp)
+
+
+bool	ft_expt_is_closing_quote(char c, t_quote *quote)
+{
+	if (c == '\'' && *quote == SINGLE) ////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	{
+		*quote = OFF;
+		return (true);
+	}
+	else if (c == '\"' && *quote == DOUBLE)
+	{
+		*quote = OFF;
+		return (true);
+	}
+	return (false);
+}
+
+
+
+
+bool	ft_expt_handle_backslash(t_exp_mem **exp)
 {
 	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\\')
 	{
@@ -189,9 +129,8 @@ bool	ft_handle_single_quote(t_exp_mem **exp, t_quote quote)
 {
 	if (quote == SINGLE)
 	{
-		if (ft_exp_token_is_closing_quote(exp, &quote))
-			return (true);
-		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
+		while (!ft_expt_is_closing_quote((*exp)->raw[(*exp)->a], &quote))
+			(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
 		return (true);
 	}
 	return (false);
@@ -201,12 +140,15 @@ bool	ft_handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
 {
 	if (quote == DOUBLE)
 	{
-		if (ft_exp_token_try_to_expand_variable(exp, mem))
+		if (ft_expt_try_to_expand_variable(exp, mem))
 			return (true);
-		if (ft_exp_token_handle_backslash(exp))
+		if (ft_expt_handle_backslash(exp))
 			return (true);
-		if (ft_exp_token_is_closing_quote(exp, &quote))
+		if (ft_expt_is_closing_quote((*exp)->raw[(*exp)->a], &quote)) //testar isso
+		{
+			(*exp)->a++;
 			return (true);
+		}
 		(*exp)->new[(*exp)->b++] = (*exp)->raw[(*exp)->a++];
 		return (true);
 	}
@@ -215,9 +157,9 @@ bool	ft_handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
 
 bool	ft_handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 {
-	if (ft_exp_token_try_to_expand_variable(exp, mem))
+	if (ft_expt_try_to_expand_variable(exp, mem))
 		return (true);
-	if (ft_exp_token_handle_backslash(exp))
+	if (ft_expt_handle_backslash(exp))
 		return (true);
 	return (false);
 }
@@ -227,7 +169,7 @@ bool	ft_handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 
 
 
-void	*ft_exp_token_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
+void	*ft_expt_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
 	t_quote	prev;
@@ -254,7 +196,7 @@ void	*ft_exp_token_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 }
 
 
-char	*ft_exp_token(char *string, t_mem **mem)
+char	*ft_expand_token(char *string, t_mem **mem)
 {
 	t_exp_mem	*exp;
 	char		*toreturn;
@@ -277,14 +219,8 @@ char	*ft_exp_token(char *string, t_mem **mem)
 	acordo com o length do valor da variável. */
 		
 
-	/* Aqui tem um problema, pois depois que eu chamo ft_copy_to_new_input
-	o valor de exp->new é exatamente igual ao de string. Pode ser um erro
-	de pointers e escopo, ou talvez uma variável trocada por engano. */
 
-	printf("raw = \"%s\"\n", exp->raw);
-	printf("strlen(raw) = %zu\n", strlen(exp->raw));
-
-	if(!ft_exp_token_copy_to_new_str(&exp, mem))
+	if(!ft_expt_copy_to_new_str(&exp, mem))
 		return (NULL);
 
 	toreturn = ft_strdup(exp->new);	

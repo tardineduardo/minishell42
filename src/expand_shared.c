@@ -1,11 +1,13 @@
 #include "../include/minishell.h"
 
 //funções compartilhadas
-void		ft_exp_update_quote_flag(char c, t_quote *quote);
 void		*ft_exp_lst_sort_strlen(t_list **head);
 t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
 void		ft_reset_exp(t_mem **mem);
 void	*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem);
+char	*ft_exp_remove_var_from_string(char **s, size_t index);
+bool	ft_expt_is_char_escaped(char *string, char c, int a);
+void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index);
 
 
 
@@ -88,39 +90,53 @@ void	*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem)
 	}
 	if (trav)
 		ft_exp_insert_var_in_string(&(*exp)->raw, node->value, (*exp)->a, len + 1);
+	else
+		ft_exp_remove_var_from_string(&(*exp)->raw, (*exp)->a);	
 	ft_lstclear(&(*exp)->sortedvars, NULL);	
 	return ((*exp)->raw);
 }
 
 
-
-
-//talvez usar a outra de token, checando se quotes sao escaped
-void	ft_exp_update_quote_flag(char c, t_quote *quote)
+bool	ft_expt_is_char_escaped(char *string, char c, int a)
 {
-	if (c == '\'' && *quote == OFF)
-		*quote = SINGLE;
-	else if (c == '\"' && *quote == OFF)
-		*quote = DOUBLE;
-	else if (c == '\'' && *quote == SINGLE)
-		*quote = OFF;
-	else if (c == '\"' && *quote == DOUBLE)
-		*quote = OFF;
+	int	escapecount;
+
+	if (string[a] != c)
+		return (false);
+
+	if (a <= 0)
+		return (false);
+
+	escapecount = 0;
+	while (a > 0)
+	{
+		if (string[a - 1] == '\\')
+			escapecount++;
+		if (escapecount % 2 == 1)
+			return (true);
+		a--;
+	}
+	return (false);
+
 }
 
-void	ft_exp_update_quote_flag_escaped(char *c, t_quote *quote, int index)
+
+void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index)
 {
-	if (c[index] != '\'' && c[index] != '\"')
+	char c;
+
+	c = s[index];
+	if (!ft_isquote(c))
 		return ;
-	if(!ft_exp_token_is_quote_escaped(c, index))
+	if(!ft_expt_is_char_escaped(s, c, index))
 	{
-		if (*c == '\'' && *quote == OFF)
+		if (c == '\'' && *quote == OFF)
 			*quote = SINGLE;
-		else if (*c == '\"' && *quote == OFF)
+		else if (c == '\"' && *quote == OFF)
 			*quote = DOUBLE;
-		else if (*c == '\'' && *quote == SINGLE)
+		else if (c == '\'' && *quote == SINGLE)
 			*quote = OFF;
-		else if (*c == '\"' && *quote == DOUBLE)
+		else if (c == '\"' && *quote == DOUBLE)
 			*quote = OFF;
 	}
 	return ;
@@ -150,6 +166,21 @@ char	*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_
 	*base = new;
 	return (new);
 }
+
+char	*ft_exp_remove_var_from_string(char **s, size_t index)
+{
+	size_t 	a;
+
+	a = 0;
+
+	while (ft_isalnum((*s)[index + a + 1]))		
+		a++;
+
+	ft_strlcpy(&(*s)[index], &(*s)[index + a + 1], ft_strlen(&(*s)[index]));
+
+	return (*s);
+}
+
 
 
 

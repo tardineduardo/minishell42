@@ -78,6 +78,7 @@ VALID =	valid/ft_isalnum.c \
 		valid/ft_isdigit.c \
 		valid/ft_isprint.c \
 		valid/ft_isspace.c \
+		valid/ft_isquote.c \
 		valid/ft_is_line_empty.c \
 		valid/ft_is_single_quote.c \
 		valid/ft_is_double_quote.c \

@@ -200,6 +200,8 @@ char		*ft_exp_hd_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
 char		*ft_exp_insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+char	*ft_exp_remove_var_from_string(char **s, size_t index);
+
 void		*ft_exp_find_variable(t_exp_mem **exp, t_mem **mem);
 void		*ft_exp_hd_input_handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 bool		ft_exp_hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
@@ -208,13 +210,12 @@ void		*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char		*ft_exp_hd_input(char *string, t_mem **mem);
 
 //expansão do token
-char	*ft_exp_token(char *string, t_mem **mem);
+char	*ft_expand_token(char *string, t_mem **mem);
 void	ft_reset_exp(t_mem **mem);
-bool	ft_exp_token_is_quote_escaped(char *s, int index);
-void	ft_exp_update_quote_flag_escaped(char *c, t_quote *quote, int index);
+bool	ft_expt_is_quote_escaped(char *s, int index);
 
 
 //funções compartilhadas
-void		ft_exp_update_quote_flag(char c, t_quote *quote);
 void		*ft_exp_lst_sort_strlen(t_list **head);
 t_list		*ft_exp_lst_sort_strlen_find_lowest(t_list *head);
+void	ft_exp_update_quote_flag_escaped(char *s, t_quote *quote, int index);

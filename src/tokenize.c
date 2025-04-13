@@ -45,7 +45,7 @@ void ft_expand_toklist(t_list **toklst, t_mem **mem)
 	{
 		tok_node = (t_tok_node *)trav->content;
 		temp = tok_node->tokstr;
-		tok_node->tokstr = ft_exp_token(tok_node->tokstr, mem);
+		tok_node->tokstr = ft_expand_token(tok_node->tokstr, mem);
 		ft_free_and_null((void *)&temp);
 		trav = trav->next;
 	}

@@ -65,7 +65,7 @@ void	ft_exp_hd_delim_copy_to_new_str(char *s, char **new)
 	while (s[a])
 	{
 		prev = quote;
-		ft_exp_update_quote_flag(s[a], &quote);
+		ft_exp_update_quote_flag_escaped(s, &quote, a);
 		if (quote != prev)
 		{
 			a++;
@@ -167,7 +167,7 @@ void	*ft_exp_hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 	while ((*exp)->raw[(*exp)->a])
 	{
 		prev = quote;
-		ft_exp_update_quote_flag((*exp)->raw[(*exp)->a], &quote);
+		ft_exp_update_quote_flag_escaped((*exp)->raw, &quote, (*exp)->a);
 		if (quote != prev)
 		{
 			(*exp)->a++;
