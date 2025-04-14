@@ -1,8 +1,8 @@
 #include "../include/minishell.h"
 
 //expansão do token
-void	*copy_to_new_str(t_exp_mem **exp, t_mem **mem);
-char	*ft_expand_token(char *string, t_mem **mem);
+void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem);
+char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
 bool	handle_backslash(t_exp_mem **exp);
 bool	is_char_escaped(char *string, int a);
 bool	is_closing_quote(char c, t_quote *quote);
@@ -180,7 +180,7 @@ bool	handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 
 
 
-void	*copy_to_new_str(t_exp_mem **exp, t_mem **mem)
+void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
 	t_quote	prev;
@@ -207,35 +207,43 @@ void	*copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 }
 
 
-char	*ft_expand_token(char *string, t_mem **mem)
+void	*enter_expansion_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
+{
+	if (mode == M_TOKEN)
+		return(copy_to_new_str_token_mode(exp, mem));
+	// if (mode == M_HD_DELIMITER)
+	// 	return(copy_to_new_str_delim_mode(exp, mem));
+	// if (mode == M_HD_INPUT)
+	// 	return(copy_to_new_str_hdcin_mode(exp, mem));
+	// if (mode == M_EXPORT)
+	// 	return(copy_to_new_str_hdcin_mode(exp, mem));
+	return (NULL);
+}
+
+
+char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem)
 {
 	t_exp_mem	*exp;
-	char		*toreturn;
-
-	//Primeiro checo se a string é NULL, o que é um caso de erro.
+	char		*expanded;
+	
 	if (!string)
 		return (NULL);
-	
-	//Depois checo se a string é vazia. Se for retorno uma string vazia.	
 	if (!ft_strlen(string))
 		return (ft_strdup(""));
-
-	/* Eu vou criar as variávereis com memória alocada dentro de uma struct
-	para facilitar a limpeza de memória e reduzir o número de linhas. */
 	exp = (*mem)->expand;
 	exp->raw = ft_strdup(string);
 	exp->new = ft_calloc(ft_strlen(string) * 2 + 1, sizeof(char));
-	//PROTECT
-
-
-
-	if(!copy_to_new_str(&exp, mem))
+	if (!exp->new)
 		return (NULL);
-
-	toreturn = ft_strdup(exp->new);	
-	//PROTECT
+	enter_expansion_mode(&exp, mem, mode);	
+	expanded = ft_strdup(exp->new);
+	if (!expanded)
+	{
+		reset(mem);
+		return (NULL);
+	}
 	reset(mem);
-	return (toreturn);
+	return (expanded);
 }
 
 
@@ -397,6 +405,28 @@ void	update_quote_flag(char *s, t_quote *quote, int index)
 
 t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 {
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////		tudo que eu der inser, eu já preciso copiar					////////
+///////		ASSIM EU NAO VOLTO A INTERPRETAR ASPAS QUE FORAM INSERIDAS	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+///////																	////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 	char *prefix;
 	char *suffix;
 	char *new;

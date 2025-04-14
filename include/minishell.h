@@ -43,14 +43,20 @@ typedef enum e_quote
 	Q_DOUBLE,
 }	t_quote;
 
-typedef enum e_exp_mode
+typedef enum e_type
 {
-	M_OFF,
 	M_TOKEN,
-	M_HD_EXPAND,
-	M_HD_QUOTED,
+	M_EXPORT,
+	M_HD_INPUT,
 	M_HD_DELIMITER,
 }	t_exp_mode;
+
+typedef enum e_delim
+{
+	EXPAND,
+	QUOTED,
+}	t_delim;
+
 
 
 
@@ -180,8 +186,8 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 
 
 //expand
-char	*ft_expand_string_heredoc_delimiter(char *string, t_mem **mem);
-char	*ft_expand_string_heredoc_input(char *string, t_mem **mem);
+char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
+
 
 
 // built-ins
@@ -221,7 +227,7 @@ void		*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
 char		*expand_hd_input(char *string, t_mem **mem);
 
 //expansão do token
-char	*ft_expand_token(char *string, t_mem **mem);
+char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
 void	reset(t_mem **mem);
 
 
