@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/11 17:52:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:11:38 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,27 +22,9 @@
 // 	token_mem = (*mem)->tokenize;
 // 	tokens = token_mem->toklst;
 // 	value = ((t_tok_node *)tokens->content)->tokstr;
-	/*
-		I need to find the operators and organize them in a way
-		that I preserve the operators precedence
 
-		so: 
-		if find parenthesis save everetyihing inside to a node
-		else if pipe, create a type PIPE
-		else if AND operator or OR operator, understand the delimiters where it ends 
-		and where it starts
-	*/
 
-	/*
-		while
-			1. mark start node and end node including redirections from a command
-			2. save all command infos in one char **cmd
-				1. how many node we have? cmd_size
-				2. malloc of a char **
 
-				1. ft_strdup of the item from the node in each
-				part of "space" of char ** created previously
-	*/
 // 	t_list *previous_pos;
 // 	t_list *and_or_op_pos;
 // 	t_list *start_pos;
@@ -303,8 +285,12 @@
 typedef struct s_org_tok
 {
 	char	*value;
-	int		cmd;
 	int		oper;
+	int		cmd;
+	int		paren;
+	int		inner_paren;
+	int		first_item;
+	int		second_item;
 }			t_org_tok;
 
 int	update_oper(char *value);
@@ -322,6 +308,10 @@ void	ft_append_new_org_token(t_list *tokens, t_org_tok_mem **org_tok_mem)
 	org_tok->value = ft_strdup(value);
 	org_tok->oper = update_oper(value);
 	org_tok->cmd = -1;
+	org_tok->paren = -1;
+	org_tok->inner_paren = -1;
+	org_tok->first_item = -1;
+	org_tok->second_item = -1;
 	append = ft_lstnew(org_tok);
 	if (!append)
 		return ;
@@ -345,6 +335,8 @@ void	*ft_org_tokenize(t_mem **mem)
 		tokens = tokens->next;
 	}
 	update_cmd_org_tok(&org_tok_mem->org_toklst);
+	update_paren_org_tok(&org_tok_mem->org_toklst);
+	update_oper_cmd_org_tok(&org_tok_mem->org_toklst);
 	return (mem);
 }
 
@@ -394,37 +386,115 @@ void	update_cmd_org_tok(t_list **org_tokens)
 		curr = curr->next;
 	}
 }
+
+void	update_paren_org_tok(t_list **org_tokens)
+{
+    int paren_num; 
+    int paren_stack[100];
+    int stack_top;
+	t_org_tok *tok;
+	t_list	*cur;
+
+	paren_num = 0;
+	stack_top = -1;
+    cur = *org_tokens;
+    while (cur) {
+        tok = (t_org_tok *)cur->content;
+
+        if (tok->oper == 2)
+		{
+            tok->paren = ++paren_num;
+            tok->inner_paren = (stack_top >= 0) ? paren_stack[stack_top] : -1;
+            stack_top++;
+            paren_stack[stack_top] = paren_num;
+        }
+        else if (tok->oper == 3)
+		{
+            if (stack_top >= 0)
+			{
+                tok->paren = paren_stack[stack_top];
+                tok->inner_paren = (stack_top > 0) ? paren_stack[stack_top - 1] : -1;
+                stack_top--;
+                paren_num--;
+            }
+			else
+			{
+                tok->paren = -1;
+                tok->inner_paren = -1;
+            }
+        }
+        else
+		{
+            tok->paren = paren_num;
+            tok->inner_paren = (stack_top >= 0) ? paren_stack[stack_top] : -1;
+        }
+        cur = cur->next;
+    }
+}
+
+void	update_oper_cmd_org_tok(t_list *org_tok)
+{
+	t_org_tok *tok;
+	t_list	*cur;
+}
 //=================================================================================== start of the treatment
 
-void	get_cmd_nodes(t_list **org_tokens, int index_cmd)
+typedef struct s_cmd_node_builder
 {
-	t_list		*start_node;
-	t_list		*end_node;
+	t_list	*start_node;
+	t_list	*end_node;
+	int		num_nodes;
+} t_cmd_node_builder;
+
+
+t_cmd_node_builder	*get_cmd_nodes(t_list **org_tokens, int index_cmd)
+{
+	t_cmd_node_builder	*cmd_builder;
 	t_list		*cur;
 	t_org_tok	*tok;
-	int			num_nodes;
 
+	cmd_builder = malloc(sizeof(t_cmd_node_builder));
 	cur = *org_tokens;
-	num_nodes = 0;
+	cmd_builder->num_nodes = 0;
 	while (cur)
 	{
 		tok = (t_org_tok *)cur->content;
-		if (tok->cmd == index_cmd && num_nodes == 0)
-			start_node = cur;
+		if (tok->cmd == index_cmd && cmd_builder->num_nodes == 0)
+			cmd_builder->start_node = cur;
 		else if (tok->cmd != index_cmd)
 			break ;
-		num_nodes++;
-		end_node = cur;
+		cmd_builder->num_nodes++;
+		cmd_builder->end_node = cur;
 		cur = cur->next;
 	}
-	return (start_node, end_node, num_nodes);
+	return (cmd_builder);
 }
 
-void	extract_redirections()
+void	extract_redirections(t_cmd_node_builder *cmd_builder)
 {
-	/*
-	
-	*/
+	t_list	*cur;
+	char	*value;
+	int		i;
+
+	i = 0;
+	cur = cmd_builder->start_node;
+	while (i < cmd_builder->num_nodes)
+	{
+		value = ((t_org_tok *)cur->content)->value;
+		if (ft_strcmp("<<<", value) == 0
+		|| ft_strcmp(">>", value) == 0
+		|| ft_strcmp("<<", value) == 0
+		|| ft_strcmp("2>", value) == 0
+		|| ft_strcmp("&>", value) == 0
+		|| ft_strcmp(">", value) == 0
+		|| ft_strcmp("<", value) == 0)
+		{
+			
+		}
+		i++;
+		cur = cur->next;
+	}
+
 }
 void	create_cmd_table()
 {
