@@ -207,10 +207,10 @@ void		ft_debug_list(t_list **head);
 //expansão do delimitador (apenas as aspas são tratadas)
 void		hd_delim_copy_to_new_str(char *s, char **new);
 t_exp_mode	hd_delim_normal_or_quoted(char *s);
-char		*hd_delim(char *string, t_mem **mem);
+char		*expand_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
-t_exit	insert_var_in_string(char **base, char *insert, size_t index, size_t len_to_replace);
+t_exit	insert_var_in_string(char **base, char *insert, size_t index);
 t_exit	remove_var_from_string(char **s, size_t index);
 
 t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
@@ -218,7 +218,7 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
 bool		handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 bool		hd_input_handle_backslash_end(t_exp_mem **exp);
 void		*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
-char		*hd_input(char *string, t_mem **mem);
+char		*expand_hd_input(char *string, t_mem **mem);
 
 //expansão do token
 char	*ft_expand_token(char *string, t_mem **mem);

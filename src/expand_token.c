@@ -18,6 +18,7 @@ t_exit	remove_var_from_string(char **s, size_t index);
 void	update_quote_flag(char *s, t_quote *quote, int index);
 void	skip_char(t_exp_mem **exp);
 void	copy_char(t_exp_mem **exp);
+size_t varlen(char *s);
 
 
 
@@ -49,41 +50,12 @@ t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 	exit = get_variable_value(&(*exp)->raw[(*exp)->a], value, mem);
 	
 	if (exit == VARIABLE_FOUND)
-		return (insert_var_in_string(&(*exp)->raw, *value, (*exp)->a, ft_strlen(*value) + 1));
+		return (insert_var_in_string(&(*exp)->raw, *value, (*exp)->a));
 	else if(exit == VARIABLE_NOT_FOUND)
 		return (remove_var_from_string(&(*exp)->raw, (*exp)->a));
 	else
 		return (ERROR);	
 }
-
-
-bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
-{
-	t_exit exit;
-
-	if (is_char_escaped((*exp)->raw, (*exp)->a))
-	{
-		copy_char(exp);
-		return (false);
-	}
-	if ((*exp)->raw[(*exp)->a] == '$' && (*exp)->raw[(*exp)->a + 1])
-	{
-		exit = try_to_expand_variable(exp, mem);
-
-		if (exit == ERROR)	 									//ERRRO NA EXPANSAO
-		{
-			(*exp)->error = true;								//ERRRO NA EXPANSAO
-			return (false);										//ERRRO NA EXPANSAO
-		}
-		return (true);
-	}
-	return (false);
-}
-
-
-
-
-
 
 
 
@@ -104,6 +76,43 @@ bool	is_closing_quote(char c, t_quote *quote)
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
+{
+	t_exit exit;
+
+	if ((*exp)->raw[(*exp)->a] != '$')
+		return (false);
+
+	if (is_char_escaped((*exp)->raw, (*exp)->a))
+	{
+		copy_char(exp);
+		return (false);
+	}
+	if ((*exp)->raw[(*exp)->a + 1])
+	{
+		exit = try_to_expand_variable(exp, mem);
+
+		if (exit == ERROR)	 									//ERRRO NA EXPANSAO
+		{
+			(*exp)->error = true;								//ERRRO NA EXPANSAO
+			return (false);										//ERRRO NA EXPANSAO
+		}
+		return (true);
+	}
+	return (false);
+}
 
 
 bool	handle_backslash(t_exp_mem **exp)
@@ -217,9 +226,7 @@ char	*ft_expand_token(char *string, t_mem **mem)
 	exp->raw = ft_strdup(string);
 	exp->new = ft_calloc(ft_strlen(string) * 2 + 1, sizeof(char));
 	//PROTECT
-	/* Alocando apenas uma string vazia para new para poder passar essa
-	variável para outras funções. O tamanho de new será definido depois, de
-	acordo com o length do valor da variável. */
+
 
 
 	if(!copy_to_new_str(&exp, mem))
@@ -253,11 +260,7 @@ char	*ft_expand_token(char *string, t_mem **mem)
 
 
 
-/*
- ▗▄▄▖▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▄▄▄▖▗▄▄▄ 
-▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌  █
- ▝▀▚▖▐▛▀▜▌▐▛▀▜▌▐▛▀▚▖▐▛▀▀▘▐▌  █
-▗▄▄▞▘▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖▐▙▄▄▀ */                              
+                          
 
 void	*lst_sort_strlen(t_list **to_sort)
 {
@@ -310,19 +313,20 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 {
 	t_list		*trav;
 	t_env_node	*node;
-	t_list		*sortedvars; // was t_list **sortedvars
+	t_list		**sortedvars; 
 
-	sortedvars = (*mem)->expand->sortedvars;
+	sortedvars = malloc(sizeof(t_list *));
+	*sortedvars = (*mem)->expand->sortedvars;
 
 	if (!dollar || dollar[0] != '$' || dollar[1] == '\0')
 		return (ERROR);
 
-	ft_lstcopy_and_rsort_by_len((*mem)->environs->envlist, &sortedvars);
+	ft_lstcopy_and_rsort_by_len((*mem)->environs->envlist, sortedvars);
 
-	if (!sortedvars)
+	if (!*sortedvars)
 		return (ERROR);
 
-	trav = sortedvars;
+	trav = *sortedvars;
 	while (trav)
 	{
 		node = (t_env_node *)trav->content;
@@ -333,10 +337,16 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 	if (trav)
 	{
 		*value = ft_strdup(node->value);
+
+		ft_lstclear(sortedvars, NULL);
+		free(sortedvars);
+		
 		return (VARIABLE_FOUND);
 	}
 	else
 	{
+		ft_lstclear(sortedvars, NULL);
+		free(sortedvars);
 		return (VARIABLE_NOT_FOUND);
 	}
 }
@@ -385,14 +395,20 @@ void	update_quote_flag(char *s, t_quote *quote, int index)
 }
 
 
-t_exit	insert_var_in_string(char **base, char *insert, size_t index, size_t varlen)
+t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 {
 	char *prefix;
 	char *suffix;
 	char *new;
+	size_t len;
 
+	len = varlen(&(*base)[index + 1]);
 	prefix = ft_substr(*base, 0, index);
-	suffix = ft_substr(*base, index + varlen, ft_strlen(*base) - index - varlen);
+	suffix = ft_strdup(*base + index + len + 1);
+
+	ft_printf("prefix: %s\n", prefix);
+	ft_printf("insert: %s\n", insert);
+	ft_printf("suffix: %s\n", suffix);
 
 	if (!prefix || !suffix)
 		return (ERROR);
@@ -440,8 +456,12 @@ void	reset(t_mem **mem)
 	ft_free_and_null((void *)&exp->new);
 	ft_free_and_null((void *)&exp->raw);
 	ft_free_and_null((void *)&exp->value);
+
+
+	//ft_lstclear(&exp->sortedvars, NULL);
+
+	ft_free_and_null((void *)&exp->sortedvars);
 	exp->error = false;
-	ft_lstclear(&exp->sortedvars, NULL);
 }
 
 
@@ -533,4 +553,14 @@ void skip_char(t_exp_mem **exp)
 {
 	(*exp)->a++;
 	return ;
+}
+
+size_t varlen(char *s)
+{
+	size_t i;
+
+	i = 0;
+	while (ft_isalnum(s[i]))
+		i++;
+	return (i);
 }

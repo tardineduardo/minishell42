@@ -3,14 +3,14 @@
 //expansão do delimitador (apenas as aspas são tratadas)
 void		hd_delim_copy_to_new_str(char *s, char **new);
 t_exp_mode	hd_delim_normal_or_quoted(char *s);
-char		*hd_delim(char *string, t_mem **mem);
+char		*expand_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
 t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
 void		*hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
 bool		handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 void		*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
-char		*hd_input(char *string, t_mem **mem);
+char		*expand_hd_input(char *string, t_mem **mem);
 
 
 
@@ -76,7 +76,7 @@ void	hd_delim_copy_to_new_str(char *s, char **new)
 	return ;
 }
 
-char	*hd_delim(char *string, t_mem **mem)
+char	*expand_delim(char *string, t_mem **mem)
 {
 	char *new;
 	t_exp_mem *exp;
@@ -158,7 +158,7 @@ void	*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 a sring deve ser tratada literalmente ou com expansão por exp->hd_mode, que é
 definida em ft_expand_string_heredoc_delimiter/ft_heredoc_normal_or_quoted
 na hora de tratar as aspas do delimiter. */
-char	*hd_input(char *string, t_mem **mem)
+char	*expand_hd_input(char *string, t_mem **mem)
 {
 	t_exp_mem	*exp;
 	char		*toreturn;

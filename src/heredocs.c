@@ -29,7 +29,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 
 	hd = (*mem)->heredoc;
 	env = (*mem)->environs;
-	hd->delim = hd_delim(delimiter, mem);
+	hd->delim = ft_strdup(delimiter);
 	if (!hd->delim)
 		return (NULL);
 	if (!ft_hd_create_file(&hd_count_int, &hd->filepath))
@@ -81,7 +81,6 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem)
 		return (NULL);
 	}
 
-
 	// handle the first line and line breaks
 	if (hd_loop_count != 0)
 		ft_dprintf(hd_temp_file, "\n");
@@ -113,15 +112,12 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		free(prompt);
 		if (!hd->loopinput)
 			return (NULL);
-		hd->looptemp = hd->loopinput;
-		if (!hd->loopinput)
-			return (NULL);
-
+			
 		// Primeiro compara, SÓ DEPOIS expande.
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
 
-		hd->loopinput = hd_input(hd->loopinput, mem);
+		//hd->loopinput = expand_hd_input(hd->loopinput, mem); DESATIVADO, VOU REFAZER DEPOIS
 
 		if (hd->loopinput)
 			if (!ft_hd_write_to_file(hd_loop_count, mem))
