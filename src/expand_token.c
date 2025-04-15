@@ -20,6 +20,8 @@ void	skip_char_no_copy(t_exp_mem **exp);
 void	copy_char_and_increment(t_exp_mem **exp);
 size_t varlen(char *s);
 void	copy_value_and_increment(t_exp_mem **exp);
+void	*copy_to_new_str_delim_mode(t_exp_mem **exp);
+void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem);
 
 
 
@@ -118,19 +120,52 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 	return (false);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+//refinar meu handle_backslash para cobrir todos os casos.
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 bool	handle_backslash(t_exp_mem **exp)
 {
 	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\\')
 	{
-		copy_char_and_increment(exp);
-		copy_char_and_increment(exp);
+		if ((*exp)->mode == HEREDOC && (*exp)->hd_mode == EXPAND)
+		{
+			copy_char_and_increment(exp);
+			skip_char_no_copy(exp);
+		}
+		else
+		{
+			copy_char_and_increment(exp);
+			copy_char_and_increment(exp);
+		}
 		return (true);
 	}
 	return (false);
 }
 
-bool	ft_skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev)
+bool	skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev)
 {
 	if (*quote != *prev)
 	{
@@ -184,6 +219,51 @@ bool	handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 
 
 
+
+void	*copy_to_new_str_delim_mode(t_exp_mem **exp)
+{
+	t_quote	quote;
+	t_quote	prev;
+	int *a;
+	char *s;
+
+	a = &(*exp)->a;
+	s = (*exp)->raw;
+	quote = Q_OFF;
+	while ((*exp)->raw[(*exp)->a])
+	{
+		if (ft_isquote(s[*a]) && !is_char_escaped(s, *a))
+			(*exp)->hd_mode = QUOTED;
+		prev = quote;
+		update_quote_flag((*exp)->raw, &quote, (*exp)->a);
+		if (skip_if_quote_changed(exp, &quote, &prev))
+			continue;
+		copy_char_and_increment(exp);
+	}
+	(*exp)->new[(*exp)->b] = '\0';
+	return ((*exp)->new);
+}
+
+
+
+void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem)
+{
+	while ((*exp)->raw[(*exp)->a])
+	{
+		if ((*exp)->hd_mode == EXPAND)
+		{
+			if (handle_dollar_sign(exp, mem))
+				continue;
+			if (handle_backslash(exp))
+				continue;
+		}
+		copy_char_and_increment(exp);
+	}
+	(*exp)->new[(*exp)->b] = '\0';
+	return ((*exp)->new);
+}
+
+
 void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
@@ -196,7 +276,7 @@ void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 			return (NULL);	
 		prev = quote;
 		update_quote_flag((*exp)->raw, &quote, (*exp)->a);
-		if (ft_skip_if_quote_changed(exp, &quote, &prev))
+		if (skip_if_quote_changed(exp, &quote, &prev))
 			continue;
 		if (handle_single_quote(exp, quote))
 			continue;
@@ -213,14 +293,14 @@ void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 
 void	*enter_expansion_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
 {
-	if (mode == M_TOKEN)
+	if (mode == TOKEN)
 		return(copy_to_new_str_token_mode(exp, mem));
-	// if (mode == M_HD_DELIMITER)
-	// 	return(copy_to_new_str_delim_mode(exp, mem));
-	// if (mode == M_HD_INPUT)
-	// 	return(copy_to_new_str_hdcin_mode(exp, mem));
-	// if (mode == M_EXPORT)
-	// 	return(copy_to_new_str_hdcin_mode(exp, mem));
+	if (mode == DELIMITER)
+		return(copy_to_new_str_delim_mode(exp));
+	if (mode == HEREDOC)
+		return(copy_to_new_str_heredoc_mode(exp, mem));
+	// if (mode == EXPORT)
+	// 	return(copy_to_new_str_heredoc_mode(exp, mem));
 	return (NULL);
 }
 
@@ -239,6 +319,7 @@ char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem)
 	exp->new = ft_calloc(ft_strlen(string) * 2 + 1, sizeof(char));
 	if (!exp->new)
 		return (NULL);
+	exp->mode = mode;	
 	enter_expansion_mode(&exp, mem, mode);	
 	expanded = ft_strdup(exp->new);
 	if (!expanded)
@@ -406,7 +487,7 @@ void	update_quote_flag(char *s, t_quote *quote, int index)
 	return ;
 }
 
-
+//refazer com menos systems calls
 t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 {
 	char *prefix;
@@ -418,10 +499,6 @@ t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 	prefix = ft_substr(*base, 0, index);
 	suffix = ft_strdup(*base + index + len + 1);
 
-	ft_printf("prefix: %s\n", prefix);
-	ft_printf("insert: %s\n", insert);
-	ft_printf("suffix: %s\n", suffix);
-
 	if (!prefix || !suffix)
 		return (ERROR);
 
@@ -431,6 +508,36 @@ t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 	ft_free_and_null((void *)&(*base));
 	*base = new;
 	return (VARIABLE_FOUND);
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+//TEM QUE AJUSTAR TB O TAMANHO DE NEW!!!!!!!!!!!!!!
+//faz uma realloc
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 }
 
 t_exit	remove_var_from_string(char **s, size_t index)
@@ -581,4 +688,28 @@ size_t varlen(char *s)
 	while (ft_isalnum(s[i]))
 		i++;
 	return (i);
+}
+
+
+t_delim	hd_delim_normal_or_quoted(char *s)
+{
+	int	a;
+	int	escapecount;
+
+	a = 0;
+	while (s[a])
+	{
+		if (a == 0 && (ft_isquote(s[a])))
+			return (EXPAND);
+		if (ft_isquote(s[a]))
+		{
+			escapecount = 0;
+			while (a > 0 && s[a - 1 - escapecount] == '\\')
+				escapecount++;
+			if (escapecount % 2 == 0)
+				return (QUOTED);
+		}
+		a++;
+	}
+	return (QUOTED);
 }

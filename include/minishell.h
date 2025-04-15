@@ -45,10 +45,10 @@ typedef enum e_quote
 
 typedef enum e_type
 {
-	M_TOKEN,
-	M_EXPORT,
-	M_HD_INPUT,
-	M_HD_DELIMITER,
+	TOKEN,
+	EXPORT,
+	HEREDOC,
+	DELIMITER,
 }	t_exp_mode;
 
 typedef enum e_delim
@@ -140,9 +140,12 @@ typedef struct s_exp_mem
 	bool	error;
 	char	*value;
 	t_list	*sortedvars;
-	t_delim	hd_mode;
+	t_delim		hd_mode;
+	t_exp_mode	mode;
 
 }	t_exp_mem;
+
+
 
 
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
@@ -211,9 +214,7 @@ void		ft_debug_list(t_list **head);
 
 
 //expansão do delimitador (apenas as aspas são tratadas)
-void		hd_delim_copy_to_new_str(char *s, char **new);
-t_delim	hd_delim_normal_or_quoted(char *s);
-char		*expand_delim(char *string, t_mem **mem);
+t_delim		hd_delim_normal_or_quoted(char *s);
 
 //expansão do input do heredoc
 t_exit	insert_var_in_string(char **base, char *insert, size_t index);
@@ -223,8 +224,6 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
 //void		*hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
 bool		handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 bool		hd_input_handle_backslash_end(t_exp_mem **exp);
-void		*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem);
-char		*expand_hd_input(char *string, t_mem **mem);
 
 //expansão do token
 char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
@@ -236,3 +235,7 @@ void		*lst_sort_strlen(t_list **head);
 t_list		*lst_sort_strlen_find_lowest(t_list *head);
 void	update_quote_flag(char *s, t_quote *quote, int index);
 t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted);
+void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem);
+
+
+char *ft_capture_in_interactive_mode(char *prompt);
