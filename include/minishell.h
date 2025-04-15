@@ -140,7 +140,7 @@ typedef struct s_exp_mem
 	bool	error;
 	char	*value;
 	t_list	*sortedvars;
-	t_exp_mode	hd_mode;
+	t_delim	hd_mode;
 
 }	t_exp_mem;
 
@@ -212,7 +212,7 @@ void		ft_debug_list(t_list **head);
 
 //expansão do delimitador (apenas as aspas são tratadas)
 void		hd_delim_copy_to_new_str(char *s, char **new);
-t_exp_mode	hd_delim_normal_or_quoted(char *s);
+t_delim	hd_delim_normal_or_quoted(char *s);
 char		*expand_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc

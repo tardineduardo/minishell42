@@ -2,7 +2,7 @@
 
 //expansão do delimitador (apenas as aspas são tratadas)
 void		hd_delim_copy_to_new_str(char *s, char **new);
-t_exp_mode	hd_delim_normal_or_quoted(char *s);
+t_delim	hd_delim_normal_or_quoted(char *s);
 char		*expand_delim(char *string, t_mem **mem);
 
 //expansão do input do heredoc
@@ -28,7 +28,7 @@ char		*expand_hd_input(char *string, t_mem **mem);
 // A função NÃO considera a hipótese de aspas não fechadas, esse caso deve ser
 // tratado antes da etapa de expansão. Ou seja, assim que é identificado um único
 // caso de aspas, simples ou duplas, a função retorna o modo "HERDOC_QUOTED".
-t_exp_mode	hd_delim_normal_or_quoted(char *s)
+t_delim	hd_delim_normal_or_quoted(char *s)
 {
 	int	a;
 	int	escapecount;
@@ -37,18 +37,18 @@ t_exp_mode	hd_delim_normal_or_quoted(char *s)
 	while (s[a])
 	{
 		if (a == 0 && (ft_isquote(s[a])))
-			return (M_HD_EXPAND);
+			return (EXPAND);
 		if (ft_isquote(s[a]))
 		{
 			escapecount = 0;
 			while (a > 0 && s[a - 1 - escapecount] == '\\')
 				escapecount++;
 			if (escapecount % 2 == 0)
-				return (M_HD_QUOTED);
+				return (QUOTED);
 		}
 		a++;
 	}
-	return (M_HD_EXPAND);
+	return (QUOTED);
 }
 
 void	hd_delim_copy_to_new_str(char *s, char **new)
@@ -141,7 +141,7 @@ void	*hd_input_copy_to_new_str(t_exp_mem **exp, t_mem **mem)
 			(*exp)->a++;
 			continue;
 		}
-		if ((*exp)->hd_mode == M_HD_EXPAND)
+		if ((*exp)->hd_mode == EXPAND)
 		{
 			if (handle_dollar_sign(exp, mem))
 				continue;

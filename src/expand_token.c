@@ -16,9 +16,10 @@ void	reset(t_mem **mem);
 t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
 t_exit	remove_var_from_string(char **s, size_t index);
 void	update_quote_flag(char *s, t_quote *quote, int index);
-void	skip_char(t_exp_mem **exp);
-void	copy_char(t_exp_mem **exp);
+void	skip_char_no_copy(t_exp_mem **exp);
+void	copy_char_and_increment(t_exp_mem **exp);
 size_t varlen(char *s);
+void	copy_value_and_increment(t_exp_mem **exp);
 
 
 
@@ -94,20 +95,23 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 
 	if ((*exp)->raw[(*exp)->a] != '$')
 		return (false);
-
 	if (is_char_escaped((*exp)->raw, (*exp)->a))
 	{
-		copy_char(exp);
+		copy_char_and_increment(exp);
 		return (false);
 	}
 	if ((*exp)->raw[(*exp)->a + 1])
 	{
 		exit = try_to_expand_variable(exp, mem);
-
-		if (exit == ERROR)	 									//ERRRO NA EXPANSAO
+		if (exit == ERROR)
 		{
-			(*exp)->error = true;								//ERRRO NA EXPANSAO
-			return (false);										//ERRRO NA EXPANSAO
+			(*exp)->error = true;
+			return (false);
+		}
+		if (exit == VARIABLE_FOUND)
+		{
+			copy_value_and_increment(exp);
+			return (true);
 		}
 		return (true);
 	}
@@ -119,8 +123,8 @@ bool	handle_backslash(t_exp_mem **exp)
 {
 	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\\')
 	{
-		copy_char(exp);
-		copy_char(exp);
+		copy_char_and_increment(exp);
+		copy_char_and_increment(exp);
 		return (true);
 	}
 	return (false);
@@ -130,7 +134,7 @@ bool	ft_skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev)
 {
 	if (*quote != *prev)
 	{
-		skip_char(exp);
+		skip_char_no_copy(exp);
 		return (true);
 	}
 	return (false);
@@ -141,7 +145,7 @@ bool	handle_single_quote(t_exp_mem **exp, t_quote quote)
 	if (quote == Q_SINGLE)
 	{
 		while (!is_closing_quote((*exp)->raw[(*exp)->a], &quote))
-			copy_char(exp);
+			copy_char_and_increment(exp);
 		return (true);
 	}
 	return (false);
@@ -157,10 +161,10 @@ bool	handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
 			return (true);
 		if (is_closing_quote((*exp)->raw[(*exp)->a], &quote)) //testar isso
 		{
-			skip_char(exp);
+			skip_char_no_copy(exp);
 			return (true);
 		}
-		copy_char(exp);
+		copy_char_and_increment(exp);
 		return (true);
 	}
 	return (false);
@@ -200,7 +204,7 @@ void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 			continue;
 		if (handle_not_quoted(exp, mem))
 			continue;
-		copy_char(exp);
+		copy_char_and_increment(exp);
 	}
 	(*exp)->new[(*exp)->b] = '\0';
 	return ((*exp)->new);
@@ -405,28 +409,6 @@ void	update_quote_flag(char *s, t_quote *quote, int index)
 
 t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 {
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////		tudo que eu der inser, eu já preciso copiar					////////
-///////		ASSIM EU NAO VOLTO A INTERPRETAR ASPAS QUE FORAM INSERIDAS	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-///////																	////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
 	char *prefix;
 	char *suffix;
 	char *new;
@@ -443,7 +425,7 @@ t_exit	insert_var_in_string(char **base, char *insert, size_t index)
 	if (!prefix || !suffix)
 		return (ERROR);
 
-	new = ft_concatenate_var(3, prefix, insert, suffix);
+	new = ft_concatenate(prefix, insert, suffix);
 	free(suffix);
 	free(prefix);
 	ft_free_and_null((void *)&(*base));
@@ -456,12 +438,9 @@ t_exit	remove_var_from_string(char **s, size_t index)
 	size_t 	a;
 
 	a = 0;
-
 	while (ft_isalnum((*s)[index + a + 1]))		
 		a++;
-
 	ft_strlcpy(&(*s)[index], &(*s)[index + a + 1], ft_strlen(&(*s)[index]));
-
 	return (VARIABLE_NOT_FOUND);
 }
 
@@ -486,10 +465,6 @@ void	reset(t_mem **mem)
 	ft_free_and_null((void *)&exp->new);
 	ft_free_and_null((void *)&exp->raw);
 	ft_free_and_null((void *)&exp->value);
-
-
-	//ft_lstclear(&exp->sortedvars, NULL);
-
 	ft_free_and_null((void *)&exp->sortedvars);
 	exp->error = false;
 }
@@ -512,7 +487,7 @@ t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted)
 	trav = source;
 	while (trav)
 	{
-		new_node = ft_lstnew(trav->content);  //TEM QUE DAR FREE NISSO
+		new_node = ft_lstnew(trav->content);
 		if (!new_node)
 		{
 			ft_lstclear(sorted, free);
@@ -569,9 +544,22 @@ bool	is_quote_escaped(char *s, int a)
 
 
 
+void	copy_value_and_increment(t_exp_mem **exp)
+{
+	size_t len;
 
+	len = ft_strlen((*exp)->value);
 
-void	copy_char(t_exp_mem **exp)
+	while (len > 0)
+	{
+		copy_char_and_increment(exp);
+		len--;
+	}
+	ft_free_and_null((void *)&(*exp)->value);
+	return ;
+}
+
+void	copy_char_and_increment(t_exp_mem **exp)
 {
 	(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
 	(*exp)->b++;
@@ -579,7 +567,7 @@ void	copy_char(t_exp_mem **exp)
 	return ;
 }
 
-void skip_char(t_exp_mem **exp)
+void skip_char_no_copy(t_exp_mem **exp)
 {
 	(*exp)->a++;
 	return ;
@@ -587,7 +575,7 @@ void skip_char(t_exp_mem **exp)
 
 size_t varlen(char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (ft_isalnum(s[i]))
