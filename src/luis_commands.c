@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 13:42:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 12:38:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:13:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_cmd_node *build_cmd_table(t_list **org_tok, int index_cmd)
 		return (NULL);
 	cmd_builder = create_cmd_builder(org_tok, index_cmd);
 	cmd->cmd_arr = extract_cmd(cmd_builder, index_cmd);
-	extract_redirections(org_tok, cmd);
+	extract_redirections(&cmd_builder->start_node, cmd, index_cmd);
 	return (cmd);
 }
 
@@ -99,7 +99,6 @@ void	ft_cmd_org(t_list **org_tok)
 		cmd_builder = create_cmd_builder(org_tok, index_cmd);
 		cmd = build_cmd_table(org_tok, index_cmd);
 		new_node = create_new_cmd_node(cmd, index_cmd);
-		printf("%s", ((t_cmd_node *)new_node->content)->cmd_arr[0]);
 		replace_with_cmd_table(new_node, cmd_builder, org_tok);
 		//ft_clear_cmd_builder_mem(cmd_builder_mem);
 		index_cmd++;

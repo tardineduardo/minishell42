@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 12:24:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:03:33 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,8 @@ void	ft_del_org_token_node(void *content)
 void ft_debug_list_org(t_list **head)
 {
 	t_list *trav;
-	//char *cmd_arr;
+	char *cmd_arr;
+	char *input_name;
 
 	trav = *head;
 	ft_printf(GREY "HEAD -> " RESET);
@@ -274,8 +275,12 @@ void ft_debug_list_org(t_list **head)
 		char *value = ((t_org_tok *)trav->content)->value;
 		int cmd_num = ((t_org_tok *)trav->content)->cmd;
 		int oper_num = ((t_org_tok *)trav->content)->oper;
-		// if (ft_strcmp("cmd table", value) == 0)
-		// 	cmd_arr = ((t_org_tok *)trav->content)->cmd_node->cmd_arr[0];
+		if (ft_strcmp("cmd table", value) == 0)
+		{
+			cmd_arr = ((t_org_tok *)trav->content)->cmd_node->cmd_arr[0];
+			if (((t_org_tok *)trav->content)->cmd_node->input_lst != NULL)
+				input_name = ((t_input_node *)((t_org_tok *)trav->content)->cmd_node->input_lst->content)->name;
+		}
 
 		printf("[");
 
@@ -304,7 +309,7 @@ void ft_debug_list_org(t_list **head)
 		}
 		else
 		{
-			printf("%s, %d", value, cmd_num);
+			printf("%s, %d, %s, %s", value, cmd_num, cmd_arr, input_name);
 		}
 
 		printf(GREY "] -> " RESET);

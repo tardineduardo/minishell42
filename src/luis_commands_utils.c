@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 19:37:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 12:36:08 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:53:15 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd)
 	t_org_tok		*tok;
 
 	cmd_builder = malloc(sizeof(t_cmd_builder));
+	if (!cmd_builder)
+		return (NULL);
+	cmd_builder->start_node = NULL;
+	cmd_builder->end_node = NULL;
+	cmd_builder->num_nodes = 0;
 	cur = *org_tok;
 	cmd_builder->num_nodes = 0;
 	while (cur)
@@ -43,7 +48,7 @@ int	extract_num_nodes_cmd(t_cmd_builder *cmd_builder, int index_cmd)
 
 	counter = 0;
 	cur = cmd_builder->start_node;
-	while (((t_org_tok *)cur->content)->cmd == index_cmd)
+	while (cur && ((t_org_tok *)cur->content)->cmd == index_cmd)
 	{
 		if (is_redirection(((t_org_tok *)cur->content)->value) == 1)
 			counter++;

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/16 11:35:16 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:12:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,7 @@ void	ft_del_org_token_node(void *content);
 t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
 void			ft_cmd_org(t_list **org_tok);
 char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
-void			extract_redirections(t_list **org_to, t_cmd_node *cmd);
+void			extract_redirections(t_list **org_to, t_cmd_node *cmd, int index_cmd);
 int				is_redirection(char *value);
 //void			ft_del_cmd_builder_node(void *content);
 
