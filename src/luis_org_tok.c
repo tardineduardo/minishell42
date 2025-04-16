@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 16:15:22 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 16:48:35 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,33 +144,8 @@ void	*ft_org_tokenize(t_mem **mem)
 //     }
 // }
 
-
-
-
-
-// int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd)
-// {
-// 	char	**cmd_arr;
-
-// 	cmd_arr = cur_cmd->cmd_arr;
-// 	if (!cur_cmd || !ms_env)
-// 	{
-// 		perror("cmd or ms_env: cmd executor");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	if (is_built_in(cmd_arr))
-// 	{
-// 		exec_built_in(ms_env, cmd_arr);
-// 		return (0);
-// 	}
-// 	else
-// 	{
-// 	exec_external_cmd(ms_env, cur_cmd);
-// 	return (0);
-// 	}
-// }
-
 void ft_debug_list_org(t_list **head);
+void	ft_del_org_token_mem(void *content);
 
 int	ft_ast_create(t_mem **mem)
 {
@@ -179,25 +154,50 @@ int	ft_ast_create(t_mem **mem)
 	t_org_tok *tok;
 	ft_org_tokenize(mem);
 	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
-	ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
+	//ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
 	tok = (*mem)->org_tokenize->org_toklst->content;
 	num_cmds = counter_num_cmd(&(*mem)->org_tokenize->org_toklst);
 	if (num_cmds == 1)
 		exec_cmd(&(*mem)->environs->envlist, tok->cmd_node);
 	else
 		exec_pipe(&(*mem)->environs->envlist, &(*mem)->org_tokenize->org_toklst, num_cmds);
+	//ft_del_org_token_mem(&(*mem)->org_tokenize);
 	return (0);
 }
 
 
 
+//------------------- CLEAN MEMORY WIP---------------------------------
 
 
 
+void	ft_del_input_node(void *content)
+{
+	t_input_node	*input_node;
 
+	if (!content)
+		return ;
 
+	input_node = (t_input_node *)content;
 
+	if (input_node->name)
+		ft_free_and_null((void *)&input_node->name);
+	ft_free_and_null((void *)&input_node);
+}
 
+void	ft_del_output_node(void *content)
+{
+	t_output_node	*output_node;
+
+	if (!content)
+		return ;
+
+	output_node = (t_output_node *)content;
+
+	if (output_node->name)
+		ft_free_and_null((void *)&output_node->name);
+	ft_free_and_null((void *)&output_node);
+}
 
 void	ft_del_cmd_builder_node(void *content)
 {
@@ -215,6 +215,33 @@ void	ft_del_cmd_builder_node(void *content)
 	ft_free_and_null((void *)&cmd_builder);
 }
 
+void	ft_del_cmd_node(void *content)
+{
+	t_cmd_node	*cmd_node;
+
+	if (!content)
+		return ;
+
+	cmd_node = (t_cmd_node *)content;
+
+	if (cmd_node->input_lst)
+	{
+		ft_lstclear(&(cmd_node)->input_lst, ft_del_input_node);
+		free((cmd_node)->input_lst);
+	}
+	if (cmd_node->output_lst)
+	{
+		ft_lstclear(&(cmd_node)->output_lst, ft_del_output_node);
+		free((cmd_node)->output_lst);
+	}
+	if (cmd_node->cmd_arr)
+	{
+		/*TODO free an array of chars ft_free_split is an option, but I need to pass the size of the array*/
+		free((cmd_node)->cmd_arr);
+	}
+	ft_free_and_null((void *)&cmd_node);
+}
+
 void	ft_del_org_token_node(void *content)
 {
 	t_org_tok	*org_tok_node;
@@ -226,8 +253,26 @@ void	ft_del_org_token_node(void *content)
 
 	if (org_tok_node->value)
 		ft_free_and_null((void *)&org_tok_node->value);
-
+	if (org_tok_node->cmd_node)
+	{
+		ft_lstclear((void *)&org_tok_node->cmd_node, ft_del_cmd_node);
+		free((void *)org_tok_node->cmd_node);
+	}
 	ft_free_and_null((void *)&org_tok_node);
+}
+
+void	ft_del_org_token_mem(void *content)
+{
+	t_org_tok_mem	*org_tok_mem;
+	if (!content)
+	return ;
+
+	org_tok_mem = (t_org_tok_mem *)content;
+	if (org_tok_mem->org_toklst)
+	{
+		ft_lstclear((void *)&org_tok_mem->org_toklst, ft_del_org_token_node);
+		free((void *)org_tok_mem->org_toklst);
+	}
 }
 
 
