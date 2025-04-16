@@ -22,15 +22,15 @@ ORG_TOKEN	= 	src/luis_commands_utils.c \
 				src/luis_cmd_treatment.c \
 				src/luis_exec_external_cmd.c \
 				src/luis_fd_control.c \
-				# src/luis_exec_built_in.c \
+				src/luis_exec_built_in.c \
 
-# BUILTIN 	=	src/built-ins/ft_env.c \
-# 				src/built-ins/ft_pwd.c \
-# 				src/built-ins/ft_exit.c \
-# 				src/built-ins/ft_echo.c \
-# 				src/built-ins/ft_cd.c \
-# 				src/built-ins/ft_unset.c \
-# 				src/built-ins/ft_export.c \
+BUILTIN 	=	src/built-ins/ft_env.c \
+				src/built-ins/ft_pwd.c \
+				src/built-ins/ft_exit.c \
+				src/built-ins/ft_echo.c \
+				src/built-ins/ft_cd.c \
+				src/built-ins/ft_unset.c \
+				src/built-ins/ft_export.c \
 
 # STUDY_MATERIAL =	src/libminishell/external_commands/cmd_treatment.c \
 # 					src/libminishell/external_commands/exec_external_cmd.c \
@@ -48,7 +48,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(ORG_TOKEN:.c=.o) \
 			$(OPERATORS:.c=.o) \
-			# $(BUILTIN:.c=.o) \
+			$(BUILTIN:.c=.o) \
 			# $(STUDY_MATERIAL:.c=.o) \	
 
 CC = cc
