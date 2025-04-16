@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/16 14:12:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:58:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,7 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
+void ft_debug_list_org(t_list **head);
 
 //LUIS org tokens
 void	ft_del_org_token_node(void *content);
@@ -234,5 +235,14 @@ int				is_redirection(char *value);
 //void			ft_del_cmd_builder_node(void *content);
 
 //LUIS ast
-//int 	excution_prom(t_list **content);
+//int	exec_pipe(t_list **ms_env, t_list **cmd);
+int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
 int	ft_ast_create(t_mem **mem);
+void	*ft_org_tokenize(t_mem **mem);
+
+void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
+void	exec_built_in(t_list **ms_env, char	**cmd_arr);
+bool	is_built_in(char **cmd_arr);
+char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
+void	fd_input_redir(t_list **input_lst);
+void	fd_output_redir(t_list **output_lst);
