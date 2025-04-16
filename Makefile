@@ -18,10 +18,12 @@ OPERATORS 	=	src/operators.c \
 ORG_TOKEN	= 	src/luis_commands_utils.c \
 				src/luis_commands.c \
 				src/luis_org_tok.c \
+				src/luis_execution.c \
 				src/luis_redirections.c \
 				src/luis_cmd_treatment.c \
 				src/luis_exec_external_cmd.c \
 				src/luis_fd_control.c \
+				src/luis_fork_pipe.c \
 				src/luis_exec_built_in.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \

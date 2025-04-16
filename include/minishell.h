@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/16 14:58:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 16:15:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@
 //---------------- PARTE LUIS ------------------------------------------
 
 typedef struct s_cmd_node t_cmd_node;
+
+typedef struct s_pipe_control
+{
+	int i;
+	int	num_cmds;
+	int	fd_next;
+}		t_pipe_control;
 
 typedef struct s_org_tok
 {
@@ -236,13 +243,18 @@ int				is_redirection(char *value);
 
 //LUIS ast
 //int	exec_pipe(t_list **ms_env, t_list **cmd);
-int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
-int	ft_ast_create(t_mem **mem);
+int		exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
+int		ft_ast_create(t_mem **mem);
 void	*ft_org_tokenize(t_mem **mem);
 
+int		exec_pipe(t_list **ms_env, t_list **org_token, int num_cmds);
 void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
 void	exec_built_in(t_list **ms_env, char	**cmd_arr);
 bool	is_built_in(char **cmd_arr);
 char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
 void	fd_input_redir(t_list **input_lst);
 void	fd_output_redir(t_list **output_lst);
+int		*ft_pipe_run(void);
+pid_t	ft_fork_control(void);
+void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2]);
+int    counter_num_cmd(t_list **org_tok);

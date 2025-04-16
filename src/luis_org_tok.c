@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 15:32:42 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 16:15:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,38 +148,44 @@ void	*ft_org_tokenize(t_mem **mem)
 
 
 
-int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd)
-{
-	char	**cmd_arr;
+// int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd)
+// {
+// 	char	**cmd_arr;
 
-	cmd_arr = cur_cmd->cmd_arr;
-	if (!cur_cmd || !ms_env)
-	{
-		perror("cmd or ms_env: cmd executor");
-		exit(EXIT_FAILURE);
-	}
-	if (is_built_in(cmd_arr))
-	{
-		exec_built_in(ms_env, cmd_arr);
-		return (0);
-	}
-	else
-	{
-	exec_external_cmd(ms_env, cur_cmd);
-	return (0);
-	}
-}
+// 	cmd_arr = cur_cmd->cmd_arr;
+// 	if (!cur_cmd || !ms_env)
+// 	{
+// 		perror("cmd or ms_env: cmd executor");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	if (is_built_in(cmd_arr))
+// 	{
+// 		exec_built_in(ms_env, cmd_arr);
+// 		return (0);
+// 	}
+// 	else
+// 	{
+// 	exec_external_cmd(ms_env, cur_cmd);
+// 	return (0);
+// 	}
+// }
 
 void ft_debug_list_org(t_list **head);
 
 int	ft_ast_create(t_mem **mem)
 {
+	int	num_cmds;
+
 	t_org_tok *tok;
 	ft_org_tokenize(mem);
 	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
 	ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
 	tok = (*mem)->org_tokenize->org_toklst->content;
-	exec_cmd(&(*mem)->environs->envlist, tok->cmd_node);
+	num_cmds = counter_num_cmd(&(*mem)->org_tokenize->org_toklst);
+	if (num_cmds == 1)
+		exec_cmd(&(*mem)->environs->envlist, tok->cmd_node);
+	else
+		exec_pipe(&(*mem)->environs->envlist, &(*mem)->org_tokenize->org_toklst, num_cmds);
 	return (0);
 }
 
