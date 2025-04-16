@@ -9,11 +9,10 @@ EXECUTE 	=	src/execute.c \
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
-				src/expand_shared.c \
-				src/expand_token.c \
+
+EXPAND		=	src/expand.c \
 
 INTERACTIVE =	src/interactive.c
-
 
 ENVIRON 	=	src/environs.c \
 
@@ -37,6 +36,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(ENVIRON:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(READLINE:.c=.o) \
+			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
 			$(INTERACTIVE:.c=.o) \

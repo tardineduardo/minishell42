@@ -135,6 +135,7 @@ typedef struct s_exp_mem
 {
 	int		a;
 	int		b;
+	size_t	new_mem_size;
 	char	*raw;
 	char	*new;
 	bool	error;
@@ -183,15 +184,12 @@ void	ft_del_env_node(void *content);
 //operators
 void *ft_init_operators(t_tok_mem **tok);
 
-// erros and exits
+// errors and exits
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
 
-
-//expand
-char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
-
-
+//interective
+char *ft_capture_in_interactive_mode(char *prompt);
 
 // built-ins
 void	ft_env(t_list *envlist);
@@ -208,34 +206,59 @@ void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 
-//DEBUG - REMOVER DEPOIS
-void		ft_debug_list(t_list **head);
 
 
 
-//expansão do delimitador (apenas as aspas são tratadas)
-t_delim		hd_delim_normal_or_quoted(char *s);
 
-//expansão do input do heredoc
-t_exit	insert_var_in_string(char **base, char *insert, size_t index);
+//expansão main
+char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
+void	*enter_expansion_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode);
+
+//expansão modes
+void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem);
+void	*copy_to_new_str_delim_mode(t_exp_mem **exp);
+void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem);
+
+//expansão steps
+void	update_quote_flag(char *s, t_quote *quote, int index);
+bool	skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev);
+bool	handle_single_quote(t_exp_mem **exp, t_quote quote);
+bool	handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote);
+bool	handle_not_quoted(t_exp_mem **exp, t_mem **mem);
+bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
+bool	handle_backslash(t_exp_mem **exp);
+t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
+
+
+//expansão findvar
+t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
+t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted);
+void	*lst_sort_strlen(t_list **to_sort);
+t_list	*lst_sort_strlen_find_lowest(t_list *head);
+
+//expansao realocs
+t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp);
 t_exit	remove_var_from_string(char **s, size_t index);
 
-t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
-//void		*hd_input_try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
-bool		handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
-bool		hd_input_handle_backslash_end(t_exp_mem **exp);
+//expansao validations
+t_delim	is_delim_normal_or_quoted(char *s);
+bool	is_char_escaped(char *string, int a);
+bool	is_closing_quote(char c, t_quote *quote);
 
-//expansão do token
-char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem);
+//expansao ops
+void	copy_char_and_increment(t_exp_mem **exp);
+void	skip_char_no_copy(t_exp_mem **exp);
+void	copy_value_and_increment(t_exp_mem **exp);
+size_t	varlen(char *s);
+
+//expansao mid reset
 void	reset(t_mem **mem);
 
 
-//funções compartilhadas
-void		*lst_sort_strlen(t_list **head);
-t_list		*lst_sort_strlen_find_lowest(t_list *head);
-void	update_quote_flag(char *s, t_quote *quote, int index);
-t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted);
-void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem);
 
 
-char *ft_capture_in_interactive_mode(char *prompt);
+
+
+
+//DEBUG - REMOVER DEPOIS
+void		ft_debug_list(t_list **head);

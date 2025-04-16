@@ -44,6 +44,7 @@ MEM = 	mem/ft_bzero.c \
 		mem/ft_memmove.c \
 		mem/ft_free_str_array.c \
 		mem/ft_free_and_null_str_array.c \
+		mem/ft_realloc_string.c \
 
 STRING = string/ft_concatenate.c \
 		string/ft_concatenate_var.c \

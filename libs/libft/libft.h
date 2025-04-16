@@ -112,6 +112,8 @@ bool	ft_free_and_true(void **ptr);
 void	*ft_free_and_null(void **ptr);
 void	*ft_free_and_null_str_array(char ***array_of_strings);
 void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
+char	*ft_realloc_string(char **string, size_t newlen);
+
 
 // validations
 int		ft_isalnum(int c);
