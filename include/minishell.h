@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/11 16:15:48 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 11:35:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,24 @@
 #include <readline/history.h>			// for history
 
 
+//---------------- PARTE LUIS ------------------------------------------
+
+typedef struct s_cmd_node t_cmd_node;
+
+typedef struct s_org_tok
+{
+	char	*value;
+	int		oper;
+	int		cmd;
+	t_cmd_node	*cmd_node;
+}			t_org_tok;
+
+typedef struct s_cmd_builder
+{
+	t_list	*start_node;
+	t_list	*end_node;
+	int		num_nodes;
+} 			t_cmd_builder;
 //------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
 
 typedef enum e_tok_exit
@@ -102,9 +120,6 @@ typedef struct	s_tok_mem
 	char		*remain;
 }	t_tok_mem;
 
-
-
-
 typedef struct	s_cap_mem
 {
 	char		*line;
@@ -137,8 +152,13 @@ typedef struct s_exp_mem
 
 typedef struct s_org_tok_mem
 {
-	t_list	*org_toklst;
-}		t_org_tok_mem;
+	t_list			*org_toklst;
+	t_cmd_builder	*cmd_builder;
+	t_cmd_node		*cmd;
+	char			**cmd_arr;
+	t_list			*input_lst;
+	t_list			*output_lst;
+}					t_org_tok_mem;
 
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
 
@@ -184,8 +204,6 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 //expand
 char *ft_expand_string(char *string, t_exp_mode mode, t_list **envlist);
 
-
-
 // built-ins
 void	ft_env(t_list *envlist);
 void	ft_pwd(t_list **envlist);
@@ -200,11 +218,21 @@ void	ft_ms_env_add(t_list **envlist, char *variable_value);
 void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
-int 	excution_prom(t_list **content);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
 
-int	ft_ast_create(t_mem **mem);
-
+//LUIS org tokens
 void	ft_del_org_token_node(void *content);
+
+//LUIS cmd table
+t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
+void			ft_cmd_org(t_list **org_tok);
+char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
+void			extract_redirections(t_list **org_to, t_cmd_node *cmd);
+int				is_redirection(char *value);
+//void			ft_del_cmd_builder_node(void *content);
+
+//LUIS ast
+//int 	excution_prom(t_list **content);
+int	ft_ast_create(t_mem **mem);

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/11 16:17:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 11:37:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->expand->i = 0;
 	(*mem)->expand->new = NULL;
 	(*mem)->org_tokenize->org_toklst = NULL;
+	// (*mem)->org_tokenize->cmd_builder = NULL;
+	// (*mem)->org_tokenize->cmd = NULL;
+	// (*mem)->org_tokenize->cmd_arr = NULL;
+	// (*mem)->org_tokenize->input_lst = NULL;
+	// (*mem)->org_tokenize->output_lst = NULL;
 	(*mem)->expand->quote = OFF;
 
 	//init operators -----------------------------------------------------------
@@ -83,7 +88,7 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_org_tok_mem(&(*mem)->org_tokenize);
 
 
-	rl_clear_history();
+	//rl_clear_history();
 	free(*mem);
 	exit(0);
 }
@@ -141,3 +146,10 @@ void	ft_clear_org_tok_mem(t_org_tok_mem **org_tok)
 	free(*org_tok);
 	return ;
 }
+
+// void	ft_clear_cmd_builder_mem(t_org_tok_mem **org_tok)
+// {
+// 	ft_lstclear(&(*org_tok)->org_toklst, ft_del_cmd_builder_node);
+// 	free(*org_tok);
+// 	return ;
+// }

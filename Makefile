@@ -15,7 +15,10 @@ ENVIRON 	=	src/environs.c \
 
 OPERATORS 	=	src/operators.c \
 
-ORG_TOKEN	= 	src/ast_create.c \
+ORG_TOKEN	= 	src/luis_commands_utils.c \
+				src/luis_commands.c \
+				src/luis_org_tok.c \
+				src/luis_redirections.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
