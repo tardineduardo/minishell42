@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 16:48:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/17 11:27:50 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,11 +150,11 @@ void	ft_del_org_token_mem(void *content);
 int	ft_ast_create(t_mem **mem)
 {
 	int	num_cmds;
-
 	t_org_tok *tok;
+	
 	ft_org_tokenize(mem);
 	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
-	//ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
+	ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
 	tok = (*mem)->org_tokenize->org_toklst->content;
 	num_cmds = counter_num_cmd(&(*mem)->org_tokenize->org_toklst);
 	if (num_cmds == 1)

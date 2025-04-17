@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 18:48:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:13:43 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	fd_input_redir(t_list **input_lst)
 	if (*input_lst != NULL)
 	{
 		input_redirect_fd = file_input_handler(input_lst);
-		if (input_redirect_fd > 0)
+		if (input_redirect_fd >= 0)
 		{
 			dup2(input_redirect_fd, STDIN_FILENO);
 			close(input_redirect_fd);
@@ -84,7 +84,7 @@ void	fd_output_redir(t_list **output_lst)
 	if (*output_lst != NULL)
 	{
 		output_redirect_fd = file_output_handler(output_lst);
-		if (output_redirect_fd > 0)
+		if (output_redirect_fd >= 0)
 		{
 			dup2(output_redirect_fd, STDOUT_FILENO);
 			close(output_redirect_fd);
@@ -92,18 +92,17 @@ void	fd_output_redir(t_list **output_lst)
 	}
 }
 
-void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2])
+void	pipe_fd_control(t_pipe_data *pipe_data, t_cmd_node *cur_cmd, int pipefd[2])
 {
-	// if (cur_cmd->input_lst != NULL)  
-	// 	fd_input_redir(&cur_cmd->input_lst);
-	(void)cur_cmd;
-	if (pipe_data->i > 0)
+	if (cur_cmd->input_lst != NULL)  
+		fd_input_redir(&cur_cmd->input_lst);
+	else if (pipe_data->i > 0)
 	{
-		dup2(pipe_data->fd_next, STDIN_FILENO);
-		close(pipe_data->fd_next);
+		dup2(pipe_data->prev_fd, STDIN_FILENO);
+		close(pipe_data->prev_fd);
 	}
-	// if (cur_cmd->output_lst != NULL) 
-	// 	fd_output_redir(&cur_cmd->output_lst);
+	if (cur_cmd->output_lst != NULL) 
+		fd_output_redir(&cur_cmd->output_lst);
 	else if (pipe_data->i < pipe_data->num_cmds - 1)
 	{
 		dup2(pipefd[1], STDOUT_FILENO);

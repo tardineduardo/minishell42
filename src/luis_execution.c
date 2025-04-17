@@ -22,68 +22,77 @@ int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd)
 	}
 }
 
-void	exec_pipe_cmd(t_pipe_control *pipe_data, int pipefd[2], t_list **ms_env, t_cmd_node *cur_cmd)
-{
-	char	**cmd_arr;
-	pid_t	cpid;
+void exec_pipe_cmd(t_pipe_data *p, t_list **env, t_cmd_node *cmd) {
+	pid_t pid = fork();
+	if (pid == -1) {
+		perror("fork");
+		exit(1);
+	}
+	if (pid == 0) {
+		// Redireciona entrada se não for o primeiro comando
+		if (p->i > 0) {
+			dup2(p->prev_fd, STDIN_FILENO);
+			close(p->prev_fd);
+		}
 
-	cmd_arr = cur_cmd->cmd_arr;
-	if (!cur_cmd || !ms_env)
-	{
-		perror("cmd or ms_env: cmd executor");
-		exit(EXIT_FAILURE);
-	}
-	cpid = ft_fork_control();
-	if (cpid == 0)
-	{
-		pipe_fd_control(pipe_data, cur_cmd, pipefd);
+		// Redireciona saída se não for o último comando
+		if (p->i < p->num_cmds - 1) {
+			dup2(p->pipefd[1], STDOUT_FILENO);
+		}
+
+		// Fecha os pipes desnecessários
+		close(p->pipefd[0]);
+		close(p->pipefd[1]);
+
+		// Redirecionamento de arquivos (opcional)
+		if (cmd->input_lst)
+			dup2(file_input_handler(&cmd->input_lst), STDIN_FILENO);
+		if (cmd->output_lst)
+			dup2(file_output_handler(&cmd->output_lst), STDOUT_FILENO);
+
+		// Execução do comando
+		char **cmd_arr = update_cmd_arr(env, cmd->cmd_arr);
+		char **env_arr = ft_ms_env_arr(env);
+
 		if (is_built_in(cmd_arr))
-			exec_built_in(ms_env, cmd_arr);
+			exec_built_in(env, cmd_arr);
 		else
-			exec_external_cmd(ms_env, cur_cmd);
+			execve(cmd_arr[0], cmd_arr, env_arr);
+
+		perror("execve");
+		exit(127);
 	}
-	if (pipe_data->i > 0) // Close previous read end
-		close(pipe_data->fd_next);
-	pipe_data->fd_next = pipefd[0]; // Update for next iteration
-	if (pipe_data->i < pipe_data->num_cmds - 1)
-		close(pipefd[1]); // Close write end after use
 }
 
-int	exec_pipe(t_list **ms_env, t_list **org_token, int num_cmds)
-{
-	int				*pipefd;
-	int				status;
-	t_org_tok		*org_tok;
-	t_cmd_node		*cur_cmd;
-	t_list			*cur_node;
-	t_pipe_control	*pipe_data;
+int exec_pipe(t_list **env, t_list **org_token, int num_cmds) {
+	t_pipe_data p = { .prev_fd = -1, .num_cmds = num_cmds, .i = 0 };
+	t_list *node = *org_token;
+	int status;
 
-	pipe_data = (t_pipe_control *)malloc(sizeof(t_pipe_control));
-	if (!pipe_data)
-		return (1);
-	pipe_data->fd_next = 0;
-	if (!org_token || !ms_env || !num_cmds)
-	{
-		perror("cmd or ms_env: exec pipeline");
-		exit(EXIT_FAILURE);
-	}
-	pipe_data->num_cmds = num_cmds;
-	cur_node = *org_token;
-	pipe_data->i = 0;
-	while (cur_node && pipe_data->i < pipe_data->num_cmds)
-	{
-		org_tok = cur_node->content;
-		if (org_tok->cmd != -1)
-		{
-			cur_cmd = org_tok->cmd_node;
-			pipefd = ft_pipe_run();
-			exec_pipe_cmd(pipe_data, pipefd, ms_env, cur_cmd);
-			pipe_data->i++;
+	while (node && p.i < num_cmds) {
+		t_org_tok *tok = node->content;
+		if (tok->cmd != -1) {
+			t_cmd_node *cmd = tok->cmd_node;
+
+			// Cria um novo pipe se houver próximo comando
+			if (p.i < num_cmds - 1 && pipe(p.pipefd) == -1) {
+				perror("pipe");
+				exit(1);
+			}
+
+			exec_pipe_cmd(&p, env, cmd);
+
+			// Fecha descritores não usados no pai
+			if (p.prev_fd != -1)
+				close(p.prev_fd);
+			if (p.i < num_cmds - 1)
+				p.prev_fd = p.pipefd[0]; // salva para o próximo comando
+			close(p.pipefd[1]); // sempre fecha a escrita no pai
+
+			p.i++;
 		}
-		cur_node = cur_node->next;
+		node = node->next;
 	}
-	while (waitpid(-1, &status, 0) > 0)
-	if (WIFEXITED(status))
-    	return (WEXITSTATUS(status));
-	return (-1);
+	while (wait(&status) > 0);
+	return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
 }

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:54 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 15:37:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/17 11:12:59 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,17 @@ void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd)
 {
 	char	**cmd_arr;
 	char	**ms_env_arr;
-	pid_t	cpid;
 
+	printf("entrou aqui");
 	cmd_arr = cmd->cmd_arr;
 	cmd_arr = update_cmd_arr(ms_env, cmd_arr);
 	ms_env_arr = ft_ms_env_arr(ms_env);
-	if (cmd->input_lst != NULL)
-		fd_input_redir(&cmd->input_lst);
-	if (cmd->output_lst != NULL)
-		fd_output_redir(&cmd->output_lst);
-	cpid = fork();
-	if (cpid == 0)
+	if (execve(cmd_arr[0], cmd_arr, ms_env_arr) == -1)
 	{
-		if (execve(cmd_arr[0], cmd_arr, ms_env_arr) == -1)
-		{
-			//perror(cmd_arr[0]);
-			// make a error msg: command not found
-			//exit("command not found");
-			fprintf(stderr, "%s: command not found\n", cmd_arr[0]);
-			exit(EXIT_FAILURE);
-		}
+		//perror(cmd_arr[0]);
+		// make a error msg: command not found
+		//exit("command not found");
+		fprintf(stderr, "%s: command not found\n", cmd_arr[0]);
+		exit(EXIT_FAILURE);
 	}
 }

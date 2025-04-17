@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/16 17:25:08 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:32:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@
 
 typedef struct s_cmd_node t_cmd_node;
 
-typedef struct s_pipe_control
+typedef struct s_pipe_data
 {
+	int	*pipefd;
 	int i;
 	int	num_cmds;
-	int	fd_next;
-}		t_pipe_control;
+	int	prev_fd;
+}		t_pipe_data;
 
 typedef struct s_org_tok
 {
@@ -228,8 +229,8 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 
 //DEBUG - REMOVER DEPOIS
-void		ft_debug_list(t_list **head);
-void ft_debug_list_org(t_list **head);
+void	ft_debug_list(t_list **head);
+void 	ft_debug_list_org(t_list **head);
 
 //LUIS org tokens
 void	ft_del_org_token_node(void *content);
@@ -257,5 +258,8 @@ void	fd_input_redir(t_list **input_lst);
 void	fd_output_redir(t_list **output_lst);
 int		*ft_pipe_run(void);
 pid_t	ft_fork_control(void);
-void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2]);
+void	pipe_fd_control(t_pipe_data *pipe_data, t_cmd_node *cur_cmd, int pipefd[2]);
 int    counter_num_cmd(t_list **org_tok);
+char	**ft_ms_env_arr(t_list **ms_env);
+int		file_input_handler(t_list **input_lst);
+int		file_output_handler(t_list **output_lst);
