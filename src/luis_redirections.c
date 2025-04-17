@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 13:16:58 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 14:15:47 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 18:47:23 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,7 @@
 
 int	is_redirection(char *value)
 {
-	if (/*ft_strcmp("<<<", value) == 0
-	||*/ ft_strcmp(">>", value) == 0
-	|| ft_strcmp("<<", value) == 0
-	/*|| ft_strcmp("2>", value) == 0
-	|| ft_strcmp("&>", value) == 0*/
+	if (ft_strcmp(">>", value) == 0
 	|| ft_strcmp(">", value) == 0
 	|| ft_strcmp("<", value) == 0)
 		return (0);
@@ -37,7 +33,7 @@ void	ft_ap_nw_in(t_cmd_node *cmd, char *name)
 	append = ft_lstnew(input_node);
 	if (!append)
 		return ;
-	ft_lstadd_back(&(*cmd).input_lst, append);
+	ft_lstadd_back(&cmd->input_lst, append);
 }
 
 void    ft_create_input_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
@@ -72,7 +68,7 @@ void	ft_ap_nw_out(t_cmd_node *cmd, char *name, bool create)
 	append = ft_lstnew(output_node);
 	if (!append)
 		return ;
-	ft_lstadd_back(&(*cmd).output_lst, append);
+	ft_lstadd_back(&cmd->output_lst, append);
 }
 
 void    ft_create_output_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/16 16:15:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:25:08 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include <stdlib.h>						// for malloc etc
 #include <readline/readline.h>			// for readline
 #include <readline/history.h>			// for history
-
+# include <sys/types.h>
+# include <sys/wait.h>
 
 //---------------- PARTE LUIS ------------------------------------------
 

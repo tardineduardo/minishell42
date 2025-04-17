@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:33:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 15:54:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/16 18:48:24 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,16 @@ void	fd_output_redir(t_list **output_lst)
 
 void	pipe_fd_control(t_pipe_control *pipe_data, t_cmd_node *cur_cmd, int pipefd[2])
 {
-	if (cur_cmd->input_lst != NULL)  
-		fd_input_redir(&cur_cmd->input_lst);
-	else if (pipe_data->i > 0)
+	// if (cur_cmd->input_lst != NULL)  
+	// 	fd_input_redir(&cur_cmd->input_lst);
+	(void)cur_cmd;
+	if (pipe_data->i > 0)
 	{
 		dup2(pipe_data->fd_next, STDIN_FILENO);
 		close(pipe_data->fd_next);
 	}
-	if (cur_cmd->output_lst != NULL) 
-		fd_output_redir(&cur_cmd->output_lst);
+	// if (cur_cmd->output_lst != NULL) 
+	// 	fd_output_redir(&cur_cmd->output_lst);
 	else if (pipe_data->i < pipe_data->num_cmds - 1)
 	{
 		dup2(pipefd[1], STDOUT_FILENO);
