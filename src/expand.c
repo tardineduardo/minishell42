@@ -11,35 +11,37 @@
 88      88      88  `"8bbdP"Y8  88  88       88  
 */				 
 				 
-char	*ft_expand(char *string, t_exp_mode mode, t_mem **mem)
+char	*ft_expand(char **string, t_exp_mode mode, t_mem **mem)
 {
 	t_exp_mem	*exp;
-	char		*expanded;
+	char		*temp;
 	
-	if (!string)
+	if (!*string)
 		return (NULL);
-	if (!ft_strlen(string))
+	if (!ft_strlen(*string))
 		return (ft_strdup(""));
 	exp = (*mem)->expand;
-	exp->raw = ft_strdup(string);
-	exp->new = ft_calloc(ft_strlen(string) + 1, sizeof(char));
-	exp->new_mem_size = (ft_strlen(string) + 1) * sizeof(char);
+	exp->raw = ft_strdup(*string);
+	exp->new = ft_calloc(ft_strlen(*string) + 1, sizeof(char));
+	exp->new_mem_size = (ft_strlen(*string) + 1) * sizeof(char);
 	if (!exp->new)
 		return (NULL);
 	exp->mode = mode;	
-	enter_expansion_mode(&exp, mem, mode);
-	expanded = ft_strdup(exp->new);
-	if (!expanded)
+	start_expansion_for_mode(&exp, mem, mode);
+	temp = *string;
+	*string = ft_strdup(exp->new);
+	ft_free_and_null((void *)&temp);
+	if (!*string)
 	{
 		reset(mem);
 		return (NULL);
 	}
 	reset(mem);
-	return (expanded);
+	return (*string);
 }
 
 
-void	*enter_expansion_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
+void	*start_expansion_for_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
 {
 	if (mode == TOKEN)
 		return(copy_to_new_str_token_mode(exp, mem));
@@ -47,8 +49,6 @@ void	*enter_expansion_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
 		return(copy_to_new_str_delim_mode(exp));
 	if (mode == HEREDOC)
 		return(copy_to_new_str_heredoc_mode(exp, mem));
-	// if (mode == EXPORT)
-	// 	return(copy_to_new_str_heredoc_mode(exp, mem));
 	return (NULL);
 }
 
@@ -82,11 +82,11 @@ void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 		update_quote_flag((*exp)->raw, &quote, (*exp)->a);
 		if (skip_if_quote_changed(exp, &quote, &prev))
 			continue;
-		if (handle_single_quote(exp, quote))
+		if (process_inside_single_quotes(exp, quote))
 			continue;
-		if (handle_double_quote(exp, mem, quote))
+		if (process_inside_double_quotes(exp, mem, quote))
 			continue;
-		if (handle_not_quoted(exp, mem))
+		if (process_unquoted_sequence(exp, mem))
 			continue;
 		copy_char_and_increment(exp);
 	}
@@ -187,7 +187,7 @@ bool	skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev)
 }
 
 // used by delim, token
-bool	handle_single_quote(t_exp_mem **exp, t_quote quote)
+bool	process_inside_single_quotes(t_exp_mem **exp, t_quote quote)
 {
 	if (quote == Q_SINGLE)
 	{
@@ -199,7 +199,7 @@ bool	handle_single_quote(t_exp_mem **exp, t_quote quote)
 }
 
 // used by delim, token
-bool	handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
+bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote)
 {
 	t_exp_mode mode;
 
@@ -225,7 +225,7 @@ bool	handle_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
 }
 
 // used by token
-bool	handle_not_quoted(t_exp_mem **exp, t_mem **mem)
+bool	process_unquoted_sequence(t_exp_mem **exp, t_mem **mem)
 {
 	if (handle_dollar_sign(exp, mem))
 		return (true);
@@ -237,8 +237,8 @@ bool	handle_not_quoted(t_exp_mem **exp, t_mem **mem)
 
 
 // used by heredoc
-// used by token->handle_not_quoted
-// used by token->handle_double_quoted
+// used by token->process_unquoted_sequence
+// used by token->process_inside_double_quotesd
 bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
 	t_exit exit;
@@ -270,10 +270,10 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 
 
 
-// used by token->handle_not_quoted
-// used by token->handle_double_quoted -> NOT DELIM
-// used by delim->handle_not_quoted - -> NOT DELIM
-// used by heredoc->handle_not_quoted
+// used by token->process_unquoted_sequence
+// used by token->process_inside_double_quotesd -> NOT DELIM
+// used by delim->process_unquoted_sequence - -> NOT DELIM
+// used by heredoc->process_unquoted_sequence
 bool	handle_backslash(t_exp_mem **exp)
 {
 	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\\')

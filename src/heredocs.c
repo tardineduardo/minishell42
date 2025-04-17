@@ -29,7 +29,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 
 	hd = (*mem)->heredoc;
 	env = (*mem)->environs;
-	hd->delim = ft_expand(delimiter, DELIMITER, mem);
+	hd->delim = ft_expand(&delimiter, DELIMITER, mem);
 	if (!hd->delim)
 		return (NULL);
 	if (!ft_hd_create_file(&hd_count_int, &hd->filepath))
@@ -118,7 +118,6 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 	hd_loop_count = 0;
 	while(1)
 	{
-		//Essa parte aqui ajuda a visualizar qual o delimitador esperado.
 		char *prompt = ft_concatenate("heredoc [", hd->delim, "] > ");
 		hd->loopinput = ft_capture_in_interactive_mode(prompt);
 		free(prompt);
@@ -129,8 +128,7 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
 
-		ft_free_and_null((void *)&hd->loopinput);
-		hd->loopinput = ft_expand(hd->loopinput, HEREDOC, mem);
+		hd->loopinput = ft_expand(&hd->loopinput, HEREDOC, mem);
 
 		if (hd->loopinput)
 			if (!ft_hd_write_to_file(hd_loop_count, mem))

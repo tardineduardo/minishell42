@@ -36,7 +36,6 @@ void	*ft_tokenize(char **line, t_mem **mem)
 
 void ft_expand_toklist(t_list **toklst, t_mem **mem)
 {
-	char	*temp;
 	t_list	*trav;
 	t_tok_node	*tok_node;
 
@@ -44,9 +43,8 @@ void ft_expand_toklist(t_list **toklst, t_mem **mem)
 	while (trav)
 	{
 		tok_node = (t_tok_node *)trav->content;
-		temp = tok_node->tokstr;
-		tok_node->tokstr = ft_expand(tok_node->tokstr, TOKEN, mem);
-		ft_free_and_null((void *)&temp);
+
+		tok_node->tokstr = ft_expand(&tok_node->tokstr, TOKEN, mem);
 		trav = trav->next;
 	}
 }
