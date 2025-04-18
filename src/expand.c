@@ -128,7 +128,7 @@ void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem)
 		{
 			if (handle_dollar_sign(exp, mem))
 				continue;
-			if (handle_backslash(exp))
+			if (handle_backslash(exp, HEREDOC, Q_NULL))
 				continue;
 		}
 		copy_char_and_increment(exp);
@@ -210,7 +210,7 @@ bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote)
 		{		
 			if (handle_dollar_sign(exp, mem))
 				return (true);
-			if (handle_backslash(exp))
+			if (handle_backslash(exp, TOKEN, Q_DOUBLE))
 				return (true);
 		}
 		if (is_closing_quote((*exp)->raw[(*exp)->a], &quote)) //testar isso
@@ -229,7 +229,7 @@ bool	process_unquoted_sequence(t_exp_mem **exp, t_mem **mem)
 {
 	if (handle_dollar_sign(exp, mem))
 		return (true);
-	if (handle_backslash(exp))
+	if (handle_backslash(exp, TOKEN, Q_OFF))
 		return (true);
 	return (false);
 }
@@ -274,26 +274,29 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 // used by token->process_inside_double_quotesd -> NOT DELIM
 // used by delim->process_unquoted_sequence - -> NOT DELIM
 // used by heredoc->process_unquoted_sequence
-bool	handle_backslash(t_exp_mem **exp)
+bool	handle_backslash(t_exp_mem **exp, t_exp_mode mode, t_quote quote)
 {
-	if ((*exp)->raw[(*exp)->a] == '\\' && (*exp)->raw[(*exp)->a + 1] == '\\')
+	if (CURRENT_CHAR != '\\' || NEXT_CHAR == '\0')
+		return (false);
+	if (mode == TOKEN && quote == Q_OFF)
 	{
-		if ((*exp)->mode == HEREDOC && (*exp)->hd_mode == EXPAND)
-		{
-			copy_char_and_increment(exp);
-			skip_char_no_copy(exp);
-		}
+		if (NEXT_CHAR == '\\')
+			return (copy_char_copy_next_and_increment(exp));
 		else
-		{
-			copy_char_and_increment(exp);
-			copy_char_and_increment(exp);
-		}
-		return (true);
+			return (skip_slash_copy_next_and_increment(exp));
+	}
+	if (mode == TOKEN && quote == Q_DOUBLE)
+	{
+		if (ft_strchr("\\\"\'$", NEXT_CHAR))
+			return (skip_slash_copy_next_and_increment(exp));
+	}
+	if (mode == HEREDOC && (*exp)->hd_mode == EXPAND)
+	{
+		if (ft_strchr("\\$", NEXT_CHAR))
+			return (skip_slash_copy_next_and_increment(exp));
 	}
 	return (false);
 }
-
-
 
 
 t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
@@ -574,7 +577,6 @@ bool	is_char_escaped(char *string, int a)
 		a--;
 	}
 	return (false);
-
 }
 
 
@@ -649,6 +651,40 @@ void skip_char_no_copy(t_exp_mem **exp)
 	(*exp)->a++;
 	return ;
 }
+
+
+bool	skip_slash_copy_next_and_increment(t_exp_mem **exp)
+{
+	(*exp)->a++;
+	if ((*exp)->raw[(*exp)->a])
+	{
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->a++;
+		(*exp)->b++;
+	}
+	return (true);
+}
+
+
+bool	copy_char_copy_next_and_increment(t_exp_mem **exp)
+{
+	if ((*exp)->raw[(*exp)->a])
+	{
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->a++;
+		(*exp)->b++;
+	}
+	if ((*exp)->raw[(*exp)->a])
+	{
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->a++;
+		(*exp)->b++;
+	}
+	return (true);
+}
+
+
+
 
 
 size_t varlen(char *s)

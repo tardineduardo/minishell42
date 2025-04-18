@@ -20,8 +20,8 @@
 # include <readline/history.h>			// for history
 
 
-# define SRC (*exp)->raw
-# define DEST (*exp)->new
+# define CURRENT_CHAR (*exp)->raw[(*exp)->a]
+# define NEXT_CHAR (*exp)->raw[(*exp)->a + 1]
 # define A (*exp)->a
 # define B (*exp)->b
 
@@ -49,6 +49,7 @@ typedef enum e_quote
 	Q_OFF,
 	Q_SINGLE,
 	Q_DOUBLE,
+	Q_NULL,
 }	t_quote;
 
 typedef enum e_type
@@ -234,9 +235,8 @@ bool	process_inside_single_quotes(t_exp_mem **exp, t_quote quote);
 bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote);
 bool	process_unquoted_sequence(t_exp_mem **exp, t_mem **mem);
 bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
-bool	handle_backslash(t_exp_mem **exp);
+bool	handle_backslash(t_exp_mem **exp, t_exp_mode mode, t_quote quote);
 t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem);
-
 
 //expansão findvar
 t_exit	get_variable_value(char *dollar, char **value, t_mem **mem);
@@ -255,6 +255,8 @@ bool	is_closing_quote(char c, t_quote *quote);
 
 //expansao ops
 void	copy_char_and_increment(t_exp_mem **exp);
+bool	copy_char_copy_next_and_increment(t_exp_mem **exp);
+bool	skip_slash_copy_next_and_increment(t_exp_mem **exp);
 void	skip_char_no_copy(t_exp_mem **exp);
 void	copy_value_and_increment(t_exp_mem **exp);
 size_t	varlen(char *s);
