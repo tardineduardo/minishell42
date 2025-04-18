@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/17 13:32:31 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 17:55:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ typedef struct s_cmd_node
 	char	**cmd_arr;
 	t_list	*input_lst;
 	t_list	*output_lst;
-	t_list	*heredoc_lst;
-	t_list	*o_concat;
 	int		err;
 }			t_cmd_node;
 
