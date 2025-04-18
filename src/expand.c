@@ -10,7 +10,11 @@
 88      88      88  88,    ,88  88  88       88  
 88      88      88  `"8bbdP"Y8  88  88       88  
 */				 
-				 
+
+
+// exp->error está capturando os tipos de erro quando o retorno é null
+// mas está salando em exp->expansion_exit_status, que eu reseto no fim. na hora de usar,
+// quardar em outra estrutura.
 char	*ft_expand(char **string, t_exp_mode mode, t_mem **mem)
 {
 	t_exp_mem	*exp;
@@ -26,8 +30,9 @@ char	*ft_expand(char **string, t_exp_mode mode, t_mem **mem)
 	exp->new_mem_size = (ft_strlen(*string) + 1) * sizeof(char);
 	if (!exp->new)
 		return (NULL);
-	exp->mode = mode;	
-	start_expansion_for_mode(&exp, mem, mode);
+	exp->mode = mode;
+	if(!start_expansion_for_mode(&exp, mem, mode))
+		return (NULL); //em exp->expansion_exit_status, esta registrado o tipo de erro.
 	temp = *string;
 	*string = ft_strdup(exp->new);
 	ft_free_and_null((void *)&temp);
@@ -77,7 +82,7 @@ void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 	while ((*exp)->raw[(*exp)->a])
 	{
 		if ((*exp)->error)
-			return (NULL);	
+			return (NULL);
 		prev = quote;
 		update_quote_flag((*exp)->raw, &quote, (*exp)->a);
 		if (skip_if_quote_changed(exp, &quote, &prev))
@@ -124,6 +129,8 @@ void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem)
 {
 	while ((*exp)->raw[(*exp)->a])
 	{
+		if ((*exp)->error)
+			return (NULL);
 		if ((*exp)->hd_mode == EXPAND)
 		{
 			if (handle_dollar_sign(exp, mem))
@@ -209,7 +216,11 @@ bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote)
 		if (mode == TOKEN)
 		{		
 			if (handle_dollar_sign(exp, mem))
+			{
+				if((*exp)->braces)
+					skip_char_no_copy(exp);
 				return (true);
+			}
 			if (handle_backslash(exp, TOKEN, Q_DOUBLE))
 				return (true);
 		}
@@ -228,7 +239,11 @@ bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote)
 bool	process_unquoted_sequence(t_exp_mem **exp, t_mem **mem)
 {
 	if (handle_dollar_sign(exp, mem))
+	{
+		if((*exp)->braces)
+			skip_char_no_copy(exp);
 		return (true);
+	}
 	if (handle_backslash(exp, TOKEN, Q_OFF))
 		return (true);
 	return (false);
@@ -243,19 +258,20 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
 	t_exit exit;
 
-	if ((*exp)->raw[(*exp)->a] != '$')
+	if (CURRENT_CHAR != '$')
 		return (false);
-	if (is_char_escaped((*exp)->raw, (*exp)->a))
+	if (NEXT_CHAR == '{')
 	{
-		copy_char_and_increment(exp);
-		return (false);
+		(*exp)->braces = true;
+		skip_char_no_copy(exp);
 	}
-	if ((*exp)->raw[(*exp)->a + 1])
+	//AQUI APAGUEI UMA COISA
+	if (NEXT_CHAR)
 	{
 		exit = try_to_expand_variable(exp, mem);
-		if (exit == ERROR)
+		if (exit == ERROR || exit == BAD_SUBSTITUITION)
 		{
-			(*exp)->error = true;
+			(*exp)->expansion_exit_status = exit;
 			return (false);
 		}
 		if (exit == VARIABLE_FOUND)
@@ -263,7 +279,7 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 			copy_value_and_increment(exp);
 			return (true);
 		}
-		return (true);
+		return (true);//AQUI É O ELSE PARA VARIABLE NOT FOUND
 	}
 	return (false);
 }
@@ -311,10 +327,11 @@ t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 	exit = get_variable_value(&(*exp)->raw[(*exp)->a], value, mem);
 	
 	if (exit == VARIABLE_FOUND)
-		//return (insert_var_in_string(&(*exp)->raw, *value, (*exp)->a));
 		return (insert_var_in_string(*value, (*exp)->a, exp));
 	else if(exit == VARIABLE_NOT_FOUND)
 		return (remove_var_from_string(&(*exp)->raw, (*exp)->a));
+	else if(exit == BAD_SUBSTITUITION)
+		return (BAD_SUBSTITUITION);	
 	else
 		return (ERROR);	
 }
@@ -348,7 +365,7 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 	sortedvars = malloc(sizeof(t_list *));
 	*sortedvars = (*mem)->expand->sortedvars;
 
-	if (!dollar || dollar[0] != '$' || dollar[1] == '\0')
+	if (!dollar || (dollar[0] != '$' && dollar[0] != '{') || dollar[1] == '\0')
 		return (ERROR);
 
 	ft_lstcopy_and_rsort_by_len((*mem)->environs->envlist, sortedvars);
@@ -367,10 +384,8 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 	if (trav)
 	{
 		*value = ft_strdup(node->value);
-
 		ft_lstclear(sortedvars, NULL);
 		free(sortedvars);
-		
 		return (VARIABLE_FOUND);
 	}
 	else
@@ -483,27 +498,19 @@ t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	char *temp;
 	size_t len;
 
-	len = varlen(&(*exp)->raw[(*exp)->a]);
+	len = varlen(&(*exp)->raw[(*exp)->a], (*exp)->braces);
 	prefix = ft_substr((*exp)->raw, 0, index);
 	suffix = ft_strdup(&(*exp)->raw[(*exp)->a] + len + 1);
-
 	if (!prefix || !suffix)
 		return (ERROR);
-	
 	temp = ft_concatenate(prefix, insert, suffix);
-
-	
 	if (ft_strlen(temp) + 1 > (*exp)->new_mem_size)
 	{
 		(*exp)-> new_mem_size = 2 * (ft_strlen((*exp)->raw) + 1);
 		ft_realloc_string(&(*exp)->new, (*exp)-> new_mem_size);
 	}
-
-
-
 	if (!temp || !(*exp)->raw)
 		return (ERROR);
-	
 	free(suffix);
 	free(prefix);
 	ft_free_and_null((void *)&(*exp)->raw);
@@ -687,17 +694,24 @@ bool	copy_char_copy_next_and_increment(t_exp_mem **exp)
 
 
 
-size_t varlen(char *s)
+size_t varlen(char *s, bool braces)
 {
 	
 	size_t	i;
 
-	if(s[0] == '$')
+	if(*s == '$')
 		s++;
 
+	if(*s == '{')
+		s++;		
+
 	i = 0;
-	while (ft_isalnum(s[i]))
-		i++;
+	if (braces == false)
+		while (ft_isalnum(s[i]))
+			i++;
+	else if (braces == true)
+		while ((s[i] != '}'))
+			i++;
 	return (i);
 }
 
@@ -729,5 +743,7 @@ void	reset(t_mem **mem)
 	ft_free_and_null((void *)&exp->raw);
 	ft_free_and_null((void *)&exp->value);
 	ft_free_and_null((void *)&exp->sortedvars);
+	exp->expansion_exit_status = NULL_E;
 	exp->error = false;
+	exp->braces = false;
 }

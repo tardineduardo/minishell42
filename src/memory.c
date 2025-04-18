@@ -57,12 +57,14 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->environs->result = NULL;
 	(*mem)->expand->a = 0;
 	(*mem)->expand->b = 0;
+	(*mem)->expand->braces = false;
 	(*mem)->expand->new_mem_size = 0;
 	(*mem)->expand->hd_mode = EXPAND;
 	(*mem)->expand->raw = NULL;
 	(*mem)->expand->new = NULL;
 	(*mem)->expand->value = NULL;
 	(*mem)->expand->error = false;
+	(*mem)->expand->expansion_exit_status = NULL_E;
 	(*mem)->expand->sortedvars = NULL;
 
 	//init operators -----------------------------------------------------------

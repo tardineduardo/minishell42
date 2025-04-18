@@ -42,6 +42,8 @@ typedef enum e_exit
 	VARIABLE_FOUND,
 	VARIABLE_NOT_FOUND,
 	EMPTY_VARIABLE_LIST,
+	BAD_SUBSTITUITION,
+	NULL_E,
 } t_exit;
 
 typedef enum e_quote
@@ -148,7 +150,9 @@ typedef struct s_exp_mem
 	char	*raw;
 	char	*new;
 	bool	error;
+	bool	braces;
 	char	*value;
+	t_exit	expansion_exit_status;
 	t_list	*sortedvars;
 	t_delim		hd_mode;
 	t_exp_mode	mode;
@@ -259,7 +263,7 @@ bool	copy_char_copy_next_and_increment(t_exp_mem **exp);
 bool	skip_slash_copy_next_and_increment(t_exp_mem **exp);
 void	skip_char_no_copy(t_exp_mem **exp);
 void	copy_value_and_increment(t_exp_mem **exp);
-size_t	varlen(char *s);
+size_t varlen(char *s, bool braces);
 
 //expansao mid reset
 void	reset(t_mem **mem);
