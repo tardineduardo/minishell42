@@ -6,6 +6,7 @@ int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
+void		ft_expand_toklist(t_list **toklst, t_mem **mem);
 
 
 void	*ft_tokenize(char **line, t_mem **mem)
@@ -18,14 +19,36 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	while (1)
 	{
 		exit_status = ft_tokenize_remain(&tok->remain, &tok);
-		if (exit_status == ERROR)
+		if (exit_status == TOK_ERROR)
 			return (NULL);
-		if (exit_status == END)
+		if (exit_status == TOK_END)
 			break ;
 	}
 	ft_free_and_null((void *)&tok->remain);
+	ft_expand_toklist(&tok->toklst, mem);
+	ft_debug_list(&tok->toklst);
+	ft_printf("\n");
+
 	return (mem);
 }
+
+
+
+void ft_expand_toklist(t_list **toklst, t_mem **mem)
+{
+	t_list	*trav;
+	t_tok_node	*tok_node;
+
+	trav = *toklst;
+	while (trav)
+	{
+		tok_node = (t_tok_node *)trav->content;
+
+		tok_node->tokstr = ft_expand(&tok_node->tokstr, TOKEN, mem);
+		trav = trav->next;
+	}
+}
+
 
 
 
@@ -39,11 +62,11 @@ t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
 	token_limit = ft_find_token_limit((*remain), tok);
 
 	detach_exit = ft_append_new_toknode(remain, tok, token_limit);
-	if (detach_exit == ERROR)
-		return (ERROR);
-	if (detach_exit == END)
-		return (END);
-	return (CONTINUE);
+	if (detach_exit == TOK_ERROR)
+		return (TOK_ERROR);
+	if (detach_exit == TOK_END)
+		return (TOK_END);
+	return (TOK_CONTINUE);
 }
 
 
@@ -58,11 +81,11 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	
 	toknode = malloc(sizeof(t_tok_node));
 	if (!toknode)
-		return (ERROR);
+		return (TOK_ERROR);
 	toknode->tokstr = new_string;
 	append = ft_lstnew(toknode);
 	if (!append)
-		return (ERROR);
+		return (TOK_ERROR);
 	ft_lstadd_back(&(*tok)->toklst, append);
 
 
@@ -78,8 +101,8 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 
 	ft_strtrim_overwrite(remain, "\t ");
 	if (!(*remain)[0])
-		return (END);
-	return (CONTINUE);
+		return (TOK_END);
+	return (TOK_CONTINUE);
 }
 
 
@@ -114,20 +137,20 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str)
 	int	i;
 
 	if (str[0] == '\'')
-		(*tok)->quote = SINGLE;
+		(*tok)->quote = Q_SINGLE;
 	else if (str[0] == '\"')	
-		(*tok)->quote = DOUBLE;
+		(*tok)->quote = Q_DOUBLE;
 
 	i = 1;
 	while (str[i])
 	{
-		if ((ft_is_single_quote(&str[i]) && (*tok)->quote == SINGLE) || (ft_is_double_quote(&str[i]) && (*tok)->quote == DOUBLE))
-			(*tok)->quote = OFF;
-		else if ((ft_is_single_quote(&str[i]) && (*tok)->quote == OFF))
-			(*tok)->quote = SINGLE;
-		else if ((ft_is_double_quote(&str[i]) && (*tok)->quote == OFF))
-			(*tok)->quote = DOUBLE;
-		else if ((ft_isspace(str[i]) || ft_is_operator((&str[i]), tok, NULL)) && (*tok)->quote == OFF)
+		if ((ft_is_single_quote(&str[i]) && (*tok)->quote == Q_SINGLE) || (ft_is_double_quote(&str[i]) && (*tok)->quote == Q_DOUBLE))
+			(*tok)->quote = Q_OFF;
+		else if ((ft_is_single_quote(&str[i]) && (*tok)->quote == Q_OFF))
+			(*tok)->quote = Q_SINGLE;
+		else if ((ft_is_double_quote(&str[i]) && (*tok)->quote == Q_OFF))
+			(*tok)->quote = Q_DOUBLE;
+		else if ((ft_isspace(str[i]) || ft_is_operator((&str[i]), tok, NULL)) && (*tok)->quote == Q_OFF)
 			return (i);
 		i++;
 	}

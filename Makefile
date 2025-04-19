@@ -9,7 +9,10 @@ EXECUTE 	=	src/execute.c \
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
-				src/expand.c \
+
+EXPAND		=	src/expand.c \
+
+INTERACTIVE =	src/interactive.c
 
 ENVIRON 	=	src/environs.c \
 
@@ -25,7 +28,7 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 
 
 
-
+ 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
@@ -33,8 +36,10 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(ENVIRON:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(READLINE:.c=.o) \
+			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
+			$(INTERACTIVE:.c=.o) \
 
 
 CC = cc

@@ -44,7 +44,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->capture->append = NULL;
 	(*mem)->heredoc->delim = NULL;
 	(*mem)->heredoc->list = NULL;
-	(*mem)->heredoc->fpath_cap = NULL;
+	(*mem)->heredoc->filepath = NULL;
 	(*mem)->tokenize->toklst = NULL;
 	(*mem)->tokenize->operators = NULL;
 	(*mem)->tokenize->last_of_list = NULL;
@@ -55,9 +55,17 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->environs->envlist = NULL;
 	(*mem)->environs->new_node = NULL;
 	(*mem)->environs->result = NULL;
-	(*mem)->expand->i = 0;
+	(*mem)->expand->a = 0;
+	(*mem)->expand->b = 0;
+	(*mem)->expand->braces = false;
+	(*mem)->expand->new_mem_size = 0;
+	(*mem)->expand->hd_mode = EXPAND;
+	(*mem)->expand->raw = NULL;
 	(*mem)->expand->new = NULL;
-	(*mem)->expand->quote = OFF;
+	(*mem)->expand->value = NULL;
+	(*mem)->expand->error = false;
+	(*mem)->expand->expansion_exit_status = NULL_E;
+	(*mem)->expand->sortedvars = NULL;
 
 	//init operators -----------------------------------------------------------
 	if (!ft_init_operators(&(*mem)->tokenize))

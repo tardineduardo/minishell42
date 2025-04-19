@@ -12,6 +12,10 @@
 
 #include "../include/minishell.h"
 
+t_list *ft_find_lowest(t_list *head);
+void *ft_lst_sort_strlen(t_list **head);
+
+
 void	ft_env_block_unset(t_list **envlist);
 void	ft_env_readonly(t_list **envlist);
 
@@ -186,3 +190,6 @@ void ft_del_env_node(void *content)
 	ft_free_and_null((void *)&node->value);
 	ft_free_and_null((void *)&node);
 }
+
+
+

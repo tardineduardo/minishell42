@@ -24,7 +24,8 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 	{
 		temp2 = temp1->next;
 		if (temp1->content)
-			(*del)(temp1->content);
+			if (del)
+				(*del)(temp1->content);
 		free(temp1);
 		temp1 = temp2;
 	}
