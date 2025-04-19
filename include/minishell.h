@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/18 17:55:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/19 11:33:03 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,51 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-//---------------- PARTE LUIS ------------------------------------------
+typedef enum e_node_type
+{
+	NODE_COMMAND,
+	NODE_PIPELINE,
+	NODE_LOGICAL,
+	NODE_SUBSHELL
+}	node_type;
+
+typedef enum e_logical_op
+{
+	OP_AND,
+	OP_OR
+}	logical_op;
+
+typedef struct s_ast_node t_ast_node;
 
 typedef struct s_cmd_node t_cmd_node;
+
+typedef struct s_pipe_info
+{
+	t_list	*cmds;					// t_list of t_cmd_node
+	int 	cmd_count;
+}	t_pipe_info;
+
+typedef struct s_logical_data
+{
+	logical_op	op;
+	t_ast_node	*left;
+	t_ast_node	*right;
+}	t_logical_data;
+
+typedef struct s_subshell_data
+{
+	t_ast_node	*body;
+}	t_subshell_data;
+//---------------- PARTE LUIS ------------------------------------------
+
+typedef struct s_ast_node
+{
+	node_type 		type;
+	t_cmd_node		*cmd;
+	t_pipe_info		*pipeline;
+	t_logical_data	*logical;
+	t_subshell_data *subshell;
+}	t_ast_node;
 
 typedef struct s_pipe_data
 {
@@ -261,3 +303,5 @@ int    counter_num_cmd(t_list **org_tok);
 char	**ft_ms_env_arr(t_list **ms_env);
 int		file_input_handler(t_list **input_lst);
 int		file_output_handler(t_list **output_lst);
+t_ast_node *parse_expression(t_list **tokens);
+void 	print_ast(t_ast_node *node, int depth);

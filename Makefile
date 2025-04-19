@@ -25,6 +25,7 @@ ORG_TOKEN	= 	src/luis_commands_utils.c \
 				src/luis_fd_control.c \
 				src/luis_fork_pipe.c \
 				src/luis_exec_built_in.c \
+				src/luis_ast_create.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/17 11:27:50 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/19 11:42:41 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,18 +149,22 @@ void	ft_del_org_token_mem(void *content);
 
 int	ft_ast_create(t_mem **mem)
 {
-	int	num_cmds;
-	t_org_tok *tok;
+	// int	num_cmds;
+	// t_org_tok *tok;
 	
 	ft_org_tokenize(mem);
 	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
 	ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
-	tok = (*mem)->org_tokenize->org_toklst->content;
-	num_cmds = counter_num_cmd(&(*mem)->org_tokenize->org_toklst);
-	if (num_cmds == 1)
-		exec_cmd(&(*mem)->environs->envlist, tok->cmd_node);
-	else
-		exec_pipe(&(*mem)->environs->envlist, &(*mem)->org_tokenize->org_toklst, num_cmds);
+	t_ast_node *root = parse_expression(&(*mem)->org_tokenize->org_toklst);
+	if (root == NULL)
+		printf("é NULL \n");
+	print_ast(root, 0);
+	// tok = (*mem)->org_tokenize->org_toklst->content;
+	// num_cmds = counter_num_cmd(&(*mem)->org_tokenize->org_toklst);
+	// if (num_cmds == 1)
+	// 	exec_cmd(&(*mem)->environs->envlist, tok->cmd_node);
+	// else
+	// 	exec_pipe(&(*mem)->environs->envlist, &(*mem)->org_tokenize->org_toklst, num_cmds);
 	//ft_del_org_token_mem(&(*mem)->org_tokenize);
 	return (0);
 }
