@@ -7,6 +7,7 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
 void		ft_expand_toklist(t_list **toklst, t_mem **mem);
+void	ft_tokeniztion_escape(int *i);
 
 
 void	*ft_tokenize(char **line, t_mem **mem)
@@ -25,6 +26,8 @@ void	*ft_tokenize(char **line, t_mem **mem)
 			break ;
 	}
 	ft_free_and_null((void *)&tok->remain);
+	
+	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
 	ft_expand_toklist(&tok->toklst, mem);
 	ft_debug_list(&tok->toklst);
 	ft_printf("\n");
@@ -34,20 +37,7 @@ void	*ft_tokenize(char **line, t_mem **mem)
 
 
 
-void ft_expand_toklist(t_list **toklst, t_mem **mem)
-{
-	t_list	*trav;
-	t_tok_node	*tok_node;
 
-	trav = *toklst;
-	while (trav)
-	{
-		tok_node = (t_tok_node *)trav->content;
-
-		tok_node->tokstr = ft_expand(&tok_node->tokstr, TOKEN, mem);
-		trav = trav->next;
-	}
-}
 
 
 
@@ -121,6 +111,8 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 			i += ft_find_word_limit(tok, &str[i]);
 			continue ;
 		}
+		if (str[i] == '\\')	
+			ft_tokeniztion_escape(&i);
 		if (ft_is_operator(&str[i], tok, &operator_len))
 		{
 			if (i == 0)
@@ -130,6 +122,13 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 		i++;
 	}
 	return (i);
+}
+
+void	ft_tokeniztion_escape(int *i)
+{
+	(*i)++;
+	(*i)++;
+	return ;
 }
 
 int			ft_find_word_limit(t_tok_mem **tok, char *str)
@@ -227,7 +226,20 @@ void	ft_del_token_node(void *content)
 
 
 
+void ft_expand_toklist(t_list **toklst, t_mem **mem)
+{
+	t_list	*trav;
+	t_tok_node	*tok_node;
 
+	trav = *toklst;
+	while (trav)
+	{
+		tok_node = (t_tok_node *)trav->content;
+
+		tok_node->tokstr = ft_expand(&tok_node->tokstr, TOKEN, mem);
+		trav = trav->next;
+	}
+}
 
 
 
