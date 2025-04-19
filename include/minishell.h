@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 20:03:43 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/04/19 17:02:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,19 @@
 # define B (*exp)->b
 
 
+typedef enum e_node_type
+{
+	NODE_COMMAND,
+	NODE_PIPELINE,
+	NODE_LOGICAL,
+	NODE_SUBSHELL
+}	node_type;
 
+typedef enum e_logical_op
+{
+	OP_AND,
+	OP_OR
+}	logical_op;
 
 typedef enum e_tok_exit
 {
@@ -68,10 +80,72 @@ typedef enum e_delim
 	QUOTED,
 }	t_delim;
 
-
-
-
 //------------- STRUCTS DOS NODES DE CADA ÁREA --------------
+
+typedef struct s_cmd_node t_cmd_node;
+
+typedef struct s_ast_node t_ast_node;
+
+typedef struct s_pipe_info
+{
+	t_list	*cmds;					// t_list of t_cmd_node
+	int 	cmd_count;
+}	t_pipe_info;
+
+typedef struct s_logical_data
+{
+	logical_op	op;
+	t_ast_node	*left;
+	t_ast_node	*right;
+}	t_logical_data;
+
+typedef struct s_subshell_data
+{
+	t_ast_node	*body;
+}	t_subshell_data;
+
+typedef struct s_ast_node
+{
+	node_type 		type;
+	t_cmd_node		*cmd;
+	t_pipe_info		*pipeline;
+	t_logical_data	*logical;
+	t_subshell_data *subshell;
+}	t_ast_node;
+
+typedef struct s_input_node
+{
+	char	*name;
+}			t_input_node;
+
+typedef struct s_output_node
+{
+	char	*name;
+	bool	create;
+}			t_output_node;
+
+typedef struct s_cmd_node
+{
+	char	**cmd_arr;
+	t_list	*input_lst;
+	t_list	*output_lst;
+	int		err;
+}			t_cmd_node;
+
+typedef struct s_org_tok
+{
+	char	*value;
+	int		oper;
+	int		cmd;
+	t_cmd_node	*cmd_node;
+}			t_org_tok;
+
+typedef struct s_cmd_builder
+{
+	t_list	*start_node;
+	t_list	*end_node;
+	int		num_nodes;
+} 			t_cmd_builder;
 
 typedef struct 	s_hd_node
 {
@@ -108,9 +182,6 @@ typedef struct	s_tok_mem
 	t_quote		quote;
 	char		*remain;
 }	t_tok_mem;
-
-
-
 
 typedef struct	s_cap_mem
 {
@@ -159,18 +230,21 @@ typedef struct s_exp_mem
 
 }	t_exp_mem;
 
-
-
+typedef struct s_org_tok_mem
+{
+	t_list			*org_toklst;
+}					t_org_tok_mem;
 
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
 
 typedef struct	s_mem
 {
-	t_cap_mem	*capture;
-	t_hd_mem	*heredoc;
-	t_tok_mem	*tokenize;
-	t_exp_mem	*expand;
-	t_env_mem	*environs;
+	t_cap_mem		*capture;
+	t_hd_mem		*heredoc;
+	t_tok_mem		*tokenize;
+	t_exp_mem		*expand;
+	t_env_mem		*environs;
+	t_org_tok_mem	*org_tokenize;
 }	t_mem;
 
 
@@ -268,11 +342,21 @@ size_t varlen(char *s, bool braces);
 //expansao mid reset
 void	reset(t_mem **mem);
 
+//luis part 
+int	ft_ast_create(t_mem **mem);
 
+//command utils
+t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
+char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
+void			ft_cmd_org(t_list **org_tok);
 
+//redirections
+int		is_redirection(char *value);
+void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
 
-
-
+//ast create
+t_ast_node	*parse_expression(t_list **tokens);
+void		print_ast(t_ast_node *node, int depth);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
