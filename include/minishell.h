@@ -237,7 +237,7 @@ typedef struct s_org_tok_mem
 
 typedef struct s_par_mem
 {
-	t_list			*parsing_lst;
+	t_list			*parsedlst;
 }					t_par_mem;
 
 
