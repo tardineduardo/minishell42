@@ -18,6 +18,12 @@ ENVIRON 	=	src/environs.c \
 
 OPERATORS 	=	src/operators.c \
 
+PARSER		=	src/luis_redirections.c \
+				src/luis_commands_utils.c \
+				src/luis_commands.c \
+				src/luis_org_tok.c \
+				src/luis_ast_create.c \
+
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
 				src/built-ins/ft_exit.c \
@@ -39,6 +45,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
+			$(PARSER:.c=.o) \
 			$(INTERACTIVE:.c=.o) \
 
 

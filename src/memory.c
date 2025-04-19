@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 20:12:07 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/04/19 16:39:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void ft_clear_cap_mem(t_cap_mem **cap);
 void ft_clear_tok_mem(t_tok_mem **tok);
 void ft_clear_env_mem(t_env_mem **env);
 void ft_clear_exp_mem(t_exp_mem **tok);
+void ft_clear_org_tok_mem(t_org_tok_mem **org_tok);
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
@@ -31,10 +32,11 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
 	(*mem)->environs = malloc(sizeof(t_env_mem));
 	(*mem)->expand = malloc(sizeof(t_exp_mem));
+	(*mem)->org_tokenize = malloc(sizeof(t_exp_mem));
 	
 	//check for errors ---------------------------------------------------------
 	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize
-		|| !(*mem)->environs || !(*mem)->expand)
+		|| !(*mem)->environs || !(*mem)->expand || !(*mem)->org_tokenize)
 		exit(1);//improve error message and code
 
 	//set everything to NULL ---------------------------------------------------
@@ -66,6 +68,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->expand->error = false;
 	(*mem)->expand->expansion_exit_status = NULL_E;
 	(*mem)->expand->sortedvars = NULL;
+	(*mem)->org_tokenize->org_toklst = NULL;
 
 	//init operators -----------------------------------------------------------
 	if (!ft_init_operators(&(*mem)->tokenize))
@@ -85,6 +88,7 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_tok_mem(&(*mem)->tokenize);
 	ft_clear_env_mem(&(*mem)->environs);
 	ft_clear_exp_mem(&(*mem)->expand);
+	//ft_clear_org_tok_mem(&(*mem)->org_tokenize);
 
 
 	rl_clear_history();
@@ -138,3 +142,10 @@ void	ft_clear_exp_mem(t_exp_mem **exp)
 	free(*exp);
 	return ;
 }
+
+// void	ft_clear_org_tok_mem(t_org_tok_mem **org_tok)
+// {
+// 	ft_lstclear(&(*org_tok)->org_toklst, ft_del_org_token_node);
+// 	free(*org_tok);
+// 	return ;
+// }

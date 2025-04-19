@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 16:22:50 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/04/19 16:45:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		if(!ft_readline(&mem))
+		{
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
+		if(!ft_ast_create(&mem))
 		{
 			ft_clean_mem_loop(&mem);
 			continue ;
