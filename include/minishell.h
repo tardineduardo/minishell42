@@ -159,7 +159,10 @@ typedef struct s_exp_mem
 
 }	t_exp_mem;
 
-
+typedef struct s_unc_mem
+{
+	t_list	*unclosed_list;
+}	t_unc_mem;
 
 
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
@@ -171,6 +174,7 @@ typedef struct	s_mem
 	t_tok_mem	*tokenize;
 	t_exp_mem	*expand;
 	t_env_mem	*environs;
+	t_unc_mem	*unclosed;
 }	t_mem;
 
 
