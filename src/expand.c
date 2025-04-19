@@ -133,6 +133,8 @@ void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem)
 			return (NULL);
 		if ((*exp)->hd_mode == EXPAND)
 		{
+			if ((*exp)->braces)
+				skip_char_no_copy(exp);
 			if (handle_dollar_sign(exp, mem))
 				continue;
 			if (handle_backslash(exp, HEREDOC, Q_NULL))
