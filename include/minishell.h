@@ -235,6 +235,12 @@ typedef struct s_org_tok_mem
 	t_list			*org_toklst;
 }					t_org_tok_mem;
 
+typedef struct s_par_mem
+{
+	t_list			*parsing_lst;
+}					t_par_mem;
+
+
 //------------- STRUCT PRINCPAL DE MEMÓRIA --------------
 
 typedef struct	s_mem
@@ -245,6 +251,7 @@ typedef struct	s_mem
 	t_exp_mem		*expand;
 	t_env_mem		*environs;
 	t_org_tok_mem	*org_tokenize;
+	t
 }	t_mem;
 
 

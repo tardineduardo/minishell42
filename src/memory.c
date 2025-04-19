@@ -17,7 +17,7 @@ void ft_clear_cap_mem(t_cap_mem **cap);
 void ft_clear_tok_mem(t_tok_mem **tok);
 void ft_clear_env_mem(t_env_mem **env);
 void ft_clear_exp_mem(t_exp_mem **tok);
-void ft_clear_org_tok_mem(t_org_tok_mem **org_tok);
+void ft_clear_org_tok_mem(t_par_mem **org_tok);
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
@@ -143,7 +143,7 @@ void	ft_clear_exp_mem(t_exp_mem **exp)
 	return ;
 }
 
-// void	ft_clear_org_tok_mem(t_org_tok_mem **org_tok)
+// void	ft_clear_org_tok_mem(t_par_mem **org_tok)
 // {
 // 	ft_lstclear(&(*org_tok)->org_toklst, ft_del_org_token_node);
 // 	free(*org_tok);
