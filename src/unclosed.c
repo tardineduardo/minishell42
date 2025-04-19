@@ -14,12 +14,18 @@
 
 bool	is_unclosed(char *s)
 {
-	t_quote quote;
+	t_quote	quote;
+	t_quote	prev;
 	size_t	a;
 	
 	a = 0;
+	quote = Q_OFF;
 	while(s[a])
-	{
+	{	
+		prev = quote;
+		update_quote_flag(s, quote, a);
+
+		skip_if_quote_changed();
 
 		if (ft_strchr("{\"\'", s[a]))
 
