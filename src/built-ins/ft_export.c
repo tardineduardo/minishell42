@@ -36,6 +36,9 @@ t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 
 //@luiscarvalhofrade essa lógica a gente preisa rever depois, pois
 //podemos passar uma variável vazia, tipo "NOVA_VAR="
+
+//nomes de variáveis em Bash devem começar com uma letra ou underline (_) — 
+// não podem começar com um número. validar isso.
 void	ft_export(t_list **envlist, char *variable_value)
 {
 	char	**result;
