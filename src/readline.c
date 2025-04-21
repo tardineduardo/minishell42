@@ -54,6 +54,8 @@ char	*ft_cap_input_loop(t_mem **mem)
 			cap->temp = cap->line;
 			cap->line = ft_strjoin(cap->line, cap->append);
 			ft_free_and_null((void *)&cap->temp);
+			if (ft_line_is_incomplete(cap->line))
+				continue ;
 			if (!tok->remain)
 				break;
 			ft_free_and_null((void *)&cap->append);

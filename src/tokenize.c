@@ -1,15 +1,15 @@
 #include "../include/minishell.h"
 
-t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok);
-t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit);
+t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem);
+t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit, t_mem **mem);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
 void		ft_expand_toklist(t_list **toklst, t_mem **mem);
 void		ft_tokeniztion_escape(int *i);
-t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok);
-t_oper			ft_get_oper(char *value);
+t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, t_mem **mem);
+t_oper		ft_get_oper(char *value);
 int			ft_count_spaces(char *s);
 
 //debug
@@ -27,7 +27,7 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	tok->remain = ft_strdup(*line);
 	while (1)
 	{
-		exit_status = ft_tokenize_remain(&tok->remain, &tok);
+		exit_status = ft_tokenize_remain(&tok->remain, &tok, mem);
 		if (exit_status == TOK_ERROR)
 			return (NULL);
 		if (exit_status == TOK_END)
@@ -36,8 +36,8 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	ft_free_and_null((void *)&tok->remain);
 	
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
-	//ft_expand_toklist(&tok->toklst, mem);
-	//ft_debug_list(&tok->toklst);
+	ft_expand_toklist(&tok->toklst, mem);
+	ft_debug_list(&tok->toklst);
 	ft_debug_indexes(&tok->toklst);
 
 	ft_printf("\n");
@@ -55,7 +55,7 @@ void	*ft_tokenize(char **line, t_mem **mem)
 
 
 
-t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
+t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem)
 {
 	int			token_limit;
 	t_tok_exit	detach_exit;
@@ -65,7 +65,7 @@ t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
 	token_limit = ft_find_token_limit((*remain), tok);
 
 
-	detach_exit = ft_append_new_toknode(remain, tok, token_limit);
+	detach_exit = ft_append_new_toknode(remain, tok, token_limit, mem);
 
 	(*tok)->index_count += token_limit;
 
@@ -77,7 +77,7 @@ t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
 }
 
 
-t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit)
+t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit, t_mem **mem)
 {
 	t_tok_node	*toknode;
 	t_list		*append;
@@ -87,7 +87,7 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	toknode = malloc(sizeof(t_tok_node));
 	if (!toknode)
 		return (TOK_ERROR);
-	ft_init_toknode(new_string, toknode, tok);
+	ft_init_toknode(new_string, toknode, tok, mem);
 	ft_free_and_null((void *)&new_string);
 	append = ft_lstnew(toknode);
 	if (!append)
@@ -116,7 +116,7 @@ int	ft_count_spaces(char *s)
 	return (a);	
 }
 
-t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok)
+t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 {
 	assert (newstring);
 	assert (node);
@@ -127,6 +127,17 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok)
 	if (!node->value)
 		return (NULL);
 	node->oper = ft_get_oper(newstring);
+	
+	if ((*tok)->get_delimiter)
+	{
+		node->heredoc_path = ft_heredoc(node->value, mem);
+		(*tok)->get_delimiter = false;
+	}
+	else
+		node->heredoc_path = NULL;
+
+	if (node->oper == HEREDOC_REDIR)
+		(*tok)->get_delimiter = true;
 	if (ft_strncmp(newstring, "|", 1) == 0)
 	{
 		node->block = -1;
@@ -135,7 +146,7 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok)
 	else
 		node->block = (*tok)->block_count;
 	node->index = (*tok)->index_count;
-	return (node);
+	return node;
 }
 
 
@@ -271,9 +282,15 @@ void	ft_del_token_node(void *content)
 
 	tok_node = (t_tok_node *)content;
 
-//	if (tok_node->value)
+	if (tok_node->heredoc_path)
+	{
+		if (access(tok_node->heredoc_path, F_OK) == 0)
+		{
+			unlink(tok_node->heredoc_path);
+			ft_free_and_null((void *)&tok_node->heredoc_path);
+		}
+	}
 	ft_free_and_null((void *)&tok_node->value);
-
 	ft_free_and_null((void *)&tok_node);
 }
 
@@ -410,6 +427,8 @@ void ft_debug_indexes(t_list **head)
 		t_oper oper = ((t_tok_node *)trav->content)->oper;
 		if (trav->next)
 			nextoper = ((t_tok_node *)trav->next->content)->oper;
+		else
+			nextoper = WORD;
 
 	if (ft_strcmp("<<<", value) == 0
 			|| ft_strcmp(">>", value) == 0
@@ -445,8 +464,15 @@ void ft_debug_indexes(t_list **head)
 		ft_printf(RED "%i " RESET, index);
 		ft_printf("\t");
 		ft_printf("%i ", block);
-		ft_printf("\t");
+		ft_printf("\t");		
 		ft_print_oper(oper);
+
+		if(((t_tok_node *)trav->content)->heredoc_path)
+		{
+			ft_printf("\t");		
+			ft_printf("%s", ((t_tok_node *)trav->content)->heredoc_path);
+		}
+
 		ft_printf("\n");
 		if (nextoper == PIPE_O)
 			ft_printf("---------------------------------------------------\n");

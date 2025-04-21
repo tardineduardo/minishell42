@@ -168,6 +168,8 @@ typedef struct 	s_tok_node
 	size_t		block;
 	size_t		index;
 	t_oper		oper;
+	char		*heredoc_path;
+
 }	t_tok_node;
 
 typedef struct 	s_env_node
@@ -256,8 +258,7 @@ typedef struct	s_tok_mem
 	char		*remain;
 	size_t		block_count;
 	size_t		index_count;
-	char		*heredoc_path;
-
+	bool		get_delimiter;
 }	t_tok_mem;
 
 typedef struct	s_cap_mem
@@ -270,9 +271,9 @@ typedef struct	s_cap_mem
 
 typedef struct s_hd_mem
 {
-	t_list		*list;
-	t_list		*new;
-	t_hd_node	*node;
+	// t_list		*list;
+	// t_list		*new;
+	// t_hd_node	*node;
 
 	char		*delim;
 	char		*filepath;

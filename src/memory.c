@@ -45,13 +45,14 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->capture->temp = NULL;
 	(*mem)->capture->append = NULL;
 	(*mem)->heredoc->delim = NULL;
-	(*mem)->heredoc->list = NULL;
+	//(*mem)->heredoc->list = NULL;
 	(*mem)->heredoc->filepath = NULL;
 	(*mem)->tokenize->toklst = NULL;
 	(*mem)->tokenize->operators = NULL;
 	(*mem)->tokenize->last_of_list = NULL;
 	(*mem)->tokenize->new = NULL;
 	(*mem)->tokenize->node = NULL;
+	(*mem)->tokenize->get_delimiter = false;	
 	(*mem)->tokenize->index_count = 0;
 	(*mem)->tokenize->block_count = 0;		
 	(*mem)->tokenize->str = NULL;
@@ -104,8 +105,7 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 void	ft_clear_hd_mem(t_hd_mem **hd)
 {
 	ft_free_and_null((void *)&(*hd)->delim);
-	ft_lstclear(&(*hd)->list, ft_del_heredoc_node);
-	ft_free_and_null((void *)&(*hd)->list);
+	//ft_free_and_null((void *)&(*hd)->filepath);
 	free(*hd);
 	return ;
 }

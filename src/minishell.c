@@ -59,7 +59,7 @@ void ft_clean_mem_loop(t_mem **mem)
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
-
+	//RESET HEREDOC STATIC COUNTER
 	tok->block_count = 0;
 	tok->index_count = 0;	
 	return ;
