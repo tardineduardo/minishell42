@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:28:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include <stdlib.h>						// for malloc etc
 # include <readline/readline.h>			// for readline
 # include <readline/history.h>			// for history
-
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # define CURRENT_CHAR (*exp)->raw[(*exp)->a]
 # define NEXT_CHAR (*exp)->raw[(*exp)->a + 1]
@@ -357,6 +358,9 @@ void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
 //ast create
 t_ast_node	*parse_expression(t_list **tokens);
 void		print_ast(t_ast_node *node, int depth);
+
+//ast exec
+int 		exec_ast(t_list **ms_env, t_ast_node **root);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);

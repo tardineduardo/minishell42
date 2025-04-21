@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/21 12:36:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,8 @@ int	ft_ast_create(t_mem **mem)
 	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
 	ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
 	root = parse_expression(&(*mem)->org_tokenize->org_toklst);
-	print_ast(root, 0);
+	//print_ast(root, 0);
+	exec_ast(&(*mem)->environs->envlist, &root);
 	return (0);
 }
 
