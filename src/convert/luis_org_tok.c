@@ -12,92 +12,11 @@
 
 #include "../include/minishell.h"
 
-int	update_oper(char *value)
-{
-	if (ft_strcmp("&&", value) == 0)
-		return (0);
-	else if (ft_strcmp("||", value) == 0)
-		return (1);
-	else if (ft_strcmp("(", value) == 0)
-		return (2);
-	else if (ft_strcmp(")", value) == 0)
-		return (3);
-	else if (ft_strcmp("|", value) == 0)
-		return (4);
-	return (-1);
-}
 
-void	ft_append_new_org_token(t_list *tokens, t_org_tok_mem **org_tok_mem)
-{
-	t_org_tok	*org_tok;
-	t_list		*append;
-	char		*value;
-	
-	value = ((t_tok_node *)tokens->content)->tokstr;
-	org_tok = malloc(sizeof(t_org_tok));
-	if (!org_tok)
-		return ;
-	org_tok->value = ft_strdup(value);
-	org_tok->oper = update_oper(value);
-	org_tok->cmd = -1;
-	org_tok->cmd_node = NULL;
-	append = ft_lstnew(org_tok);
-	if (!append)
-		return ;
-	ft_lstadd_back(&(*org_tok_mem)->org_toklst, append);
-}
 
-void	update_cmd_org_tok(t_list **org_tokens)
-{
-	int			cmd_num;
-	int			is_new_cmd;
-	t_list		*curr;
-	t_org_tok	*tok;
 
-	is_new_cmd = 1;
-	cmd_num = 0;
-	curr = *org_tokens;
-	while (curr)
-	{
-		tok = (t_org_tok *)curr->content;
-		if (tok->oper == -1)
-		{
-			if (is_new_cmd)
-			{
-				tok->cmd = cmd_num;
-				is_new_cmd = 0;
-			}
-			else
-				tok->cmd = cmd_num;
-		}
-		else if (tok->oper == 0 || tok->oper == 1 || tok->oper == 4)
-		{
-			is_new_cmd = 1;
-			cmd_num++;
-		}
-		else
-			is_new_cmd = 1;
-		curr = curr->next;
-	}
-}
 
-void	*ft_org_tokenize(t_mem **mem)
-{
-	t_org_tok_mem	*org_tok_mem;
-	t_tok_mem	*token_mem;
-	t_list      *tokens;
-	
-	token_mem = (*mem)->tokenize;
-	tokens = token_mem->toklst;
-	org_tok_mem = (*mem)->org_tokenize;
-	while (tokens)
-	{
-		ft_append_new_org_token(tokens, &org_tok_mem);
-		tokens = tokens->next;
-	}
-	update_cmd_org_tok(&org_tok_mem->org_toklst);
-	return (mem);
-}
+
 
 // void	update_paren_org_tok(t_list **org_tokens)
 // {
@@ -147,17 +66,7 @@ void	*ft_org_tokenize(t_mem **mem)
 void ft_debug_list_org(t_list **head);
 void	ft_del_org_token_mem(void *content);
 
-int	ft_ast_create(t_mem **mem)
-{
-	t_ast_node *root;
-	
-	ft_org_tokenize(mem);
-	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
-	ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
-	root = parse_expression(&(*mem)->org_tokenize->org_toklst);
-	print_ast(root, 0);
-	return (0);
-}
+
 
 
 

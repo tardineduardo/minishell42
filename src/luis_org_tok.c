@@ -33,7 +33,7 @@ void	ft_append_new_org_token(t_list *tokens, t_org_tok_mem **org_tok_mem)
 	t_list		*append;
 	char		*value;
 	
-	value = ((t_tok_node *)tokens->content)->tokstr;
+	value = ((t_tok_node *)tokens->content)->value;
 	org_tok = malloc(sizeof(t_org_tok));
 	if (!org_tok)
 		return ;

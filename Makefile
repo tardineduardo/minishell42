@@ -23,6 +23,7 @@ PARSER		=	src/luis_redirections.c \
 				src/luis_commands.c \
 				src/luis_org_tok.c \
 				src/luis_ast_create.c \
+				src/parsing.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \

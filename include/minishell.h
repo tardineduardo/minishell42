@@ -80,6 +80,28 @@ typedef enum e_delim
 	QUOTED,
 }	t_delim;
 
+
+typedef enum e_oper
+{
+	WORD = -1,
+	AND_O_BONUS = 0, 
+	OR_O_BONUS,
+	GROUP_START_O_BONUS,
+	GROUP_END_O_BONUS,
+	PIPE_O,
+	BACKGROUND_O_EXTRA,
+	IN_REDIR,
+	OUT_REDIR,
+	APPEND_REDIR,
+	ERROR_REDIR_EXTRA,
+	HEREDOC_REDIR,		
+	HERESTR_REDIR_EXTRA,		
+	WILDCARD_REDIR_BONUS,		
+	OUT_ERROR_REDIR_EXTRA,
+}	t_oper;
+
+
+
 //------------- STRUCTS DOS NODES DE CADA ÁREA --------------
 
 typedef struct s_cmd_node t_cmd_node;
@@ -89,7 +111,7 @@ typedef struct s_ast_node t_ast_node;
 typedef struct s_pipe_info
 {
 	t_list	*cmds;					// t_list of t_cmd_node
-	int 	cmd_count;
+	int		cmd_count;
 }	t_pipe_info;
 
 typedef struct s_logical_data
@@ -113,10 +135,7 @@ typedef struct s_ast_node
 	t_subshell_data *subshell;
 }	t_ast_node;
 
-typedef struct s_input_node
-{
-	char	*name;
-}			t_input_node;
+
 
 typedef struct s_output_node
 {
@@ -132,20 +151,9 @@ typedef struct s_cmd_node
 	int		err;
 }			t_cmd_node;
 
-typedef struct s_org_tok
-{
-	char	*value;
-	int		oper;
-	int		cmd;
-	t_cmd_node	*cmd_node;
-}			t_org_tok;
 
-typedef struct s_cmd_builder
-{
-	t_list	*start_node;
-	t_list	*end_node;
-	int		num_nodes;
-} 			t_cmd_builder;
+
+
 
 typedef struct 	s_hd_node
 {
@@ -154,9 +162,12 @@ typedef struct 	s_hd_node
 
 typedef struct 	s_tok_node
 {
-	char		*tokstr;
+	char		*value;
 	bool		double_quote;
 	bool		single_quote;
+	size_t		block;
+	size_t		index;
+	t_oper		oper;
 }	t_tok_node;
 
 typedef struct 	s_env_node
@@ -166,6 +177,68 @@ typedef struct 	s_env_node
 	bool	readonly;
 	bool	block_unset;
 }	t_env_node;
+
+
+
+typedef struct s_input_node
+{
+	char	*name;
+}	t_input_node;
+
+typedef struct s_cmd_builder
+{
+	t_list	*start_node;
+	t_list	*end_node;
+	int		num_nodes;
+} 	t_cmd_builder;
+
+typedef struct s_org_tok
+{
+	char		*value;
+	int			oper;
+	int			cmd;
+	t_cmd_node	*cmd_node;
+}	t_org_tok;
+
+///////////////////////////////////
+////////////////////////////////////////////////////
+
+
+
+// typedef struct s_input_node
+// {
+// 	char	*name;
+// }	t_input_node;
+
+// typedef struct s_org_tok
+// {
+// 	char		*value;
+// 	int			oper;
+// 	int			cmd;
+// 	t_cmd_node	*cmd_node;
+// }	t_org_tok;
+
+// typedef struct s_cmd_builder
+// {
+// 	t_list	*start_node;
+// 	t_list	*end_node;
+// 	int		num_nodes;
+// } 	t_cmd_builder;
+
+typedef struct s_par_node
+{
+	char		*value;
+	int			position;
+	t_oper		oper;
+	t_cmd_node	*cmd_node;
+}	t_par_node;
+
+
+
+
+
+
+
 
 
 //------------- STRUCTS DA MEMÓRIA DE CADA ÁREA --------------
@@ -181,6 +254,10 @@ typedef struct	s_tok_mem
 	char		*str;
 	t_quote		quote;
 	char		*remain;
+	size_t		block_count;
+	size_t		index_count;
+	char		*heredoc_path;
+
 }	t_tok_mem;
 
 typedef struct	s_cap_mem
@@ -355,7 +432,7 @@ int	ft_ast_create(t_mem **mem);
 //command utils
 t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
 char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
-void			ft_cmd_org(t_list **org_tok);
+void			*ft_cmd_org(t_list **org_tok);
 
 //redirections
 int		is_redirection(char *value);

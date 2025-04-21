@@ -17,7 +17,7 @@ void ft_clear_cap_mem(t_cap_mem **cap);
 void ft_clear_tok_mem(t_tok_mem **tok);
 void ft_clear_env_mem(t_env_mem **env);
 void ft_clear_exp_mem(t_exp_mem **tok);
-void ft_clear_org_tok_mem(t_par_mem **org_tok);
+void ft_clear_par_mem(t_par_mem **par);
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
@@ -32,11 +32,11 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
 	(*mem)->environs = malloc(sizeof(t_env_mem));
 	(*mem)->expand = malloc(sizeof(t_exp_mem));
-	(*mem)->org_tokenize = malloc(sizeof(t_exp_mem));
+	(*mem)->parsing = malloc(sizeof(t_par_mem));
 	
 	//check for errors ---------------------------------------------------------
 	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize
-		|| !(*mem)->environs || !(*mem)->expand || !(*mem)->org_tokenize)
+		|| !(*mem)->environs || !(*mem)->expand || !(*mem)->parsing)
 		exit(1);//improve error message and code
 
 	//set everything to NULL ---------------------------------------------------
@@ -52,6 +52,8 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->tokenize->last_of_list = NULL;
 	(*mem)->tokenize->new = NULL;
 	(*mem)->tokenize->node = NULL;
+	(*mem)->tokenize->index_count = 0;
+	(*mem)->tokenize->block_count = 0;		
 	(*mem)->tokenize->str = NULL;
 	(*mem)->tokenize->remain = NULL;
 	(*mem)->environs->envlist = NULL;
@@ -68,7 +70,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	(*mem)->expand->error = false;
 	(*mem)->expand->expansion_exit_status = NULL_E;
 	(*mem)->expand->sortedvars = NULL;
-	(*mem)->org_tokenize->org_toklst = NULL;
+	(*mem)->parsing->parsedlst = NULL;
 
 	//init operators -----------------------------------------------------------
 	if (!ft_init_operators(&(*mem)->tokenize))
@@ -88,7 +90,7 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_tok_mem(&(*mem)->tokenize);
 	ft_clear_env_mem(&(*mem)->environs);
 	ft_clear_exp_mem(&(*mem)->expand);
-	//ft_clear_org_tok_mem(&(*mem)->org_tokenize);
+	ft_clear_par_mem(&(*mem)->parsing);
 
 
 	rl_clear_history();
@@ -142,6 +144,16 @@ void	ft_clear_exp_mem(t_exp_mem **exp)
 	free(*exp);
 	return ;
 }
+
+
+void	ft_clear_par_mem(t_par_mem **par)
+{
+	ft_free_and_null((void *)&(*par)->parsedlst);
+	free(*par);
+	return ;
+}
+
+
 
 // void	ft_clear_org_tok_mem(t_par_mem **org_tok)
 // {

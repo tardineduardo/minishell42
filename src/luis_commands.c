@@ -84,7 +84,7 @@ void	replace_with_cmd_table(t_list *new_node, t_cmd_builder *cmd_builder, t_list
 	}
 }
 
-void	ft_cmd_org(t_list **org_tok)
+void	*ft_cmd_org(t_list **org_tok)
 {
 	int				total_cmds;
 	int				index_cmd;
@@ -103,4 +103,5 @@ void	ft_cmd_org(t_list **org_tok)
 		//ft_clear_cmd_builder_mem(cmd_builder_mem);
 		index_cmd++;
 	}
+	return (org_tok);
 }

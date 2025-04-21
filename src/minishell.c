@@ -27,11 +27,11 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		if(!ft_ast_create(&mem))
-		{
-			ft_clean_mem_loop(&mem);
-			continue ;
-		}
+		// if(!ft_ast_create(&mem))
+		// {
+		// 	ft_clean_mem_loop(&mem);
+		// 	continue ;
+		// }
 		if(!ft_execute(mem->capture->line, &mem))
 		{
 			ft_clean_mem_loop(&mem);
@@ -52,12 +52,15 @@ void ft_clean_mem_loop(t_mem **mem)
 	cap = (*mem)->capture;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
+	//PASRSING
 
 	ft_lstclear(&tok->toklst, ft_del_token_node);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
-	
+
+	tok->block_count = 0;
+	tok->index_count = 0;	
 	return ;
 }

@@ -7,7 +7,15 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 void		ft_del_token_node(void *content);
 void		ft_expand_toklist(t_list **toklst, t_mem **mem);
-void	ft_tokeniztion_escape(int *i);
+void		ft_tokeniztion_escape(int *i);
+t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok);
+t_oper			ft_get_oper(char *value);
+int			ft_count_spaces(char *s);
+
+//debug
+void		ft_debug_indexes(t_list **head);
+void		ft_print_oper(t_oper oper);
+
 
 
 void	*ft_tokenize(char **line, t_mem **mem)
@@ -28,10 +36,15 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	ft_free_and_null((void *)&tok->remain);
 	
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
-	ft_expand_toklist(&tok->toklst, mem);
-	ft_debug_list(&tok->toklst);
-	ft_printf("\n");
+	//ft_expand_toklist(&tok->toklst, mem);
+	//ft_debug_list(&tok->toklst);
+	ft_debug_indexes(&tok->toklst);
 
+	ft_printf("\n");
+	
+	//reset_counters
+	
+	
 	return (mem);
 }
 
@@ -51,7 +64,11 @@ t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
 	//limit = last character of the string
 	token_limit = ft_find_token_limit((*remain), tok);
 
+
 	detach_exit = ft_append_new_toknode(remain, tok, token_limit);
+
+	(*tok)->index_count += token_limit;
+
 	if (detach_exit == TOK_ERROR)
 		return (TOK_ERROR);
 	if (detach_exit == TOK_END)
@@ -64,36 +81,102 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 {
 	t_tok_node	*toknode;
 	t_list		*append;
-
-	char *new_string;
+	char		*new_string;
 
 	new_string = ft_substr((*remain), 0, token_limit);
-	
 	toknode = malloc(sizeof(t_tok_node));
 	if (!toknode)
 		return (TOK_ERROR);
-	toknode->tokstr = new_string;
+	ft_init_toknode(new_string, toknode, tok);
+	ft_free_and_null((void *)&new_string);
 	append = ft_lstnew(toknode);
 	if (!append)
 		return (TOK_ERROR);
 	ft_lstadd_back(&(*tok)->toklst, append);
-
-
-	char *temp = (*remain);
-	(*remain) = ft_strdup(&(*remain)[token_limit]);
+	char *temp = *remain;
+	*remain = ft_strdup(&(*remain)[token_limit]);
 	ft_free_and_null((void *)&temp);
-
-	
-
-	ft_debug_list(&(*tok)->toklst);
-	ft_printf(GREY " {%s}\n" RESET, *remain);
-
-
+	(*tok)->index_count += ft_count_spaces(*remain);
+	// ft_debug_list(&(*tok)->toklst);
+	// ft_printf(GREY " {%s}\n" RESET, *remain);
 	ft_strtrim_overwrite(remain, "\t ");
 	if (!(*remain)[0])
 		return (TOK_END);
 	return (TOK_CONTINUE);
 }
+
+
+int	ft_count_spaces(char *s)
+{
+	int a;
+	
+	a = 0;
+	while(ft_isspace(s[a]))
+		a++;
+	return (a);	
+}
+
+t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok)
+{
+	assert (newstring);
+	assert (node);
+	assert (tok);
+	assert (*tok);
+
+	node->value = ft_strdup(newstring);
+	if (!node->value)
+		return (NULL);
+	node->oper = ft_get_oper(newstring);
+	if (ft_strncmp(newstring, "|", 1) == 0)
+	{
+		node->block = -1;
+		(*tok)->block_count++;
+	}
+	else
+		node->block = (*tok)->block_count;
+	node->index = (*tok)->index_count;
+	return (node);
+}
+
+
+t_oper	ft_get_oper(char *value)
+{
+	if (ft_strcmp("&&", value) == 0)
+		return (AND_O_BONUS);
+	else if (ft_strcmp("||", value) == 0)
+		return (OR_O_BONUS);
+	else if (ft_strcmp("(", value) == 0)
+		return (GROUP_START_O_BONUS);
+	else if (ft_strcmp(")", value) == 0)
+		return (GROUP_END_O_BONUS);
+	else if (ft_strcmp("|", value) == 0)
+		return (PIPE_O);
+	else if (ft_strcmp("&", value) == 0)
+		return (BACKGROUND_O_EXTRA);
+	else if (ft_strcmp("<", value) == 0)
+		return (IN_REDIR);
+	else if (ft_strcmp(">", value) == 0)
+		return (OUT_REDIR);
+	else if (ft_strcmp(">>", value) == 0)
+		return (APPEND_REDIR);
+	else if (ft_strcmp("2>", value) == 0)
+		return (ERROR_REDIR_EXTRA);
+	else if (ft_strcmp("<<", value) == 0)
+		return (HEREDOC_REDIR);
+	else if (ft_strcmp("<<<", value) == 0)
+		return (HERESTR_REDIR_EXTRA);
+	else if (ft_strcmp("*", value) == 0)
+		return (WILDCARD_REDIR_BONUS);
+	else if (ft_strcmp("&>", value) == 0)
+		return (OUT_ERROR_REDIR_EXTRA);
+	return (WORD);
+}
+
+
+
+
+
+
 
 
 int	ft_find_token_limit(char *str, t_tok_mem **tok)
@@ -188,8 +271,8 @@ void	ft_del_token_node(void *content)
 
 	tok_node = (t_tok_node *)content;
 
-//	if (tok_node->tokstr)
-	ft_free_and_null((void *)&tok_node->tokstr);
+//	if (tok_node->value)
+	ft_free_and_null((void *)&tok_node->value);
 
 	ft_free_and_null((void *)&tok_node);
 }
@@ -236,7 +319,7 @@ void ft_expand_toklist(t_list **toklst, t_mem **mem)
 	{
 		tok_node = (t_tok_node *)trav->content;
 
-		tok_node->tokstr = ft_expand(&tok_node->tokstr, TOKEN, mem);
+		tok_node->value = ft_expand(&tok_node->value, TOKEN, mem);
 		trav = trav->next;
 	}
 }
@@ -251,7 +334,7 @@ void ft_debug_list(t_list **head)
 	t_list *trav;
 
 	trav = *head;
-	ft_printf(GREY "HEAD -> " RESET);
+	//ft_printf(GREY "HEAD -> " RESET);
 
 	if (!trav)
 	{
@@ -261,41 +344,155 @@ void ft_debug_list(t_list **head)
 
 	while (trav)
 	{
-		char *tokstr = ((t_tok_node *)trav->content)->tokstr;
+		char *value = ((t_tok_node *)trav->content)->value;
 
 		ft_printf(GREY "[" RESET);
 
-		if (ft_strcmp("<<<", tokstr) == 0
-			|| ft_strcmp(">>", tokstr) == 0
-			|| ft_strcmp("<<", tokstr) == 0
-			|| ft_strcmp("2>", tokstr) == 0
-			|| ft_strcmp("&>", tokstr) == 0
-			|| ft_strcmp(">", tokstr) == 0
-			|| ft_strcmp("<", tokstr) == 0)
+		if (ft_strcmp("<<<", value) == 0
+			|| ft_strcmp(">>", value) == 0
+			|| ft_strcmp("<<", value) == 0
+			|| ft_strcmp("2>", value) == 0
+			|| ft_strcmp("&>", value) == 0
+			|| ft_strcmp(">", value) == 0
+			|| ft_strcmp("<", value) == 0)
 		{
-			ft_printf(BRIGHT_BLUE "%s" RESET, tokstr);
+			ft_printf(BRIGHT_BLUE "%s" RESET, value);
 		}
-		else if (ft_strcmp("|", tokstr) == 0)
+		else if (ft_strcmp("|", value) == 0)
 		{
-			ft_printf(YELLOW "%s" RESET, tokstr);
+			ft_printf(YELLOW "%s" RESET, value);
 		}
-		else if (ft_strcmp("&", tokstr) == 0
-			|| ft_strcmp("*", tokstr) == 0
-			|| ft_strcmp("&&", tokstr) == 0
-			|| ft_strcmp("||", tokstr) == 0
-			|| ft_strcmp("(", tokstr) == 0
-			|| ft_strcmp(")", tokstr) == 0)
+		else if (ft_strcmp("&", value) == 0
+			|| ft_strcmp("*", value) == 0
+			|| ft_strcmp("&&", value) == 0
+			|| ft_strcmp("||", value) == 0
+			|| ft_strcmp("(", value) == 0
+			|| ft_strcmp(")", value) == 0)
 		{
-			ft_printf(BRIGHT_MAGENTA "%s" RESET, tokstr);
+			ft_printf(BRIGHT_MAGENTA "%s" RESET, value);
 		}
 		else
 		{
-			ft_printf(GREEN "%s" RESET, tokstr);
+			ft_printf(GREEN "%s" RESET, value);
 		}
 
-		ft_printf(GREY "] -> " RESET);
+		ft_printf(GREY "] " RESET);
 		trav = trav->next;
 	}
-	ft_printf(GREY "NULL" RESET);
+	//ft_printf(GREY "NULL" RESET);
 
+}
+
+
+
+void ft_debug_indexes(t_list **head)
+{
+	t_list *trav;
+
+	trav = *head;
+	ft_printf("\n");
+
+
+	ft_printf("TOKEN\t\tPOS\tGROUP\tTYPE\n");
+	if (!trav)
+	{
+		ft_printf(GREY "NULL\n" RESET);
+		return ;
+	}
+
+	while (trav)
+	{
+		t_oper nextoper;
+
+		char *value = ((t_tok_node *)trav->content)->value;
+		int index = ((t_tok_node *)trav->content)->index;
+		int block =  ((t_tok_node *)trav->content)->block;
+		t_oper oper = ((t_tok_node *)trav->content)->oper;
+		if (trav->next)
+			nextoper = ((t_tok_node *)trav->next->content)->oper;
+
+	if (ft_strcmp("<<<", value) == 0
+			|| ft_strcmp(">>", value) == 0
+			|| ft_strcmp("<<", value) == 0
+			|| ft_strcmp("2>", value) == 0
+			|| ft_strcmp("&>", value) == 0
+			|| ft_strcmp(">", value) == 0
+			|| ft_strcmp("<", value) == 0)
+		{
+			ft_printf(BRIGHT_BLUE "%s" RESET, value);
+		}
+		else if (ft_strcmp("|", value) == 0)
+		{
+			ft_printf(YELLOW "%s" RESET, value);
+		}
+		else if (ft_strcmp("&", value) == 0
+			|| ft_strcmp("*", value) == 0
+			|| ft_strcmp("&&", value) == 0
+			|| ft_strcmp("||", value) == 0
+			|| ft_strcmp("(", value) == 0
+			|| ft_strcmp(")", value) == 0)
+		{
+			ft_printf(BRIGHT_MAGENTA "%s" RESET, value);
+		}
+		else
+		{
+			ft_printf(GREEN "%s" RESET, value);
+		}
+		ft_printf(GREY " " RESET);
+
+		ft_printf("\t\t");
+
+		ft_printf(RED "%i " RESET, index);
+		ft_printf("\t");
+		ft_printf("%i ", block);
+		ft_printf("\t");
+		ft_print_oper(oper);
+		ft_printf("\n");
+		if (nextoper == PIPE_O)
+			ft_printf("---------------------------------------------------\n");
+		if (oper == PIPE_O)
+			ft_printf("---------------------------------------------------\n");
+		trav = trav->next;
+	}
+
+
+
+}
+
+
+
+void	ft_print_oper(t_oper oper)
+{
+	if (oper == AND_O_BONUS)
+		ft_printf(BRIGHT_MAGENTA "AND_O_BONUS" RESET);
+	else if (oper == OR_O_BONUS)
+		ft_printf(BRIGHT_MAGENTA "OR_O_BONUS" RESET);
+	else if (oper == GROUP_START_O_BONUS)
+		ft_printf(BRIGHT_MAGENTA "GROUP_START_O_BONUS" RESET);
+	else if (oper == GROUP_END_O_BONUS)
+		ft_printf(BRIGHT_MAGENTA "GROUP_END_O_BONUS" RESET);
+	else if (oper == PIPE_O)
+		ft_printf(YELLOW "PIPE_O" RESET);
+	else if (oper == BACKGROUND_O_EXTRA)
+		ft_printf(BRIGHT_CYAN "BACKGROUND_O_EXTRA" RESET);
+	else if (oper == IN_REDIR)
+		ft_printf(BRIGHT_BLUE "IN_REDIR" RESET);
+	else if (oper == OUT_REDIR)
+		ft_printf(BRIGHT_BLUE "OUT_REDIR" RESET);
+	else if (oper == APPEND_REDIR)
+		ft_printf(BRIGHT_BLUE "APPEND_REDIR" RESET);
+	else if (oper == ERROR_REDIR_EXTRA)
+		ft_printf(BRIGHT_CYAN "ERROR_REDIR_EXTRA" RESET);
+	else if (oper == HEREDOC_REDIR)
+		ft_printf(BRIGHT_BLUE "HEREDOC_REDIR" RESET);
+	else if (oper == HERESTR_REDIR_EXTRA)
+		ft_printf(BRIGHT_CYAN "HERESTR_REDIR_EXTRA" RESET);
+	else if (oper == WILDCARD_REDIR_BONUS)
+		ft_printf(BRIGHT_MAGENTA "WILDCARD_REDIR_BONUS" RESET);
+	else if (oper == OUT_ERROR_REDIR_EXTRA)
+		ft_printf(BRIGHT_CYAN "OUT_ERROR_REDIR_EXTRA" RESET);
+	else if (oper == WORD)
+		ft_printf(GREEN "WORD" RESET);
+	else
+		ft_printf("UNKNOWN_OPERATOR (%d)", oper);
 }
