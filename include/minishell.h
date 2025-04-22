@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/21 13:28:12 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/22 09:28:58 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,14 @@ typedef enum e_delim
 typedef struct s_cmd_node t_cmd_node;
 
 typedef struct s_ast_node t_ast_node;
+
+typedef struct s_pipe_data
+{
+	int	*pipefd;
+	int i;
+	int	num_cmds;
+	int	prev_fd;
+}		t_pipe_data;
 
 typedef struct s_pipe_info
 {
@@ -361,6 +369,27 @@ void		print_ast(t_ast_node *node, int depth);
 
 //ast exec
 int 		exec_ast(t_list **ms_env, t_ast_node **root);
+
+//execution
+int exec_pipe(t_list **env, t_list **org_token, int num_cmds);
+int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
+
+//external cmd treatment
+char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
+
+//exec external cmd
+void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd);
+char	**ft_ms_env_arr(t_list **ms_env);
+
+//exec built in
+bool	is_built_in(char **cmd_arr);
+void	exec_built_in(t_list **ms_env, char	**cmd_arr);
+
+//redir control
+void	fd_output_redir(t_list **output_lst);
+void	fd_input_redir(t_list **input_lst);
+int		file_input_handler(t_list **input_lst);
+int		file_output_handler(t_list **output_lst);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);

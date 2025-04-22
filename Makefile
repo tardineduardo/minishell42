@@ -24,6 +24,11 @@ PARSER		=	src/luis_redirections.c \
 				src/luis_org_tok.c \
 				src/luis_ast_create.c \
 				src/luis_ast_exec.c \
+				src/luis_execution.c \
+				src/luis_exec_ext_cmd.c \
+				src/luis_exec_built_in.c \
+				src/luis_cmd_treatment.c \
+				src/luis_redir_control.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
@@ -33,9 +38,6 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
-
-
- 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
