@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/22 09:28:58 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:57:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ typedef struct s_ast_node t_ast_node;
 
 typedef struct s_pipe_data
 {
-	int	*pipefd;
+	pid_t	child_pids[100];
+	int	pipefd[2];
 	int i;
 	int	num_cmds;
 	int	prev_fd;
@@ -390,6 +391,7 @@ void	fd_output_redir(t_list **output_lst);
 void	fd_input_redir(t_list **input_lst);
 int		file_input_handler(t_list **input_lst);
 int		file_output_handler(t_list **output_lst);
+void	pipe_fd_control(t_pipe_data *pipe_data, t_cmd_node *cur_cmd, int pipefd[2]);
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
