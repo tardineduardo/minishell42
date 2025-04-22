@@ -12,6 +12,8 @@
 
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
 
 void		*ft_parsing(t_mem **mem);
 t_list		*ft_classify_tokens(t_mem **mem);

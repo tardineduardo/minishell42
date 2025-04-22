@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
+
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -32,7 +39,7 @@ int	main(int argc, char *argv[], char *envp[])
 		// 	ft_clean_mem_loop(&mem);
 		// 	continue ;
 		// }
-		if(!ft_execute(mem->capture->line, &mem))
+		if(!ft_execute(mem->readline->line, &mem))
 		{
 			ft_clean_mem_loop(&mem);
 			continue ;
@@ -45,11 +52,11 @@ int	main(int argc, char *argv[], char *envp[])
 
 void ft_clean_mem_loop(t_mem **mem)
 {
-	t_cap_mem *cap;
+	t_rdl_mem *cap;
 	t_tok_mem *tok;
-	t_hd_mem *hd;
+	t_hdc_mem *hd;
 
-	cap = (*mem)->capture;
+	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
 	//PASRSING

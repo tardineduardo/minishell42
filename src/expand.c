@@ -1,6 +1,10 @@
 #include "../include/minishell.h"
-
-
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
                                                  
 /*
 ""
@@ -11,42 +15,37 @@
 88      88      88  `"8bbdP"Y8  88  88       88  
 */				 
 
-
-// exp->error está capturando os tipos de erro quando o retorno é null
-// mas está salando em exp->expansion_exit_status, que eu reseto no fim. na hora de usar,
-// quardar em outra estrutura.
-char	*ft_expand(char **string, t_exp_mode mode, t_mem **mem)
+// return NULL = erro. O tipo de erro fica registrado em exp->exit
+char	*ft_expand(char **string, t_mode mode, t_mem **mem)
 {
 	t_exp_mem	*exp;
-	char		*temp;
 	
 	if (!*string)
 		return (NULL);
 	if (!ft_strlen(*string))
 		return (ft_strdup(""));
 	exp = (*mem)->expand;
+	exp->mode = mode;
 	exp->raw = ft_strdup(*string);
 	exp->new = ft_calloc(ft_strlen(*string) + 1, sizeof(char));
-	exp->new_mem_size = (ft_strlen(*string) + 1) * sizeof(char);
+	exp->allocated = (ft_strlen(*string) + 1) * sizeof(char);
 	if (!exp->new)
 		return (NULL);
-	exp->mode = mode;
 	if(!start_expansion_for_mode(&exp, mem, mode))
-		return (NULL); //em exp->expansion_exit_status, esta registrado o tipo de erro.
-	temp = *string;
+		return (NULL);
+	exp->temp = *string;
 	*string = ft_strdup(exp->new);
-	ft_free_and_null((void *)&temp);
+	ft_free_and_null((void *)&exp->temp);
 	if (!*string)
 	{
-		reset(mem);
+		reset_parameters(mem);
 		return (NULL);
 	}
-	reset(mem);
+	reset_parameters(mem);
 	return (*string);
 }
 
-
-void	*start_expansion_for_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
+void	*start_expansion_for_mode(t_exp_mem **exp, t_mem **mem, t_mode mode)
 {
 	if (mode == TOKEN)
 		return(copy_to_new_str_token_mode(exp, mem));
@@ -56,8 +55,6 @@ void	*start_expansion_for_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
 		return(copy_to_new_str_heredoc_mode(exp, mem));
 	return (NULL);
 }
-
-
 
 /*
                                                                      
@@ -72,7 +69,6 @@ void	*start_expansion_for_mode(t_exp_mem **exp, t_mem **mem, t_exp_mode mode)
                                                                      
                                                                      
 */
-
 void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
@@ -208,7 +204,7 @@ bool	process_inside_single_quotes(t_exp_mem **exp, t_quote quote)
 // used by delim, token
 bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote)
 {
-	t_exp_mode mode;
+	t_mode mode;
 
 	mode = (*exp)->mode;
 	if (quote == Q_DOUBLE)
@@ -269,12 +265,12 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 	if (NEXT_CHAR)
 	{
 		exit = try_to_expand_variable(exp, mem);
-		if (exit == ERROR || exit == BAD_SUBSTITUITION)
+		if (!exit)
 		{
-			(*exp)->expansion_exit_status = exit;
+			(*exp)->exit = exit;
 			return (false);
 		}
-		if (exit == VARIABLE_FOUND)
+		if (exit == VAR_FOUND)
 		{
 			copy_value_and_increment(exp);
 			return (true);
@@ -284,13 +280,11 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 	return (false);
 }
 
-
-
 // used by token->process_unquoted_sequence
 // used by token->process_inside_double_quotesd -> NOT DELIM
 // used by delim->process_unquoted_sequence - -> NOT DELIM
 // used by heredoc->process_unquoted_sequence
-bool	handle_backslash(t_exp_mem **exp, t_exp_mode mode, t_quote quote)
+bool	handle_backslash(t_exp_mem **exp, t_mode mode, t_quote quote)
 {
 	if (CURRENT_CHAR != '\\' || NEXT_CHAR == '\0')
 		return (false);
@@ -326,9 +320,9 @@ t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 	value = &(*exp)->value;
 	exit = get_variable_value(&(*exp)->raw[(*exp)->a], value, mem);
 	
-	if (exit == VARIABLE_FOUND)
+	if (exit == VAR_FOUND)
 		return (insert_var_in_string(*value, (*exp)->a, exp));
-	else if(exit == VARIABLE_NOT_FOUND)
+	else if(exit == VAR_NOT_FOUND)
 		return (remove_var_from_string(&(*exp)->raw, (*exp)->a));
 	else if(exit == BAD_SUBSTITUITION)
 		return (BAD_SUBSTITUITION);	
@@ -386,13 +380,13 @@ t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 		*value = ft_strdup(node->value);
 		ft_lstclear(sortedvars, NULL);
 		free(sortedvars);
-		return (VARIABLE_FOUND);
+		return (VAR_FOUND);
 	}
 	else
 	{
 		ft_lstclear(sortedvars, NULL);
 		free(sortedvars);
-		return (VARIABLE_NOT_FOUND);
+		return (VAR_NOT_FOUND);
 	}
 }
 
@@ -403,7 +397,7 @@ t_exit	ft_lstcopy_and_rsort_by_len(t_list *source, t_list **sorted)
 	t_list	*new_node;
 
 	if (!source)
-		return (EMPTY_VARIABLE_LIST);
+		return (EMPTY_VARLIST);
 	if (!sorted)
 		return (ERROR);
 
@@ -504,10 +498,10 @@ t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	if (!prefix || !suffix)
 		return (ERROR);
 	temp = ft_concatenate(prefix, insert, suffix);
-	if (ft_strlen(temp) + 1 > (*exp)->new_mem_size)
+	if (ft_strlen(temp) + 1 > (*exp)->allocated)
 	{
-		(*exp)-> new_mem_size = 2 * (ft_strlen((*exp)->raw) + 1);
-		ft_realloc_string(&(*exp)->new, (*exp)-> new_mem_size);
+		(*exp)-> allocated = 2 * (ft_strlen((*exp)->raw) + 1);
+		ft_realloc_string(&(*exp)->new, (*exp)-> allocated);
 	}
 	if (!temp || !(*exp)->raw)
 		return (ERROR);
@@ -515,7 +509,7 @@ t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	free(prefix);
 	ft_free_and_null((void *)&(*exp)->raw);
 	(*exp)->raw = temp;
-	return (VARIABLE_FOUND);
+	return (VAR_FOUND);
 }
 
 t_exit	remove_var_from_string(char **s, size_t index)
@@ -526,7 +520,7 @@ t_exit	remove_var_from_string(char **s, size_t index)
 	while (ft_isalnum((*s)[index + a + 1]))		
 		a++;
 	ft_strlcpy(&(*s)[index], &(*s)[index + a + 1], ft_strlen(&(*s)[index]));
-	return (VARIABLE_NOT_FOUND);
+	return (VAR_NOT_FOUND);
 }
 
 
@@ -731,19 +725,44 @@ size_t varlen(char *s, bool braces)
                                                                                                 
                                                                                                 */
 
-void	reset(t_mem **mem)
+void	reset_parameters(t_mem **mem)
 {
 	t_exp_mem *exp;
 
 	exp = (*mem)->expand;
-
 	exp->a = 0;
 	exp->b = 0;
 	ft_free_and_null((void *)&exp->new);
 	ft_free_and_null((void *)&exp->raw);
 	ft_free_and_null((void *)&exp->value);
 	ft_free_and_null((void *)&exp->sortedvars);
-	exp->expansion_exit_status = NULL_E;
+	exp->exit = INIT;
 	exp->error = false;
 	exp->braces = false;
+}
+
+void	*ft_init_exp_memory(t_mem **mem)
+{
+	(*mem)->expand = malloc(sizeof(t_exp_mem));
+	if (!(*mem)->expand)
+		return (NULL);
+	(*mem)->expand->a = 0;
+	(*mem)->expand->b = 0;
+	(*mem)->expand->braces = false;
+	(*mem)->expand->allocated = 0;
+	(*mem)->expand->hd_mode = EXPAND;
+	(*mem)->expand->raw = NULL;
+	(*mem)->expand->new = NULL;
+	(*mem)->expand->value = NULL;
+	(*mem)->expand->error = false;
+	(*mem)->expand->exit = INIT;
+	(*mem)->expand->sortedvars = NULL;
+	return ((*mem)->expand);
+}
+
+void	ft_clear_exp_mem(t_exp_mem **exp)
+{
+	ft_free_and_null((void *)&(*exp)->new);
+	free(*exp);
+	return ;
 }

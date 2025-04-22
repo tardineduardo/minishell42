@@ -11,60 +11,64 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
 
-void	*ft_cap_error(char *message, t_cap_mem **cap);
-bool	ft_line_is_incomplete(char *s);
-void	*ft_first_tokenize(t_mem **mem);
-char	*ft_cap_input_loop(t_mem **mem);
+
+
 
 
 void	*ft_readline(t_mem **mem)
 {
-	t_cap_mem	*cap;
+	t_rdl_mem	*rdl;
 
-	cap = (*mem)->capture;
-	cap->line = readline(YELLOW "Minishell> " RESET);
-	if (!cap->line)
+	rdl = (*mem)->readline;
+	rdl->line = readline(YELLOW "Minishell> " RESET);
+	if (!rdl->line)
 		return (NULL);
-	if (ft_strlen(cap->line) == 0)
+	if (ft_strlen(rdl->line) == 0)
 		return (NULL);
-	if (!ft_tokenize(&cap->line, mem))
+	if (!ft_tokenize(&rdl->line, mem))
 		return (NULL);
-	if (!ft_cap_input_loop(mem))
+	if (!ft_rdl_input_loop(mem))
 		return (NULL);
 
-	add_history(cap->line);
+	add_history(rdl->line);
 	return (mem);
 }
 
-char	*ft_cap_input_loop(t_mem **mem)
+char	*ft_rdl_input_loop(t_mem **mem)
 {
-	t_cap_mem	*cap;
+	t_rdl_mem	*rdl;
 	t_tok_mem	*tok;
 
-	cap = (*mem)->capture;
+	rdl = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	while(1)
 	{
-		if (ft_line_is_incomplete(cap->line))
+		if (ft_line_is_incomplete(rdl->line))
 		{
-			cap->append = (readline(YELLOW "append > " RESET));
-			if (!ft_tokenize(&cap->append, mem))
+			rdl->append = (readline(YELLOW "append > " RESET));
+			if (!ft_tokenize(&rdl->append, mem))
 				return (NULL);
-			cap->temp = cap->line;
-			cap->line = ft_strjoin(cap->line, cap->append);
-			ft_free_and_null((void *)&cap->temp);
-			if (ft_line_is_incomplete(cap->line))
+			rdl->temp = rdl->line;
+			rdl->line = ft_strjoin(rdl->line, rdl->append);
+			ft_free_and_null((void *)&rdl->temp);
+			if (ft_line_is_incomplete(rdl->line))
 				continue ;
 			if (!tok->remain)
 				break;
-			ft_free_and_null((void *)&cap->append);
+			ft_free_and_null((void *)&rdl->append);
 			continue ;
 		}
 		ft_free_and_null((void *)&tok->remain);	
 		break ;
 	}
-	return (cap->line);
+	return (rdl->line);
 }
 
 

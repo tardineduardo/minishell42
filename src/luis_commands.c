@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
 
 int    counter_num_cmd(t_list **org_tok)
 {

@@ -1,4 +1,5 @@
 #include "../include/minishell.h"
+#include "../include/tokenize.h"
 
 void *ft_init_operators(t_tok_mem **tok)
 {

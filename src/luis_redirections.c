@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
 
 int	is_redirection(char *value)
 {

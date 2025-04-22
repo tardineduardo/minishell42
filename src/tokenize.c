@@ -1,81 +1,50 @@
+#include "../include/expand.h"
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/parsing.h"
 
-t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem);
-t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit, t_mem **mem);
-int			ft_find_token_limit(char *str, t_tok_mem **tok);
-int			ft_find_word_limit(t_tok_mem **tok, char *str);
-bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
-void		ft_del_token_node(void *content);
-void		ft_expand_toklist(t_list **toklst, t_mem **mem);
-void		ft_tokeniztion_escape(int *i);
-t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, t_mem **mem);
-t_oper		ft_get_oper(char *value);
-int			ft_count_spaces(char *s);
-
-//debug
-void		ft_debug_indexes(t_list **head);
-void		ft_print_oper(t_oper oper);
-
-
-
+//return = NULL = erro.
 void	*ft_tokenize(char **line, t_mem **mem)
 {
 	t_tok_mem	*tok;
-	t_tok_exit	exit_status;
+	t_tok_exit	exit;
 
 	tok = (*mem)->tokenize;
 	tok->remain = ft_strdup(*line);
 	while (1)
 	{
-		exit_status = ft_tokenize_remain(&tok->remain, &tok, mem);
-		if (exit_status == TOK_ERROR)
+		exit = ft_tokenize_remain(&tok->remain, &tok, mem);
+		if (exit == TOK_ERROR)
 			return (NULL);
-		if (exit_status == TOK_END)
+		if (exit == TOK_END)
 			break ;
 	}
 	ft_free_and_null((void *)&tok->remain);
 	
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
-	ft_expand_toklist(&tok->toklst, mem);
-	ft_debug_list(&tok->toklst);
-	ft_debug_indexes(&tok->toklst);
-
-	ft_printf("\n");
-	
-	//reset_counters
-	
+	ft_expand_toklist(&tok->toklst, mem);			//DEBUG
+	ft_debug_list(&tok->toklst);					//DEBUG
+	ft_debug_indexes(&tok->toklst);					//DEBUG
+	ft_printf("\n");								//DEBUG
 	
 	return (mem);
 }
-
-
-
-
-
-
-
 
 t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem)
 {
 	int			token_limit;
 	t_tok_exit	detach_exit;
 
-
-	//limit = last character of the string
 	token_limit = ft_find_token_limit((*remain), tok);
-
-
 	detach_exit = ft_append_new_toknode(remain, tok, token_limit, mem);
-
 	(*tok)->index_count += token_limit;
-
 	if (detach_exit == TOK_ERROR)
 		return (TOK_ERROR);
 	if (detach_exit == TOK_END)
 		return (TOK_END);
 	return (TOK_CONTINUE);
 }
-
 
 t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit, t_mem **mem)
 {
@@ -97,15 +66,14 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	*remain = ft_strdup(&(*remain)[token_limit]);
 	ft_free_and_null((void *)&temp);
 	(*tok)->index_count += ft_count_spaces(*remain);
-	// ft_debug_list(&(*tok)->toklst);
-	// ft_printf(GREY " {%s}\n" RESET, *remain);
 	ft_strtrim_overwrite(remain, "\t ");
 	if (!(*remain)[0])
 		return (TOK_END);
 	return (TOK_CONTINUE);
 }
 
-
+//essa função só está aqui para contar a posicao do token da string.
+//se a posição nao vier a ser usada, pode apagar essa parte.
 int	ft_count_spaces(char *s)
 {
 	int a;
@@ -116,18 +84,13 @@ int	ft_count_spaces(char *s)
 	return (a);	
 }
 
+//essa funcão incorpora a maior parte da antiga org_tok do @luiscarvalhofrade
 t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 {
-	assert (newstring);
-	assert (node);
-	assert (tok);
-	assert (*tok);
-
 	node->value = ft_strdup(newstring);
 	if (!node->value)
 		return (NULL);
 	node->oper = ft_get_oper(newstring);
-	
 	if ((*tok)->get_delimiter)
 	{
 		node->heredoc_path = ft_heredoc(node->value, mem);
@@ -135,7 +98,6 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 	}
 	else
 		node->heredoc_path = NULL;
-
 	if (node->oper == HEREDOC_REDIR)
 		(*tok)->get_delimiter = true;
 	if (ft_strncmp(newstring, "|", 1) == 0)
@@ -149,7 +111,7 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 	return node;
 }
 
-
+//que preguica de dividir isso em duas funcoes...
 t_oper	ft_get_oper(char *value)
 {
 	if (ft_strcmp("&&", value) == 0)
@@ -182,13 +144,6 @@ t_oper	ft_get_oper(char *value)
 		return (OUT_ERROR_REDIR_EXTRA);
 	return (WORD);
 }
-
-
-
-
-
-
-
 
 int	ft_find_token_limit(char *str, t_tok_mem **tok)
 {
@@ -272,7 +227,6 @@ bool	ft_is_operator(char *str, t_tok_mem **tok, int *operator_len)
 	return (false);
 }
 
-
 void	ft_del_token_node(void *content)
 {
 	t_tok_node	*tok_node;
@@ -293,6 +247,92 @@ void	ft_del_token_node(void *content)
 	ft_free_and_null((void *)&tok_node->value);
 	ft_free_and_null((void *)&tok_node);
 }
+
+void	*ft_init_tok_memory(t_mem **mem)
+{
+	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
+	if (!(*mem)->tokenize)
+		return (NULL);
+	(*mem)->tokenize->operators = NULL;
+	(*mem)->tokenize->toklst = NULL;
+	(*mem)->tokenize->last_of_list = NULL;
+	(*mem)->tokenize->last_of_toks = NULL;
+	(*mem)->tokenize->new = NULL;
+	(*mem)->tokenize->node = NULL;
+	(*mem)->tokenize->str = NULL;
+	(*mem)->tokenize->remain = NULL;
+	(*mem)->tokenize->get_delimiter = false;	
+	(*mem)->tokenize->index_count = 0;
+	(*mem)->tokenize->block_count = 0;		
+	(*mem)->tokenize->quote = Q_OFF;
+	return((*mem)->tokenize);
+}
+
+void	ft_clear_tok_mem(t_tok_mem **tok)
+{
+	ft_lstclear(&(*tok)->toklst, ft_del_token_node);
+	ft_free_str_array((*tok)->operators);
+	ft_free_and_null((void *)&(*tok)->str);
+	ft_free_and_null((void *)&(*tok)->remain);
+	free(*tok);
+	return ;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -340,11 +380,6 @@ void ft_expand_toklist(t_list **toklst, t_mem **mem)
 		trav = trav->next;
 	}
 }
-
-
-
-
-
 
 void ft_debug_list(t_list **head)
 {

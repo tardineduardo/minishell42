@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
 
 t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd)
 {

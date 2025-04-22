@@ -11,24 +11,19 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-t_list *ft_find_lowest(t_list *head);
-void *ft_lst_sort_strlen(t_list **head);
-
-
-void	ft_env_block_unset(t_list **envlist);
-void	ft_env_readonly(t_list **envlist);
-
-//errors
-void		*ft_env_syscall_error(char *message);
-void		*ft_env_error(char *message, t_env_mem **env);
-
-//nodes and lists
-t_env_node	*ft_init_env_node(char *variable, char *value);
-t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
 
 
-//------------ NEW ----------------------------------------
+
+
+
+
+
 void	*ft_init_environs(t_env_mem **env, char **envp)
 {
 	if (!envp)
@@ -193,3 +188,21 @@ void ft_del_env_node(void *content)
 
 
 
+void	*ft_init_env_memory(t_mem **mem)
+{
+	(*mem)->environs = malloc(sizeof(t_env_mem));
+	if (!(*mem)->environs)
+		return (NULL);
+	(*mem)->environs->envlist = NULL;
+	(*mem)->environs->new_node = NULL;
+	(*mem)->environs->result = NULL;
+	return (mem);
+}
+
+void	ft_clear_env_mem(t_env_mem **env)
+{
+	ft_lstclear(&(*env)->envlist, ft_del_env_node);
+	ft_free_and_null_str_array(&(*env)->result);
+	free(*env);
+	return ;
+}

@@ -11,6 +11,14 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
+#include "../include/builtins.h"
+
 
 char *ft_execute(char *line, t_mem **mem)
 {
@@ -62,7 +70,7 @@ char *ft_execute(char *line, t_mem **mem)
 		}
 		ft_unset(&(*mem)->environs->envlist, line);
 	}
-	else if (ft_strcmp((*mem)->capture->line, "exit") == 0)
+	else if (ft_strcmp((*mem)->readline->line, "exit") == 0)
 		ft_clear_mem_and_exit(mem);
 
 	return (NULL);

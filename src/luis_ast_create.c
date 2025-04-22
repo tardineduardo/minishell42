@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
 
 // Function prototypes
 t_ast_node *parse_expression(t_list **tokens);
