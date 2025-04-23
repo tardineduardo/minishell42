@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/22 12:16:16 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:43:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,8 @@ void ft_debug_list_org(t_list **head)
 			cmd_arr = ((t_org_tok *)trav->content)->cmd_node->cmd_arr[0];
 			if (((t_org_tok *)trav->content)->cmd_node->input_lst != NULL)
 				input_name = ((t_input_node *)((t_org_tok *)trav->content)->cmd_node->input_lst->content)->name;
+			else
+				input_name = ft_strdup("no file");
 		}
 
 		printf("[");
