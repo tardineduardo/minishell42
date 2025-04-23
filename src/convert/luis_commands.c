@@ -84,23 +84,4 @@ void	replace_with_cmd_table(t_list *new_node, t_cmd_builder *cmd_builder, t_list
 	}
 }
 
-void	ft_cmd_org(t_list **org_tok)
-{
-	int				total_cmds;
-	int				index_cmd;
-	t_list			*new_node;
-	t_cmd_node 		*cmd;
-	t_cmd_builder	*cmd_builder;
 
-	total_cmds = counter_num_cmd(org_tok);
-	index_cmd = 0;
-	while (index_cmd < total_cmds)
-	{
-		cmd_builder = create_cmd_builder(org_tok, index_cmd);
-		cmd = build_cmd_table(org_tok, index_cmd);
-		new_node = create_new_cmd_node(cmd, index_cmd);
-		replace_with_cmd_table(new_node, cmd_builder, org_tok);
-		//ft_clear_cmd_builder_mem(cmd_builder_mem);
-		index_cmd++;
-	}
-}

@@ -27,6 +27,9 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	}
 	ft_free_and_null((void *)&tok->remain);
 	
+	//LIMPAR WHITE TOKENS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
 	ft_expand_toklist(&tok->toklst, mem);			//DEBUG
 	ft_debug_list(&tok->toklst);					//DEBUG
@@ -103,7 +106,7 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 	}
 	else
 		node->heredoc_path = NULL;
-	if (node->oper == HEREDOC_REDIR)
+	if (node->oper == HEREDOC_R)
 		(*tok)->get_delimiter = true;
 	if (ft_strncmp(newstring, "|", 1) == 0)
 	{
@@ -120,33 +123,33 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 t_oper	ft_get_oper(char *value)
 {
 	if (ft_strcmp("&&", value) == 0)
-		return (AND_O_BONUS);
+		return (AND_O);
 	else if (ft_strcmp("||", value) == 0)
-		return (OR_O_BONUS);
+		return (OR_O);
 	else if (ft_strcmp("(", value) == 0)
-		return (GROUP_START_O_BONUS);
+		return (GROUP_START_O);
 	else if (ft_strcmp(")", value) == 0)
-		return (GROUP_END_O_BONUS);
+		return (GROUP_END_O);
 	else if (ft_strcmp("|", value) == 0)
 		return (PIPE_O);
 	else if (ft_strcmp("&", value) == 0)
-		return (BACKGROUND_O_EXTRA);
+		return (BCKGRND_O);
 	else if (ft_strcmp("<", value) == 0)
-		return (IN_REDIR);
+		return (IN_R);
 	else if (ft_strcmp(">", value) == 0)
-		return (OUT_REDIR);
+		return (OUT_R);
 	else if (ft_strcmp(">>", value) == 0)
-		return (APPEND_REDIR);
+		return (APPEND_R);
 	else if (ft_strcmp("2>", value) == 0)
-		return (ERROR_REDIR_EXTRA);
+		return (ERROR_R);
 	else if (ft_strcmp("<<", value) == 0)
-		return (HEREDOC_REDIR);
+		return (HEREDOC_R);
 	else if (ft_strcmp("<<<", value) == 0)
-		return (HERESTR_REDIR_EXTRA);
+		return (HERESTR_R);
 	else if (ft_strcmp("*", value) == 0)
-		return (WILDCARD_REDIR_BONUS);
+		return (WILDCARD_R);
 	else if (ft_strcmp("&>", value) == 0)
-		return (OUT_ERROR_REDIR_EXTRA);
+		return (OUT_ERROR_R);
 	return (WORD);
 }
 
@@ -529,34 +532,34 @@ void ft_debug_indexes(t_list **head)
 
 void	ft_print_oper(t_oper oper)
 {
-	if (oper == AND_O_BONUS)
-		ft_printf(BRIGHT_MAGENTA "AND_O_BONUS" RESET);
-	else if (oper == OR_O_BONUS)
-		ft_printf(BRIGHT_MAGENTA "OR_O_BONUS" RESET);
-	else if (oper == GROUP_START_O_BONUS)
-		ft_printf(BRIGHT_MAGENTA "GROUP_START_O_BONUS" RESET);
-	else if (oper == GROUP_END_O_BONUS)
-		ft_printf(BRIGHT_MAGENTA "GROUP_END_O_BONUS" RESET);
+	if (oper == AND_O)
+		ft_printf(BRIGHT_MAGENTA "AND_O" RESET);
+	else if (oper == OR_O)
+		ft_printf(BRIGHT_MAGENTA "OR_O" RESET);
+	else if (oper == GROUP_START_O)
+		ft_printf(BRIGHT_MAGENTA "GROUP_START_O" RESET);
+	else if (oper == GROUP_END_O)
+		ft_printf(BRIGHT_MAGENTA "GROUP_END_O" RESET);
 	else if (oper == PIPE_O)
 		ft_printf(YELLOW "PIPE_O" RESET);
-	else if (oper == BACKGROUND_O_EXTRA)
-		ft_printf(BRIGHT_CYAN "BACKGROUND_O_EXTRA" RESET);
-	else if (oper == IN_REDIR)
-		ft_printf(BRIGHT_BLUE "IN_REDIR" RESET);
-	else if (oper == OUT_REDIR)
-		ft_printf(BRIGHT_BLUE "OUT_REDIR" RESET);
-	else if (oper == APPEND_REDIR)
-		ft_printf(BRIGHT_BLUE "APPEND_REDIR" RESET);
-	else if (oper == ERROR_REDIR_EXTRA)
-		ft_printf(BRIGHT_CYAN "ERROR_REDIR_EXTRA" RESET);
-	else if (oper == HEREDOC_REDIR)
-		ft_printf(BRIGHT_BLUE "HEREDOC_REDIR" RESET);
-	else if (oper == HERESTR_REDIR_EXTRA)
-		ft_printf(BRIGHT_CYAN "HERESTR_REDIR_EXTRA" RESET);
-	else if (oper == WILDCARD_REDIR_BONUS)
-		ft_printf(BRIGHT_MAGENTA "WILDCARD_REDIR_BONUS" RESET);
-	else if (oper == OUT_ERROR_REDIR_EXTRA)
-		ft_printf(BRIGHT_CYAN "OUT_ERROR_REDIR_EXTRA" RESET);
+	else if (oper == BCKGRND_O)
+		ft_printf(BRIGHT_CYAN "BCKGRND_O" RESET);
+	else if (oper == IN_R)
+		ft_printf(BRIGHT_BLUE "IN_R" RESET);
+	else if (oper == OUT_R)
+		ft_printf(BRIGHT_BLUE "OUT_R" RESET);
+	else if (oper == APPEND_R)
+		ft_printf(BRIGHT_BLUE "APPEND_R" RESET);
+	else if (oper == ERROR_R)
+		ft_printf(BRIGHT_CYAN "ERROR_R" RESET);
+	else if (oper == HEREDOC_R)
+		ft_printf(BRIGHT_BLUE "HEREDOC_R" RESET);
+	else if (oper == HERESTR_R)
+		ft_printf(BRIGHT_CYAN "HERESTR_R" RESET);
+	else if (oper == WILDCARD_R)
+		ft_printf(BRIGHT_MAGENTA "WILDCARD_R" RESET);
+	else if (oper == OUT_ERROR_R)
+		ft_printf(BRIGHT_CYAN "OUT_ERROR_R" RESET);
 	else if (oper == WORD)
 		ft_printf(GREEN "WORD" RESET);
 	else

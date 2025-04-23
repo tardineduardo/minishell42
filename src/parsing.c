@@ -139,23 +139,88 @@ t_cmd_builder	*create_cmd_builder(t_list **parlst, int index_cmd)
 }
 
 
+
+/*
+                                                                                                                                     
+                                                                                             
+                                      ,d                                       
+                                      88                                             
+,adPPYba,  8b       d8  8b,dPPYba,  MM88MMM  ,adPPYYba,  8b,     ,d8
+I8[    ""  `8b     d8'  88P'   `"8a   88     ""     `Y8   `Y8, ,8P'
+ `"Y8ba,    `8b   d8'   88       88   88     ,adPPPPP88     )888(
+aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
+`"YbbdP"'      Y88'     88       88   "Y888  `"8bbdP"Y8  8P'     `Y8
+               d8'                                                                                                                   
+              d8'                                                                                                                    
+
+*/
+
 t_syntax	ft_check_syntax(t_list *parlst)
 {
 	if(operator_not_supported(parlst))
 		return (ERROR1);
 	if (redirect_without_file(parlst))
 		return (ERROR1);
-	if (heredoc_without_delim(parlst))
-		return (ERROR1);
 	if (pipe_at_invalid_position(parlst))
-		return (ERROR1);
-	if (unsupported_operator(parlst))
 		return (ERROR1);
 	if (and_or_at_invalid_positions(parlst))
 		return (ERROR1);
 	if (empty_parentheses(parlst))
 		return (ERROR1);
-	return(SUCCESS);
+	return(SUCCESS_P);
+}
+
+t_syntax	ft_operator_not_supported(t_list *parlst)
+{
+	t_list		*trav;
+	t_par_node	*parnode;
+
+	trav = parlst;
+	while(trav)
+	{
+		parnode = (t_par_node *)trav->content;
+		if (parnode->oper != WORD)
+		{
+			if (ft_strcmp(parnode->oper, "|") != 0 &&
+				ft_strcmp(parnode->oper, ">") != 0 &&
+				ft_strcmp(parnode->oper, "<") != 0 &&
+				ft_strcmp(parnode->oper, ">>") != 0 &&
+				ft_strcmp(parnode->oper, "<<") != 0)
+				//set par->syntax error;
+				//set error exit code;
+				return (ERROR1);
+		}
+	return(SUCCESS_P);
+	}
+}
+
+t_syntax	redirect_without_file(t_list *parlst)
+{
+	t_list		*trav;
+	t_par_node	*parnode;
+	t_par_node	*next;	
+	
+	trav = parlst;
+	while(trav)
+	{
+		parnode = (t_par_node *)trav->content;	
+		//transformat em funcao
+		if (parnode->oper == IN_R || parnode->oper == OUT_R ||
+			parnode->oper == HEREDOC_R || parnode->oper == APPEND_R ||
+			parnode->oper == HERESTR_R || parnode->oper == ERROR_R ||
+			parnode->oper == WILDCARD_R || parnode->oper == OUT_ERROR_R)
+		{
+			next = (t_par_node *)trav->next->content;
+			if (!next || next->oper != WORD)
+			{
+				//set par->syntax error;
+				//set error exit code;
+				return (ERROR1);
+			}
+		}
+		trav = trav->next;
+	}
+	return(SUCCESS_P);
 }
 
 
@@ -185,23 +250,15 @@ t_syntax	ft_check_syntax(t_list *parlst)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+                                                                                          
+88,dPYba,,adPYba,    ,adPPYba,  88,dPYba,,adPYba,    ,adPPYba,   8b,dPPYba,  8b       d8  
+88P'   "88"    "8a  a8P_____88  88P'   "88"    "8a  a8"     "8a  88P'   "Y8  `8b     d8'  
+88      88      88  8PP"""""""  88      88      88  8b       d8  88           `8b   d8'   
+88      88      88  "8b,   ,aa  88      88      88  "8a,   ,a8"  88            `8b,d8'    
+88      88      88   `"Ybbd8"'  88      88      88   `"YbbdP"'   88              Y88'     
+                                                                                 d8'      
+                                                                                d8'    */
 
 
 void	*ft_init_par_memory(t_mem **mem)
