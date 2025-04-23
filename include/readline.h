@@ -22,6 +22,8 @@ typedef struct	s_rdl_mem
 void	*ft_readline(t_mem **mem);
 bool	ft_line_is_incomplete(char *s);
 char	*ft_rdl_input_loop(t_mem **mem);
+void	*ft_init_rdl_memory(t_mem **mem);
+void	ft_clear_rdl_mem(t_rdl_mem **rdl);
 
 
 #endif

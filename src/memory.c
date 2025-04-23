@@ -18,10 +18,6 @@
 #include "../include/environs.h"
 #include "../include/readline.h"
 
-void ft_clear_par_mem(t_par_mem **par);
-void ft_clear_rdl_mem(t_rdl_mem **rdl);
-
-
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
 	*mem = malloc(sizeof(t_mem));
@@ -31,33 +27,17 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	ft_init_exp_memory(mem);
 	ft_init_hdc_memory(mem);
 	ft_init_tok_memory(mem);
-
-
-	(*mem)->readline = malloc(sizeof(t_rdl_mem));
-	(*mem)->parsing = malloc(sizeof(t_par_mem));
-	
-	if (!(*mem)->heredoc || !(*mem)->readline || !(*mem)->tokenize
-		|| !(*mem)->environs || !(*mem)->expand || !(*mem)->parsing)
+	ft_init_rdl_memory(mem);
+	ft_init_par_memory(mem);
+	if (!(*mem)->heredoc 	|| !(*mem)->readline || 
+		!(*mem)->tokenize 	|| !(*mem)->environs ||
+		!(*mem)->expand 	|| !(*mem)->parsing)
 		exit(1);
-
-
-	// //set everything to NULL ---------------------------------------------------
-	(*mem)->readline->line = NULL;
-	(*mem)->readline->trim = NULL;
-	(*mem)->readline->temp = NULL;
-	(*mem)->readline->append = NULL;
-	(*mem)->parsing->parsedlst = NULL;
-
-
 	if (!ft_init_operators(&(*mem)->tokenize))
 		ft_clear_mem_and_exit(mem);
-
 	if (!ft_init_environs(&(*mem)->environs, envp))
-		ft_clear_mem_and_exit(mem);		
+		ft_clear_mem_and_exit(mem);
 }
-
-
-
 
 void	ft_clear_mem_and_exit(t_mem **mem)
 {
@@ -70,33 +50,4 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	rl_clear_history();
 	free(*mem);
 	exit(0);
-}
-
-
-//FUNCOES DE LIMPAR MEMEORIA DE CADA SECAO -------------------------------------
-
-
-
-void	ft_clear_rdl_mem(t_rdl_mem **rdl)
-{
-	ft_free_and_null((void *)&(*rdl)->line);
-	ft_free_and_null((void *)&(*rdl)->trim);
-	ft_free_and_null((void *)&(*rdl)->temp);
-	free(*rdl);
-	return ;
-}
-
-
-
-
-
-
-
-
-
-void	ft_clear_par_mem(t_par_mem **par)
-{
-	ft_free_and_null((void *)&(*par)->parsedlst);
-	free(*par);
-	return ;
 }

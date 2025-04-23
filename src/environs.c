@@ -18,12 +18,6 @@
 #include "../include/environs.h"
 #include "../include/readline.h"
 
-
-
-
-
-
-
 void	*ft_init_environs(t_env_mem **env, char **envp)
 {
 	if (!envp)
@@ -116,14 +110,6 @@ void	ft_env_block_unset(t_list **envlist)
 		trav = trav->next;
 	}
 }
-
-
-
-
-
-
-
-
 
 //----------- NODES and LISTS ----------------
 

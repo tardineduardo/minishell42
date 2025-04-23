@@ -4,7 +4,12 @@
 #include "../include/tokenize.h"
 #include "../include/parsing.h"
 
-//return = NULL = erro.
+/*return = NULL = erro. Eu ainda não gosto dessa versão. Se a ideia é que cada
+módulo do programa seja realmente independente, cada chamada para tokenize
+deveria receber uma **string e uma **t_list. a string seria tokenizada e os
+os novos tokens salvos em t_list - que podia já estar preenchida ou não. 
+Do jeito que está hoje, tokenize sempre preenche a mesma lista e fica segurando
+a memória dos tokens em tok_mem mesmo depois que a tokenização já terminou.*/
 void	*ft_tokenize(char **line, t_mem **mem)
 {
 	t_tok_mem	*tok;
@@ -180,7 +185,7 @@ void	ft_tokeniztion_escape(int *i)
 	return ;
 }
 
-int			ft_find_word_limit(t_tok_mem **tok, char *str)
+int		ft_find_word_limit(t_tok_mem **tok, char *str)
 {
 	int	i;
 
@@ -227,26 +232,7 @@ bool	ft_is_operator(char *str, t_tok_mem **tok, int *operator_len)
 	return (false);
 }
 
-void	ft_del_token_node(void *content)
-{
-	t_tok_node	*tok_node;
 
-	if (!content)
-		return ;
-
-	tok_node = (t_tok_node *)content;
-
-	if (tok_node->heredoc_path)
-	{
-		if (access(tok_node->heredoc_path, F_OK) == 0)
-		{
-			unlink(tok_node->heredoc_path);
-			ft_free_and_null((void *)&tok_node->heredoc_path);
-		}
-	}
-	ft_free_and_null((void *)&tok_node->value);
-	ft_free_and_null((void *)&tok_node);
-}
 
 void	*ft_init_tok_memory(t_mem **mem)
 {
@@ -278,7 +264,26 @@ void	ft_clear_tok_mem(t_tok_mem **tok)
 	return ;
 }
 
+void	ft_del_token_node(void *content)
+{
+	t_tok_node	*tok_node;
 
+	if (!content)
+		return ;
+
+	tok_node = (t_tok_node *)content;
+
+	if (tok_node->heredoc_path)
+	{
+		if (access(tok_node->heredoc_path, F_OK) == 0)
+		{
+			unlink(tok_node->heredoc_path);
+			ft_free_and_null((void *)&tok_node->heredoc_path);
+		}
+	}
+	ft_free_and_null((void *)&tok_node->value);
+	ft_free_and_null((void *)&tok_node);
+}
 
 
 

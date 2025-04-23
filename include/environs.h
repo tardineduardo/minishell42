@@ -8,7 +8,6 @@
 # include "environs.h"
 # include "../libs/libft/libft.h"
 
-
 typedef struct 	s_env_node
 {
 	char	*variable;
@@ -16,7 +15,6 @@ typedef struct 	s_env_node
 	bool	readonly;
 	bool	block_unset;
 }	t_env_node;
-
 
 typedef struct s_env_mem
 {
@@ -27,15 +25,9 @@ typedef struct s_env_mem
 
 void	*ft_init_env_memory(t_mem **mem);
 void	ft_clear_env_mem(t_env_mem **env);
+
 void	*ft_init_environs(t_env_mem **env, char **envp);
 void	ft_del_env_node(void *content);
-
-
-
-
-
-
-
 void	ft_env_block_unset(t_list **envlist);
 void	ft_env_readonly(t_list **envlist);
 

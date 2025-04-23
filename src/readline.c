@@ -11,16 +11,12 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include "../include/heredoc.h"
-#include "../include/tokenize.h"
-#include "../include/expand.h"
-#include "../include/parsing.h"
-#include "../include/environs.h"
+//#include "../include/heredoc.h"
+//#include "../include/tokenize.h"
+//#include "../include/expand.h"
+//#include "../include/parsing.h"
+//#include "../include/environs.h"
 #include "../include/readline.h"
-
-
-
-
 
 void	*ft_readline(t_mem **mem)
 {
@@ -88,4 +84,25 @@ bool	ft_line_is_incomplete(char *s)
 	}
 	free(new);
 	return (false);
+}
+
+void	*ft_init_rdl_memory(t_mem **mem)
+{
+	(*mem)->readline = malloc(sizeof(t_rdl_mem));
+	if (!(*mem)->readline)
+		return (NULL);
+	(*mem)->readline->line = NULL;
+	(*mem)->readline->trim = NULL;
+	(*mem)->readline->temp = NULL;
+	(*mem)->readline->append = NULL;
+	return ((*mem)->readline);
+}
+
+void	ft_clear_rdl_mem(t_rdl_mem **rdl)
+{
+	ft_free_and_null((void *)&(*rdl)->line);
+	ft_free_and_null((void *)&(*rdl)->trim);
+	ft_free_and_null((void *)&(*rdl)->temp);
+	free(*rdl);
+	return ;
 }

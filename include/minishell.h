@@ -132,12 +132,7 @@ typedef struct s_input_node
 	char	*name;
 }	t_input_node;
 
-typedef struct s_cmd_builder
-{
-	t_list	*start_node;
-	t_list	*end_node;
-	int		num_nodes;
-} 	t_cmd_builder;
+
 
 
 
