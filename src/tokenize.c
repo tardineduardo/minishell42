@@ -64,7 +64,8 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	toknode = malloc(sizeof(t_tok_node));
 	if (!toknode)
 		return (TOK_ERROR);
-	ft_init_toknode(new_string, toknode, tok, mem);
+	if (!ft_init_toknode(new_string, toknode, tok, mem))
+		return (TOK_ERROR); //-------------------> SYNTAX ERROR 
 	ft_free_and_null((void *)&new_string);
 	append = ft_lstnew(toknode);
 	if (!append)
@@ -93,6 +94,11 @@ int	ft_count_spaces(char *s)
 }
 
 //essa funcão incorpora a maior parte da antiga org_tok do @luiscarvalhofrade
+
+// PRECISA MAIS VALIDACOES! E SE O PROXIMO TERMO FOR OPERADOR? A SINTAXE ESTA
+// SENDO VALIDADA SO NO PARSING, MAS ACHO QUE ALGO PRECISA SER FEITO AQUI.
+// PROXIMO TOKEN NAO PODE SER OPERADOR
+
 t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 {
 	node->value = ft_strdup(newstring);
@@ -101,6 +107,9 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 	node->oper = ft_get_oper(newstring);
 	if ((*tok)->get_delimiter)
 	{
+		if (node->oper != WORD)
+			return (NULL);
+	
 		node->heredoc_path = ft_heredoc(node->value, mem);
 		(*tok)->get_delimiter = false;
 	}
@@ -116,7 +125,7 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 	else
 		node->block = (*tok)->block_count;
 	node->index = (*tok)->index_count;
-	return node;
+	return (node);
 }
 
 //que preguica de dividir isso em duas funcoes...

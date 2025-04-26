@@ -33,14 +33,16 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 	par = (*mem)->parsing;
 	par->parlst = ft_copy_tokens(tok->toklst);
 
-	ft_cmd_org(&par->parlst);
-
 	// AQUI: CHECAR ERROS DE SINTAXE
 	if (!ft_check_syntax(tok->toklst))
 	{
 		//print error type like bash
 		return (NULL);
 	}
+
+	ft_cmd_org(&par->parlst);
+
+
 
 	root = parse_expression(&(*mem)->tokenize->toklst);
 	
@@ -79,64 +81,16 @@ t_list	*ft_copy_tokens(t_mem **mem)
 	return (copy);
 }
 
-void	*ft_cmd_org(t_list **parlst)
-{
-	int				total_cmds;
-	int				index_cmd;
-	t_list			*new_node;
-	t_cmd_node 		*cmd;
-	t_cmd_builder	*cmd_builder;
-
-	total_cmds = counter_num_cmd(parlst);
-	index_cmd = 0;
-	while (index_cmd < total_cmds)
-	{
-		cmd_builder = create_cmd_builder(parlst, index_cmd);
-		cmd = build_cmd_table(parlst, index_cmd);
-		new_node = create_new_cmd_node(cmd, index_cmd);
-		replace_with_cmd_table(new_node, cmd_builder, parlst);
-		//ft_clear_cmd_builder_mem(cmd_builder_mem);
-		index_cmd++;
-	}
-}
-
-int    counter_num_cmd(t_list *parlst)
-{
-	t_list		*last;
-
-	last = ft_lstlast(parlst);
-	return (((t_par_node *)last->content)->position + 1);
-}
 
 
-t_cmd_builder	*create_cmd_builder(t_list **parlst, int index_cmd)
-{
-	t_cmd_builder	*cmd_builder;
-	t_list			*cur;
-	t_par_node		*parsnode;
+// int    counter_num_cmd(t_list *parlst)
+// {
+// 	t_list		*last;
 
-	cmd_builder = malloc(sizeof(t_cmd_builder));
-	if (!cmd_builder)
-		return (NULL);
-	cmd_builder->start_node = NULL;
-	cmd_builder->end_node = NULL;
-	cmd_builder->num_nodes = 0;
-	cur = *parlst;
-	cmd_builder->num_nodes = 0;
-	while (cur)
-	{
-		parsnode = (t_par_node *)cur->content;
-		if (parsnode->position == index_cmd)
-		{
-			if (cmd_builder->num_nodes == 0)
-				cmd_builder->start_node = cur;
-			cmd_builder->num_nodes++;
-			cmd_builder->end_node = cur;
-		}
-		cur = cur->next;
-	}
-	return (cmd_builder);
-}
+// 	last = ft_lstlast(parlst);
+// 	return (((t_par_node *)last->content)->position + 1);
+// }
+
 
 
 
@@ -163,10 +117,10 @@ t_syntax	ft_check_syntax(t_list *parlst)
 		return (ERROR1);
 	if (pipe_at_invalid_position(parlst))
 		return (ERROR1);
-	if (and_or_at_invalid_positions(parlst))
-		return (ERROR1);
-	if (empty_parentheses(parlst))
-		return (ERROR1);
+	// if (and_or_at_invalid_positions(parlst))
+	// 	return (ERROR1);
+	// if (empty_parentheses(parlst))
+	// 	return (ERROR1);
 	return(SUCCESS_P);
 }
 

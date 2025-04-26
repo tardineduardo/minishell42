@@ -119,13 +119,13 @@ typedef struct s_output_node
 	bool	create;
 }			t_output_node;
 
-typedef struct s_cmd_node
-{
-	char	**cmd_arr;
-	t_list	*input_lst;
-	t_list	*output_lst;
-	int		err;
-}			t_cmd_node;
+// typedef struct s_cmd_node
+// {
+// 	char	**cmd_arr;
+// 	t_list	*input_lst;
+// 	t_list	*output_lst;
+// 	int		err;
+// }			t_cmd_node;
 
 typedef struct s_input_node
 {

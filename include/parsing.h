@@ -33,6 +33,16 @@ typedef enum e_oper
 	OUT_ERROR_R,
 }	t_oper;
 
+
+typedef struct s_block_node
+{
+	char	**cmd_arr;
+	t_list	*input_lst;
+	t_list	*output_lst;
+	int		err;
+}			t_block_node;
+
+
 typedef struct s_par_node
 {
 	char		*value;
@@ -41,12 +51,7 @@ typedef struct s_par_node
 	t_cmd_node	*cmd_node;
 }	t_par_node;
 
-typedef struct s_cmd_builder
-{
-	t_list	*start_node;
-	t_list	*end_node;
-	int		num_nodes;
-} 	t_cmd_builder;
+
 
 
 typedef struct s_par_mem
