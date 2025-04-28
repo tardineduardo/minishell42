@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:44:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/24 13:29:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/28 15:46:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd)
 	return (0);
 }
 
-void exec_pipe_cmd(t_pipe_data *p, t_list **env, t_cmd_node *cmd)
+void exec_pipe_cmd(t_pipe_data *p, t_list **ms_env, t_cmd_node *cmd)
 {
 	pid_t pid = fork();
 	if (pid == -1)
@@ -41,9 +41,33 @@ void exec_pipe_cmd(t_pipe_data *p, t_list **env, t_cmd_node *cmd)
 	if (pid == 0)
 	{
 		pipe_fd_control(p, cmd, p->pipefd);
-		exec_cmd(env, cmd);
+		exec_cmd(ms_env, cmd);
 		exit(EXIT_SUCCESS);
 	}
+}
+
+int	exec_single_cmd(t_list **ms_env, t_cmd_node *cmd)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(1);
+	}
+	if (pid == 0)
+	{
+		exec_cmd(ms_env, cmd);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else 
+		return (-1);
+	return (0);
 }
 
 int exec_pipe(t_list **env, t_list **org_token, int num_cmds)

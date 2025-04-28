@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/22 11:57:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/28 15:41:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,6 +374,7 @@ int 		exec_ast(t_list **ms_env, t_ast_node **root);
 //execution
 int exec_pipe(t_list **env, t_list **org_token, int num_cmds);
 int	exec_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
+int	exec_single_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
 
 //external cmd treatment
 char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
