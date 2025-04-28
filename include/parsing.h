@@ -34,7 +34,7 @@ typedef enum e_oper
 }	t_oper;
 
 
-typedef struct s_block_node
+typedef struct s_block_node // s_cmd_node
 {
 	char	**cmd_arr;
 	t_list	*input_lst;
@@ -43,12 +43,16 @@ typedef struct s_block_node
 }			t_block_node;
 
 
-typedef struct s_par_node
+typedef struct s_par_node // s_ork_tok
 {
-	char		*value;
-	int			position;
-	t_oper		oper;
-	t_cmd_node	*cmd_node;
+	//char			*value; ---	nao precisamos disso.
+	t_oper			oper; // --	aqui uso t_oper em vez de int, mas os valores sao os mesmos
+	int				block_index; //
+	t_block_node	*block_node;
+	char	**wip_cmd_arr;
+	t_list	*wip_input_lst;
+	t_list	*wip_output_lst;
+
 }	t_par_node;
 
 
@@ -57,6 +61,7 @@ typedef struct s_par_node
 typedef struct s_par_mem
 {
 	t_list			*parlst;
+	t_btree			*partree;
 	char			*syntax_error;
 }					t_par_mem;
 

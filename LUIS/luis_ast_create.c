@@ -12,11 +12,6 @@
 
 #include "../include/minishell.h"
 
-// VER SE ESTA TUDO INICIALIZADO CORRETAMENTE, POR O NODE 
-// DE AST NÂO VAI USAR SEMPRE TODOS OS CAMPOS, POR ISSO
-// TEM QUE INIT NULL PRA NAO DAR SEG FAULT DEPOIS.
-
-
 // Function prototypes
 t_ast_node *parse_expression(t_list **tokens);
 t_ast_node *parse_logical_or(t_list **tokens);
@@ -241,59 +236,6 @@ t_ast_node *parse_command(t_list **tokens)
     *tokens = (*tokens)->next;
     return node;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void print_ast(t_ast_node *node, int depth)
 {

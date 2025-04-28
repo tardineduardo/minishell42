@@ -22,7 +22,7 @@ t_oper		update_oper2(char *value);
 void		*ft_cmd_org(t_list **org_tok);
 
 
-// O QUE AST RETORNA?
+// RETORNA O POINTER PARA ROOT DE AST
 void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 {
 	t_ast_node *root;
@@ -31,20 +31,17 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
-	par->parlst = ft_copy_tokens(tok->toklst);
 
-	// AQUI: CHECAR ERROS DE SINTAXE
+	// CHECAR ERROS DE SINTAXE
 	if (!ft_check_syntax(tok->toklst))
 	{
 		//print error type like bash
 		return (NULL);
 	}
 
-	ft_cmd_org(&par->parlst);
+	par->partree = ft_create_partree(tok->toklst);
 
-
-
-	root = parse_expression(&(*mem)->tokenize->toklst);
+	root = parse_expression(&par->parlst);
 	
 	//print_ast(root, 0);
 	//no fim de tudo, liberar a lista de toklst
@@ -54,42 +51,14 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 // vou copiar a toklst para: 1) simular o mesmo ambiente que a primeira versão
 // 2) poder manipular e modificar parlst sem perder informações de toklst.
 // depois, pode ser que eu elimine essa função aqui e manipule direto toklst.
-t_list	*ft_copy_tokens(t_mem **mem)
+t_list	*ft_create_partree(t_mem **mem)
 {
-	t_list		*copy;
-	t_list		*trav;
-	t_tok_node	*toknode;
-	t_par_node	*parnode;	
+	t_btree		*partree;
+	t_par_node	*parnode;
+	
 
-	trav = (*mem)->tokenize->toklst;
-	copy = malloc(sizeof(t_par_node));
-	if (!copy)
-		return (NULL);
-	while(trav)
-	{
-		parnode = malloc(sizeof(t_par_node));
-		if (!parnode)
-			return (NULL);
-		toknode = ((t_tok_node *)trav->content);
-		parnode->value = ft_strdup(toknode->value);
-		parnode->position = toknode->block; //padronizar depois =>block
-		parnode->oper = toknode->oper;
-		parnode->cmd_node = NULL;
-		ft_lstadd_back(&copy, parnode);
-		trav = trav->next;
-	}
-	return (copy);
+
 }
-
-
-
-// int    counter_num_cmd(t_list *parlst)
-// {
-// 	t_list		*last;
-
-// 	last = ft_lstlast(parlst);
-// 	return (((t_par_node *)last->content)->position + 1);
-// }
 
 
 

@@ -16,7 +16,7 @@ typedef struct 	s_tok_node
 	char		*value;
 	bool		double_quote;		//se der tempo, usar a mesma funcao de aspas de expand.
 	bool		single_quote;
-	size_t		block;
+	size_t		block_index;
 	size_t		index;
 	t_oper		oper;
 	char		*heredoc_path;

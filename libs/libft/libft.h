@@ -57,15 +57,22 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-}				t_list;
+} t_list;
 
 typedef struct s_dlist
 {
 	void			*content;
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
+} t_dlist;
 
-}				t_dll;
+typedef struct s_btree
+{
+struct s_btree	*left;
+struct s_btree	*right;
+void			*data;
+} t_btree;
+
 
 typedef long long	t_llong;
 

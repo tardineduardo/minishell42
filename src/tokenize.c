@@ -119,12 +119,13 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 		(*tok)->get_delimiter = true;
 	if (ft_strncmp(newstring, "|", 1) == 0)
 	{
-		node->block = -1;
+		node->block_index = -1;
 		(*tok)->block_count++;
 	}
 	else
-		node->block = (*tok)->block_count;
-	node->index = (*tok)->index_count;
+		node->block_index = (*tok)->block_count;	// Essa é a contagem que o Luis precisa ()
+	node->index = (*tok)->index_count;				// Isso eu estou gravando, mas não estamos usando ainda.
+													// É o index de onde começa o token na linha original.
 	return (node);
 }
 
