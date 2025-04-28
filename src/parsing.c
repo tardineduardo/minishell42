@@ -16,10 +16,10 @@
 #include "../include/tokenize.h"
 
 t_list		*ft_classify_tokens(t_mem **mem);
-void		*ft_append_new_parsed_token(t_list *tokens, t_par_mem **par);
-void		set_positions(t_list **org_tokens);
+void		*ft_append_new_parsed_token(t_dlist *tokens, t_par_mem **par);
+void		set_positions(t_dlist **org_tokens);
 t_oper		update_oper2(char *value);
-void		*ft_cmd_org(t_list **org_tok);
+void		*ft_cmd_org(t_dlist **org_tok);
 
 
 // RETORNA O POINTER PARA ROOT DE AST
@@ -45,19 +45,60 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 	
 	//print_ast(root, 0);
 	//no fim de tudo, liberar a lista de toklst
-	return (mem); //trocar para reotrnar o pointer para árvore.
+	return (mem); //trocar para rotrnar o pointer para árvore.
 }
 
-// vou copiar a toklst para: 1) simular o mesmo ambiente que a primeira versão
-// 2) poder manipular e modificar parlst sem perder informações de toklst.
-// depois, pode ser que eu elimine essa função aqui e manipule direto toklst.
-t_list	*ft_create_partree(t_mem **mem)
+
+t_dlist	*ft_create_partree(t_dlist **toklst)
 {
-	t_btree		*partree;
+	t_dlist		*trav;
+	t_dlist		*parlst;
 	t_par_node	*parnode;
+	int			nbr_of_blocks;
+
+	nbr_of_blocks = count_blocks(*toklst); 
+	parlst = malloc (nbr_of_blocks * sizeof(parnode));
+	trav = parlst;
+	while (trav)
+	{
+
+		parse_redirs()
+
+	/////// CONTINUAR AQUI
+
+
+	}
+
+
 	
 
 
+}
+
+
+
+int	count_blocks(t_dlist **toklst)
+{
+	bool		inside_paren;
+	t_dlist		*trav;
+	t_tok_node	*node;
+	int			count;
+
+	inside_paren = false;
+	trav = *toklst;
+	count = 0;
+	while(trav)
+	{
+		node = ((t_tok_node *)trav->content);
+		if (node->value[0] == '(' && !inside_paren)
+			inside_paren = true;
+		else if (node->value[0] == ')' && inside_paren)
+			inside_paren = false;
+		if (node->value[0] == '|' && !inside_paren)
+			count++;
+		trav = trav->next;
+	}
+	return (count + 1);
 }
 
 

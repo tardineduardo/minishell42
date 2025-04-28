@@ -24,7 +24,7 @@ typedef struct 	s_tok_node
 
 typedef struct	s_tok_mem
 {
-	t_list		*toklst;
+	t_dlist		*toklst;
 	char		**operators;
 	t_list		*last_of_list;
 	t_tok_node	*last_of_toks;
@@ -58,8 +58,8 @@ void		*ft_init_operators(t_tok_mem **tok);
 void		ft_del_token_node(void *content);
 
 //debug
-void		ft_debug_indexes(t_list **head);
+void		ft_debug_indexes(t_dlist **head);
 void		ft_print_oper(t_oper oper);
-void		ft_debug_list(t_list **head);
+void		ft_debug_list(t_dlist **head);
 
 #endif

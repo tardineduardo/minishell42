@@ -57,7 +57,7 @@ t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem)
 t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit, t_mem **mem)
 {
 	t_tok_node	*toknode;
-	t_list		*append;
+	t_dlist		*append;
 	char		*new_string;
 
 	new_string = ft_substr((*remain), 0, token_limit);
@@ -67,10 +67,10 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	if (!ft_init_toknode(new_string, toknode, tok, mem))
 		return (TOK_ERROR); //-------------------> SYNTAX ERROR 
 	ft_free_and_null((void *)&new_string);
-	append = ft_lstnew(toknode);
+	append = ft_dlstnew(toknode);
 	if (!append)
 		return (TOK_ERROR);
-	ft_lstadd_back(&(*tok)->toklst, append);
+	ft_dlstadd_back(&(*tok)->toklst, append);
 	char *temp = *remain;
 	*remain = ft_strdup(&(*remain)[token_limit]);
 	ft_free_and_null((void *)&temp);
@@ -269,7 +269,7 @@ void	*ft_init_tok_memory(t_mem **mem)
 
 void	ft_clear_tok_mem(t_tok_mem **tok)
 {
-	ft_lstclear(&(*tok)->toklst, ft_del_token_node);
+	ft_dlstclear(&(*tok)->toklst, ft_del_token_node);
 	ft_free_str_array((*tok)->operators);
 	ft_free_and_null((void *)&(*tok)->str);
 	ft_free_and_null((void *)&(*tok)->remain);
@@ -384,9 +384,9 @@ void	ft_del_token_node(void *content)
 
 
 
-void ft_expand_toklist(t_list **toklst, t_mem **mem)
+void ft_expand_toklist(t_dlist **toklst, t_mem **mem)
 {
-	t_list	*trav;
+	t_dlist	*trav;
 	t_tok_node	*tok_node;
 
 	trav = *toklst;
@@ -399,9 +399,9 @@ void ft_expand_toklist(t_list **toklst, t_mem **mem)
 	}
 }
 
-void ft_debug_list(t_list **head)
+void ft_debug_list(t_dlist **head)
 {
-	t_list *trav;
+	t_dlist *trav;
 
 	trav = *head;
 	//ft_printf(GREY "HEAD -> " RESET);
@@ -455,9 +455,9 @@ void ft_debug_list(t_list **head)
 
 
 
-void ft_debug_indexes(t_list **head)
+void ft_debug_indexes(t_dlist **head)
 {
-	t_list *trav;
+	t_dlist *trav;
 
 	trav = *head;
 	ft_printf("\n");
