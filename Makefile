@@ -29,6 +29,7 @@ PARSER		=	src/luis_redirections.c \
 				src/luis_exec_built_in.c \
 				src/luis_cmd_treatment.c \
 				src/luis_redir_control.c \
+				src/luis_signals.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \

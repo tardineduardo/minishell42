@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/28 15:41:40 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:31:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/history.h>			// for history
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <signal.h>
 
 # define CURRENT_CHAR (*exp)->raw[(*exp)->a]
 # define NEXT_CHAR (*exp)->raw[(*exp)->a + 1]
@@ -396,5 +397,9 @@ void	pipe_fd_control(t_pipe_data *pipe_data, t_cmd_node *cur_cmd, int pipefd[2])
 
 //DEBUG - REMOVER DEPOIS
 void		ft_debug_list(t_list **head);
+
+//signal
+void	handle_signal_prompt(int signo);
+void	handle_signal_cmd(int signo);
 
 #endif

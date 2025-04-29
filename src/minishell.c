@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/19 16:45:28 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/28 17:44:13 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_init_minishell_memory(&mem, envp);
 	while (1)
 	{
+		signal(SIGINT, handle_signal_prompt);
 		if(!ft_readline(&mem))
 		{
 			ft_clean_mem_loop(&mem);

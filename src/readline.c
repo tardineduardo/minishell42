@@ -17,22 +17,24 @@ bool	ft_line_is_incomplete(char *s);
 void	*ft_first_tokenize(t_mem **mem);
 char	*ft_cap_input_loop(t_mem **mem);
 
-
 void	*ft_readline(t_mem **mem)
 {
 	t_cap_mem	*cap;
 
 	cap = (*mem)->capture;
 	cap->line = readline(YELLOW "Minishell> " RESET);
+	//the same as signal Crtl-D
 	if (!cap->line)
-		return (NULL);
+	{
+		ft_exit();
+		return (0);
+	}
 	if (ft_strlen(cap->line) == 0)
 		return (NULL);
 	if (!ft_tokenize(&cap->line, mem))
 		return (NULL);
 	if (!ft_cap_input_loop(mem))
 		return (NULL);
-
 	add_history(cap->line);
 	return (mem);
 }
