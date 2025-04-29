@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/28 19:31:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:53:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct s_ast_node t_ast_node;
 typedef struct s_pipe_data
 {
 	pid_t	child_pids[100];
+	int	status_arr[100];
 	int	pipefd[2];
 	int i;
 	int	num_cmds;
@@ -401,5 +402,8 @@ void		ft_debug_list(t_list **head);
 //signal
 void	handle_signal_prompt(int signo);
 void	handle_signal_cmd(int signo);
+void	signal_before_wait(void);
+void	signal_after_wait(void);
+void	signal_child_process(void);
 
 #endif

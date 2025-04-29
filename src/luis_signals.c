@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:51:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/28 19:30:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:29:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,22 @@ void	handle_signal_cmd(int signo)
 	signal(SIGINT, SIG_DFL);
 	//clean everything that needs to be cleaned
 	exit(130);
+}
+
+void	signal_before_wait(void)
+{
+	signal(SIGINT, SIG_IGN);    // Ignore Ctrl+C during child run
+	signal(SIGQUIT, SIG_IGN);   // Ignore Ctrl+\ during child run
+}
+
+void	signal_after_wait(void)
+{
+	signal(SIGINT, handle_signal_prompt);
+	signal(SIGQUIT, SIG_IGN);   // Keep ignoring in shell
+}
+
+void	signal_child_process(void)
+{
+	signal(SIGINT, SIG_DFL);   // Ctrl+C should kill
+	signal(SIGQUIT, SIG_DFL);  // Ctrl+\ should quit with core dump
 }

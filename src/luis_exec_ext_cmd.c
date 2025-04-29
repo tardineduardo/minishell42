@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:15:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/22 10:02:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:06:17 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,6 @@ void	exec_external_cmd(t_list **ms_env, t_cmd_node *cmd)
 		// make a error msg: command not found
 		//exit("command not found");
 		fprintf(stderr, "%s: command not found\n", cmd_arr[0]);
-		//exit(EXIT_FAILURE);
+		exit(127);
 	}
 }
