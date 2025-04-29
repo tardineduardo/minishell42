@@ -68,10 +68,6 @@ typedef struct s_par_node // s_ork_tok
 	t_oper			oper; // --	aqui uso t_oper em vez de int, mas os valores sao os mesmos
 	int				block_index; //
 	t_block_node	*block_node;
-	char	**wip_cmd_arr;
-	t_list	*wip_input_lst;
-	t_list	*wip_output_lst;
-
 }	t_par_node;
 
 

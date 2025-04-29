@@ -19,6 +19,10 @@
 # include <readline/readline.h>			// for readline
 # include <readline/history.h>			// for history
 
+#include <unistd.h> 					// access
+#include <sys/stat.h> 					// stat, lstat
+#include <stdint.h>						// size-specific integer 
+
 
 # define CURRENT_CHAR (*exp)->raw[(*exp)->a]
 # define NEXT_CHAR (*exp)->raw[(*exp)->a + 1]

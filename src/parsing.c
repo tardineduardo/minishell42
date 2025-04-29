@@ -39,7 +39,7 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 		return (NULL);
 	}
 
-	par->partree = ft_create_partree(tok->toklst);
+	par->parlst = ft_create_parlst(tok->toklst);
 
 	root = parse_expression(&par->parlst);
 	
@@ -49,7 +49,7 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 }
 
 
-t_dlist	*ft_create_partree(t_dlist **toklst)
+t_dlist	*ft_create_parlst(t_dlist **toklst)
 {
 	t_dlist		*trav;
 	t_dlist		*parlst;
@@ -59,10 +59,10 @@ t_dlist	*ft_create_partree(t_dlist **toklst)
 	nbr_of_blocks = count_blocks(*toklst); 
 	parlst = malloc (nbr_of_blocks * sizeof(parnode));
 	trav = parlst;
-	while (trav)
+	while (trav )
 	{
-
-		parse_redirs()
+		if ()
+		parse_all_redirs()
 
 	/////// CONTINUAR AQUI
 
