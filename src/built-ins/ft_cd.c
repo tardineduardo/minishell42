@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:26:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:17:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 
-void	ft_cd(t_list **envlist, char *new_path)
+int	ft_cd(t_list **envlist, char *new_path)
 {
 	t_list 	*trav;
 	t_env_node	*current;
@@ -108,6 +108,7 @@ void	ft_cd(t_list **envlist, char *new_path)
 		else if (errno == 13)
 			ft_printf("bash: cd: %s: Permission denied\n", new_path);
 	}
+	return (0);
 }
 
 
@@ -118,8 +119,6 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value)
 
 	if (!envlist || !variable || !value)
 		return ;
-	
-	
 	trav = *envlist;
 	while (trav)
 	{

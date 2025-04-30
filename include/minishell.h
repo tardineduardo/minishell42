@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/29 15:01:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:22:18 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/history.h>			// for history
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <stdbool.h>
 # include <signal.h>
 
 # define CURRENT_CHAR (*exp)->raw[(*exp)->a]
@@ -291,13 +292,13 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 char *ft_capture_in_interactive_mode(char *prompt);
 
 // built-ins
-void	ft_env(t_list *envlist);
-void	ft_pwd(t_list **envlist);
-void	ft_echo(char *line, bool flag);
-void	ft_cd(t_list **envlist, char *new_path);
+int	ft_env(t_list *envlist);
+int	ft_pwd(t_list **envlist);
+int	ft_echo(char **cmd_arr, t_mem **mem);
+int	ft_cd(t_list **envlist, char *new_path);
+int	ft_export(t_list **envlist, char *variable_value);
+int	ft_unset(t_list **envlist, char *variable);
 void	ft_exit(void);
-void	ft_export(t_list **envlist, char *variable_value);
-void	ft_unset(t_list **envlist, char *variable);
 
 // built-ins helpers
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
@@ -371,12 +372,14 @@ t_ast_node	*parse_expression(t_list **tokens);
 void		print_ast(t_ast_node *node, int depth);
 
 //ast exec
-int 		exec_ast(t_list **ms_env, t_ast_node **root);
+int 		exec_ast(t_list **ms_env, t_ast_node **root, t_mem **mem);
+t_env_node	*ft_init_env_node(char *variable, char *value);
+t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
 
 //execution
-int execute_pipeline(t_list **env, t_list **org_token, int num_cmds);
-int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd);
-int	exec_single_cmd(t_list **ms_env, t_cmd_node *cur_cmd);
+int execute_pipeline(t_list **env, t_list **org_token, int num_cmds, t_mem **mem);
+int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem);
+int	exec_single_cmd(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem);
 
 //external cmd treatment
 char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
@@ -387,7 +390,7 @@ char	**ft_ms_env_arr(t_list **ms_env);
 
 //exec built in
 bool	is_built_in(char **cmd_arr);
-void	exec_built_in(t_list **ms_env, char	**cmd_arr);
+int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem);
 
 //redir control
 void	fd_output_redir(t_list **output_lst);

@@ -29,8 +29,8 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
 	ft_expand_toklist(&tok->toklst, mem);
-	ft_debug_list(&tok->toklst);
-	ft_printf("\n");
+	//ft_debug_list(&tok->toklst);
+	//ft_printf("\n");
 
 	return (mem);
 }
@@ -85,8 +85,8 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 
 	
 
-	ft_debug_list(&(*tok)->toklst);
-	ft_printf(GREY " {%s}\n" RESET, *remain);
+	//ft_debug_list(&(*tok)->toklst);
+	//ft_printf(GREY " {%s}\n" RESET, *remain);
 
 
 	ft_strtrim_overwrite(remain, "\t ");

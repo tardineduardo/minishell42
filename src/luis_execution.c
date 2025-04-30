@@ -6,16 +6,18 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:44:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/29 15:20:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:27:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd)
+int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem)
 {
 	char	**cmd_arr;
+	int		res;
 
+	res = -1;
 	if (!cur_cmd || !ms_env)
 	{
 		perror("cmd or ms_env: cmd executor");
@@ -25,13 +27,13 @@ int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd)
 	// if (cmd_arr == NULL && cur_cmd->output_lst != NULL)
 	// 	file_output_handler(&cur_cmd->output_lst);
 	if (is_built_in(cmd_arr))
-		exec_built_in(ms_env, cmd_arr);
+		res = exec_built_in(ms_env, cmd_arr, mem);
 	else
 		exec_external_cmd(ms_env, cur_cmd);
-	return (0);
+	return (res);
 }
 
-void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_cmd_node *cmd)
+void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_cmd_node *cmd, t_mem **mem)
 {
 	pid_t pid;
 
@@ -46,7 +48,7 @@ void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_cmd_node *cmd
 	{
 		signal_child_process();
 		pipe_fd_control(p, cmd, p->pipefd);
-		execute_command(ms_env, cmd);
+		execute_command(ms_env, cmd, mem);
 		exit(EXIT_SUCCESS);
 	}
 }
@@ -55,38 +57,41 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 	int sig;
 	int	index;
 	int	i;
+	int	res;
 
 	if (p == NULL)
 		i = 1;
 	else
 		i = p->num_cmds;
 	index = 0;
+	res = -1;
 	while (index < i)
 	{
 		if (WIFSIGNALED(status[index]))
 		{
 			sig = WTERMSIG(status[index]);
 			if (sig == SIGQUIT)
-				ft_printf("Quit (core dumped)\n");
+				return(ft_printf("Quit (core dumped)\n"));
+			if (sig == SIGINT)
+				res = (sig + 128);
+			return (res);
 		}
-		//if (WIFEXITED(status[index]))	
-		//	printf("\n\n\nstatus: %d\n\n\n", WEXITSTATUS(status[index]));
-		//else 
-		printf("\n\n\nstatus: %d\n\n\n", status[index]);
+		if (WIFEXITED(status[index]))
+			res = WEXITSTATUS(status[index]);
 		index++;
 	}
-	return (0);
+	return (res);
 }
 
-int	exec_single_cmd(t_list **ms_env, t_cmd_node *cmd)
+int	exec_single_cmd(t_list **ms_env, t_cmd_node *cmd, t_mem **mem)
 {
 	pid_t	pid;
 	int		status;
 	char	**cmd_arr;
+	int		res;
 
+	res = -1;
 	cmd_arr = cmd->cmd_arr;
-	// if (cmd_arr == NULL && cmd->output_lst != NULL)
-	// 	file_output_handler(&cmd->output_lst);
 	if (!is_built_in(cmd_arr))
 	{
 		pid = fork();
@@ -98,17 +103,17 @@ int	exec_single_cmd(t_list **ms_env, t_cmd_node *cmd)
 		if (pid == 0)
 		{
 			signal_child_process();
-			execute_command(ms_env, cmd);
+			execute_command(ms_env, cmd, mem);
 			exit(EXIT_SUCCESS);
 		}
 		signal_before_wait();
 		waitpid(pid, &status, 0);
 		signal_after_wait();
-		print_child_statuses(NULL, &status);
+		res = print_child_statuses(NULL, &status);
 	}
 	else
-		execute_command(ms_env, cmd);
-	return (0);
+		res = execute_command(ms_env, cmd, mem);
+	return (res);
 }
 
 int	wait_for_all_children(t_pipe_data p)
@@ -131,7 +136,7 @@ int	wait_for_all_children(t_pipe_data p)
 	return(print_child_statuses(&p, p.status_arr));
 }
 
-int execute_pipeline(t_list **env, t_list **org_token, int num_cmds)
+int execute_pipeline(t_list **env, t_list **org_token, int num_cmds, t_mem **mem)
 {
 	t_pipe_data p;
 	t_list *node;
@@ -149,7 +154,7 @@ int execute_pipeline(t_list **env, t_list **org_token, int num_cmds)
 			perror("pipe");
 			exit(1);
 		}
-		execute_child_pipe_command(&p, env, (t_cmd_node *)node->content);
+		execute_child_pipe_command(&p, env, (t_cmd_node *)node->content, mem);
 		if (p.i > 0)
 			close(p.prev_fd);
 		p.prev_fd = p.pipefd[0];

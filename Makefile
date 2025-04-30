@@ -4,8 +4,6 @@ READLINE 	=	src/readline.c \
 
 HEREDOC 	=	src/heredocs.c \
 
-EXECUTE 	=	src/execute.c \
-
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
@@ -44,7 +42,6 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(MEMORY:.c=.o) \
 			$(TOKEN:.c=.o) \
 			$(ENVIRON:.c=.o) \
-			$(EXECUTE:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \

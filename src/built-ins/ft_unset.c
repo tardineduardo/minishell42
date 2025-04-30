@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:43:00 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:34:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:21:35 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 // }
 
 
-void	ft_unset(t_list **envlist, char *variable)
+int	ft_unset(t_list **envlist, char *variable)
 {
 	t_list		*trav;
 	t_env_node	*current;
@@ -55,7 +55,7 @@ void	ft_unset(t_list **envlist, char *variable)
 	trav = *envlist;
 
 	if (ft_strchr(variable, '=') != NULL)
-		return ;
+		return (-1);
 	while (trav)
 	{
 		current = (t_env_node *)trav->content;
@@ -70,8 +70,9 @@ void	ft_unset(t_list **envlist, char *variable)
 			// Só para a mensagem de erro ser correta. 
 			// else if (current->block_unset == true)
 			//	ft_printf("Error: cannot unset blocked variable\n");
-			return ;
+			return (-1);
 		}
 		trav = trav->next;
 	}
+	return (0);
 }

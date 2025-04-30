@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:28:08 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:18:54 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 
 //@luiscarvalhofrade essa lógica a gente preisa rever depois, pois
 //podemos passar uma variável vazia, tipo "NOVA_VAR="
-void	ft_export(t_list **envlist, char *variable_value)
+int	ft_export(t_list **envlist, char *variable_value)
 {
 	char	**result;
 	t_list	*trav;
@@ -53,14 +53,14 @@ void	ft_export(t_list **envlist, char *variable_value)
 			{
 				ft_ms_env_update_export(envlist, result[0], result[1]);
 				ft_free_split(result, 2);
-				return ;
+				return (0);
 			}
 		}
 		trav = trav->next;
 	}
 	ft_free_and_null_str_array(&result);
 	ft_ms_env_add(envlist, variable_value);
-	return ;
+	return (0);
 }
 
 void	ft_ms_env_add(t_list **envlist, char *variable_value)

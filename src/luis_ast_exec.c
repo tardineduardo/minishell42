@@ -6,28 +6,30 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:26:50 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/29 15:01:48 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 13:33:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int exec_ast(t_list **ms_env, t_ast_node **root)
+int exec_ast(t_list **ms_env, t_ast_node **root, t_mem **mem)
 {
+	int	res = -1;
+
     if (!root) 
 		return (0);
 	if ((*root)->type == NODE_COMMAND)
-		return (exec_single_cmd(ms_env, (*root)->cmd));
+		res = exec_single_cmd(ms_env, (*root)->cmd, mem);
 	else if ((*root)->type == NODE_LOGICAL && (*root)->logical->op == OP_AND)
 	{
-		if (exec_ast(ms_env, &(*root)->logical->left) == 0)
-			return (exec_ast(ms_env, &(*root)->logical->right));
+		if (exec_ast(ms_env, &(*root)->logical->left, mem) == 0)
+			return (exec_ast(ms_env, &(*root)->logical->right, mem));
 		return (1);
 	}
 	else if ((*root)->type == NODE_LOGICAL && (*root)->logical->op == OP_OR)
 	{
-		if (exec_ast(ms_env, &(*root)->logical->left) != 0)
-			return (exec_ast(ms_env, &(*root)->logical->right));
+		if (exec_ast(ms_env, &(*root)->logical->left, mem) != 0)
+			return (exec_ast(ms_env, &(*root)->logical->right, mem));
 		return (0);
 	}
 	else if ((*root)->type == NODE_SUBSHELL)
@@ -35,7 +37,7 @@ int exec_ast(t_list **ms_env, t_ast_node **root)
 		pid_t pid = fork();
 		if (pid == 0)
 		{
-			int ret = exec_ast(ms_env, &(*root));
+			int ret = exec_ast(ms_env, &(*root), mem);
 			exit(ret);
 		}
 		else
@@ -48,6 +50,6 @@ int exec_ast(t_list **ms_env, t_ast_node **root)
 		}
 	}
 	else if ((*root)->type == NODE_PIPELINE)
-		return (execute_pipeline(ms_env, &(*root)->pipeline->cmds, (*root)->pipeline->cmd_count));
-    return (1);
+		res = execute_pipeline(ms_env, &(*root)->pipeline->cmds, (*root)->pipeline->cmd_count, mem);
+    return (res);
 }
