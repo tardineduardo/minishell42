@@ -66,6 +66,13 @@ typedef struct s_dlist
 	struct s_dlist	*prev;
 } t_dlist;
 
+typedef struct s_dll
+{
+	void			*content;
+	struct s_dlist	*next;
+	struct s_dlist	*prev;
+} t_dll;
+
 typedef struct s_btree
 {
 struct s_btree	*left;

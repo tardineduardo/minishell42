@@ -6,16 +6,6 @@
 
 
 
-typedef enum e_redir_type
-{
-	IN,
-	OUT,
-	APPEND,
-	HEREDOC,	
-	WILDCARD,
-}	t_redir_type;
-
-
 typedef enum e_syntax
 {
 	ERROR1 = 0,
@@ -47,7 +37,7 @@ typedef enum e_oper
 
 typedef struct s_redirs
 {
-	t_redir_type	type;
+	t_oper	type;
 	char			*path;
 	int				err;
 }					t_redirs;

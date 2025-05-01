@@ -136,20 +136,20 @@ typedef struct s_input_node
 
 
 
-//luis part 
-int	ft_ast_create(t_mem **mem);
+// //luis part 
+// int	ft_ast_create(t_mem **mem);
 
-//command utils
-t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
-char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
-void			*ft_cmd_org(t_list **org_tok);
+// //command utils
+// t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
+// char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
+// void			*ft_cmd_org(t_list **org_tok);
 
-//redirections
-int		is_redirection(char *value);
-void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
+// //redirections
+// int		is_redirection(char *value);
+// void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
 
-//ast create
-t_ast_node	*parse_expression(t_list **tokens);
-void		print_ast(t_ast_node *node, int depth);
+// //ast create
+// t_ast_node	*parse_expression(t_list **tokens);
+// void		print_ast(t_ast_node *node, int depth);
 
 #endif

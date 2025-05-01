@@ -28,10 +28,10 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	ft_init_hdc_memory(mem);
 	ft_init_tok_memory(mem);
 	ft_init_rdl_memory(mem);
-	ft_init_par_memory(mem);
+//	ft_init_par_memory(mem);
 	if (!(*mem)->heredoc 	|| !(*mem)->readline || 
 		!(*mem)->tokenize 	|| !(*mem)->environs ||
-		!(*mem)->expand 	|| !(*mem)->parsing)
+		!(*mem)->expand 	) //|| !(*mem)->parsing)
 		exit(1);
 	if (!ft_init_operators(&(*mem)->tokenize))
 		ft_clear_mem_and_exit(mem);
@@ -45,7 +45,7 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_rdl_mem(&(*mem)->readline);
 	ft_clear_tok_mem(&(*mem)->tokenize);
 	ft_clear_exp_mem(&(*mem)->expand);
-	ft_clear_par_mem(&(*mem)->parsing);
+	//ft_clear_par_mem(&(*mem)->parsing);
 	ft_clear_env_mem(&(*mem)->environs);
 	rl_clear_history();
 	free(*mem);

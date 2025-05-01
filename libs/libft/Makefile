@@ -102,8 +102,8 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lst_destroy_node.c \
 		lists/slist/ft_lst_unlink_node.c \
 		lists/clist/ft_clistsize.c \
-		lists/dclist/ft_dclistsize.c \
 		lists/slist/ft_lstcopy.c \
+#		lists/dclist/ft_dclistsize.c \
 
 
 DEBUG =	debug/ft_debug_print_array_of_ints.c \
@@ -123,7 +123,7 @@ OBJS =	$(PRINT:.c=.o) \
 		$(VALID:.c=.o) \
 		$(GNL:.c=.o) \
 		$(SORT:.c=.o) \
-		$(DEBUG:.c=.o) \
+#		$(DEBUG:.c=.o) \
 
 CC = cc
 

@@ -57,7 +57,7 @@ t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem)
 t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit, t_mem **mem)
 {
 	t_tok_node	*toknode;
-	t_dlist		*append;
+	t_list		*append;
 	char		*new_string;
 
 	new_string = ft_substr((*remain), 0, token_limit);
@@ -67,10 +67,10 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok, int token_limit
 	if (!ft_init_toknode(new_string, toknode, tok, mem))
 		return (TOK_ERROR); //-------------------> SYNTAX ERROR 
 	ft_free_and_null((void *)&new_string);
-	append = ft_dlstnew(toknode);
+	append = ft_lstnew(toknode);
 	if (!append)
 		return (TOK_ERROR);
-	ft_dlstadd_back(&(*tok)->toklst, append);
+	ft_lstadd_back(&(*tok)->toklst, append);
 	char *temp = *remain;
 	*remain = ft_strdup(&(*remain)[token_limit]);
 	ft_free_and_null((void *)&temp);
@@ -105,11 +105,45 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 	if (!node->value)
 		return (NULL);
 	node->oper = ft_get_oper(newstring);
+	if (!process_heredoc(node, tok, mem))
+		return (NULL);						//Retorna null se houver erro de sintaxe e develve o prompt					
+	capture_values_for_parsing_later(newstring, node, tok);
+
+
+
+
+//	if (ft_strncmp(newstring, "|", 1) == 0)
+
+	return (node);
+}
+
+
+void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_mem **tok)
+{
+	if (is_a_luis_operator(newstring))
+	{
+		node->block_index = -1;
+		if ((*tok)->previous->block_index != -1)
+			(*tok)->block_count++;
+	}
+	else
+		node->block_index = (*tok)->block_count;	// Essa é a contagem que o Luis precisa ()
+	node->index = (*tok)->index_count;				// Isso eu estou gravando, mas não estamos usando ainda.
+													// É o index de onde começa o token na linha original.
+	(*tok)->previous = node;
+}
+
+
+
+void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
+{
 	if ((*tok)->get_delimiter)
 	{
 		if (node->oper != WORD)
+		{
+			 // PREENCHER ERRO !!!!!!!!!
 			return (NULL);
-	
+		}
 		node->heredoc_path = ft_heredoc(node->value, mem);
 		(*tok)->get_delimiter = false;
 	}
@@ -117,17 +151,28 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 		node->heredoc_path = NULL;
 	if (node->oper == HEREDOC_R)
 		(*tok)->get_delimiter = true;
-	if (ft_strncmp(newstring, "|", 1) == 0)
-	{
-		node->block_index = -1;
-		(*tok)->block_count++;
-	}
-	else
-		node->block_index = (*tok)->block_count;	// Essa é a contagem que o Luis precisa ()
-	node->index = (*tok)->index_count;				// Isso eu estou gravando, mas não estamos usando ainda.
-													// É o index de onde começa o token na linha original.
-	return (node);
+	return (node);	
 }
+
+
+
+
+
+bool is_a_luis_operator(char *string)
+{
+	if (ft_strcmp("&&", string) == 0)
+		return (true);
+	else if (ft_strcmp("||", string) == 0)
+		return (true);
+	else if (ft_strcmp("(", string) == 0)
+		return (true);
+	else if (ft_strcmp(")", string) == 0)
+		return (true);
+	else if (ft_strcmp("|", string) == 0)
+		return (true);
+	return (false);
+}
+
 
 //que preguica de dividir isso em duas funcoes...
 t_oper	ft_get_oper(char *value)
@@ -269,7 +314,7 @@ void	*ft_init_tok_memory(t_mem **mem)
 
 void	ft_clear_tok_mem(t_tok_mem **tok)
 {
-	ft_dlstclear(&(*tok)->toklst, ft_del_token_node);
+	ft_lstclear(&(*tok)->toklst, ft_del_token_node);
 	ft_free_str_array((*tok)->operators);
 	ft_free_and_null((void *)&(*tok)->str);
 	ft_free_and_null((void *)&(*tok)->remain);
@@ -384,9 +429,9 @@ void	ft_del_token_node(void *content)
 
 
 
-void ft_expand_toklist(t_dlist **toklst, t_mem **mem)
+void ft_expand_toklist(t_list **toklst, t_mem **mem)
 {
-	t_dlist	*trav;
+	t_list	*trav;
 	t_tok_node	*tok_node;
 
 	trav = *toklst;
@@ -399,9 +444,9 @@ void ft_expand_toklist(t_dlist **toklst, t_mem **mem)
 	}
 }
 
-void ft_debug_list(t_dlist **head)
+void ft_debug_list(t_list **head)
 {
-	t_dlist *trav;
+	t_list *trav;
 
 	trav = *head;
 	//ft_printf(GREY "HEAD -> " RESET);
@@ -455,9 +500,9 @@ void ft_debug_list(t_dlist **head)
 
 
 
-void ft_debug_indexes(t_dlist **head)
+void ft_debug_indexes(t_list **head)
 {
-	t_dlist *trav;
+	t_list *trav;
 
 	trav = *head;
 	ft_printf("\n");
@@ -476,7 +521,7 @@ void ft_debug_indexes(t_dlist **head)
 
 		char *value = ((t_tok_node *)trav->content)->value;
 		int index = ((t_tok_node *)trav->content)->index;
-		int block =  ((t_tok_node *)trav->content)->block;
+		int block =  ((t_tok_node *)trav->content)->block_index;
 		t_oper oper = ((t_tok_node *)trav->content)->oper;
 		if (trav->next)
 			nextoper = ((t_tok_node *)trav->next->content)->oper;
@@ -527,10 +572,11 @@ void ft_debug_indexes(t_dlist **head)
 		}
 
 		ft_printf("\n");
-		if (nextoper == PIPE_O)
-			ft_printf("---------------------------------------------------\n");
-		if (oper == PIPE_O)
-			ft_printf("---------------------------------------------------\n");
+		(void)nextoper;
+		// if (nextoper == PIPE_O || nextoper == AND_O || nextoper == OR_O || nextoper == GROUP_START_O || nextoper == GROUP_END_O)
+		// 	ft_printf("---------------------------------------------------\n");
+		// if (oper == PIPE_O || nextoper == AND_O || nextoper == OR_O || nextoper == GROUP_START_O || nextoper == GROUP_END_O)
+		// 	ft_printf("---------------------------------------------------\n");
 		trav = trav->next;
 	}
 

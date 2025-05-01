@@ -18,7 +18,7 @@ ENVIRON 	=	src/environs.c \
 
 OPERATORS 	=	src/operators.c \
 
-PARSER		=	src/parsing.c \
+PARSER		=	#src/parsing.c \
 				# src/luis_redirections.c \
 				# src/luis_commands_utils.c \
 				# src/luis_commands.c \

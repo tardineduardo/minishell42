@@ -16,7 +16,7 @@ typedef struct 	s_tok_node
 	char		*value;
 	bool		double_quote;		//se der tempo, usar a mesma funcao de aspas de expand.
 	bool		single_quote;
-	size_t		block_index;
+	int			block_index;
 	size_t		index;
 	t_oper		oper;
 	char		*heredoc_path;
@@ -24,12 +24,13 @@ typedef struct 	s_tok_node
 
 typedef struct	s_tok_mem
 {
-	t_dlist		*toklst;
+	t_list		*toklst;
 	char		**operators;
 	t_list		*last_of_list;
 	t_tok_node	*last_of_toks;
 	t_list		*new;
 	t_tok_node	*node;
+	t_tok_node	*previous;
 	char		*str;
 	t_quote		quote;
 	char		*remain;
@@ -45,6 +46,7 @@ int			ft_count_spaces(char *s);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
+bool is_a_luis_operator(char *string);
 void		ft_del_token_node(void *content);
 void		ft_expand_toklist(t_list **toklst, t_mem **mem);
 void		ft_tokeniztion_escape(int *i);
@@ -56,10 +58,14 @@ t_tok_exit	ft_append_new_toknode(char **remain, t_tok_mem **tok,
 t_oper		ft_get_oper(char *value);
 void		*ft_init_operators(t_tok_mem **tok);
 void		ft_del_token_node(void *content);
+void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem);
+void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_mem **tok);
+
+
 
 //debug
-void		ft_debug_indexes(t_dlist **head);
+void		ft_debug_indexes(t_list **head);
 void		ft_print_oper(t_oper oper);
-void		ft_debug_list(t_dlist **head);
+void		ft_debug_list(t_list **head);
 
 #endif

@@ -16,10 +16,10 @@
 #include "../include/tokenize.h"
 
 t_list		*ft_classify_tokens(t_mem **mem);
-void		*ft_append_new_parsed_token(t_dlist *tokens, t_par_mem **par);
-void		set_positions(t_dlist **org_tokens);
+void		*ft_append_new_parsed_token(t_list *tokens, t_par_mem **par);
+void		set_positions(t_list **org_tokens);
 t_oper		update_oper2(char *value);
-void		*ft_cmd_org(t_dlist **org_tok);
+void		*ft_cmd_org(t_list **org_tok);
 
 
 // RETORNA O POINTER PARA ROOT DE AST
@@ -49,10 +49,10 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 }
 
 
-t_dlist	*ft_create_parlst(t_dlist **toklst)
+t_list	*ft_create_parlst(t_list **toklst)
 {
-	t_dlist		*trav;
-	t_dlist		*parlst;
+	t_list		*trav;
+	t_list		*parlst;
 	t_par_node	*parnode;
 	int			nbr_of_blocks;
 
@@ -77,29 +77,51 @@ t_dlist	*ft_create_parlst(t_dlist **toklst)
 
 
 
-int	count_blocks(t_dlist **toklst)
-{
-	bool		inside_paren;
-	t_dlist		*trav;
-	t_tok_node	*node;
-	int			count;
 
-	inside_paren = false;
-	trav = *toklst;
-	count = 0;
-	while(trav)
+
+int    counter_num_blocks(t_list **parlist)
+{
+	t_list		*trav;
+	t_par_node	*par;
+	int         total_cmds;
+
+	trav = *parlist;
+	total_cmds = 0;
+	while (trav)
 	{
-		node = ((t_tok_node *)trav->content);
-		if (node->value[0] == '(' && !inside_paren)
-			inside_paren = true;
-		else if (node->value[0] == ')' && inside_paren)
-			inside_paren = false;
-		if (node->value[0] == '|' && !inside_paren)
-			count++;
-		trav = trav->next;
+		par = (t_par_node *)trav->content;
+		if (par->block_index != -1)
+			total_cmds = par->block_index;
+		par = par->next;
 	}
-	return (count + 1);
+	return (total_cmds + 1);
 }
+
+
+
+// int	count_blocks(t_dlist **toklst)
+// {
+// 	bool		inside_paren;
+// 	t_dlist		*trav;
+// 	t_tok_node	*node;
+// 	int			count;
+
+// 	inside_paren = false;
+// 	trav = *toklst;
+// 	count = 0;
+// 	while(trav)
+// 	{
+// 		node = ((t_tok_node *)trav->content);
+// 		if (node->value[0] == '(' && !inside_paren)
+// 			inside_paren = true;
+// 		else if (node->value[0] == ')' && inside_paren)
+// 			inside_paren = false;
+// 		if (node->value[0] == '|' && !inside_paren)
+// 			count++;
+// 		trav = trav->next;
+// 	}
+// 	return (count + 1);
+// }
 
 
 
