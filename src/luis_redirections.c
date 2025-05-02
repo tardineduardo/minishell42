@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 13:16:58 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 18:47:23 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:28:29 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,19 @@ void	ft_ap_nw_in(t_cmd_node *cmd, char *name)
 
 void    ft_create_input_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
 {
-	t_org_tok       *tok;
+	t_org_tok *tok;
 
 	while (tokens)
 	{
 		tok = tokens->content;
-		/* TODO create here the case for heredoc, connect to the right file */
 		if (tok->cmd == index_cmd && ft_strcmp("<", tok->value) == 0)
 		{
 			tokens = tokens->next;
+			if (!tokens)
+				break;
 			tok = tokens->content;
-			if (tokens && tok->cmd == index_cmd)
-				ft_ap_nw_in(cmd, ((t_org_tok *)tokens->content)->value);
+			if (tok->cmd == index_cmd)
+				ft_ap_nw_in(cmd, tok->value);
 		}
 		tokens = tokens->next;
 	}
@@ -81,16 +82,20 @@ void    ft_create_output_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
 		if (tok->cmd == index_cmd && ft_strcmp(">>", tok->value) == 0)
 		{
 			tokens = tokens->next;
+			if (!tokens)
+				break ;
 			tok = tokens->content;
-			if (tokens && tok->cmd == index_cmd)
-				ft_ap_nw_out(cmd, ((t_org_tok *)tokens->content)->value, false);
+			if (tok->cmd == index_cmd)
+				ft_ap_nw_out(cmd, tok->value, false);
 		}
 		if (tok->cmd == index_cmd && ft_strcmp(">", tok->value) == 0)
 		{
 			tokens = tokens->next;
+			if (!tokens)
+				break ;
 			tok = tokens->content;
-			if (tokens && tok->cmd == index_cmd)
-				ft_ap_nw_out(cmd, ((t_org_tok *)tokens->content)->value, true);
+			if (tok->cmd == index_cmd)
+				ft_ap_nw_out(cmd, tok->value, true);
 		}
 		tokens = tokens->next;
 	}

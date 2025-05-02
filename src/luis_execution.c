@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:44:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 15:27:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:57:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int	exec_single_cmd(t_list **ms_env, t_cmd_node *cmd, t_mem **mem)
 		if (pid == 0)
 		{
 			signal_child_process();
+			fd_input_redir(&cmd->input_lst);
+			fd_output_redir(&cmd->output_lst);
 			execute_command(ms_env, cmd, mem);
 			exit(EXIT_SUCCESS);
 		}

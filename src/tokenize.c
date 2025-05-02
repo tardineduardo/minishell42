@@ -28,7 +28,7 @@ void	*ft_tokenize(char **line, t_mem **mem)
 	ft_free_and_null((void *)&tok->remain);
 	
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
-	ft_expand_toklist(&tok->toklst, mem);
+	//ft_expand_toklist(&tok->toklst, mem);
 	//ft_debug_list(&tok->toklst);
 	//ft_printf("\n");
 
