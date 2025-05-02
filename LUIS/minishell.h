@@ -176,11 +176,11 @@ typedef struct 	s_env_node
 
 typedef struct	s_tok_mem
 {
-	t_list		*toklst;
+	t_dlist		*toklst;
 	char		**operators;
-	t_list		*last_of_list;
+	t_dlist		*last_of_list;
 	t_tok_node	*last_of_toks;
-	t_list		*new;
+	t_dlist		*new;
 	t_tok_node	*node;
 	char		*str;
 	t_quote		quote;

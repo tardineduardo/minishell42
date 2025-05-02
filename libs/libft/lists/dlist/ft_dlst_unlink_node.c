@@ -15,7 +15,7 @@ t_dlist	*ft_dlst_unlink_node(t_dlist **head, t_dlist *node)
 		*head = node->next;
 		if (node->next)
 			node->next->prev = NULL;
-		return (head);
+		return (*head);
 	}
 	trav = *head;
 	while (trav != NULL && trav != node)
@@ -26,7 +26,7 @@ t_dlist	*ft_dlst_unlink_node(t_dlist **head, t_dlist *node)
 		trav->prev->next = trav->next;
 	if (trav->next)
 		trav->next->prev = trav->prev;
-	return (head);
+	return (*head);
 }
 
 /* quick version, does not check if node is in head. returns NULL if params
@@ -40,11 +40,11 @@ t_dlist	*ft_dlst_quick_unlink_node(t_dlist **head, t_dlist *node)
 		*head = node->next;
 		if (node->next)
 			node->next->prev = NULL;
-		return (head);
+		return (*head);
 	}
 	if (node->prev)
 		node->prev->next = node->next;
 	if (node->next)
 		node->next->prev = node->prev;
-	return (head);
+	return (*head);
 }

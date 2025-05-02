@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 13:49:21 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/18 15:07:17 by eduribei         ###   ########.fr       */
+/*   Created: 2024/05/21 14:33:44 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/18 15:06:58 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft.h"
 
-int	ft_dlstsize(t_dlist *lst)
+void	ft_dclstclear_simple(t_dll **tail)
 {
-	int		counter;
-	t_dlist	*trav;
+	t_dll	*temp;
+	t_dll	*next_node;
 
-	trav = lst;
-	counter = 0;
-	while (trav != NULL)
+	if (tail == NULL || *tail == NULL)
+		return ;
+	temp = (*tail)->next;
+	while (temp != *tail)
 	{
-		trav = trav->next;
-		counter++;
+		next_node = temp->next;
+		free(temp);
+		temp = next_node;
 	}
-	return (counter);
+	free(*tail);
+	*tail = NULL;
 }

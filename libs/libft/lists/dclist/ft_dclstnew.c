@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   ft_dclstnew.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 13:49:21 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/18 15:07:17 by eduribei         ###   ########.fr       */
+/*   Created: 2024/11/12 18:18:44 by eduribei          #+#    #+#             */
+/*   Updated: 2024/11/12 18:18:48 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft.h"
 
-int	ft_dlstsize(t_dlist *lst)
+t_dll	*ft_dclstnew(void *content)
 {
-	int		counter;
-	t_dlist	*trav;
+	t_dll	*temp;
 
-	trav = lst;
-	counter = 0;
-	while (trav != NULL)
-	{
-		trav = trav->next;
-		counter++;
-	}
-	return (counter);
+	temp = malloc(sizeof(t_dll));
+	if (!temp)
+		return (NULL);
+	temp->content = content;
+	temp->next = temp;
+	temp->prev = temp;
+	return (temp);
 }

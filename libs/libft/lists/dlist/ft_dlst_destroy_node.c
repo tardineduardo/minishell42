@@ -11,17 +11,17 @@ t_dlist	*ft_dlst_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*))
 	t_dlist	*trav;
 
 	if (!head || !*head || !node)
-		return ;
+		return (NULL);
 	if (*head == node)
 	{
 		ft_handle_head(head, node, del);
-		return (head);
+		return (*head);
 	}
 	trav = *head;
 	while (trav != NULL && trav != node)
 		trav = trav->next;
 	if (trav == NULL)
-		return ;
+		return (NULL);
 	if (trav->prev)
 		trav->prev->next = trav->next;
 	if (trav->next)
@@ -29,7 +29,7 @@ t_dlist	*ft_dlst_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*))
 	if (del)
 		(*del)(trav->content);
 	free(trav);
-	return ;
+	return (*head);
 }
 
 t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*))
@@ -44,7 +44,7 @@ t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node, void (*del)(v
 		if (del)
 			(*del)(node->content);
 		free(node);	
-		return (head);
+		return (*head);
 	}
 	if (node->prev)
 		node->prev->next = node->next;
@@ -53,7 +53,7 @@ t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node, void (*del)(v
 	if (del)
 		(*del)(node->content);
 	free(node);	
-	return (head);
+	return (*head);
 }
 
 static void	ft_handle_head(t_dlist **head, t_dlist *node, void (*del)(void*))

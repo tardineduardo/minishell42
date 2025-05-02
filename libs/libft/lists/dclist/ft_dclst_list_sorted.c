@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   ft_dclst_list_sorted.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 13:49:21 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/18 15:07:17 by eduribei         ###   ########.fr       */
+/*   Created: 2024/11/14 19:23:56 by eduribei          #+#    #+#             */
+/*   Updated: 2024/11/14 19:27:05 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft.h"
 
-int	ft_dlstsize(t_dlist *lst)
+bool	ft_dclst_list_sortd(t_dll **tail, t_accessor get_label)
 {
-	int		counter;
-	t_dlist	*trav;
+	int		len;
+	int		curr;
+	int		next;
+	t_dll	*trav;
 
-	trav = lst;
-	counter = 0;
-	while (trav != NULL)
+	len = ft_dclstsize(tail);
+	trav = (*tail)->next;
+	if (len < 0)
+		ft_perror_exit("ft_dclstsize error", EINVAL);
+	if (len == 1 || len == 0)
+		return (true);
+	while (len > 1)
 	{
+		curr = *(int *)get_label(trav);
+		next = *(int *)get_label(trav->next);
+		if (curr > next)
+			return (false);
 		trav = trav->next;
-		counter++;
+		len--;
 	}
-	return (counter);
+	return (true);
 }

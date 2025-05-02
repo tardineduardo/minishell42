@@ -24,14 +24,14 @@ typedef enum e_oper
 	GROUP_END_O,
 	PIPE_O,
 	BCKGRND_O,
-	IN_R,
-	OUT_R,
-	APPEND_R,
-	ERROR_R,
-	HEREDOC_R,		
-	HERESTR_R,		
-	WILDCARD_R,		
-	OUT_ERROR_R,
+	IN_R, 				//NAO MEXER NA ORDEM!!!!
+	OUT_R,//NAO MEXER NA ORDEM!!!!
+	APPEND_R,//NAO MEXER NA ORDEM!!!!
+	ERROR_R,//NAO MEXER NA ORDEM!!!!
+	HEREDOC_R,		//NAO MEXER NA ORDEM!!!!
+	HERESTR_R,		//NAO MEXER NA ORDEM!!!!
+	WILDCARD_R,		//NAO MEXER NA ORDEM!!!!
+	OUT_ERROR_R,//NAO MEXER NA ORDEM!!!!
 }	t_oper;
 
 
@@ -66,7 +66,6 @@ typedef struct s_par_node // s_ork_tok
 typedef struct s_par_mem
 {
 	t_list			*parlst;
-	t_btree			*partree;
 	char			*syntax_error;
 }					t_par_mem;
 

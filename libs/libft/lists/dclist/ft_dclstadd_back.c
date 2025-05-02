@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   ft_dclstadd_back.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 13:49:21 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/18 15:07:17 by eduribei         ###   ########.fr       */
+/*   Created: 2024/05/21 13:49:50 by eduribei          #+#    #+#             */
+/*   Updated: 2024/11/12 18:40:48 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft.h"
 
-int	ft_dlstsize(t_dlist *lst)
+// back means the end of the list, right after the last element.
+void	ft_dclstadd_back(t_dll **tail, t_dll *new)
 {
-	int		counter;
-	t_dlist	*trav;
-
-	trav = lst;
-	counter = 0;
-	while (trav != NULL)
+	if (new == NULL)
+		return ;
+	if (*tail == NULL)
+		*tail = new;
+	else
 	{
-		trav = trav->next;
-		counter++;
+		new->next = (*tail)->next;
+		new->prev = *tail;
+		(*tail)->next = new;
+		new->next->prev = new;
+		*tail = new;
 	}
-	return (counter);
 }

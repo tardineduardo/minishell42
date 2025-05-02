@@ -61,7 +61,7 @@ void ft_clean_mem_loop(t_mem **mem)
 	hd = (*mem)->heredoc;
 	//PASRSING
 
-	ft_lstclear(&tok->toklst, ft_del_token_node);
+	ft_dlstclear(&tok->toklst, ft_del_token_node);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);

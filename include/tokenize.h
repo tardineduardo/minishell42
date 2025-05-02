@@ -24,7 +24,7 @@ typedef struct 	s_tok_node
 
 typedef struct	s_tok_mem
 {
-	t_list		*toklst;
+	t_dlist		*toklst;
 	char		**operators;
 	t_list		*last_of_list;
 	t_tok_node	*last_of_toks;
@@ -48,7 +48,7 @@ int			ft_find_word_limit(t_tok_mem **tok, char *str);
 bool		ft_is_operator(char *str, t_tok_mem **tok, int *op_len);
 bool is_a_luis_operator(char *string);
 void		ft_del_token_node(void *content);
-void		ft_expand_toklist(t_list **toklst, t_mem **mem);
+void		ft_expand_toklist(t_dlist **toklst, t_mem **mem);
 void		ft_tokeniztion_escape(int *i);
 t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok,
 			t_mem **mem);
@@ -64,8 +64,8 @@ void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_m
 
 
 //debug
-void		ft_debug_indexes(t_list **head);
+void		ft_debug_indexes(t_dlist **head);
 void		ft_print_oper(t_oper oper);
-void		ft_debug_list(t_list **head);
+void		ft_debug_list(t_dlist **head);
 
 #endif
