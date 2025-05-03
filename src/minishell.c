@@ -34,7 +34,8 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		// if(!ft_ast_create(&mem))
+		ft_parsing(&mem);
+		// if(!ft_parsing(&mem))
 		// {
 		// 	ft_clean_mem_loop(&mem);
 		// 	continue ;

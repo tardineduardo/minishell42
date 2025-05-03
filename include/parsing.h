@@ -20,18 +20,18 @@ typedef enum e_oper
 	WORD = -1,
 	AND_O = 0, 
 	OR_O,
-	GROUP_START_O,
-	GROUP_END_O,
+	GSTART_O,
+	GEND_O,
 	PIPE_O,
-	BCKGRND_O,
-	IN_R, 				//NAO MEXER NA ORDEM!!!!
-	OUT_R,//NAO MEXER NA ORDEM!!!!
-	APPEND_R,//NAO MEXER NA ORDEM!!!!
-	ERROR_R,//NAO MEXER NA ORDEM!!!!
-	HEREDOC_R,		//NAO MEXER NA ORDEM!!!!
-	HERESTR_R,		//NAO MEXER NA ORDEM!!!!
-	WILDCARD_R,		//NAO MEXER NA ORDEM!!!!
-	OUT_ERROR_R,//NAO MEXER NA ORDEM!!!!
+	IN_R,
+	OUT_R,
+	APPD_R,
+	HDC_R,
+	WILD_R,
+	ERROR_R,
+	HSTR_R,
+	OERR_R,
+	BCKG_O,
 }	t_oper;
 
 
@@ -42,7 +42,6 @@ typedef struct s_redirs
 	int				err;
 }					t_redirs;
 
-
 typedef struct s_block_node // s_cmd_node
 {
 	char	**cmd_arr;
@@ -50,7 +49,6 @@ typedef struct s_block_node // s_cmd_node
 	t_list	*output_lst;
 	int		err;
 }			t_block_node;
-
 
 typedef struct s_par_node // s_ork_tok
 {
@@ -69,8 +67,17 @@ typedef struct s_par_mem
 	char			*syntax_error;
 }					t_par_mem;
 
-void	*ft_init_par_memory(t_mem **mem);
-void	ft_clear_par_mem(t_par_mem **par);
+void		*ft_init_par_memory(t_mem **mem);
+void		ft_clear_par_mem(t_par_mem **par);
+t_syntax	ft_check_syntax(t_dlist *parlst);
+t_list		*ft_create_parlst(t_dlist **toklst);
+int			counter_num_cmdblocks(t_dlist **toklst);
+int			counter_num_parsnodes(t_dlist **toklst);
+t_syntax	operators_are_supported(t_dlist *parlst);
+t_syntax	redirects_are_complete(t_dlist *parlst);
+
+
+
 
 
 void		*ft_parsing(t_mem **mem);

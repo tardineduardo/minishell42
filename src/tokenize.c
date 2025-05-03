@@ -120,10 +120,16 @@ t_tok_node	*ft_init_toknode(char *newstring, t_tok_node *node, t_tok_mem **tok, 
 
 void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_mem **tok)
 {
+	t_tok_node *previous;
+
+	if (ft_dlstlast((*tok)->toklst))
+		previous = (t_tok_node *)(ft_dlstlast((*tok)->toklst)->content);
+	else
+		previous = NULL;
 	if (is_a_luis_operator(newstring))
 	{
 		node->block_index = -1;
-		if ((*tok)->previous->block_index != -1)
+		if (previous && previous->block_index != -1)
 			(*tok)->block_count++;
 	}
 	else
@@ -149,7 +155,7 @@ void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 	}
 	else
 		node->heredoc_path = NULL;
-	if (node->oper == HEREDOC_R)
+	if (node->oper == HDC_R)
 		(*tok)->get_delimiter = true;
 	return (node);	
 }
@@ -182,29 +188,29 @@ t_oper	ft_get_oper(char *value)
 	else if (ft_strcmp("||", value) == 0)
 		return (OR_O);
 	else if (ft_strcmp("(", value) == 0)
-		return (GROUP_START_O);
+		return (GSTART_O);
 	else if (ft_strcmp(")", value) == 0)
-		return (GROUP_END_O);
+		return (GEND_O);
 	else if (ft_strcmp("|", value) == 0)
 		return (PIPE_O);
 	else if (ft_strcmp("&", value) == 0)
-		return (BCKGRND_O);
+		return (BCKG_O);
 	else if (ft_strcmp("<", value) == 0)
 		return (IN_R);
 	else if (ft_strcmp(">", value) == 0)
 		return (OUT_R);
 	else if (ft_strcmp(">>", value) == 0)
-		return (APPEND_R);
+		return (APPD_R);
 	else if (ft_strcmp("2>", value) == 0)
 		return (ERROR_R);
 	else if (ft_strcmp("<<", value) == 0)
-		return (HEREDOC_R);
+		return (HDC_R);
 	else if (ft_strcmp("<<<", value) == 0)
-		return (HERESTR_R);
+		return (HSTR_R);
 	else if (ft_strcmp("*", value) == 0)
-		return (WILDCARD_R);
+		return (WILD_R);
 	else if (ft_strcmp("&>", value) == 0)
-		return (OUT_ERROR_R);
+		return (OERR_R);
 	return (WORD);
 }
 
@@ -223,8 +229,12 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 			i += ft_find_word_limit(tok, &str[i]);
 			continue ;
 		}
+		if (ft_isspace(str[i]))
+			break ;
 		if (str[i] == '\\')	
 			ft_tokeniztion_escape(&i);
+		if (ft_isspace(str[i]))
+			break ;		
 		if (ft_is_operator(&str[i], tok, &operator_len))
 		{
 			if (i == 0)
@@ -528,33 +538,18 @@ void ft_debug_indexes(t_dlist **head)
 		else
 			nextoper = WORD;
 
-	if (ft_strcmp("<<<", value) == 0
-			|| ft_strcmp(">>", value) == 0
-			|| ft_strcmp("<<", value) == 0
-			|| ft_strcmp("2>", value) == 0
-			|| ft_strcmp("&>", value) == 0
-			|| ft_strcmp(">", value) == 0
-			|| ft_strcmp("<", value) == 0)
-		{
+	if (oper == IN_R 	|| oper == OUT_R	|| oper == APPD_R	|| HDC_R == IN_R ||
+		oper == HSTR_R	|| oper == WILD_R	|| oper == ERROR_R	|| oper == OERR_R)
 			ft_printf(BRIGHT_BLUE "%s" RESET, value);
-		}
-		else if (ft_strcmp("|", value) == 0)
-		{
+		
+		else if (oper == PIPE_O)
 			ft_printf(YELLOW "%s" RESET, value);
-		}
-		else if (ft_strcmp("&", value) == 0
-			|| ft_strcmp("*", value) == 0
-			|| ft_strcmp("&&", value) == 0
-			|| ft_strcmp("||", value) == 0
-			|| ft_strcmp("(", value) == 0
-			|| ft_strcmp(")", value) == 0)
-		{
+		else if (oper == AND_O || oper == OR_O || oper == GSTART_O ||
+				oper == GEND_O || oper == BCKG_O)
 			ft_printf(BRIGHT_MAGENTA "%s" RESET, value);
-		}
 		else
-		{
 			ft_printf(GREEN "%s" RESET, value);
-		}
+
 		ft_printf(GREY " " RESET);
 
 		ft_printf("\t\t");
@@ -573,10 +568,6 @@ void ft_debug_indexes(t_dlist **head)
 
 		ft_printf("\n");
 		(void)nextoper;
-		// if (nextoper == PIPE_O || nextoper == AND_O || nextoper == OR_O || nextoper == GROUP_START_O || nextoper == GROUP_END_O)
-		// 	ft_printf("---------------------------------------------------\n");
-		// if (oper == PIPE_O || nextoper == AND_O || nextoper == OR_O || nextoper == GROUP_START_O || nextoper == GROUP_END_O)
-		// 	ft_printf("---------------------------------------------------\n");
 		trav = trav->next;
 	}
 
@@ -592,30 +583,30 @@ void	ft_print_oper(t_oper oper)
 		ft_printf(BRIGHT_MAGENTA "AND_O" RESET);
 	else if (oper == OR_O)
 		ft_printf(BRIGHT_MAGENTA "OR_O" RESET);
-	else if (oper == GROUP_START_O)
-		ft_printf(BRIGHT_MAGENTA "GROUP_START_O" RESET);
-	else if (oper == GROUP_END_O)
-		ft_printf(BRIGHT_MAGENTA "GROUP_END_O" RESET);
+	else if (oper == GSTART_O)
+		ft_printf(BRIGHT_MAGENTA "GSTART_O" RESET);
+	else if (oper == GEND_O)
+		ft_printf(BRIGHT_MAGENTA "GEND_O" RESET);
 	else if (oper == PIPE_O)
 		ft_printf(YELLOW "PIPE_O" RESET);
-	else if (oper == BCKGRND_O)
-		ft_printf(BRIGHT_CYAN "BCKGRND_O" RESET);
+	else if (oper == BCKG_O)
+		ft_printf(BRIGHT_CYAN "BCKG_O" RESET);
 	else if (oper == IN_R)
 		ft_printf(BRIGHT_BLUE "IN_R" RESET);
 	else if (oper == OUT_R)
 		ft_printf(BRIGHT_BLUE "OUT_R" RESET);
-	else if (oper == APPEND_R)
-		ft_printf(BRIGHT_BLUE "APPEND_R" RESET);
+	else if (oper == APPD_R)
+		ft_printf(BRIGHT_BLUE "APPD_R" RESET);
 	else if (oper == ERROR_R)
 		ft_printf(BRIGHT_CYAN "ERROR_R" RESET);
-	else if (oper == HEREDOC_R)
-		ft_printf(BRIGHT_BLUE "HEREDOC_R" RESET);
-	else if (oper == HERESTR_R)
-		ft_printf(BRIGHT_CYAN "HERESTR_R" RESET);
-	else if (oper == WILDCARD_R)
-		ft_printf(BRIGHT_MAGENTA "WILDCARD_R" RESET);
-	else if (oper == OUT_ERROR_R)
-		ft_printf(BRIGHT_CYAN "OUT_ERROR_R" RESET);
+	else if (oper == HDC_R)
+		ft_printf(BRIGHT_BLUE "HDC_R" RESET);
+	else if (oper == HSTR_R)
+		ft_printf(BRIGHT_CYAN "HSTR_R" RESET);
+	else if (oper == WILD_R)
+		ft_printf(BRIGHT_MAGENTA "WILD_R" RESET);
+	else if (oper == OERR_R)
+		ft_printf(BRIGHT_CYAN "OERR_R" RESET);
 	else if (oper == WORD)
 		ft_printf(GREEN "WORD" RESET);
 	else

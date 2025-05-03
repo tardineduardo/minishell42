@@ -15,12 +15,6 @@
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
 
-t_list		*ft_classify_tokens(t_mem **mem);
-void		*ft_append_new_parsed_token(t_list *tokens, t_par_mem **par);
-void		set_positions(t_list **org_tokens);
-t_oper		update_oper2(char *value);
-void		*ft_cmd_org(t_list **org_tok);
-
 
 // RETORNA O POINTER PARA ROOT DE AST
 void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
@@ -29,19 +23,23 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 	t_par_mem	*par;
 	t_tok_mem	*tok;
 
+	(void)root;
+
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
 
-	// CHECAR ERROS DE SINTAXE
+	//CHECAR ERROS DE SINTAXE
 	if (!ft_check_syntax(tok->toklst))
 	{
-		//print error type like bash
+
+		//message for debug only ---- NEED TO GET CORRECT ERROR
+		ft_printf("invalid sintax\n");
 		return (NULL);
 	}
 
-	par->parlst = ft_create_parlst(tok->toklst);
+	par->parlst = ft_create_parlst(&tok->toklst);
 
-	root = parse_expression(&par->parlst);
+//	root = parse_expression(&par->parlst);
 	
 	//print_ast(root, 0);
 	//no fim de tudo, liberar a lista de toklst
@@ -51,74 +49,84 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 
 t_list	*ft_create_parlst(t_dlist **toklst)
 {
-	t_list		*parlst;
-	t_par_node	*parnode;
-	t_tok_node	*toknode;	
+	//t_list		*parlst;
+	//t_list		*start;
+	//t_par_node	*parnode;
+	int			num_cmdblocks;
+	int			num_parsnodes;
 
-	parlst = malloc(sizeof(t_par_node *));
 	
-	
-	
-	
-	while (toklst)
-	{
-		toknode = (t_tok_node *)trav->content;
-		extract_node();
+	num_cmdblocks = counter_num_cmdblocks(toklst);
+	num_parsnodes = counter_num_parsnodes(toklst);
+
+	ft_printf("num_cmdblocks = %i | num_parsnodes == %i\n\n", num_cmdblocks, num_parsnodes);
+
+	//parlst = malloc(sizeof(t_par_node *));
 
 
-	}
-
-
-
+	// TO DO
+	// while (count < num_blocos)
+	// {
+	// 	start = find_block_start(toklst);
+	// 	get_in();
+	// 	get_out();
+	// 	get_redirs();
+	// 	count++;
+	// }
+	return (NULL);
 }
 
 
 
 
 
-int    counter_num_blocks(t_list **parlist)
+int    counter_num_cmdblocks(t_dlist **toklst)
 {
-	t_list		*trav;
-	t_par_node	*par;
+	t_dlist		*trav;
+	t_tok_node	*toknode;
 	int         total_cmds;
 
-	trav = *parlist;
+	trav = *toklst;
 	total_cmds = 0;
 	while (trav)
 	{
-		par = (t_par_node *)trav->content;
-		if (par->block_index != -1)
-			total_cmds = par->block_index;
+		toknode = (t_tok_node *)trav->content;
+		if (toknode->block_index != -1)
+			total_cmds = toknode->block_index;
 		trav = trav->next;
 	}
 	return (total_cmds + 1);
 }
 
+int    counter_num_parsnodes(t_dlist **toklst)
+{
+	t_dlist		*trav;
+	t_tok_node	*toknode;
+	int         total_parsnodes;
+	int			prev_block_index;
+
+	trav = *toklst;
+	total_parsnodes = 0;
+	while (trav)
+	{
+		if (trav == *toklst)
+			prev_block_index = 0;	
+
+		toknode = (t_tok_node *)trav->content;
+		
+		if (toknode->block_index != prev_block_index || prev_block_index == -1)
+			total_parsnodes++; 			
+
+		prev_block_index = toknode->block_index;	
+		trav = trav->next;
+	}
+	return (total_parsnodes + 1);
+}
 
 
-// int	count_blocks(t_dlist **toklst)
-// {
-// 	bool		inside_paren;
-// 	t_dlist		*trav;
-// 	t_tok_node	*node;
-// 	int			count;
 
-// 	inside_paren = false;
-// 	trav = *toklst;
-// 	count = 0;
-// 	while(trav)
-// 	{
-// 		node = ((t_tok_node *)trav->content);
-// 		if (node->value[0] == '(' && !inside_paren)
-// 			inside_paren = true;
-// 		else if (node->value[0] == ')' && inside_paren)
-// 			inside_paren = false;
-// 		if (node->value[0] == '|' && !inside_paren)
-// 			count++;
-// 		trav = trav->next;
-// 	}
-// 	return (count + 1);
-// }
+
+
 
 
 
@@ -138,14 +146,14 @@ aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
 
 */
 
-t_syntax	ft_check_syntax(t_list *parlst)
+t_syntax	ft_check_syntax(t_dlist *parlst)
 {
-	if(operator_not_supported(parlst))
+	if(!operators_are_supported(parlst))
 		return (ERROR1);
-	if (redirect_without_file(parlst))
+	if (!redirects_are_complete(parlst))
 		return (ERROR1);
-	if (pipe_at_invalid_position(parlst))
-		return (ERROR1);
+	// if (pipe_at_invalid_position(parlst))
+	// 	return (ERROR1);
 	// if (and_or_at_invalid_positions(parlst))
 	// 	return (ERROR1);
 	// if (empty_parentheses(parlst))
@@ -153,47 +161,51 @@ t_syntax	ft_check_syntax(t_list *parlst)
 	return(SUCCESS_P);
 }
 
-t_syntax	ft_operator_not_supported(t_list *parlst)
+t_syntax	operators_are_supported(t_dlist *toklst)
 {
-	t_list		*trav;
-	t_par_node	*parnode;
+	t_dlist		*trav;
+	t_tok_node	*toknode;
 
-	trav = parlst;
+	trav = toklst;
 	while(trav)
 	{
-		parnode = (t_par_node *)trav->content;
-		if (parnode->oper != WORD)
+		toknode = (t_tok_node *)trav->content;
+		if (toknode->oper != WORD)
 		{
-			if (ft_strcmp(parnode->oper, "|") != 0 &&
-				ft_strcmp(parnode->oper, ">") != 0 &&
-				ft_strcmp(parnode->oper, "<") != 0 &&
-				ft_strcmp(parnode->oper, ">>") != 0 &&
-				ft_strcmp(parnode->oper, "<<") != 0)
+			if (toknode->oper != PIPE_O		&&
+				toknode->oper != OUT_R		&&
+				toknode->oper != IN_R		&&
+				toknode->oper != APPD_R	&&
+				toknode->oper != HDC_R)
 				//set par->syntax error;
 				//set error exit code;
 				return (ERROR1);
 		}
-	return(SUCCESS_P);
+		trav = trav->next;
 	}
+	return(SUCCESS_P);
+
 }
 
-t_syntax	redirect_without_file(t_list *parlst)
+t_syntax	redirects_are_complete(t_dlist *toklst)
 {
-	t_list		*trav;
-	t_par_node	*parnode;
-	t_par_node	*next;	
+	t_dlist		*trav;
+	t_tok_node	*toknode;
+	t_tok_node	*next;	
 	
-	trav = parlst;
+	trav = toklst;
 	while(trav)
 	{
-		parnode = (t_par_node *)trav->content;	
+		toknode = (t_tok_node *)trav->content;	
 		//transformat em funcao
-		if (parnode->oper == IN_R || parnode->oper == OUT_R ||
-			parnode->oper == HEREDOC_R || parnode->oper == APPEND_R ||
-			parnode->oper == HERESTR_R || parnode->oper == ERROR_R ||
-			parnode->oper == WILDCARD_R || parnode->oper == OUT_ERROR_R)
+		if (toknode->oper == IN_R		|| toknode->oper == OUT_R		||
+			toknode->oper == HDC_R	|| toknode->oper == APPD_R	||
+			toknode->oper == HSTR_R	|| toknode->oper == ERROR_R		||
+			toknode->oper == WILD_R	|| toknode->oper == OERR_R)
 		{
-			next = (t_par_node *)trav->next->content;
+			if (!trav->next)
+				return (ERROR1);
+			next = (t_tok_node *)trav->next->content;
 			if (!next || next->oper != WORD)
 			{
 				//set par->syntax error;
