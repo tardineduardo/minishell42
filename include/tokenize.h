@@ -63,9 +63,24 @@ void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_m
 
 
 
+//needed later for parsing 
+bool	is_redir(t_tok_node *toknode);
+bool	is_pipe(t_tok_node *toknode);
+bool	is_logical(t_tok_node *toknode);
+bool	is_subshell(t_tok_node *toknode);
+bool	is_supported_token(t_tok_node *toknode);
+bool	is_operator(t_tok_node *toknode);
+
+
+
+
 //debug
 void		ft_debug_indexes(t_dlist **head);
 void		ft_print_oper(t_oper oper);
 void		ft_debug_list(t_dlist **head);
+
+
+
+
 
 #endif

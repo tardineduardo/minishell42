@@ -34,19 +34,20 @@ typedef enum e_oper
 	BCKG_O,
 }	t_oper;
 
-
-typedef struct s_redirs
+typedef struct s_redirs_node
 {
-	t_oper	type;
-	char			*path;
+	t_oper			type;
+	char			*name;
+	bool			create;
 	int				err;
-}					t_redirs;
+}					t_redirs_node;
 
 typedef struct s_block_node // s_cmd_node
 {
 	char	**cmd_arr;
 	t_list	*input_lst;
 	t_list	*output_lst;
+	t_list	*redirs_lst;
 	int		err;
 }			t_block_node;
 
@@ -70,17 +71,26 @@ typedef struct s_par_mem
 void		*ft_init_par_memory(t_mem **mem);
 void		ft_clear_par_mem(t_par_mem **par);
 t_syntax	ft_check_syntax(t_dlist *parlst);
-t_list		*ft_create_parlst(t_dlist **toklst);
-int			counter_num_cmdblocks(t_dlist **toklst);
-int			counter_num_parsnodes(t_dlist **toklst);
+t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst);
+int			count_num_cmdblocks(t_dlist **toklst);
+int			count_num_parsnodes(t_dlist **toklst);
 t_syntax	operators_are_supported(t_dlist *parlst);
 t_syntax	redirects_are_complete(t_dlist *parlst);
+
+t_par_node *init_parnode1(int a, t_par_node **parnode, t_dlist **toklst);
+void *fill_parnode_and_redir(t_dlist **toklst, t_par_node **parnode);
 
 
 
 
 
 void		*ft_parsing(t_mem **mem);
+
+
+//debug
+void	ft_print_oper_par(t_oper oper);
+void print_debug_parsing(t_list **parslst);
+
 
 
 #endif
