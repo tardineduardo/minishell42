@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:15:27 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 16:49:14 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:54:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 	else if (ft_strncmp(cmd_arr[0], "env", 3) == 0)
 		res = ft_env(*ms_env);
 	else if (ft_strncmp(cmd_arr[0], "cd", 2) == 0)
-		res = ft_cd(ms_env, cmd_arr[1]);
+		res = ft_cd(ms_env, cmd_arr);
 	else if (ft_strncmp(cmd_arr[0], "export", 5) == 0)
 		res = ft_export(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "unset", 5) == 0)
 		res = ft_unset(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "exit", 4) == 0)
-		ft_exit();
+		ft_exit(cmd_arr, mem);
 	else
 	{
 		perror("built-in executor");

@@ -26,7 +26,7 @@ void	*ft_readline(t_mem **mem)
 	//the same as signal Crtl-D
 	if (!cap->line)
 	{
-		ft_exit();
+		exit(0);
 		return (0);
 	}
 	if (ft_strlen(cap->line) == 0)

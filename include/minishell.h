@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/30 15:22:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:54:23 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,10 +295,10 @@ char *ft_capture_in_interactive_mode(char *prompt);
 int	ft_env(t_list *envlist);
 int	ft_pwd(t_list **envlist);
 int	ft_echo(char **cmd_arr, t_mem **mem);
-int	ft_cd(t_list **envlist, char *new_path);
+int	ft_cd(t_list **envlist, char **cmd_arr);
 int	ft_export(t_list **envlist, char *variable_value);
 int	ft_unset(t_list **envlist, char *variable);
-void	ft_exit(void);
+int	ft_exit(char **cmd_arr, t_mem **mem);
 
 // built-ins helpers
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
@@ -380,6 +380,7 @@ t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
 int execute_pipeline(t_list **env, t_list **org_token, int num_cmds, t_mem **mem);
 int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem);
 int	exec_single_cmd(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem);
+void	ft_ms_env_add_exit_code(t_list **envlist, char *variable, int value);
 
 //external cmd treatment
 char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);

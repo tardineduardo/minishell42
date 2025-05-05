@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:27:21 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/02 16:54:30 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:33:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,7 @@ void	fd_output_redir(t_list **output_lst)
 void	pipe_fd_control(t_pipe_data *pipe_data, t_cmd_node *cur_cmd, int pipefd[2])
 {
 	if (cur_cmd->input_lst != NULL) 
-	{
-		printf("entrou aqui");
 		fd_input_redir(&cur_cmd->input_lst);
-	}
 	else if (pipe_data->i > 0)
 	{
 		dup2(pipe_data->prev_fd, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 14:39:54 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:38:43 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,26 +147,6 @@ void	*ft_org_tokenize(t_mem **mem)
 void ft_debug_list_org(t_list **head);
 void	ft_del_org_token_mem(void *content);
 
-
-bool	ft_find_variable_env(t_list **envlist, char *variable)
-{
-	t_list *trav;
-	t_env_node *current;
-
-	if (!envlist || !variable)
-		return (NULL);
-	
-	trav = *envlist;
-	while (trav)
-	{
-		current = (t_env_node *)trav->content;
-		if (ft_strcmp(current->variable, variable) == 0)
-			return (true);
-		trav = trav->next;
-	}
-	return (false);
-}
-
 void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value)
 {
 	t_list *trav;
@@ -207,16 +187,14 @@ int	ft_ast_create(t_mem **mem)
 	t_ast_node *root;
 	int			res;
 	
+	//create environ ?
 	ft_org_tokenize(mem);
 	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
 	//ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
 	root = parse_expression(&(*mem)->org_tokenize->org_toklst);
 	//print_ast(root, 0);
 	res = exec_ast(&(*mem)->environs->envlist, &root, mem);
-	if (ft_find_variable_env(&(*mem)->environs->envlist, "?"))
-		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
-	else
-		ft_ms_env_add_exit_code(&(*mem)->environs->envlist, "?", res);
+	ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
 	return (0);
 }
 

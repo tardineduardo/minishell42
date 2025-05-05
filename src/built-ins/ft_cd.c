@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 15:17:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:03:44 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,18 @@
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 
-int	ft_cd(t_list **envlist, char *new_path)
+int	ft_cd(t_list **envlist, char **cmd_arr)
 {
 	t_list 	*trav;
 	t_env_node	*current;
 
 	trav = *envlist;
-	if (chdir(new_path) == 0)
+	if (cmd_arr[2] != NULL)
+	{
+		ft_dprintf(2, " too many arguments");
+		return (1);
+	}
+	if (chdir(cmd_arr[1]) == 0)
 	{
 		while (trav)
 		{
@@ -99,14 +104,15 @@ int	ft_cd(t_list **envlist, char *new_path)
 			}
 			trav = trav->next;
 		}
-		ft_ms_env_update_cd(envlist, "PWD", new_path);
+		ft_ms_env_update_cd(envlist, "PWD", cmd_arr[1]);
 	}
 	else
 	{
 		if (errno == 2 || errno == 20)
-			ft_printf("bash: cd: %s: No such file or directory\n", new_path);
+			ft_dprintf(2, " No such file or directory");
 		else if (errno == 13)
-			ft_printf("bash: cd: %s: Permission denied\n", new_path);
+			ft_dprintf(2, " Permission denied");
+		return (1);
 	}
 	return (0);
 }
