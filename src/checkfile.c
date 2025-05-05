@@ -6,9 +6,6 @@
 
 #include <sys/stat.h> // stat
 
-#define ABSFLE    0x01	// 0000 0000 0001 0000
-#define ABSBIN    0x02	// 0000 0000 0010 0000
-
 #define EXIS    0x01	// 0000 0000 0001 0000
 #define READ    0x02	// 0000 0000 0010 0000
 #define WRIT    0x04	// 0000 0000 0100 0000
@@ -16,63 +13,160 @@
 #define ISFLE   0x10	// 0000 0001 0000 0000
 #define ISDIR   0x20	// 0000 0010 0000 0000
 
-char *check(char *abspath, u_int16_t flags, int *errnbr, char **errmsg)
+typedef struct s_error
+{
+	int		errnum;
+	char	*errmsg;
+} t_error;
+
+
+bool	check(char *abspath, u_int16_t flags, t_error **error)
 {
 	struct stat	statbuf;
 
 	if (abspath[0] != '/')
-		return (NULL); //maybe print error?
+		return (false); //maybe print error?
 	if (flags & EXIS && access(abs, F_OK))
-		return (return_error(abs, errnbr, errmsg));
+		return (return_error(abs, error));
 	if (flags & READ && access(abs, R_OK))
-		return (return_error(abs, errnbr, errmsg));
+		return (return_error(abs, error));
 	if (flags & WRIT && access(abs, W_OK))
-		return (return_error(abs, errnbr, errmsg));
+		return (return_error(abs, error));
 	if (flags & EXEC && access(abs, X_OK))
-		return (return_error(abs, errnbr, errmsg));
-	if (stat(file, &statbuf))
-		return (return_error(abs, errnbr, errmsg));
+		return (return_error(abs, error));
+	if (stat(abspath, &statbuf))
+		return (return_error(abs, error));
 	if (flags & ISFLE && !S_ISREG(statbuf.st_mode))
-		return (return_error(abs, errnbr, errmsg));
+		return (return_error(abs, error));
 	if (flags & ISDIR && !S_ISDIR(statbuf.st_mode))
-		return (return_error(abs, errnbr, errmsg));
+		return (return_error(abs, error));
 	return (abs);
 
 }
 
-void *return_error(char *abs, int **errnbr, char **errmsg)
+
+bool	*return_error(char *abs, t_error **error)
 {
-	free(abs);
-	if (errnbr)
-		*errnbr = errno;
-	if (errmsg)
-		*errmsg = strerror(errno);
-	return (NULL);
+	if (!error || !*error)
+		return (false);
+	(*error)->errnum = errno;
+	(*error)->errmsg = strerror(errno);
+	return (false);
 }
 
 
-char *get_absolute_path(char *file, u_int8_t mode)
+char *get_absolute_path_file(char *file, t_mem *mem)
 {
+	if (!file || !mem)
+		return (NULL);
+
 	if (strncmp(file, "/", 1))
 		return (ft_strdup(file));
-	if (strncmp(file, "./", 2) || mode & ABSFLE)
-		return (get_working_dir);
+	if (strncmp(file, "./", 2))
+		return (get_working_dir(file, mem));
 	if (strncmp(file, "../", 3))
 		return (get_relative_path);
-	if (mode & ABSBIN)
-		return (get_environment_path);
 	return (NULL);
 }
 
-
-
-
-
-
-void get_working_dir(file)
+char *get_absolute_path_bin(char *file, u_int8_t mode, t_mem *mem)
 {
 
 }
+
+char *get_absolute_path_folder(char *file, u_int8_t mode, t_mem *mem)
+{
+
+}
+
+
+
+
+//malloc
+char *get_working_dir(char *file, t_mem *mem)
+{
+	char		*path;
+	t_list		*trav;
+	t_list		*envlist;
+	t_env_node	*envnode;
+
+	envlist = ((t_env_mem *)mem->environs)->envlist;
+
+	trav = envlist;
+	while(trav)
+	{
+		envnode = (t_env_node *)trav->content;
+		if(ft_strcmp(envnode->variable, "PWD") == 0)
+			break ;
+		trav = trav->next;
+	}
+	if (!trav)
+		return (NULL);
+	path = ft_concatenate_var(3, envnode->value, "/", file);
+	return (path);
+}
+
+
+
+
+
+char *get_relative_path(char *file, t_mem *mem)
+{
+	char		*path;
+	char		**steps;
+	t_list		*trav;
+	t_list		*envlist;
+	t_env_node	*envnode;
+
+	envlist = ((t_env_mem *)mem->environs)->envlist;
+
+	trav = envlist;
+	while(trav)
+	{
+		envnode = (t_env_node *)trav->content;
+		if(ft_strcmp(envnode->variable, "PWD") == 0)
+			break ;
+		trav = trav->next;
+	}
+	if (!trav)
+		return (NULL);
+
+	steps = ft_split_char(file, '/');
+	int max = ft_split_count(file, '/'); 
+	int a = 0; 
+
+	while(a < max)
+	{
+		if(ft_strcmp(steps[a], "..") == 0)
+		{}	//remove last folder from pwd
+		else if (ft_strcmp(steps[a], ".") != 0)
+		{}	//apend /folder to pwd - check it is a folder
+		a++;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 static char	*get_absolute_path(t_cmd *cmd, char *argv[])
@@ -89,6 +183,7 @@ static char	*get_absolute_path(t_cmd *cmd, char *argv[])
 	ft_free_str_array(commands);
 	return (path);
 }
+
 
 static char	*get_relative_path(char *envp[], t_cmd *cmd)
 {
@@ -118,6 +213,7 @@ static char	*get_relative_path(char *envp[], t_cmd *cmd)
 	free(pwd);
 	return (path);
 }
+
 
 static char	*ft_get_abs_env_path(char **path_split, char *path, char *cmd)
 {
