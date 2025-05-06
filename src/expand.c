@@ -701,8 +701,12 @@ size_t varlen(char *s, bool braces)
 
 	i = 0;
 	if (braces == false)
+	{
+		if((s[0] == '?' && !ft_isalnum(s[1])))
+			return (1);
 		while (ft_isalnum(s[i]))
 			i++;
+	}
 	else if (braces == true)
 		while ((s[i] != '}'))
 			i++;

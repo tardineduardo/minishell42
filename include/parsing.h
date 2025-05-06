@@ -72,13 +72,12 @@ void		*ft_init_par_memory(t_mem **mem);
 void		ft_clear_par_mem(t_par_mem **par);
 t_syntax	ft_check_syntax(t_dlist *parlst);
 t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst);
-int			count_num_cmdblocks(t_dlist **toklst);
 int			count_num_parsnodes(t_dlist **toklst);
 t_syntax	operators_are_supported(t_dlist *parlst);
 t_syntax	redirects_are_complete(t_dlist *parlst);
 
-t_par_node *init_parnode1(int a, t_par_node **parnode, t_dlist **toklst);
-void *fill_parnode_and_redir(t_dlist **toklst, t_par_node **parnode);
+t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst);
+void *fill_parnode_and_redirs(t_dlist **toklst, t_par_node **parnode);
 
 
 
