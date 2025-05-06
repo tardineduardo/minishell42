@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:20 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 15:17:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 17:59:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	ft_env(t_list *envlist)
 	while (trav)
 	{
 		current = (t_env_node *)trav->content;
-		ft_dprintf(1, "%s=%s\n", current->variable, current->value);
+		if (current->visible == true)
+			ft_dprintf(1, "%s=%s\n", current->variable, current->value);
 		trav = trav->next;
 	}
 	return (0);

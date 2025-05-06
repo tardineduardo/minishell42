@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:43:00 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 15:21:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:39:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	ft_unset(t_list **envlist, char *variable)
 
 	trav = *envlist;
 
+	if (variable == NULL)
+		return (0);
 	if (ft_strchr(variable, '=') != NULL)
 		return (-1);
 	while (trav)
@@ -61,16 +63,17 @@ int	ft_unset(t_list **envlist, char *variable)
 		current = (t_env_node *)trav->content;
 		if (ft_strcmp(current->variable, variable) == 0)
 		{
-			if (current->readonly == false && current->block_unset == false)
+			//if (current->readonly == false && current->block_unset == false)
 				// criei uma nova função para a libft.
-				ft_lst_destroy_node(envlist, trav, ft_del_env_node);
-			else if (current->readonly == true)
-				ft_printf("Error: cannot unset readonly variable\n");
+			ft_lst_destroy_node(envlist, trav, ft_del_env_node);
+			break ;
+			//else if (current->readonly == true)
+				//ft_printf("Error: cannot unset readonly variable\n");
 			// @luiscarvalhofrade não está faltando uma condição aqui?
 			// Só para a mensagem de erro ser correta. 
 			// else if (current->block_unset == true)
 			//	ft_printf("Error: cannot unset blocked variable\n");
-			return (-1);
+			//return (-1);
 		}
 		trav = trav->next;
 	}

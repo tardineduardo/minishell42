@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 15:18:54 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:08:19 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,38 +29,88 @@
 			appears that are not on the call of env. Create a bool inside t_env
 			to mark with it is exported or not?
 */
-t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value);
+t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
 t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 
 
 
 //@luiscarvalhofrade essa lógica a gente preisa rever depois, pois
 //podemos passar uma variável vazia, tipo "NOVA_VAR="
-int	ft_export(t_list **envlist, char *variable_value)
+int ft_export(t_list **envlist, char *variable_value)
 {
-	char	**result;
-	t_list	*trav;
-	t_env_node	*current;
+	int	i;
+    char **result;
+    t_list *trav;
+    t_env_node *current;
 
-	trav = *envlist;
-	result = ft_split_char(variable_value, '=');
-	while (trav)
-	{
-		current = (t_env_node *)trav->content;
-		if (ft_strcmp(current->variable, result[0]) == 0)
-		{
-			if (current->block_unset == false && current->readonly == false)
-			{
-				ft_ms_env_update_export(envlist, result[0], result[1]);
-				ft_free_split(result, 2);
-				return (0);
-			}
-		}
-		trav = trav->next;
-	}
-	ft_free_and_null_str_array(&result);
-	ft_ms_env_add(envlist, variable_value);
-	return (0);
+    if (!envlist)
+        return (1);
+
+    // Case 1: `export` (no args) → print all visible vars
+    if (!variable_value)
+    {
+        trav = *envlist;
+        while (trav)
+        {
+            current = (t_env_node *)trav->content;
+            if (current->visible)
+                ft_dprintf(1, "declare -x %s=\"%s\"\n", current->variable, current->value);
+            trav = trav->next;
+        }
+        return (0);
+    }
+	if (ft_strcmp(variable_value, "=") == 0)
+    {
+        ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
+        return (1);
+    }
+    // Case 2: `export VAR=VAL` → validate and add/update
+    result = ft_split_char(variable_value, '=');
+    if (!result || !result[0])
+        return (1);
+
+    // Validate VAR_NAME (letters, numbers, _, but starts with letter or _)
+    if (!ft_isalpha(result[0][0]) && result[0][0] != '_')
+    {
+        ft_free_split(result, 2);
+        ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
+        return (1);
+    }
+	i = 1;
+    while (result[0][i])
+    {
+        if (!ft_isalnum(result[0][i]) && result[0][i] != '_')
+        {
+            ft_free_split(result, 2);
+            ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
+            return (1);
+        }
+		i++;
+    }
+
+    // Update existing var or add new one
+    trav = *envlist;
+    while (trav)
+    {
+        current = (t_env_node *)trav->content;
+        if (ft_strcmp(current->variable, result[0]) == 0)
+        {
+            if (!current->readonly && !current->block_unset)
+            {
+                free(current->value);
+                current->value = ft_strdup(result[1] ? result[1] : "");
+                current->visible = true;
+            }
+            ft_free_split(result, 2);
+            return (0);
+        }
+        trav = trav->next;
+    }
+
+    // Add new var
+    ft_ms_env_add(envlist, variable_value);
+    ft_free_split(result, 2);
+    return (0);
 }
 
 void	ft_ms_env_add(t_list **envlist, char *variable_value)
@@ -71,8 +121,10 @@ void	ft_ms_env_add(t_list **envlist, char *variable_value)
 	if (!(*envlist) || !variable_value)
 		return ;
 	result = ft_split_char(variable_value, '=');
-		
-	new_env_node = ft_init_env_node_expbuiltin(result[0], result[1]);
+	if (ft_strchr(variable_value, '=') == NULL)
+		new_env_node = ft_init_env_node_expbuiltin(result[0], " ", false);
+	else
+		new_env_node = ft_init_env_node_expbuiltin(result[0], result[1], true);
 	if(!ft_add_to_envlist_expbuiltin(envlist, new_env_node))
 
 	ft_free_and_null_str_array(&result);
@@ -109,7 +161,7 @@ void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value)
 // arquivo environ.c. eu acho melhor no começo a gente isolar as funções
 // para evitar mudar uma coisa em um lugar e quebrar em outro. no fim do
 // projeto, a gente pode criar uma lista de shared functions.   
-t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value)
+t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible)
 {
 	t_env_node *new;
 
@@ -120,6 +172,7 @@ t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value)
     new->value = ft_strdup(value);
     new->readonly = false;
 	new->block_unset = false;
+	new->visible = visible;
 	return (new);
 }
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environs_NEW.c                                     :+:      :+:    :+:   */
+/*   environs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/22 11:39:46 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:51:13 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void		*ft_env_syscall_error(char *message);
 void		*ft_env_error(char *message, t_env_mem **env);
 
 //nodes and lists
-t_env_node	*ft_init_env_node(char *variable, char *value);
+t_env_node	*ft_init_env_node(char *variable, char *value, bool visible);
 t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
 
 
@@ -41,9 +41,9 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 		if (!(*env)->result)
 			return (ft_env_error("Envp split error", env));
 		if ((*env)->result[1])
-			(*env)->new_node = ft_init_env_node((*env)->result[0], (*env)->result[1]);
+			(*env)->new_node = ft_init_env_node((*env)->result[0], (*env)->result[1], true);
 		else
-			(*env)->new_node = ft_init_env_node((*env)->result[0], "");
+			(*env)->new_node = ft_init_env_node((*env)->result[0], "", false);
 		if (!(*env)->new_node)
 			return (ft_env_error("Init node error", env));
 		if(!ft_add_to_envlist(&(*env)->envlist, (*env)->new_node))
@@ -132,7 +132,7 @@ void	ft_env_block_unset(t_list **envlist)
 
 //----------- NODES and LISTS ----------------
 
-t_env_node	*ft_init_env_node(char *variable, char *value)
+t_env_node	*ft_init_env_node(char *variable, char *value, bool visible)
 {
 	t_env_node *new;
 
@@ -143,6 +143,7 @@ t_env_node	*ft_init_env_node(char *variable, char *value)
     new->value = ft_strdup(value);
     new->readonly = false;
 	new->block_unset = false;
+	new->visible = visible;
 	return (new);
 }
 

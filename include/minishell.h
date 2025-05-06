@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/06 15:28:32 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:47:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ typedef struct 	s_env_node
 	char	*value;
 	bool	readonly;
 	bool	block_unset;
+	bool	visible;
 }	t_env_node;
 
 
@@ -374,7 +375,7 @@ void		print_ast(t_ast_node *node, int depth);
 
 //ast exec
 int 		exec_ast(t_list **ms_env, t_ast_node **root, t_mem **mem);
-t_env_node	*ft_init_env_node(char *variable, char *value);
+t_env_node	*ft_init_env_node(char *variable, char *value, bool visible);
 t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
 
 //execution
