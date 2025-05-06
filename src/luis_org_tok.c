@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/05 16:38:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:18:38 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,9 +152,8 @@ void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value)
 	t_list *trav;
 	t_env_node *current;
 
-	if (!envlist || !variable || !value)
+	if (!envlist || !variable)
 		return ;
-	
 	trav = *envlist;
 	while (trav)
 	{
@@ -187,9 +186,8 @@ int	ft_ast_create(t_mem **mem)
 	t_ast_node *root;
 	int			res;
 	
-	//create environ ?
 	ft_org_tokenize(mem);
-	ft_cmd_org(&(*mem)->org_tokenize->org_toklst);
+	ft_cmd_org(&(*mem)->org_tokenize->org_toklst, mem);
 	//ft_debug_list_org(&(*mem)->org_tokenize->org_toklst);
 	root = parse_expression(&(*mem)->org_tokenize->org_toklst);
 	//print_ast(root, 0);

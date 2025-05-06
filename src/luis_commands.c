@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 13:42:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/16 14:13:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:18:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int    counter_num_cmd(t_list **org_tok)
 	return (total_cmds + 1);
 }
 
-t_cmd_node *build_cmd_table(t_list **org_tok, int index_cmd)
+t_cmd_node *build_cmd_table(t_list **org_tok, int index_cmd, t_mem **mem)
 {
 	t_cmd_node 			*cmd;
 	t_cmd_builder		*cmd_builder;
@@ -40,7 +40,7 @@ t_cmd_node *build_cmd_table(t_list **org_tok, int index_cmd)
 		return (NULL);
 	cmd_builder = create_cmd_builder(org_tok, index_cmd);
 	cmd->cmd_arr = extract_cmd(cmd_builder, index_cmd);
-	extract_redirections(&cmd_builder->start_node, cmd, index_cmd);
+	extract_redirections(&cmd_builder->start_node, cmd, index_cmd, mem);
 	return (cmd);
 }
 
@@ -84,7 +84,7 @@ void	replace_with_cmd_table(t_list *new_node, t_cmd_builder *cmd_builder, t_list
 	}
 }
 
-void	ft_cmd_org(t_list **org_tok)
+void	ft_cmd_org(t_list **org_tok, t_mem **mem)
 {
 	int				total_cmds;
 	int				index_cmd;
@@ -97,7 +97,7 @@ void	ft_cmd_org(t_list **org_tok)
 	while (index_cmd < total_cmds)
 	{
 		cmd_builder = create_cmd_builder(org_tok, index_cmd);
-		cmd = build_cmd_table(org_tok, index_cmd);
+		cmd = build_cmd_table(org_tok, index_cmd, mem);
 		new_node = create_new_cmd_node(cmd, index_cmd);
 		replace_with_cmd_table(new_node, cmd_builder, org_tok);
 		//ft_clear_cmd_builder_mem(cmd_builder_mem);

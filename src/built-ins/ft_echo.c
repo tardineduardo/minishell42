@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:52:39 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/30 15:17:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:42:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	ft_echo(char **cmd_arr, t_mem **mem)
 	int	i;
 	int	j;
 	bool	flag;
+	(void)mem;
 
 	i = 0;
 	j = 0;
@@ -39,9 +40,9 @@ int	ft_echo(char **cmd_arr, t_mem **mem)
 		while (cmd_arr[j] != NULL)
 		{
 			if (j != (i - 1))
-				ft_printf("%s ", ft_expand(&cmd_arr[j], TOKEN, mem));
+				ft_printf("%s ", cmd_arr[j]);
 			else
-				ft_printf("%s", ft_expand(&cmd_arr[j], TOKEN, mem));
+				ft_printf("%s", cmd_arr[j]);
 			j++;
 		}
 		ft_printf("\n");

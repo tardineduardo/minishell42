@@ -6,31 +6,59 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:44:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/02 15:57:20 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:08:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	execute_command(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem)
+int execute_command(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem)
 {
-	char	**cmd_arr;
-	int		res;
+    char    **cmd_arr;
+    char    **final_cmd_arr;
+    int     res;
+    int     size_arr;
+    int     i;
 
-	res = -1;
-	if (!cur_cmd || !ms_env)
-	{
-		perror("cmd or ms_env: cmd executor");
-		exit(EXIT_FAILURE);
-	}
-	cmd_arr = cur_cmd->cmd_arr;
-	// if (cmd_arr == NULL && cur_cmd->output_lst != NULL)
-	// 	file_output_handler(&cur_cmd->output_lst);
-	if (is_built_in(cmd_arr))
-		res = exec_built_in(ms_env, cmd_arr, mem);
-	else
-		exec_external_cmd(ms_env, cur_cmd);
-	return (res);
+    res = -1;
+    i = 0;
+    if (!cur_cmd || !ms_env)
+    {
+        ft_putstr_fd("cmd or ms_env: cmd executor: NULL pointer\n", STDERR_FILENO);
+        exit(EXIT_FAILURE);
+    }
+    cmd_arr = cur_cmd->cmd_arr;
+    size_arr = ft_count_items(cmd_arr);
+    final_cmd_arr = malloc(sizeof(char *) * (size_arr));
+    if (!final_cmd_arr)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    while (cmd_arr[i] != NULL)
+    {
+        final_cmd_arr[i] = ft_strdup(ft_expand(&cur_cmd->cmd_arr[i], TOKEN, mem));
+        if (!final_cmd_arr[i])
+        {
+            perror("ft_strdup");
+            while (--i >= 0)
+                free(final_cmd_arr[i]);
+            free(final_cmd_arr);
+            exit(EXIT_FAILURE);
+        }
+        free(cur_cmd->cmd_arr[i]);
+        i++;
+    }
+    final_cmd_arr[i] = NULL;
+    free(cur_cmd->cmd_arr);
+    cur_cmd->cmd_arr = final_cmd_arr;
+
+    if (is_built_in(cur_cmd->cmd_arr))
+        res = exec_built_in(ms_env, cur_cmd->cmd_arr, mem);
+    else
+        exec_external_cmd(ms_env, cur_cmd);  // Assuming you modify this to return a value
+    
+    return (res);
 }
 
 void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_cmd_node *cmd, t_mem **mem)

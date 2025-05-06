@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 13:16:58 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/02 15:28:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:19:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	is_redirection(char *value)
 	return (1);
 }
 
-void	ft_ap_nw_in(t_cmd_node *cmd, char *name)
+void	ft_ap_nw_in(t_cmd_node *cmd, char *name, t_mem **mem)
 {
 	t_list			*append;
 	t_input_node	*input_node;
@@ -29,14 +29,14 @@ void	ft_ap_nw_in(t_cmd_node *cmd, char *name)
 	input_node = malloc(sizeof(t_input_node));
 	if (!input_node)
 		return ;
-	input_node->name = ft_strdup(name);
+	input_node->name = ft_strdup(ft_expand(&name, TOKEN, mem));
 	append = ft_lstnew(input_node);
 	if (!append)
 		return ;
 	ft_lstadd_back(&cmd->input_lst, append);
 }
 
-void    ft_create_input_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
+void    ft_create_input_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd, t_mem **mem)
 {
 	t_org_tok *tok;
 
@@ -50,13 +50,13 @@ void    ft_create_input_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
 				break;
 			tok = tokens->content;
 			if (tok->cmd == index_cmd)
-				ft_ap_nw_in(cmd, tok->value);
+				ft_ap_nw_in(cmd, tok->value, mem);
 		}
 		tokens = tokens->next;
 	}
 }
 
-void	ft_ap_nw_out(t_cmd_node *cmd, char *name, bool create)
+void	ft_ap_nw_out(t_cmd_node *cmd, char *name, bool create, t_mem **mem)
 {
 	t_list			*append;
 	t_output_node	*output_node;
@@ -64,7 +64,7 @@ void	ft_ap_nw_out(t_cmd_node *cmd, char *name, bool create)
 	output_node = malloc(sizeof(t_output_node));
 	if (!output_node)
 		return ;
-	output_node->name = ft_strdup(name);
+	output_node->name = ft_strdup(ft_expand(&name, TOKEN, mem));
 	output_node->create = create;
 	append = ft_lstnew(output_node);
 	if (!append)
@@ -72,7 +72,7 @@ void	ft_ap_nw_out(t_cmd_node *cmd, char *name, bool create)
 	ft_lstadd_back(&cmd->output_lst, append);
 }
 
-void    ft_create_output_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
+void    ft_create_output_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd, t_mem **mem)
 {
 	t_org_tok       *tok;
 
@@ -86,7 +86,7 @@ void    ft_create_output_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
 				break ;
 			tok = tokens->content;
 			if (tok->cmd == index_cmd)
-				ft_ap_nw_out(cmd, tok->value, false);
+				ft_ap_nw_out(cmd, tok->value, false, mem);
 		}
 		if (tok->cmd == index_cmd && ft_strcmp(">", tok->value) == 0)
 		{
@@ -95,14 +95,14 @@ void    ft_create_output_lst(t_list *tokens,  t_cmd_node *cmd, int index_cmd)
 				break ;
 			tok = tokens->content;
 			if (tok->cmd == index_cmd)
-				ft_ap_nw_out(cmd, tok->value, true);
+				ft_ap_nw_out(cmd, tok->value, true, mem);
 		}
 		tokens = tokens->next;
 	}
 }
 
-void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd)
+void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd, t_mem **mem)
 {
-	ft_create_input_lst(*org_tok,  cmd, index_cmd);
-	ft_create_output_lst(*org_tok, cmd, index_cmd);
+	ft_create_input_lst(*org_tok,  cmd, index_cmd, mem);
+	ft_create_output_lst(*org_tok, cmd, index_cmd, mem);
 }

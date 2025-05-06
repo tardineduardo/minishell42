@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/05 16:54:23 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:28:32 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,11 +361,12 @@ int	ft_ast_create(t_mem **mem);
 //command utils
 t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
 char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
-void			ft_cmd_org(t_list **org_tok);
+void			ft_cmd_org(t_list **org_tok, t_mem **mem);
+int	ft_count_items(char **str_arr);
 
-//redirections
+//redirectionsft_cmd_org
 int		is_redirection(char *value);
-void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
+void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd, t_mem **mem);
 
 //ast create
 t_ast_node	*parse_expression(t_list **tokens);
