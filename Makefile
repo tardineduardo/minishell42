@@ -84,3 +84,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+#strace -f -e trace=execve -e verbose=all ./minishell
