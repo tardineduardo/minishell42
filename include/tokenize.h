@@ -70,6 +70,7 @@ bool	is_logical(t_tok_node *toknode);
 bool	is_subshell(t_tok_node *toknode);
 bool	is_supported_token(t_tok_node *toknode);
 bool	is_operator(t_tok_node *toknode);
+bool	is_command(t_tok_node *toknode);
 
 
 

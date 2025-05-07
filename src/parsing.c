@@ -36,7 +36,7 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 
 	ft_create_parlst(&tok->toklst, &par->parlst);
 
-	print_debug_parsing(&par->parlst);
+	//print_debug_parsing(&par->parlst);
 
 //	root = parse_expression(&par->parlst);
 	
@@ -65,10 +65,11 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 			return (NULL);
 		if(!init_parnode(a, &parnode, toklst))
 			return (NULL);
-		new = ft_lstnew(lstnode);
+		new = ft_lstnew(parnode);
 		ft_lstadd_back(parlst, new);
 		a++;
 	}
+	print_debug_parsing(parlst);
 	return (*parlst);
 }
 
@@ -111,195 +112,74 @@ void *fill_parnode_and_redirs(t_dlist **toklst, t_par_node **parnode)
 {
 	t_list			*new;
 	t_tok_node		*toknode;
-	t_redirs_node	*redir_node;
+	t_redirs_node	*redirnode;
 	t_oper			oper;
 
-	//separar
 	if(!(*parnode)->block_node)
-	{
-		(*parnode)->block_node = malloc(sizeof(t_block_node));
-		(*parnode)->block_node->cmd_arr = NULL;
-		(*parnode)->block_node->input_lst = NULL;
-		(*parnode)->block_node->output_lst = NULL;
-		(*parnode)->block_node->redirs_lst = NULL;
-	}
+		intit_block_node(parnode);
 
-	redir_node = malloc(sizeof(t_redirs_node));
-	if(!redir_node)
+	redirnode = malloc(sizeof(t_redirs_node));
+	if(!redirnode)
 		return (NULL);
 
 	oper = ((t_tok_node *)(*toklst)->content)->oper;
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	toknode = (t_tok_node *)(*toklst)->content;
-	redir_node->type = oper;
-	redir_node->create = true;
-
+	redirnode->type = oper;
+	redirnode->create = true;
 	if(oper == IN_R || oper == OUT_R || oper == APPD_R)
-		redir_node->name = toknode->value; 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
+		redirnode->name = toknode->value; 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
 	if(oper == HDC_R)
-		redir_node->name = toknode->heredoc_path;
+		redirnode->name = toknode->heredoc_path;
 	if(oper == APPD_R)
-		redir_node->create = false;
-
-	new = ft_lstnew(redir_node);
-	
+		redirnode->create = false;
+	new = ft_lstnew(redirnode);
 	ft_lstadd_back(&(*parnode)->block_node->redirs_lst, new);
 	if (oper == IN_R	|| oper == HDC_R)
 		ft_lstadd_back(&(*parnode)->block_node->input_lst, new);
 	if (oper == OUT_R	|| oper == APPD_R)
 		ft_lstadd_back(&(*parnode)->block_node->output_lst, new);
-
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	return (*parnode);
 }
 
 
+t_block_node *intit_block_node(t_par_node **parnode)
+{
+	(*parnode)->block_node = malloc(sizeof(t_block_node));
+	if ((*parnode)->block_node)
+		return (NULL);
+	(*parnode)->block_node->cmd_arr = NULL;
+	(*parnode)->block_node->input_lst = NULL;
+	(*parnode)->block_node->output_lst = NULL;
+	(*parnode)->block_node->redirs_lst = NULL;
+}
+_
 
-
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
-//ESSA ESTA ERRADA - CASO QUE COMECA COM PARENTESES 
 
 int    count_num_parsnodes(t_dlist **toklst)
 {
 	t_dlist		*trav;
 	t_tok_node	*toknode;
+	t_tok_node	*prevtok;
 	int         total_parsnodes;
-	int			prev_block_index;
 
 	trav = *toklst;
 	total_parsnodes = 0;
 	while (trav)
 	{
-		if (trav == *toklst)
-			prev_block_index = 0;	
-
 		toknode = (t_tok_node *)trav->content;
-		
-		if (toknode->block_index != prev_block_index || prev_block_index == -1)
-			total_parsnodes++; 			
 
-		prev_block_index = toknode->block_index;	
+		if (trav == *toklst)
+			total_parsnodes++;	
+		else if(is_command(toknode) && !is_command(prevtok))
+			total_parsnodes++;	
+		else if(is_operator(toknode))
+			total_parsnodes++;	
+		prevtok = toknode;
 		trav = trav->next;
 	}
-	return (total_parsnodes + 1);
+	return (total_parsnodes);
 }
 
 
@@ -411,6 +291,21 @@ bool is_pipe(t_tok_node *toknode)
 		return (true);
 	return (false);
 }
+
+
+bool is_command(t_tok_node *toknode)
+{
+	if (toknode->oper == IN_R	|| toknode->oper ==  OUT_R	||  
+		toknode->oper == HDC_R	|| toknode->oper ==  APPD_R)
+		return (true);
+	if (toknode->oper == WILD_R	|| toknode->oper ==  ERROR_R ||  
+		toknode->oper == HSTR_R	|| toknode->oper ==  OERR_R)
+		return (true);
+	if (toknode->oper == WORD)
+		return (true);		
+	return (false);
+}
+
 
 bool is_logical(t_tok_node *toknode)
 {
