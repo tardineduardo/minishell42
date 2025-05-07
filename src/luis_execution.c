@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:44:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/07 13:44:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:59:47 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int execute_command(t_list **ms_env, t_cmd_node *cur_cmd, t_mem **mem)
     if (is_built_in(cur_cmd->cmd_arr))
         res = exec_built_in(ms_env, cur_cmd->cmd_arr);
     else
-        exec_external_cmd(ms_env, cur_cmd);  // Assuming you modify this to return a value
+        exec_external_cmd(ms_env, cur_cmd);
     return (res);
 }
 

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:11:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/07 12:56:34 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:07:44 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 int	ft_exit(char **cmd_arr)
 {
-	int	exit_code;
-
 	if (cmd_arr[2] != NULL)
 	{
 		ft_dprintf(2, " too many arguments");
@@ -31,6 +29,7 @@ int	ft_exit(char **cmd_arr)
 		ft_dprintf(2, " numeric argument required");
 		exit (0);
 	}
-	exit_code = ft_atoi(cmd_arr[1]);
-	exit(exit_code);
+	else if (cmd_arr[1] != NULL && ft_atoi(cmd_arr[1]) != 0)
+		exit(ft_atoi(cmd_arr[1]));
+	exit(0);
 }
