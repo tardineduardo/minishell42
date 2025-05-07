@@ -17,12 +17,13 @@ typedef enum e_syntax
 
 typedef enum e_oper
 {
-	WORD = -1,
-	AND_O = 0, 
+	CMD		= -1,
+	AND_O	= 0, 
 	OR_O,
 	GSTART_O,
 	GEND_O,
 	PIPE_O,
+	WORD,
 	IN_R,
 	OUT_R,
 	APPD_R,
@@ -76,8 +77,10 @@ int			count_num_parsnodes(t_dlist **toklst);
 t_syntax	operators_are_supported(t_dlist *parlst);
 t_syntax	redirects_are_complete(t_dlist *parlst);
 
-t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst);
-void *fill_parnode_and_redirs(t_dlist **toklst, t_par_node **parnode);
+t_par_node		*init_parnode(int a, t_par_node **parnode, t_dlist **toklst);
+t_block_node	*intit_block_node(t_par_node **parnode, t_dlist **toklst);
+void			*fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode);
+void			*fill_blocknode_cmdarray(t_dlist **toklst, t_par_node **parnode);
 
 
 
@@ -89,6 +92,7 @@ void		*ft_parsing(t_mem **mem);
 //debug
 void	ft_print_oper_par(t_oper oper);
 void print_debug_parsing(t_list **parslst);
+void print_redir_list(t_list *redirs);
 
 
 

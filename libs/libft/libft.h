@@ -263,4 +263,8 @@ int			ft_dclst_dist_head_bidi(t_dll **tail, t_dll *node);
 int			ft_dclst_dist_head_bidi_len(t_dll **tail, t_dll *nd, int list_len);
 
 
+//debug
+void	ft_debug_print_array_of_strings_line(char **array, int fd);
+
+
 #endif

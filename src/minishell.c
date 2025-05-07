@@ -56,10 +56,13 @@ void ft_clean_mem_loop(t_mem **mem)
 	t_rdl_mem *cap;
 	t_tok_mem *tok;
 	t_hdc_mem *hd;
+	t_par_mem *par;
+
 
 	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
+	par = (*mem)->parsing;
 	//PASRSING
 
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
@@ -67,7 +70,7 @@ void ft_clean_mem_loop(t_mem **mem)
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
-	//RESET HEREDOC STATIC COUNTER
+	ft_free_and_null((void *)&par->parlst); ///// TEM LEAK AQUI
 	tok->block_count = 0;
 	tok->index_count = 0;	
 	return ;
