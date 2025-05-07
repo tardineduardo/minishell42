@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/06 18:47:48 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:57:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,11 +295,11 @@ char *ft_capture_in_interactive_mode(char *prompt);
 // built-ins
 int	ft_env(t_list *envlist);
 int	ft_pwd(t_list **envlist);
-int	ft_echo(char **cmd_arr, t_mem **mem);
+int	ft_echo(char **cmd_arr);
 int	ft_cd(t_list **envlist, char **cmd_arr);
 int	ft_export(t_list **envlist, char *variable_value);
 int	ft_unset(t_list **envlist, char *variable);
-int	ft_exit(char **cmd_arr, t_mem **mem);
+int	ft_exit(char **cmd_arr);
 
 // built-ins helpers
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
@@ -393,7 +393,7 @@ char	**ft_ms_env_arr(t_list **ms_env);
 
 //exec built in
 bool	is_built_in(char **cmd_arr);
-int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem);
+int	exec_built_in(t_list **ms_env, char	**cmd_arr);
 
 //redir control
 void	fd_output_redir(t_list **output_lst);

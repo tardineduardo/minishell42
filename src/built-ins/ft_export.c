@@ -6,111 +6,81 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/06 18:08:19 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:15:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-
-/*
-	**Mandatory: export with no options**
-	Cases possible: 
-		1. export VAR_NAME=VALUE
-			a. If the VAR_NAME already exists, checks if it is readonly and
-			after that updates the value. If readonly, nothing happens even 
-			a warning msg;
-			b. If the VAR_NAME does not exists, append the KEY=VALUE to our
-			linked list with all other environment variables
-		2. export
-			Passing only the command export, we need to print a list of all 
-			the exported variables TODO: how to identify if a env var is 
-			exported or not? running the command on real bash some vars
-			appears that are not on the call of env. Create a bool inside t_env
-			to mark with it is exported or not?
-*/
 t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
 t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 
-
-
-//@luiscarvalhofrade essa lógica a gente preisa rever depois, pois
-//podemos passar uma variável vazia, tipo "NOVA_VAR="
 int ft_export(t_list **envlist, char *variable_value)
 {
 	int	i;
-    char **result;
-    t_list *trav;
-    t_env_node *current;
+	char **result;
+	t_list *trav;
+	t_env_node *current;
 
-    if (!envlist)
-        return (1);
-
-    // Case 1: `export` (no args) → print all visible vars
-    if (!variable_value)
-    {
-        trav = *envlist;
-        while (trav)
-        {
-            current = (t_env_node *)trav->content;
-            if (current->visible)
-                ft_dprintf(1, "declare -x %s=\"%s\"\n", current->variable, current->value);
-            trav = trav->next;
-        }
-        return (0);
-    }
+	if (!envlist)
+		return (1);
+	if (!variable_value)
+	{
+		trav = *envlist;
+		while (trav)
+		{
+			current = (t_env_node *)trav->content;
+			if (current->visible)
+				ft_dprintf(1, "declare -x %s=\"%s\"\n", current->variable, current->value);
+			trav = trav->next;
+		}
+		return (0);
+	}
 	if (ft_strcmp(variable_value, "=") == 0)
-    {
-        ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
-        return (1);
-    }
-    // Case 2: `export VAR=VAL` → validate and add/update
-    result = ft_split_char(variable_value, '=');
-    if (!result || !result[0])
-        return (1);
-
-    // Validate VAR_NAME (letters, numbers, _, but starts with letter or _)
-    if (!ft_isalpha(result[0][0]) && result[0][0] != '_')
-    {
-        ft_free_split(result, 2);
-        ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
-        return (1);
-    }
+	{
+		ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
+		return (1);
+	}
+	result = ft_split_char(variable_value, '=');
+	if (!result || !result[0])
+		return (1);
+	if (!ft_isalpha(result[0][0]) && result[0][0] != '_')
+	{
+		ft_free_split(result, 2);
+		ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
+		return (1);
+	}
 	i = 1;
-    while (result[0][i])
-    {
-        if (!ft_isalnum(result[0][i]) && result[0][i] != '_')
-        {
-            ft_free_split(result, 2);
-            ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
-            return (1);
-        }
+	while (result[0][i])
+	{
+		if (!ft_isalnum(result[0][i]) && result[0][i] != '_')
+		{
+			ft_free_split(result, 2);
+			ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
+			return (1);
+		}
 		i++;
-    }
-
-    // Update existing var or add new one
-    trav = *envlist;
-    while (trav)
-    {
-        current = (t_env_node *)trav->content;
-        if (ft_strcmp(current->variable, result[0]) == 0)
-        {
-            if (!current->readonly && !current->block_unset)
-            {
-                free(current->value);
-                current->value = ft_strdup(result[1] ? result[1] : "");
-                current->visible = true;
-            }
-            ft_free_split(result, 2);
-            return (0);
-        }
-        trav = trav->next;
-    }
-
-    // Add new var
-    ft_ms_env_add(envlist, variable_value);
-    ft_free_split(result, 2);
-    return (0);
+	}
+	trav = *envlist;
+	while (trav)
+	{
+		current = (t_env_node *)trav->content;
+		if (ft_strcmp(current->variable, result[0]) == 0)
+		{
+			if (!current->readonly && !current->block_unset)
+			{
+				free(current->value);
+				current->value = ft_strdup(result[1] ? result[1] : "");
+				current->visible = true;
+			}
+			ft_free_split(result, 2);
+			return (0);
+		}
+		trav = trav->next;
+	}
+	ft_ms_env_add(envlist, variable_value);
+	ft_free_split(result, 2);
+	return (0);
 }
 
 void	ft_ms_env_add(t_list **envlist, char *variable_value)
@@ -131,7 +101,6 @@ void	ft_ms_env_add(t_list **envlist, char *variable_value)
 	return ;
 }
 
-
 void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value)
 {
 	t_list *trav;
@@ -139,7 +108,6 @@ void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value)
 
 	if (!envlist || !variable || !value)
 		return ;
-	
 	trav = *envlist;
 	while (trav)
 	{
@@ -169,8 +137,8 @@ t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visibl
 	//if (!new)
 		//return (ft_env_syscall_error("Init node malloc error"));
 	new->variable = ft_strdup(variable);
-    new->value = ft_strdup(value);
-    new->readonly = false;
+	new->value = ft_strdup(value);
+	new->readonly = false;
 	new->block_unset = false;
 	new->visible = visible;
 	return (new);
