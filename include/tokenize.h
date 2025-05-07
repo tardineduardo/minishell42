@@ -64,14 +64,10 @@ void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_m
 
 
 //needed later for parsing 
-bool	is_redir(t_tok_node *toknode);
-bool	is_pipe(t_tok_node *toknode);
-bool	is_logical(t_tok_node *toknode);
-bool	is_subshell(t_tok_node *toknode);
-bool	is_supported_token(t_tok_node *toknode);
-bool	is_operator(t_tok_node *toknode);
-bool	is_command(t_tok_node *toknode);
 bool	is_word(t_tok_node *toknode);
+bool	is_redir(t_tok_node *toknode);
+bool	is_pipe_logical_or_subshell(t_tok_node *toknode);
+bool	is_command(t_tok_node *toknode);
 
 
 
