@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/07 12:57:16 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:15:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define NEXT_CHAR (*exp)->raw[(*exp)->a + 1]
 # define A (*exp)->a
 # define B (*exp)->b
+# define ERR_PERMISSION_DENIED 126
+# define ERR_NO_SUCH_FILE 127
 
 
 typedef enum e_node_type
@@ -411,5 +413,8 @@ void	handle_signal_cmd(int signo);
 void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
+
+//exec_error
+//int	ft_exec_error(int exit_code, const char *file);
 
 #endif

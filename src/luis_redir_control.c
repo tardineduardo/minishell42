@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:27:21 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/05 17:33:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:47:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,32 @@ int	file_input_handler(t_list **input_lst)
 {
 	int				fd;
 	t_list			*cur_node_input;
-	t_input_node	*last_input;
+	t_input_node	*cur_input;
 
 	if (input_lst == NULL || *input_lst == NULL)
 		return (-1);
 	cur_node_input = *input_lst;
-	while (cur_node_input->next)
-		cur_node_input = cur_node_input->next;
-	last_input = cur_node_input->content;
-	fd = open(last_input->name, O_RDONLY);
-	if (fd == -1)
+	while (cur_node_input)
 	{
-		perror(last_input->name);
-		exit(EXIT_FAILURE);
+		cur_input = cur_node_input->content;
+		if (access(cur_input->name, F_OK) != 0)
+		{
+			ft_dprintf(2, "%s: No such file or directory", cur_input->name);
+			exit(1);
+		}
+		fd = open(cur_input->name, O_RDONLY);
+		if (fd == -1)
+		{
+			close(fd);
+			perror(cur_input->name);
+			exit(EXIT_FAILURE);
+		}
+		if (cur_node_input->next == NULL)
+			return (fd);
+		close(fd);
+		cur_node_input = cur_node_input->next;
 	}
-	return (fd);              
+	return (0);              
 }
 
 int file_output_handler(t_list **output_lst)
@@ -51,6 +62,7 @@ int file_output_handler(t_list **output_lst)
 			fd = open(cur_output->name, O_WRONLY | O_APPEND | O_CREAT, 0644);
 		if (fd == -1)
 		{
+			close(fd);
 			perror(cur_output->name);
 			exit(EXIT_FAILURE);
 		}

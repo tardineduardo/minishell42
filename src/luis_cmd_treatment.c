@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:19:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/22 09:19:19 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:54:47 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
 			if (path_options != NULL)
 				ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
 			free(right_option);
-			// perror("path option");
-			// exit(EXIT_FAILURE);
 		}
 		else
 		{
