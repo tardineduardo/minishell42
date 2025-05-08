@@ -10,7 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../include/minishell.h"  
+#include "../../include/heredoc.h"
+#include "../../include/expand.h"
+#include "../../include/tokenize.h"
+#include "../../include/environs.h"
+#include "../../include/heredoc.h"
+#include "../../include/builtins.h"
+
 
 /*
 	**Mandatory: env with no options or with no arguments**

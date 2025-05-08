@@ -102,14 +102,37 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lst_destroy_node.c \
 		lists/slist/ft_lst_unlink_node.c \
 		lists/clist/ft_clistsize.c \
-		lists/dclist/ft_dclistsize.c \
 		lists/slist/ft_lstcopy.c \
+		lists/dclist/ft_dclistsize.c \
+		lists/dclist/ft_dclst_circle_sorted.c \
+		lists/dclist/ft_dclst_clock_sortd.c \
+		lists/dclist/ft_dclst_dist_head_bidi_len.c \
+		lists/dclist/ft_dclst_dist_head_bidi.c \
+		lists/dclist/ft_dclst_find_highest_int.c \
+		lists/dclist/ft_dclst_find_lowest_int.c \
+		lists/dclist/ft_dclst_find_node.c \
+		lists/dclist/ft_dclst_find_value.c \
+		lists/dclist/ft_dclstadd_back.c \
+		lists/dclist/ft_dclstclear_simple.c \
+		lists/dclist/ft_dclstnew.c \
+		lists/dlist/ft_dlstclear.c \
+		lists/dlist/ft_dlst_destroy_node.c \
+		lists/dlist/ft_dlst_unlink_node.c \
+		lists/dlist/ft_dlstadd_back.c \
+		lists/dlist/ft_dlstadd_front.c \
+		lists/dlist/ft_dlstclear.c \
+		lists/dlist/ft_dlstcopy.c \
+		lists/dlist/ft_dlstdelone.c \
+		lists/dlist/ft_dlstiter.c \
+		lists/dlist/ft_dlstlast.c \
+		lists/dlist/ft_dlstmap.c \
+		lists/dlist/ft_dlstnew.c \
+		lists/dlist/ft_dlstsize.c \
 
-
-DEBUG =	debug/ft_debug_print_array_of_ints.c \
-		debug/ft_debug_print_array_of_strings.c \
-		debug/ft_debug_print_dclist.c \
-		debug/ft_debug_print_list.c \
+DEBUG =	debug/ft_debug_print_array_of_strings.c \
+		# debug/ft_debug_print_array_of_ints.c \
+		# debug/ft_debug_print_dclist.c \
+		# debug/ft_debug_print_list.c \
 
 OBJS =	$(PRINT:.c=.o) \
 		$(CONV:.c=.o) \

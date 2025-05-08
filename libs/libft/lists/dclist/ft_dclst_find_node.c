@@ -1,41 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_debug_print_array_of_strings.c                                  :+:      :+:    :+:   */
+/*   ft_dclst_find_node.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/12 18:49:43 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/26 13:50:38 by eduribei         ###   ########.fr       */
+/*   Created: 2024/11/12 18:23:12 by eduribei          #+#    #+#             */
+/*   Updated: 2024/11/12 18:23:48 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft.h"
+#include "../../libft.h"
 
-void	ft_debug_print_array_of_strings(char **array, int fd)
+t_dll	*ft_dclst_find_node(t_dll **tail, t_dll *node)
 {
-	int	a;
+	t_dll	*trav;
 
-	a = 0;
-	while (array[a] != NULL)
+	if (!tail || !(*tail) || !node)
+		return (NULL);
+	trav = *tail;
+	while (1)
 	{
-		ft_dprintf(fd, "[%i] %s\n", a, array[a]);
-		a++;
+		if (trav == node)
+			return (trav);
+		trav = trav->next;
+		if (trav == *tail)
+			break ;
 	}
-	ft_dprintf(fd, "\n");
-}
-
-void	ft_debug_print_array_of_strings_line(char **array, int fd)
-{
-	int	a;
-
-	a = 0;
-	while (array[a] != NULL)
-	{
-		ft_dprintf(fd, "\"%s\"", array[a]);
-		a++;
-
-		if(array[a])
-			ft_dprintf(fd, " ");
-	}
+	return (NULL);
 }

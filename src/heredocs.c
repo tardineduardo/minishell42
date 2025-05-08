@@ -11,54 +11,32 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-char	*ft_hd_create_file(int *hd_count_int, char **filepath);
-char	*ft_hd_input_loop(t_list **envlist, t_mem **mem);
-void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem);
-char	*ft_hd_validate_path(char **filepath, int *hd_count_int);
-int		ft_hd_init_file(char **filepath);
-void	ft_del_heredoc_node(void *content);
-void	reset(t_mem **mem);
-
+#include "../include/heredoc.h"
+#include "../include/expand.h"
 
 char	*ft_heredoc(char *delimiter, t_mem **mem)
 {
 	static int	hd_count_int;
-	t_hd_mem	*hd;
+	t_hdc_mem	*hd;
 	t_env_mem	*env;
 
 	hd = (*mem)->heredoc;
 	env = (*mem)->environs;
-	hd->delim = ft_expand(&delimiter, DELIMITER, mem);
+
+	hd->delim = ft_strdup(delimiter);
+	ft_expand(&hd->delim, DELIMITER, mem);
 	if (!hd->delim)
 		return (NULL);
 	if (!ft_hd_create_file(&hd_count_int, &hd->filepath))
 		return (NULL);
 	if (!ft_hd_input_loop(&env->envlist, mem))
 		return (NULL);
-	hd->node = malloc(sizeof(t_hd_node));
-	if (!hd->node)
-		return (NULL);
-	hd->node->fpath = hd->filepath;
-	hd->new = ft_lstnew(hd->node);
-	ft_lstadd_back(&hd->list, hd->new);  //Essa lógica precisa ser revista
 	hd_count_int++;
 	if (hd_count_int == INT_MAX)
 		return (NULL);
-	return (hd->delim);				//esse valor de retorno precisa ser revisto
+	ft_free_and_null((void *)&hd->delim);	
+	return (hd->filepath);
 }
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-// o heredoc precisa retornar uma dup de fpath e LIMPAR toda a memoria.
-// nao posso simplemente encadear heredocs em sequencia, porqu eu nao sei 
-// a precedencia de cada um. isso precisara ser feito na hora depois?
-// por outro lado, o bash pega sim os hd sem que a arvore esteja pronta. preciso
-// entender essa logica melhor. 
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 
 
 //Cria o arquivo temporário para receber o heredoc.
@@ -83,7 +61,7 @@ char	*ft_hd_create_file(int *hd_count_int, char **filepath)
 void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem)
 {
 	int			hd_temp_file;
-	t_hd_mem	*hd; 
+	t_hdc_mem	*hd; 
 
 	hd = (*mem)->heredoc;
 
@@ -111,7 +89,7 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem)
 char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 {
 	int			hd_loop_count;
-	t_hd_mem	*hd; 
+	t_hdc_mem	*hd; 
 
 	hd =(*mem)->heredoc;
 	(void)envlist;
@@ -187,25 +165,23 @@ int	ft_hd_init_file(char **filepath)
 	return (0);
 }
 
-void	ft_del_heredoc_node(void *content)
+
+void	*ft_init_hdc_memory(t_mem **mem)
 {
-	t_hd_node	*hd_node;
-
-	if (!content)
-		return ;
-	
-	hd_node = (t_hd_node *)content;
-	if (!hd_node->fpath)
-		return ;
-
-		
-	if (access(hd_node->fpath, F_OK) == 0)
-	{
-		unlink(hd_node->fpath);
-		ft_free_and_null((void *)&hd_node->fpath);
-	}
-	ft_free_and_null((void *)&hd_node);
+	(*mem)->heredoc = malloc(sizeof(t_hdc_mem));
+	if(!(*mem)->heredoc)
+		return (NULL);
+	(*mem)->heredoc->delim = NULL;
+	(*mem)->heredoc->filepath = NULL;
+	(*mem)->heredoc->looptemp = NULL;
+	(*mem)->heredoc->loopinput = NULL;
+	(*mem)->heredoc->mode = INIT_MODE;
+	return ((*mem)->heredoc);
 }
 
-
-
+void	ft_clear_hdc_mem(t_hdc_mem **hd)
+{
+	ft_free_and_null((void *)&(*hd)->delim);
+	free(*hd);
+	return ;
+}

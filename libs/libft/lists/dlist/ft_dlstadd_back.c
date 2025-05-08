@@ -1,41 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_debug_print_array_of_strings.c                                  :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/12 18:49:43 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/26 13:50:38 by eduribei         ###   ########.fr       */
+/*   Created: 2024/05/21 13:49:50 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/18 15:06:14 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft.h"
+#include "../../libft.h"
 
-void	ft_debug_print_array_of_strings(char **array, int fd)
+// back means the end of the list, far from head.
+void	ft_dlstadd_back(t_dlist **lst, t_dlist *new)
 {
-	int	a;
+	t_dlist	*temp;
 
-	a = 0;
-	while (array[a] != NULL)
+	if (lst == NULL || new == NULL)
+		return ;
+	if (*lst == NULL)
 	{
-		ft_dprintf(fd, "[%i] %s\n", a, array[a]);
-		a++;
+		*lst = new;
 	}
-	ft_dprintf(fd, "\n");
-}
-
-void	ft_debug_print_array_of_strings_line(char **array, int fd)
-{
-	int	a;
-
-	a = 0;
-	while (array[a] != NULL)
+	else
 	{
-		ft_dprintf(fd, "\"%s\"", array[a]);
-		a++;
-
-		if(array[a])
-			ft_dprintf(fd, " ");
+		temp = ft_dlstlast(*lst);
+		temp->next = new;
 	}
 }

@@ -57,15 +57,29 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-}				t_list;
+} t_list;
 
 typedef struct s_dlist
 {
 	void			*content;
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
+} t_dlist;
 
-}				t_dll;
+typedef struct s_dll
+{
+	void			*content;
+	struct s_dll	*next;
+	struct s_dll	*prev;
+} t_dll;
+
+typedef struct s_btree
+{
+struct s_btree	*left;
+struct s_btree	*right;
+void			*data;
+} t_btree;
+
 
 typedef long long	t_llong;
 
@@ -210,10 +224,47 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
 int		ft_clstsize(t_list **tail);
-int		ft_dclstsize(t_dll **tail);
 void	ft_debug_print_list(t_list **head, char *type, size_t offset);
 t_list	*ft_lstcopy(t_list *source);
 
+
+
+
+void	ft_dlstadd_front(t_dlist **lst, t_dlist *new);
+void	ft_dlstadd_back(t_dlist **lst, t_dlist *new);
+void	ft_dlstclear(t_dlist **lst, void (*del)(void*));
+t_dlist	*ft_dlst_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*));
+t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*));
+
+t_dlist	*ft_dlst_unlink_node(t_dlist **head, t_dlist *node);
+t_dlist	*ft_dlst_quick_unlink_node(t_dlist **head, t_dlist *node);
+void	ft_dlstdelone(t_dlist *lst, void (*del)(void*));
+void	ft_dlstiter(t_dlist *lst, void (*f)(void *));
+t_dlist	*ft_dlstlast(t_dlist *lst);
+t_dlist	*ft_dlstmap(t_dlist *lst, void *(*f)(void *), void (*del)(void *));
+t_dlist	*ft_dlstnew(void *content);
+int		ft_dlstsize(t_dlist *lst);
+
+
+
+
+//lists - dclist
+t_dll		*ft_dclstnew(void *content);
+t_dll		*ft_dclst_find_lo_int(t_dll **tail, int offset);
+t_dll		*ft_dclst_find_hi_int(t_dll **tail, int offset);
+t_dll		*ft_dclst_find_value(t_dll **tail, int value, int offset);
+t_dll		*ft_dclst_find_node(t_dll **tail, t_dll *node);
+bool		ft_dclst_clock_sortd(t_dll **tail, char mode, int offset);
+bool		ft_dclst_circ_sortd(t_dll **tail, char mode, int offset);
+void		ft_dclstadd_back(t_dll **tail, t_dll *new);
+void		ft_dclstclear_simple(t_dll **lst);
+int			ft_dclstsize(t_dll **tail);
+int			ft_dclst_dist_head_bidi(t_dll **tail, t_dll *node);
+int			ft_dclst_dist_head_bidi_len(t_dll **tail, t_dll *nd, int list_len);
+
+
+//debug
+void	ft_debug_print_array_of_strings_line(char **array, int fd);
 
 
 #endif

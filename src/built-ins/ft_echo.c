@@ -10,7 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../include/minishell.h"  
+#include "../../include/heredoc.h"
+#include "../../include/expand.h"
+#include "../../include/tokenize.h"
+#include "../../include/environs.h"
+#include "../../include/heredoc.h"
+#include "../../include/builtins.h"
+
+
 
 void	ft_echo(char *line, bool flag)
 {

@@ -1,41 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_debug_print_array_of_strings.c                                  :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/12 18:49:43 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/26 13:50:38 by eduribei         ###   ########.fr       */
+/*   Created: 2024/05/21 14:33:44 by eduribei          #+#    #+#             */
+/*   Updated: 2025/03/06 22:46:50 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft.h"
+#include "../../libft.h"
 
-void	ft_debug_print_array_of_strings(char **array, int fd)
+void	ft_dlstclear(t_dlist **lst, void (*del)(void*))
 {
-	int	a;
+	t_dlist	*curr;
+	t_dlist	*next;
 
-	a = 0;
-	while (array[a] != NULL)
+	if (lst == NULL || *lst == NULL)
+		return ;
+	curr = *lst;
+	while (curr)
 	{
-		ft_dprintf(fd, "[%i] %s\n", a, array[a]);
-		a++;
+		next = curr->next;
+		if (del)
+			del(curr->content);
+		free(curr);
+		curr = next;
 	}
-	ft_dprintf(fd, "\n");
-}
-
-void	ft_debug_print_array_of_strings_line(char **array, int fd)
-{
-	int	a;
-
-	a = 0;
-	while (array[a] != NULL)
-	{
-		ft_dprintf(fd, "\"%s\"", array[a]);
-		a++;
-
-		if(array[a])
-			ft_dprintf(fd, " ");
-	}
+	*lst = NULL;
 }

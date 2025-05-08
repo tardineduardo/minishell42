@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
+
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -27,12 +34,13 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		if(!ft_ast_create(&mem))
-		{
-			ft_clean_mem_loop(&mem);
-			continue ;
-		}
-		if(!ft_execute(mem->capture->line, &mem))
+		ft_parsing(&mem);
+		// if(!ft_parsing(&mem))
+		// {
+		// 	ft_clean_mem_loop(&mem);
+		// 	continue ;
+		// }
+		if(!ft_execute(mem->readline->line, &mem))
 		{
 			ft_clean_mem_loop(&mem);
 			continue ;
@@ -45,19 +53,25 @@ int	main(int argc, char *argv[], char *envp[])
 
 void ft_clean_mem_loop(t_mem **mem)
 {
-	t_cap_mem *cap;
+	t_rdl_mem *cap;
 	t_tok_mem *tok;
-	t_hd_mem *hd;
+	t_hdc_mem *hd;
+	t_par_mem *par;
 
-	cap = (*mem)->capture;
+
+	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
+	par = (*mem)->parsing;
+	//PASRSING
 
-	ft_lstclear(&tok->toklst, ft_del_token_node);
+	ft_dlstclear(&tok->toklst, ft_del_token_node);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
-	
+	ft_free_and_null((void *)&par->parlst); ///// TEM LEAK AQUI
+	tok->block_count = 0;
+	tok->index_count = 0;	
 	return ;
 }

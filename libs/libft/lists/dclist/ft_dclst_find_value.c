@@ -1,41 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_debug_print_array_of_strings.c                                  :+:      :+:    :+:   */
+/*   ft_dclst_find_value.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/12 18:49:43 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/26 13:50:38 by eduribei         ###   ########.fr       */
+/*   Created: 2024/10/28 15:42:18 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/28 20:30:29 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft.h"
+#include "../../libft.h"
 
-void	ft_debug_print_array_of_strings(char **array, int fd)
+t_dll	*ft_dclst_find_value(t_dll **tail, int value, int offset)
 {
-	int	a;
+	t_dll	*trav;
 
-	a = 0;
-	while (array[a] != NULL)
+	if (!tail || !(*tail))
+		return (NULL);
+	trav = (*tail)->next;
+	while (1)
 	{
-		ft_dprintf(fd, "[%i] %s\n", a, array[a]);
-		a++;
+		if (*(int *)((char *)trav + offset) == value)
+			return (trav);
+		trav = trav->next;
+		if (trav == (*tail)->next)
+			break ;
 	}
-	ft_dprintf(fd, "\n");
-}
-
-void	ft_debug_print_array_of_strings_line(char **array, int fd)
-{
-	int	a;
-
-	a = 0;
-	while (array[a] != NULL)
-	{
-		ft_dprintf(fd, "\"%s\"", array[a]);
-		a++;
-
-		if(array[a])
-			ft_dprintf(fd, " ");
-	}
+	return (NULL);
 }

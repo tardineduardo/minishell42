@@ -1,31 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_dclistsize.c                                    :+:      :+:    :+:   */
+/*   ft_dclst_list_sorted.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 19:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2024/11/12 18:23:29 by eduribei         ###   ########.fr       */
+/*   Created: 2024/11/14 19:23:56 by eduribei          #+#    #+#             */
+/*   Updated: 2024/11/14 19:27:05 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft.h"
 
-int	ft_dclstsize(t_dll **tail)
+bool	ft_dclst_list_sortd(t_dll **tail, t_accessor get_label)
 {
-	int		count_fwd;
-	t_dll	*trav_fwd;
+	int		len;
+	int		curr;
+	int		next;
+	t_dll	*trav;
 
-	if (*tail == NULL)
-		return (0);
-	trav_fwd = *tail;
-	count_fwd = 1;
-	trav_fwd = trav_fwd->next;
-	while (trav_fwd != *tail)
+	len = ft_dclstsize(tail);
+	trav = (*tail)->next;
+	if (len < 0)
+		ft_perror_exit("ft_dclstsize error", EINVAL);
+	if (len == 1 || len == 0)
+		return (true);
+	while (len > 1)
 	{
-		count_fwd++;
-		trav_fwd = trav_fwd->next;
+		curr = *(int *)get_label(trav);
+		next = *(int *)get_label(trav->next);
+		if (curr > next)
+			return (false);
+		trav = trav->next;
+		len--;
 	}
-	return (count_fwd);
+	return (true);
 }

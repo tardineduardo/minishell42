@@ -1,41 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_debug_print_array_of_strings.c                                  :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/12 18:49:43 by eduribei          #+#    #+#             */
-/*   Updated: 2024/10/26 13:50:38 by eduribei         ###   ########.fr       */
+/*   Created: 2024/05/21 13:49:21 by eduribei          #+#    #+#             */
+/*   Updated: 2024/10/18 15:07:17 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft.h"
+#include "../../libft.h"
 
-void	ft_debug_print_array_of_strings(char **array, int fd)
+int	ft_dlstsize(t_dlist *lst)
 {
-	int	a;
+	int		counter;
+	t_dlist	*trav;
 
-	a = 0;
-	while (array[a] != NULL)
+	trav = lst;
+	counter = 0;
+	while (trav != NULL)
 	{
-		ft_dprintf(fd, "[%i] %s\n", a, array[a]);
-		a++;
+		trav = trav->next;
+		counter++;
 	}
-	ft_dprintf(fd, "\n");
-}
-
-void	ft_debug_print_array_of_strings_line(char **array, int fd)
-{
-	int	a;
-
-	a = 0;
-	while (array[a] != NULL)
-	{
-		ft_dprintf(fd, "\"%s\"", array[a]);
-		a++;
-
-		if(array[a])
-			ft_dprintf(fd, " ");
-	}
+	return (counter);
 }
