@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 13:48:58 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:59:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 		exit(EXIT_SUCCESS);
 	}
 }
+
 int	print_child_statuses(t_pipe_data *p, int *status)
 {
 	int sig;
@@ -231,7 +232,7 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 		pid = fork();
 		if (pid == 0)
 		{
-			ret = ft_execute(ms_env, &(*root), mem);
+			ret = ft_execute(ms_env, &(*root)->subshell->body, mem);
 			exit(ret);
 		}
 		else

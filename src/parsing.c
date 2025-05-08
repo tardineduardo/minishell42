@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 14:09:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 17:27:32 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,23 @@
 #include "../include/minishell.h"
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
+#include "../include/environs.h"
+#include "../include/execution.h"
 
 // RETORNA O POINTER PARA ROOT DE AST
 void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 {
-	// t_ast_node *root;
+	// t_ast_node	*root;
 	t_par_mem	*par;
 	t_tok_mem	*tok;
+	// t_env_mem	*env;
+	// int			res;
 
 	//(void)root;
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
+	// env	= (*mem)->environs;
 
 	if (!ft_check_syntax(tok->toklst))
 	{
@@ -37,7 +42,8 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 	
 	// É AQUI QUE CONTINUA. parse expression está em ast.c	
 	// root = parse_expression(&par->parlst);
-	
+	// res = ft_execute(&env->envlist, &root, mem);
+	// ft_ms_env_update_exit_code(&env->envlist, "?", res);
 
 
 	// print_ast(root, 0);

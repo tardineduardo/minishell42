@@ -17,11 +17,6 @@ ENVIRON 	=	src/environs.c \
 OPERATORS 	=	src/operators.c \
 
 PARSER		=	src/parsing.c \
-				# src/luis_redirections.c \
-				# src/luis_commands_utils.c \
-				# src/luis_commands.c \
-				# src/luis_org_tok.c \
-				# src/luis_ast_create.c \
 
 AST 		=	src/ast.c \
 
