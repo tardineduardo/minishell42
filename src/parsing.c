@@ -33,8 +33,13 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 		return (NULL);
 	}
 	ft_create_parlst(&tok->toklst, &par->parlst);
+	
+	
+	// É AQUI QUE CONTINUA. parse expression está em ast.c	
 	//root = parse_expression(&par->parlst);
 	
+
+
 	//print_ast(root, 0);
 	return (mem); //trocar para rotrnar o pointer para árvore.
 }
@@ -138,7 +143,7 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst)
 input_list, output_list e redir_list. Dá para deixar menor depois.*/
 void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
 {
-	t_list			*redirlstnode;
+	t_list			*redirlse;
 	t_list			*copy;
 	t_tok_node		*toknode;
 	t_redirs_node	*redirnode;
@@ -162,8 +167,8 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
 		redirnode->name = ft_strdup(toknode->heredoc_path);
 	if(oper == APPD_R)
 		redirnode->create = false;
-	redirlstnode = ft_lstnew(redirnode);
-	ft_lstadd_back(&(*parnode)->block_node->redirs_lst, redirlstnode);
+	redirlse = ft_lstnew(redirnode);
+	ft_lstadd_back(&(*parnode)->block_node->redirs_lst, redirlse);
 	copy = ft_lstnew(redirnode);
 	if (oper == IN_R	|| oper == HDC_R)
 		ft_lstadd_back(&(*parnode)->block_node->input_lst, copy);
@@ -172,6 +177,49 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	return (*parnode);
 }
+
+
+
+
+//
+// Quando dispensar inputlist e outputlist, pode essar essa de baixo.
+//
+// void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
+// {
+// 	t_list			*redirlst;
+// 	t_tok_node		*toknode;
+// 	t_redirs_node	*redirnode;
+// 	t_oper			oper;
+
+// 	if(!(*parnode)->block_node)
+// 		intit_block_node(parnode, toklst);
+
+// 	redirnode = malloc(sizeof(t_redirs_node));
+// 	if(!redirnode)
+// 		return (NULL);
+
+// 	oper = ((t_tok_node *)(*toklst)->content)->oper;
+	
+// 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
+
+// 	toknode = (t_tok_node *)(*toklst)->content;
+// 	redirnode->type = oper;
+// 	redirnode->create = true;
+	
+// 	if(oper == IN_R || oper == OUT_R || oper == APPD_R)
+// 		redirnode->name = ft_strdup(toknode->value); 		//AQUI PRECISA PEGAR O FULL PATH
+// 	if(oper == HDC_R)
+// 		redirnode->name = ft_strdup(toknode->heredoc_path); //O PATH DO HEREDOC JA VEM PRONTO
+// 	if(oper == APPD_R)
+// 		redirnode->create = false;
+// 	redirlst = ft_lstnew(redirnode);
+// 	ft_lstadd_back(&(*parnode)->block_node->redirs_lst, redirlst);
+	
+// 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
+// 	return (*parnode);
+// }
+
+
 
 
 

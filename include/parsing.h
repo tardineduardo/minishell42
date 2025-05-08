@@ -43,22 +43,32 @@ typedef struct s_redirs_node
 	int				err;
 }					t_redirs_node;
 
-typedef struct s_block_node // s_cmd_node
+typedef struct s_block_node // esse é s_cmd_node
 {
 	char	**cmd_arr;
 	t_list	*input_lst;
 	t_list	*output_lst;
 	t_list	*redirs_lst;
-	int		err;
+	int		err;				// deixei, mas näo sei para que serve
 }			t_block_node;
 
 typedef struct s_par_node // s_ork_tok
 {
-	//char			*value; ---	nao precisamos disso.
-	t_oper			oper; // --	aqui uso t_oper em vez de int, mas os valores sao os mesmos
-	int				block_index; //
+	//char			*value; 		// nao precisamos disso.
+	t_oper			oper; 			// t_oper em vez de int, mas os valores iguais
+	int				block_index;	// esse é int cmd
 	t_block_node	*block_node;
 }	t_par_node;
+
+
+// typedef struct s_org_tok
+// {
+// 	char	*value;
+// 	int		oper;
+// 	int		cmd;
+// 	t_cmd_node	*cmd_node;
+// } t_org_tok;
+
 
 
 
@@ -72,7 +82,7 @@ typedef struct s_par_mem
 void		*ft_init_par_memory(t_mem **mem);
 void		ft_clear_par_mem(t_par_mem **par);
 t_syntax	ft_check_syntax(t_dlist *parlst);
-t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst);
+t_list		*ft_create_parlst(t_dlist **toklst, t_list **parlst);
 int			count_num_parsnodes(t_dlist **toklst);
 t_syntax	operators_are_supported(t_dlist *parlst);
 t_syntax	redirects_are_complete(t_dlist *parlst);
