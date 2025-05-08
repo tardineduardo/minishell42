@@ -25,7 +25,7 @@ void	*ft_readline(t_mem **mem)
 	rdl = (*mem)->readline;
 	rdl->line = readline(YELLOW "Minishell> " RESET);
 	if (!rdl->line)
-		return (NULL);
+		exit(0);
 	if (ft_strlen(rdl->line) == 0)
 		return (NULL);
 	if (!ft_tokenize(&rdl->line, mem))
