@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/08 13:43:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:22:38 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,15 @@
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_mem	*mem;
-	t_ast_node *root;
+	t_mem		*mem;
+	t_ast_node	*root;
+	int			res;
 
 	(void)argc;
 	(void)argv;
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
-	//ft_ms_env_add_exit_code(&(*mem).environs->envlist, "?", 0);
+	ft_ms_env_add_exit_code(&(*mem).environs->envlist, "?", 0);
 	while (1)
 	{
 		signal(SIGINT, handle_signal_prompt);
@@ -39,17 +40,15 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		ft_parsing(&mem);
+		if(!ft_parsing(&mem))
+		{
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
 		root = parse_expression(&mem->parsing->parlst);
-
-
-		print_ast(root, 0);
-		ft_execute(&(*mem).environs->envlist, &root, &mem);
-		// if(!ft_parsing(&mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
+		//print_ast(root, 0);
+		res = ft_execute(&(*mem).environs->envlist, &root, &mem);
+		ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 		// if(!ft_execute(mem->readline->line, &mem))
 		// {
 		// 	ft_clean_mem_loop(&mem);

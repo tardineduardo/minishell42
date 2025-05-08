@@ -6,18 +6,19 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 13:28:47 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:47:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../include/minishell.h"
+#include "../include/parsing.h"
 
 int	file_input_handler(t_list **input_lst)
 {
 	int				fd;
 	t_list			*cur_node_input;
-	t_input_node	*cur_input;
+	t_redirs_node	*cur_input;
 
 	if (input_lst == NULL || *input_lst == NULL)
 		return (-1);
@@ -49,7 +50,7 @@ int file_output_handler(t_list **output_lst)
 {
 	int				fd;
 	t_list			*cur_node_output;
-	t_output_node	*cur_output;
+	t_redirs_node	*cur_output;
 
 	if (output_lst == NULL || *output_lst == NULL)
 		return (-1);

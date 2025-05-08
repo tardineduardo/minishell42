@@ -31,10 +31,10 @@ void	*ft_tokenize(char **line, t_mem **mem)
 
 
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
-	ft_expand_toklist(&tok->toklst, mem);			//DEBUG
-	ft_debug_list(&tok->toklst);					//DEBUG
-	ft_debug_indexes(&tok->toklst);					//DEBUG
-	ft_printf("\n");								//DEBUG
+	//ft_expand_toklist(&tok->toklst, mem);			//DEBUG
+	//ft_debug_list(&tok->toklst);					//DEBUG
+	//ft_debug_indexes(&tok->toklst);					//DEBUG
+	//ft_printf("\n");								//DEBUG
 	
 	return (mem);
 }

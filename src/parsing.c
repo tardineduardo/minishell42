@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 11:54:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:09:29 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 	num_parsnodes = count_num_parsnodes(toklst);
 	
 	//debug
-	ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
+	//ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
 
 	a = 0;
 	// começa a preencher os nodes de parlst.	
@@ -80,7 +80,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 	}
 
 	//debug
-	print_debug_parsing(parlst);
+	//print_debug_parsing(parlst);
 	return (*parlst);
 }
 

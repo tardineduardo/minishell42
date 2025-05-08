@@ -6,12 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 13:25:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:00:24 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/environs.h"
+#include "../include/execution.h"
 
 char	**ft_ms_env_arr(t_list **ms_env)
 {

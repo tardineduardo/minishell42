@@ -28,8 +28,9 @@ AST 		=	src/ast.c \
 EXECUTE		= 	src/execution.c \
 				src/exec_block_treatment.c \
 				src/exec_built_in.c \
-				src/ext_cmd.c \
+				src/exec_ext_cmd.c \
 				src/exec_redir_control.c \
+				src/exec_exit_code.c \
 
 SIGNALS		= 	src/signals.c \
 
