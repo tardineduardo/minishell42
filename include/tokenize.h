@@ -1,8 +1,10 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# include "minishell.h"  
+# include "minishell.h"
 # include "parsing.h"			// for t_oper
+
+typedef struct	s_mem t_mem;
 
 typedef enum e_tok_exit
 {

@@ -1,8 +1,11 @@
 #ifndef HEREDOC_H
 # define HEREDOC_H
 
-# include "minishell.h"  
+# include "minishell.h" 
 # include "tokenize.h"
+
+typedef struct	s_mem t_mem;
+typedef enum e_quote t_quote;
 
 typedef struct s_hdc_mem
 {

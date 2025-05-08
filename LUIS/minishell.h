@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:32:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,13 +283,13 @@ void	ft_clear_mem_and_exit(t_mem **mem);
 char *ft_capture_in_interactive_mode(char *prompt);
 
 // built-ins
-void	ft_env(t_list *envlist);
-void	ft_pwd(t_list **envlist);
-void	ft_echo(char *line, bool flag);
-void	ft_cd(t_list **envlist, char *new_path);
-void	ft_exit(void);
-void	ft_export(t_list **envlist, char *variable_value);
-void	ft_unset(t_list **envlist, char *variable);
+// void	ft_env(t_list *envlist);
+// void	ft_pwd(t_list **envlist);
+// void	ft_echo(char *line, bool flag);
+// void	ft_cd(t_list **envlist, char *new_path);
+// void	ft_exit(void);
+// void	ft_export(t_list **envlist, char *variable_value);
+// void	ft_unset(t_list **envlist, char *variable);
 
 // built-ins helpers
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
@@ -359,7 +359,7 @@ int		is_redirection(char *value);
 void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
 
 //ast create
-t_ast_node	*parse_expression(t_list **tokens);
+t_ast_node	*parse_expression(t_list **parlst);
 void		print_ast(t_ast_node *node, int depth);
 
 //DEBUG - REMOVER DEPOIS

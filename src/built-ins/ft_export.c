@@ -6,11 +6,12 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 10:26:22 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:35:24 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include "../../include/environs.h"
 
 
 /*
@@ -29,17 +30,17 @@
 			appears that are not on the call of env. Create a bool inside t_env
 			to mark with it is exported or not?
 */
-t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value);
+t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
 t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 
-
-
+void	ft_ms_env_add(t_list **envlist, char *variable_value);
+void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 //@luiscarvalhofrade essa lógica a gente preisa rever depois, pois
 //podemos passar uma variável vazia, tipo "NOVA_VAR="
 
 //nomes de variáveis em Bash devem começar com uma letra ou underline (_) — 
 // não podem começar com um número. validar isso.
-void	ft_export(t_list **envlist, char *variable_value)
+int	ft_export(t_list **envlist, char *variable_value)
 {
 	int	i;
 	char **result;

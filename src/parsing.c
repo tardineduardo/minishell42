@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   luis_org_tok.c                                     :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:54:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 // RETORNA O POINTER PARA ROOT DE AST
 void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 {
-	t_ast_node *root;
+	// t_ast_node *root;
 	t_par_mem	*par;
 	t_tok_mem	*tok;
 
-	(void)root;
+	//(void)root;
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
@@ -36,11 +36,11 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 	
 	
 	// É AQUI QUE CONTINUA. parse expression está em ast.c	
-	//root = parse_expression(&par->parlst);
+	// root = parse_expression(&par->parlst);
 	
 
 
-	//print_ast(root, 0);
+	// print_ast(root, 0);
 	return (mem); //trocar para rotrnar o pointer para árvore.
 }
 
@@ -322,8 +322,8 @@ aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
 
 t_syntax	ft_check_syntax(t_dlist *parlst)
 {
-	if(!operators_are_supported(parlst))
-	 	return (ERROR1);
+	// if(!operators_are_supported(parlst))
+	//  	return (ERROR1);
 	if (!redirects_are_complete(parlst))
 		return (ERROR1);
 	// if (pipe_at_invalid_position(parlst))

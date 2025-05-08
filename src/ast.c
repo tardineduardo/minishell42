@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   luis_ast_create.c                                  :+:      :+:    :+:   */
+/*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/19 17:01:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:51:36 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 #include "../include/tokenize.h"
 
 // Function prototypes
-t_ast_node *parse_expression(t_list **tokens);
-t_ast_node *parse_logical_or(t_list **tokens);
-t_ast_node *parse_logical_and(t_list **tokens);
-t_ast_node *parse_pipeline(t_list **tokens);
-t_ast_node *parse_command_or_group(t_list **tokens);
-t_ast_node *parse_command(t_list **tokens);
+t_ast_node *parse_expression(t_list **parlst);
+t_ast_node *parse_logical_or(t_list **parlst);
+t_ast_node *parse_logical_and(t_list **parlst);
+t_ast_node *parse_pipeline(t_list **parlst);
+t_ast_node *parse_command_or_group(t_list **parlst);
+t_ast_node *parse_command(t_list **parlst);
 // void free_ast(t_ast_node *node);
 
 // Create a new command node
-t_ast_node *create_command_node(t_cmd_node *cmd_data)
+t_ast_node *create_command_node(t_block_node *block_node)
 {
 	t_ast_node	*node;
 
@@ -32,35 +32,35 @@ t_ast_node *create_command_node(t_cmd_node *cmd_data)
 	if (!node)
 		return (NULL);
 	node->type = NODE_COMMAND;
-	node->cmd = cmd_data;
+	node->block_node = block_node;
 	return (node);
 }
 
 t_ast_node *create_pipeline_node(t_list *cmds_lst)
 {
-    t_ast_node *node = malloc(sizeof(t_ast_node));
-    t_pipe_info *pipe_data = malloc(sizeof(t_pipe_info));
+    t_ast_node *node;
+    t_pipe_info *pipe_data;
+	t_list *current;
+
+	node = malloc(sizeof(t_ast_node));
+	pipe_data = malloc(sizeof(t_pipe_info));
     if (!node || !pipe_data) {
-        if (node) free(node);
-        if (pipe_data) free(pipe_data);
+        if (node)
+			free(node);
+        if (pipe_data)
+			free(pipe_data);
         return NULL;
     }
-
     node->type = NODE_PIPELINE;
     pipe_data->cmds = cmds_lst;
     pipe_data->cmd_count = 0;
-    
-    // Count commands
-    t_list *current = cmds_lst;
-    while (current) {
+    current = cmds_lst;
+    while (current)
+	{
         pipe_data->cmd_count++;
         current = current->next;
     }
-    
     node->pipeline = pipe_data;
-    node->cmd = NULL;
-    node->logical = NULL;
-    node->subshell = NULL;
     return node;
 }
 
@@ -87,28 +87,28 @@ t_ast_node *create_group_node(t_ast_node *body)
 	node->subshell = malloc(sizeof(t_subshell_data));
 	node->type = NODE_SUBSHELL;
 	node->subshell->body = body;
-	return node;
+	return (node);
 }
 //----------------------------------------PARSING NODES------------------------------------
 // Parse an expression
-t_ast_node *parse_expression(t_list **tokens)
+t_ast_node *parse_expression(t_list **parlst)
 {
-	return parse_logical_or(tokens);
+	return parse_logical_or(parlst);
 }
 
 // Parse logical OR (||)
-t_ast_node *parse_logical_or(t_list **tokens)
+t_ast_node *parse_logical_or(t_list **parlst)
 {
     t_ast_node *node;
     t_ast_node *right;
 
-    node = parse_logical_and(tokens);
+    node = parse_logical_and(parlst);
     if (!node) 
         return (NULL);
-    while (*tokens && ((t_org_tok *)(*tokens)->content)->oper == 1) // || operator
+    while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 1) // || operator
     {
-        *tokens = (*tokens)->next;
-        right = parse_logical_and(tokens);
+        *parlst = (*parlst)->next;
+        right = parse_logical_and(parlst);
         if (!right)
             return (NULL);
         node = create_logical_node(OP_OR, node, right);
@@ -117,18 +117,18 @@ t_ast_node *parse_logical_or(t_list **tokens)
 }
 
 // Parse logical AND (&&)
-t_ast_node *parse_logical_and(t_list **tokens)
+t_ast_node *parse_logical_and(t_list **parlst)
 {
     t_ast_node *node;
     t_ast_node *right;
 
-    node = parse_pipeline(tokens);
+    node = parse_pipeline(parlst);
     if (!node)
         return (NULL);
-    while (*tokens && ((t_org_tok *)(*tokens)->content)->oper == 0) // && operator
+    while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 0) // && operator
     {
-        *tokens = (*tokens)->next;
-        right = parse_pipeline(tokens);
+        *parlst = (*parlst)->next;
+        right = parse_pipeline(parlst);
         if (!right)
             return( NULL);
         node = create_logical_node(OP_AND, node, right);
@@ -137,7 +137,7 @@ t_ast_node *parse_logical_and(t_list **tokens)
 }
 
 // Parse pipeline (|)
-t_ast_node *parse_pipeline(t_list **tokens)
+t_ast_node *parse_pipeline(t_list **parlst)
 {
     t_ast_node *node;
     t_list *cmds_lst;
@@ -145,26 +145,26 @@ t_ast_node *parse_pipeline(t_list **tokens)
     t_list *new_node;
     t_ast_node *pipeline_node;
 
-    node = parse_command_or_group(tokens);
+    node = parse_command_or_group(parlst);
     if (!node)
         return (NULL);
     // If we don't have a pipe, return the single command
-    if (!*tokens || ((t_org_tok *)(*tokens)->content)->oper != 4)
+    if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 4)
         return (node);
     // We have a pipeline - create a list of commands
-    cmds_lst = ft_lstnew(node->cmd);
+    cmds_lst = ft_lstnew(node->block_node);
     if (!cmds_lst)
         return (NULL);
-    while (*tokens && ((t_org_tok *)(*tokens)->content)->oper == 4)
+    while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 4)
     {
-        *tokens = (*tokens)->next; // Consume '|'
-        right = parse_command_or_group(tokens);
+        *parlst = (*parlst)->next; // Consume '|'
+        right = parse_command_or_group(parlst);
         if (!right || right->type != NODE_COMMAND)
         {
             fprintf(stderr, "Invalid pipeline structure\n");
             exit(1);
         }
-        new_node = ft_lstnew(right->cmd);
+        new_node = ft_lstnew(right->block_node);
         if (!new_node)
         {
             // Free the list we created
@@ -197,46 +197,46 @@ t_ast_node *parse_pipeline(t_list **tokens)
 }
 
 // Parse either a command or a group
-t_ast_node *parse_command_or_group(t_list **tokens)
+t_ast_node *parse_command_or_group(t_list **parlst)
 {
     t_list *cur;
     t_ast_node *node;
 
-    if (!tokens || !*tokens)
+    if (!parlst || !*parlst)
         return (NULL);
-    cur = *tokens;
-    if (((t_org_tok *)cur->content)->oper == 2) // '('
+    cur = *parlst;
+    if (((t_par_node *)cur->content)->oper == 2) // '('
     {
-        *tokens = (*tokens)->next; // Consume "("
-        node = parse_expression(tokens);
+        *parlst = (*parlst)->next; // Consume "("
+        node = parse_expression(parlst);
         
-        if (!*tokens || ((t_org_tok *)(*tokens)->content)->oper != 3) // ')'
+        if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 3) // ')'
         {
             fprintf(stderr, "Error: Unclosed parenthesis\n");
             exit(1);
         }
-        *tokens = (*tokens)->next; // Consume ")"
+        *parlst = (*parlst)->next; // Consume ")"
         return (create_group_node(node));
     }
-    return (parse_command(tokens));
+    return (parse_command(parlst));
 }
 
 // Parse a simple command
-t_ast_node *parse_command(t_list **tokens)
+t_ast_node *parse_command(t_list **parlst)
 {
     t_list *cur;
     t_ast_node *node;
 
-    if (!tokens || !*tokens)
+    if (!parlst || !*parlst)
         return (NULL);
-    cur = *tokens;
-    if (((t_org_tok *)cur->content)->oper != -2)
+    cur = *parlst;
+    if (((t_par_node *)cur->content)->block_index == -1)
         return (NULL);
-    node = create_command_node(((t_org_tok *)cur->content)->cmd_node);
+    node = create_command_node(((t_par_node *)cur->content)->block_node);
     if (!node)
         return (NULL);
-    *tokens = (*tokens)->next;
-    return node;
+    *parlst = (*parlst)->next;
+    return (node);
 }
 
 
@@ -300,7 +300,7 @@ void print_ast(t_ast_node *node, int depth)
 	switch (node->type)
 	{
 		case NODE_COMMAND:
-			printf("COMMAND: %s\n", node->cmd->cmd_arr[0]);
+			printf("COMMAND: %s\n", node->block_node->cmd_arr[0]);
 			break;
 		case NODE_PIPELINE:
 			printf("PIPELINE:\n");
@@ -308,9 +308,9 @@ void print_ast(t_ast_node *node, int depth)
 			{
 				for (int i = 0; i < depth + 1; ++i)
 					printf("  ");
-				t_cmd_node *cmd = (t_cmd_node *)cur->content;
-				if (cmd && cmd->cmd_arr)
-					printf("CMD: %s\n", cmd->cmd_arr[0]);
+				t_block_node *block_node = (t_block_node *)cur->content;
+				if (block_node && block_node->cmd_arr)
+					printf("CMD: %s\n", block_node->cmd_arr[0]);
 			}
 			break;
 		case NODE_LOGICAL:

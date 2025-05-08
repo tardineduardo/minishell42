@@ -1,7 +1,7 @@
 #ifndef READLINE_H
 # define READLINE_H
 
-# include "minishell.h"  
+# include "minishell.h" 
 # include "heredoc.h"
 # include "expand.h"
 # include "tokenize.h"
@@ -9,7 +9,7 @@
 
 # include "../libs/libft/libft.h"
 
-
+typedef struct	s_mem t_mem;
 
 typedef struct	s_rdl_mem
 {

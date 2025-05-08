@@ -23,6 +23,8 @@ PARSER		=	src/parsing.c \
 				# src/luis_org_tok.c \
 				# src/luis_ast_create.c \
 
+AST 		=	src/ast.c \
+
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
 				src/built-ins/ft_exit.c \
@@ -41,6 +43,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
 			$(PARSER:.c=.o) \
+			$(AST:.c=.o) \
 			$(INTERACTIVE:.c=.o) \
 
 

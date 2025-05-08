@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/08 10:23:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:37:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,13 +114,25 @@ typedef struct s_subshell_data
 	t_ast_node	*body;
 }	t_subshell_data;
 
+typedef struct s_block_node // esse é s_cmd_node
+{
+	char	**cmd_arr;
+	t_list	*input_lst;
+	t_list	*output_lst;
+	t_list	*redirs_lst;
+	int		err;				// deixei, mas näo sei para que serve
+}			t_block_node;
+
 typedef struct s_ast_node
 {
 	node_mode 		type;
-	t_cmd_node		*cmd;
-	t_pipe_info		*pipeline;
-	t_logical_data	*logical;
-	t_subshell_data *subshell;
+	union
+	{
+		t_block_node	*block_node;
+		t_pipe_info		*pipeline;
+		t_logical_data	*logical;
+		t_subshell_data *subshell;
+	};
 }	t_ast_node;
 
 typedef struct s_output_node
@@ -144,7 +156,8 @@ typedef struct s_input_node
 
 
 
-
+t_ast_node *parse_expression(t_list **parlst);
+void print_ast(t_ast_node *node, int depth);
 
 // //luis part 
 // int	ft_ast_create(t_mem **mem);
