@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/08 11:37:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 13:53:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>						// for malloc etc
 # include <readline/readline.h>				// for readline
 # include <readline/history.h>				// for history
+# include <signal.h>						// handle signals
 
 typedef struct s_hdc_mem t_hdc_mem;
 typedef struct s_tok_mem t_tok_mem;
@@ -54,12 +55,16 @@ typedef struct	s_mem
 }	t_mem;
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
-char	*ft_execute(char *line, t_mem **mem);
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
 char	*ft_capture_in_interactive_mode(char *prompt);
 
-
+// handle signals
+void	handle_signal_prompt(int signo);
+void	handle_signal_cmd(int signo);
+void	signal_before_wait(void);
+void	signal_after_wait(void);
+void	signal_child_process(void);
 
 
 

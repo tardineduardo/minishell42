@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/08 11:47:59 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 13:43:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "../include/parsing.h"
 #include "../include/environs.h"
 #include "../include/readline.h"
+#include "../include/execution.h"
 
 
 int	main(int argc, char *argv[], char *envp[])
@@ -31,8 +32,8 @@ int	main(int argc, char *argv[], char *envp[])
 	//ft_ms_env_add_exit_code(&(*mem).environs->envlist, "?", 0);
 	while (1)
 	{
-		//signal(SIGINT, handle_signal_prompt);
-		//signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
+		signal(SIGINT, handle_signal_prompt);
+		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
 		if(!ft_readline(&mem))
 		{
 			ft_clean_mem_loop(&mem);
@@ -43,6 +44,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 
 		print_ast(root, 0);
+		ft_execute(&(*mem).environs->envlist, &root, &mem);
 		// if(!ft_parsing(&mem))
 		// {
 		// 	ft_clean_mem_loop(&mem);

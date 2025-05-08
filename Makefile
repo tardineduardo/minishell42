@@ -25,6 +25,14 @@ PARSER		=	src/parsing.c \
 
 AST 		=	src/ast.c \
 
+EXECUTE		= 	src/execution.c \
+				src/exec_block_treatment.c \
+				src/exec_built_in.c \
+				src/ext_cmd.c \
+				src/exec_redir_control.c \
+
+SIGNALS		= 	src/signals.c \
+
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
 				src/built-ins/ft_exit.c \
@@ -44,6 +52,8 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
 			$(PARSER:.c=.o) \
 			$(AST:.c=.o) \
+			$(EXECUTE:.c=.o) \
+			$(SIGNALS:.c=.o) \
 			$(INTERACTIVE:.c=.o) \
 
 
