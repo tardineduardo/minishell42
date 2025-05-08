@@ -6,13 +6,60 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 14:47:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:05:10 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../include/minishell.h"
 #include "../include/parsing.h"
+
+int	redir_files_validation(t_list **redir_lst)
+{
+	int				fd;
+	t_list			*cur_node_redir;
+	t_redirs_node	*cur_redir;
+	
+	if (redir_lst == NULL || *redir_lst == NULL)
+		return (-1);
+	cur_node_redir = *redir_lst;
+	while (cur_node_redir)
+	{
+		cur_redir = cur_node_redir->content;
+		if (cur_redir->type == IN_R)
+		{
+			// if (access(cur_redir->name, F_OK) != 0)
+			// {
+			// 	ft_dprintf(2, "%s: No such file or directory", cur_redir->name);
+			// 	exit(1);
+			// }
+			fd = open(cur_redir->name, O_RDONLY);
+			if (fd == -1)
+			{
+				close(fd);
+				ft_dprintf(2, "%s: Permission denied\n", cur_redir->name);
+				exit(EXIT_FAILURE);
+			}
+			close(fd);
+		}
+		else if (cur_redir->type == OUT_R)
+		{
+			if (cur_redir->create == false)
+			{
+				fd = open(cur_redir->name, O_WRONLY | O_APPEND | O_CREAT, 0644);
+				if (fd == -1)
+				{
+					close(fd);
+					ft_dprintf(2, "%s: Permission denied\n", cur_redir->name);
+					exit(EXIT_FAILURE);
+				}
+				close(fd);
+			}
+		}
+		cur_node_redir = cur_node_redir->next;
+	}
+	return (0);
+}
 
 int	file_input_handler(t_list **input_lst)
 {
@@ -35,7 +82,7 @@ int	file_input_handler(t_list **input_lst)
 		if (fd == -1)
 		{
 			close(fd);
-			perror(cur_input->name);
+			ft_dprintf(2, "%s: Permission denied\n", cur_input->name);
 			exit(EXIT_FAILURE);
 		}
 		if (cur_node_input->next == NULL)
@@ -65,7 +112,7 @@ int file_output_handler(t_list **output_lst)
 		if (fd == -1)
 		{
 			close(fd);
-			perror(cur_output->name);
+			ft_dprintf(2, "%s: Permission denied\n", cur_output->name);
 			exit(EXIT_FAILURE);
 		}
 		if (cur_node_output->next == NULL)
@@ -108,6 +155,7 @@ void	fd_output_redir(t_list **output_lst)
 
 void	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2])
 {
+	redir_files_validation(&cur_cmd->redirs_lst);
 	if (cur_cmd->input_lst != NULL) 
 		fd_input_redir(&cur_cmd->input_lst);
 	else if (pipe_data->i > 0)
