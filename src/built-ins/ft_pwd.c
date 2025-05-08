@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:47 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:28:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:19:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 //herdada do parent (rodando "env -i ./minishell"). Daí mesmo isso seja feito,
 //o bash tem pelos menos a PWD 
 
-void	ft_pwd(t_list **envlist)
+int	ft_pwd(t_list **envlist)
 {
 	t_list		*trav;
 	t_env_node	*current;
@@ -51,4 +51,5 @@ void	ft_pwd(t_list **envlist)
 		}
 		trav = trav->next;
 	}
+	return (0);
 }

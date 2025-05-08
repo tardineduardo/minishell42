@@ -4,8 +4,6 @@ READLINE 	=	src/readline.c \
 
 HEREDOC 	=	src/heredocs.c \
 
-EXECUTE 	=	src/execute.c \
-
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
@@ -33,15 +31,11 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
-
-
- 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
 			$(TOKEN:.c=.o) \
 			$(ENVIRON:.c=.o) \
-			$(EXECUTE:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
@@ -84,3 +78,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+#strace -f -e trace=execve -e verbose=all ./minishell

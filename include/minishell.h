@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/08 10:23:13 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,16 @@ typedef enum e_logical_op
 typedef struct s_cmd_node t_cmd_node;
 
 typedef struct s_ast_node t_ast_node;
+
+typedef struct s_pipe_data
+{
+	pid_t	child_pids[100];
+	int	status_arr[100];
+	int	pipefd[2];
+	int i;
+	int	num_cmds;
+	int	prev_fd;
+}		t_pipe_data;
 
 typedef struct s_pipe_info
 {
