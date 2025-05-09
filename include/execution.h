@@ -7,9 +7,9 @@
 
 
 //redir control
-void	fd_input_redir(t_list **input_lst);
-void	fd_output_redir(t_list **output_lst);
-void	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2]);
+void	fd_input_redir(t_list **input_lst, t_mem **mem);
+void	fd_output_redir(t_list **output_lst, t_mem **mem);
+int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2], t_mem **mem);
 
 //exec external cmd
 void	exec_external_cmd(t_list **ms_env, t_block_node *cmd);

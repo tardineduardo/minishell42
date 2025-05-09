@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 16:59:48 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/09 19:30:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 	if (pid == 0)
 	{
 		signal_child_process();
-		pipe_fd_control(p, cmd, p->pipefd);
+		pipe_fd_control(p, cmd, p->pipefd, mem);
 		execute_command(ms_env, cmd, mem);
 		exit(EXIT_SUCCESS);
 	}
@@ -139,8 +139,8 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 		if (pid == 0)
 		{
 			signal_child_process();
-			fd_input_redir(&cmd->input_lst);
-			fd_output_redir(&cmd->output_lst);
+			fd_input_redir(&cmd->input_lst, mem);
+			fd_output_redir(&cmd->output_lst, mem);
 			execute_command(ms_env, cmd, mem);
 			exit(EXIT_SUCCESS);
 		}
