@@ -33,10 +33,10 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
-
+CHECK		=	src/checkfile.c \
 
  
-OBJS_SRC =	$(MAIN:.c=.o) \
+ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
 			$(TOKEN:.c=.o) \
@@ -48,6 +48,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
 			$(PARSER:.c=.o) \
 			$(INTERACTIVE:.c=.o) \
+			$(CHECK:.c=.o) \
 
 
 CC = cc

@@ -14,6 +14,8 @@
 #include "../include/minishell.h"
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
+#include "../include/checkfile.h"
+
 
 // RETORNA O POINTER PARA ROOT DE AST
 void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
@@ -32,7 +34,7 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 		ft_printf("invalid sintax\n");
 		return (NULL);
 	}
-	ft_create_parlst(&tok->toklst, &par->parlst);
+	ft_create_parlst(&tok->toklst, &par->parlst, mem);
 	
 	
 	// É AQUI QUE CONTINUA. parse expression está em ast.c	
@@ -45,7 +47,7 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 }
 
 // Cria uma lista de nodes do tipo par_node (antigo org_tok)
-t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
+t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_mem **mem)
 {
 	t_list		*new;
 	t_list		*lstnode;
@@ -70,7 +72,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 			return (NULL);
 	
 		// inicializa as informações de cada parnode a partir de toklst
-		if(!init_parnode(a, &parnode, toklst))
+		if(!init_parnode(a, &parnode, toklst, mem))
 			return (NULL);
 
 		// adiciona o novo parnode em parlst.
@@ -85,7 +87,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 }
 
 // inicializa as informações de cada parnode a partir de toklst
-t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst)
+t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_mem **mem)
 {
 	t_dlist		*first;
 	t_tok_node	*toknode;
@@ -127,7 +129,7 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst)
 			break ;													// encerra porque acabou bloco
 		// se o token for de um operador de redirecionamento
 		if (is_redir(toknode))
-			fill_blocknode_redirs(toklst, parnode);
+			fill_blocknode_redirs(toklst, parnode, mem);
 		// se o token for uma word
 		else if (is_word(toknode)) 
 			fill_blocknode_cmdarray(toklst, parnode);
@@ -141,7 +143,7 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst)
 
 /*Essa função está muito longa e um pouco confusa pois está lidando com
 input_list, output_list e redir_list. Dá para deixar menor depois.*/
-void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
+void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_mem **mem)
 {
 	t_list			*redirlse;
 	t_list			*copy;
@@ -162,7 +164,7 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
 	redirnode->type = oper;
 	redirnode->create = true;
 	if(oper == IN_R || oper == OUT_R || oper == APPD_R)
-		redirnode->name = ft_strdup(toknode->value); 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
+		redirnode->name = get_absolute_path_file(toknode->value, mem); 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
 	if(oper == HDC_R)
 		redirnode->name = ft_strdup(toknode->heredoc_path);
 	if(oper == APPD_R)
@@ -612,14 +614,14 @@ void print_debug_parsing(t_list **parslst)
 		ft_printf("cmd\t%i\n", par->block_index);
 		if (par->block_node)
 		{
-			if(par->block_node->cmd_arr)
-			{
-				ft_printf("cmdarray: {");
-				ft_debug_print_array_of_strings_line(par->block_node->cmd_arr, STDOUT_FILENO);
-				ft_printf("}\n");
-			}
-			else
-				ft_printf("cmdarray: NULL\n");
+			// if(par->block_node->cmd_arr)
+			// {
+			// 	ft_printf("cmdarray: {");
+			// 	ft_debug_print_array_of_strings_line(par->block_node->cmd_arr, STDOUT_FILENO);
+			// 	ft_printf("}\n");
+			// }
+			// else
+			// 	ft_printf("cmdarray: NULL\n");
 
 			if(par->block_node->input_lst)
 			{
