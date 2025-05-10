@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/09 19:16:30 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:18:00 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ int file_output_handler(t_list **output_lst, t_mem **mem)
 	return (0);
 }
 
-int	fd_input_redir(t_list **input_lst, t_mem **mem)
+void	fd_input_redir(t_list **input_lst, t_mem **mem)
 {
 	int	input_redirect_fd;
 
@@ -144,7 +144,7 @@ int	fd_input_redir(t_list **input_lst, t_mem **mem)
 	}
 }
 
-int	fd_output_redir(t_list **output_lst, t_mem **mem)
+void	fd_output_redir(t_list **output_lst, t_mem **mem)
 {
 	int	output_redirect_fd;
 
