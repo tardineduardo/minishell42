@@ -55,26 +55,36 @@ char *get_absolute_path(char *execfile, t_mem **mem)
 {
 	if (!execfile || !mem)
 		return (NULL);
-
 	if (ft_strncmp(execfile, "/", 1) == 0)
-		return (get_absolute_path(execfile));
+		return (get_abs_path(execfile));
 	if (ft_strncmp(execfile, "../", 3) == 0 || ft_strncmp(execfile, "./", 2) == 0)
 		return (get_relative_path(execfile, mem));
 	else
-		return (get_env_path(execfile, mem))
+		return (get_env_path(execfile, mem));
 	return (NULL);
 }
 
 
 
-char *get_absolute_path(char *file)
+char *get_abs_path(char *execfile)
 {
+	char *abs;
 
-
-
-
+	abs = ft_strdup(execfile);
+	if (!abs)
+		return (NULL);
+	if (access(abs, F_OK) == 0)
+		return (abs);
+	free(abs);
+	return (NULL);
 }
 
+char *get_env_path(char *file, t_mem **mem)
+{
+	(void)file;
+	(void)mem;
+	return (NULL);
+}
 
 
 // Build full absolute path from relative path (e.g., "../dir/file")

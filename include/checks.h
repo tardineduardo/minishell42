@@ -14,3 +14,5 @@ char	*remove_last_folder_from_cwd(char **cwd);
 void	*append_to_cwd(char **cwd, char *append);
 char	*get_cwd(t_mem *mem);
 bool	*return_error(char *abs, t_error **error);
+char *get_abs_path(char *execfile);
+char *get_env_path(char *file, t_mem **mem);
