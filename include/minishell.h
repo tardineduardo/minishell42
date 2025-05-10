@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/09 19:30:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:37:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	signal_child_process(void);
 // 	int	err;
 // }	t_redir_control;
 
-int	redir_files_validation(t_list **redir_lst);
 typedef enum e_node_mode
 {
 	NODE_COMMAND,

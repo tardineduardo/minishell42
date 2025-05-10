@@ -447,6 +447,11 @@ void ft_expand_toklist(t_dlist **toklst, t_mem **mem)
 	trav = *toklst;
 	while (trav)
 	{
+		if (!trav->content)
+		{
+			trav = trav->next;
+			continue ;
+		}
 		tok_node = (t_tok_node *)trav->content;
 
 		tok_node->value = ft_expand(&tok_node->value, TOKEN, mem);

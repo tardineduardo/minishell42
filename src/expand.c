@@ -500,7 +500,7 @@ t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	temp = ft_concatenate(prefix, insert, suffix);
 	if (ft_strlen(temp) + 1 > (*exp)->allocated)
 	{
-		(*exp)-> allocated = 2 * (ft_strlen((*exp)->raw) + 1);
+		(*exp)->allocated = 2 * (ft_strlen((*exp)->raw) + 1 + ft_strlen(temp) + 1);
 		ft_realloc_string(&(*exp)->new, (*exp)-> allocated);
 	}
 	if (!temp || !(*exp)->raw)
