@@ -14,7 +14,7 @@
 #include "../include/minishell.h"
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
-#include "../include/checkfile.h"
+#include "../include/checks.h"
 
 
 // RETORNA O POINTER PARA ROOT DE AST
@@ -164,7 +164,7 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_mem **mem)
 	redirnode->type = oper;
 	redirnode->create = true;
 	if(oper == IN_R || oper == OUT_R || oper == APPD_R)
-		redirnode->name = get_absolute_path_file(toknode->value, mem); 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
+		redirnode->name = get_absolute_path(toknode->value, mem); 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
 	if(oper == HDC_R)
 		redirnode->name = ft_strdup(toknode->heredoc_path);
 	if(oper == APPD_R)
@@ -726,4 +726,3 @@ void print_redir_list(t_list *redirs)
 			ft_printf(" ");
 	}
 }
-

@@ -33,7 +33,7 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
-CHECK		=	src/checkfile.c \
+CHECK		=	src/checks.c \
 
  
  OBJS_SRC =	$(MAIN:.c=.o) \
