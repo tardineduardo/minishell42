@@ -16,7 +16,7 @@
 
 
 // Check file properties based on flags (existence, permissions, type)
-bool	check(char *abspath, u_int16_t flags, t_error **error)
+bool	validate_file_(char *abspath, u_int16_t flags, t_error **error)
 {
 	struct stat	statbuf;
 
@@ -51,17 +51,31 @@ bool	*return_error(char *abs, t_error **error)
 }
 
 // Return absolute path for a file; supports absolute and relative paths
-char *get_absolute_path(char *file, t_mem **mem)
+char *get_absolute_path(char *execfile, t_mem **mem)
 {
-	if (!file || !mem)
+	if (!execfile || !mem)
 		return (NULL);
 
-	if (strncmp(file, "/", 1) == 0)
-		return (ft_strdup(file));
-	if (strncmp(file, "../", 3) == 0)
-		return (get_relative_path(file, mem));
+	if (ft_strncmp(execfile, "/", 1) == 0)
+		return (get_absolute_path(execfile));
+	if (ft_strncmp(execfile, "../", 3) == 0 || ft_strncmp(execfile, "./", 2) == 0)
+		return (get_relative_path(execfile, mem));
+	else
+		return (get_env_path(execfile, mem))
 	return (NULL);
 }
+
+
+
+char *get_absolute_path(char *file)
+{
+
+
+
+
+}
+
+
 
 // Build full absolute path from relative path (e.g., "../dir/file")
 char *get_relative_path(char *relative_path, t_mem **mem)
