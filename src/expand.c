@@ -75,7 +75,7 @@ void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 	t_quote	prev;
 
 	quote = Q_OFF;
-	while ((*exp)->raw[(*exp)->a])
+	while (CURRENT_CHAR)
 	{
 		if ((*exp)->error)
 			return (NULL);
@@ -106,7 +106,7 @@ void	*copy_to_new_str_delim_mode(t_exp_mem **exp)
 	a = &(*exp)->a;
 	s = (*exp)->raw;
 	quote = Q_OFF;
-	while ((*exp)->raw[(*exp)->a])
+	while (CURRENT_CHAR)
 	{
 		if (ft_isquote(s[*a]) && !is_char_escaped(s, *a))
 			(*exp)->hd_mode = QUOTED;
@@ -123,7 +123,7 @@ void	*copy_to_new_str_delim_mode(t_exp_mem **exp)
 
 void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem)
 {
-	while ((*exp)->raw[(*exp)->a])
+	while (CURRENT_CHAR)
 	{
 		if ((*exp)->error)
 			return (NULL);
@@ -194,7 +194,7 @@ bool	process_inside_single_quotes(t_exp_mem **exp, t_quote quote)
 {
 	if (quote == Q_SINGLE)
 	{
-		while (!is_closing_quote((*exp)->raw[(*exp)->a], &quote))
+		while (!is_closing_quote(CURRENT_CHAR, &quote))
 			copy_char_and_increment(exp);
 		return (true);
 	}
@@ -220,7 +220,7 @@ bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote)
 			if (handle_backslash(exp, TOKEN, Q_DOUBLE))
 				return (true);
 		}
-		if (is_closing_quote((*exp)->raw[(*exp)->a], &quote)) //testar isso
+		if (is_closing_quote(CURRENT_CHAR, &quote)) //testar isso
 		{
 			skip_char_no_copy(exp);
 			return (true);
@@ -261,7 +261,6 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 		(*exp)->braces = true;
 		skip_char_no_copy(exp);
 	}
-	//AQUI APAGUEI UMA COISA
 	if (NEXT_CHAR)
 	{
 		exit = try_to_expand_variable(exp, mem);
@@ -316,52 +315,14 @@ t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 
 	value = &(*exp)->value;
 
-	if (CURRENT_CHAR != '$' || NEXT_CHAR == '?')
-	value
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
-//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII//AQUIIIII
+	
+	// if (CURRENT_CHAR != '$' || NEXT_CHAR == '?')
+	// 	exit = get_error_value(&CURRENT_CHAR, value, mem);
+	// else if (CURRENT_CHAR != '$' || NEXT_CHAR == '$')
+	// 	exit = get_pid_value(&CURRENT_CHAR, value, mem);
+	// else
+		exit = get_variable_value(&CURRENT_CHAR, value, mem);
 
-	exit = get_variable_value(&(*exp)->raw[(*exp)->a], value, mem);
 	
 	if (exit == VAR_FOUND)
 		return (insert_var_in_string(*value, (*exp)->a, exp));
@@ -392,6 +353,35 @@ MM88MMM  88  8b,dPPYba,    ,adPPYb,88     8b       d8  ,adPPYYba,  8b,dPPYba,
                                                                                
 
 */
+
+
+
+// t_exit	get_error_value(char *dollar, char **value, t_mem **mem)
+// {
+// 	t_list		*trav;
+// 	t_env_node	*node;
+
+// 	trav = (*mem)->expand;
+
+
+// }
+
+
+// t_exit	get_pid_value(char *dollar, char **value, t_mem **mem)
+// {
+
+// }
+
+
+
+
+
+
+
+
+
+
+
 
 t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
 {
@@ -535,9 +525,9 @@ t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	char *temp;
 	size_t len;
 
-	len = varlen(&(*exp)->raw[(*exp)->a], (*exp)->braces);
+	len = varlen(&CURRENT_CHAR, (*exp)->braces);
 	prefix = ft_substr((*exp)->raw, 0, index);
-	suffix = ft_strdup(&(*exp)->raw[(*exp)->a] + len + 1);
+	suffix = ft_strdup(&CURRENT_CHAR + len + 1);
 	if (!prefix || !suffix)
 		return (ERROR);
 	temp = ft_concatenate(prefix, insert, suffix);
@@ -680,9 +670,9 @@ void	copy_value_and_increment(t_exp_mem **exp)
 
 void	copy_char_and_increment(t_exp_mem **exp)
 {
-	if ((*exp)->raw[(*exp)->a])
+	if (CURRENT_CHAR)
 	{
-		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
 		(*exp)->b++;
 		(*exp)->a++;
 	}
@@ -700,9 +690,9 @@ void skip_char_no_copy(t_exp_mem **exp)
 bool	skip_slash_copy_next_and_increment(t_exp_mem **exp)
 {
 	(*exp)->a++;
-	if ((*exp)->raw[(*exp)->a])
+	if (CURRENT_CHAR)
 	{
-		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
 		(*exp)->a++;
 		(*exp)->b++;
 	}
@@ -712,15 +702,15 @@ bool	skip_slash_copy_next_and_increment(t_exp_mem **exp)
 
 bool	copy_char_copy_next_and_increment(t_exp_mem **exp)
 {
-	if ((*exp)->raw[(*exp)->a])
+	if (CURRENT_CHAR)
 	{
-		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
 		(*exp)->a++;
 		(*exp)->b++;
 	}
-	if ((*exp)->raw[(*exp)->a])
+	if (CURRENT_CHAR)
 	{
-		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
+		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
 		(*exp)->a++;
 		(*exp)->b++;
 	}

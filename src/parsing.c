@@ -262,7 +262,7 @@ t_block_node *intit_block_node(t_par_node **parnode, t_dlist **toklst)
 	assim não preciso realocar memória dinamicamente a cada nova entrada.*/
 	nb_of_tokens = ft_dlstsize(*toklst);
 	(*parnode)->block_node = malloc(sizeof(t_block_node));
-	(*parnode)->block_node->cmd_arr = ft_calloc(nb_of_tokens, sizeof(char *) + 1);
+	(*parnode)->block_node->cmd_arr = ft_calloc(2 * nb_of_tokens, sizeof(char *) + 1); //REVISAR AQUI
 	if (!(*parnode)->block_node || !(*parnode)->block_node->cmd_arr)
 		return (NULL);
 	(*parnode)->block_node->input_lst = NULL;

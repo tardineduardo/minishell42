@@ -25,17 +25,19 @@ void	ft_debug_print_array_of_strings(char **array, int fd)
 	ft_dprintf(fd, "\n");
 }
 
+
 void	ft_debug_print_array_of_strings_line(char **array, int fd)
 {
 	int	a;
 
+	if (!array)
+		return ;
 	a = 0;
-	while (array[a] != NULL)
+	while (array[a])
 	{
 		ft_dprintf(fd, "\"%s\"", array[a]);
-		a++;
-
-		if(array[a])
+		if (array[a + 1])
 			ft_dprintf(fd, " ");
+		a++;
 	}
 }
