@@ -254,14 +254,14 @@ bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
 {
 	t_exit exit;
 
-	if (CURRENT_CHAR != '$' || NEXT_CHAR == '\0')
+	if (CURRENT_CHAR != '$' || NEXT_CHAR == '\0' || ft_isspace(NEXT_CHAR))
 		return (false);
 	if (NEXT_CHAR == '{')
 	{
 		(*exp)->braces = true;
 		skip_char_no_copy(exp);
 	}
-	if (NEXT_CHAR)
+	if (NEXT_CHAR && (ft_isalnum(NEXT_CHAR) || NEXT_CHAR == '?'))
 	{
 		exit = try_to_expand_variable(exp, mem);
 		if (!exit)
@@ -321,7 +321,7 @@ t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 	// else if (CURRENT_CHAR != '$' || NEXT_CHAR == '$')
 	// 	exit = get_pid_value(&CURRENT_CHAR, value, mem);
 	// else
-		exit = get_variable_value(&CURRENT_CHAR, value, mem);
+	exit = get_variable_value(&CURRENT_CHAR, value, mem);
 
 	
 	if (exit == VAR_FOUND)
@@ -353,34 +353,6 @@ MM88MMM  88  8b,dPPYba,    ,adPPYb,88     8b       d8  ,adPPYYba,  8b,dPPYba,
                                                                                
 
 */
-
-
-
-// t_exit	get_error_value(char *dollar, char **value, t_mem **mem)
-// {
-// 	t_list		*trav;
-// 	t_env_node	*node;
-
-// 	trav = (*mem)->expand;
-
-
-// }
-
-
-// t_exit	get_pid_value(char *dollar, char **value, t_mem **mem)
-// {
-
-// }
-
-
-
-
-
-
-
-
-
-
 
 
 t_exit	get_variable_value(char *dollar, char **value, t_mem **mem)
@@ -735,7 +707,7 @@ size_t varlen(char *s, bool braces)
 	i = 0;
 	if (braces == false)
 	{
-		if((s[0] == '?' && !ft_isalnum(s[1])))
+		if((s[0] == '?'))
 			return (1);
 		while (ft_isalnum(s[i]))
 			i++;

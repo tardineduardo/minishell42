@@ -59,7 +59,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 	num_parsnodes = count_num_parsnodes(toklst);
 	
 	//debug
-	ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
+	//ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
 
 	a = 0;
 	// começa a preencher os nodes de parlst.	
@@ -82,7 +82,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 	}
 
 	//debug
-	print_debug_parsing(parlst);
+	//print_debug_parsing(parlst);
 	return (*parlst);
 }
 
@@ -607,7 +607,7 @@ void print_debug_parsing(t_list **parslst)
 	{
 		par = (t_par_node *)trav->content;
 
-		ft_printf("\n\n----- Node %i-----\n", a);
+		ft_printf("\n----- Node %i-----\n", a);
 		ft_printf("oper\t%i (", par->oper);
 		ft_print_oper_par(par->oper);
 		ft_printf(")\n");
@@ -710,7 +710,6 @@ void print_redir_list(t_list *redirs)
 	t_list *trav;
 	t_redirs_node *redir;
 
-
 	trav = redirs;
 	int a = 1;
 	while(trav)
@@ -718,14 +717,14 @@ void print_redir_list(t_list *redirs)
 		redir = (t_redirs_node *)trav->content;
 		ft_printf("%i) " , a);		
 		ft_print_oper_par(redir->type);
-		ft_printf(" [%s]" , redir->name);
+		ft_printf(" [%s] " , redir->name);
 		if (redir->create)
 			ft_printf("create = true");
 		else
 			ft_printf("create = false");
 		trav = trav->next;
 		a++;
-		if(trav)
-			ft_printf(" ");
+		ft_printf(" ");
+
 	}
 }
