@@ -37,6 +37,8 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
+CHECK		= 	src/checks.c \
+
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
@@ -51,6 +53,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(SIGNALS:.c=.o) \
 			$(INTERACTIVE:.c=.o) \
+			$(CHECK:.c=.o) \
 
 
 CC = cc

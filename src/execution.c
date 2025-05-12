@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/09 19:30:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:56:30 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 
 void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
-	pid_t pid;
+	pid_t	pid;
+	int		res;
 
 	pid = fork();
 	if (pid == -1)
@@ -83,8 +84,8 @@ void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 	{
 		signal_child_process();
 		pipe_fd_control(p, cmd, p->pipefd, mem);
-		execute_command(ms_env, cmd, mem);
-		exit(EXIT_SUCCESS);
+		res = execute_command(ms_env, cmd, mem);
+		exit(res);
 	}
 }
 
@@ -100,7 +101,8 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 	else
 		i = p->num_cmds;
 	index = 0;
-	res = -1;
+	res = 0;
+	printf("status: %d", res);
 	while (index < i)
 	{
 		if (WIFSIGNALED(status[index]))
@@ -139,8 +141,9 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 		if (pid == 0)
 		{
 			signal_child_process();
-			fd_input_redir(&cmd->input_lst, mem);
-			fd_output_redir(&cmd->output_lst, mem);
+			res = pipe_fd_control_single_cmd(cmd, mem);
+			if (res != 0 && res == 255)
+				exit(res);
 			execute_command(ms_env, cmd, mem);
 			exit(EXIT_SUCCESS);
 		}
@@ -150,6 +153,7 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 		res = print_child_statuses(NULL, &status);
 	}
 	else
+		//result = pipe_fd_control_single_cmd(cmd, mem);
 		res = execute_command(ms_env, cmd, mem);
 	return (res);
 }
@@ -167,7 +171,7 @@ int	wait_for_all_children(t_pipe_data p)
 		if (p.child_pids[i] > 0)
 		{
 			waitpid(p.child_pids[i], &status, 0);
-			p.status_arr[p.i] = status;
+			p.status_arr[i] = status;
 		}
 		i++;
 	}
