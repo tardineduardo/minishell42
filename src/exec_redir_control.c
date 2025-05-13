@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 13:42:17 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:30:47 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../include/minishell.h"
 #include "../include/parsing.h"
 #include "../include/expand.h"
+#include "../include/execution.h"
 
 int	redir_files_validation(t_list **redir_lst, t_mem **mem)
 {
@@ -179,8 +180,11 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 	int	res;
 
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
-	if (cur_cmd->input_lst != NULL) 
-		fd_input_redir(&cur_cmd->input_lst, mem);
+	if (!is_built_in(cur_cmd->cmd_arr))
+	{
+		if (cur_cmd->input_lst != NULL) 
+			fd_input_redir(&cur_cmd->input_lst, mem);
+	}
 	if (cur_cmd->output_lst != NULL)
 		fd_output_redir(&cur_cmd->output_lst, mem);
 	return (res);

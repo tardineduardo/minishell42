@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 11:52:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:11:34 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,10 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	int		status;
 	char	**cmd_arr;
 	int		res;
+	int		result;
 
 	res = -1;
+	result = 0;
 	cmd_arr = cmd->cmd_arr;
 	if (!is_built_in(cmd_arr))
 	{
@@ -152,8 +154,14 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 		res = print_child_statuses(NULL, &status);
 	}
 	else
-		//result = pipe_fd_control_single_cmd(cmd, mem);
-		res = execute_command(ms_env, cmd, mem);
+	{
+		if (cmd->redirs_lst != NULL)
+			result = pipe_fd_control_single_cmd(cmd, mem);
+		if (result == 0)
+			res = execute_command(ms_env, cmd, mem);
+		else
+			res = 1;
+	}
 	return (res);
 }
 

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 14:02:43 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/10 19:37:54 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:02:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
     int     size_arr;
     int     i;
 
-    res = -12;
+    res = -1;
     i = 0;
     if (!cur_cmd || !ms_env)
     {
@@ -60,7 +60,6 @@ int execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
     final_cmd_arr[i] = NULL;
     free(cur_cmd->cmd_arr);
     cur_cmd->cmd_arr = final_cmd_arr;
-
     if (is_built_in(cur_cmd->cmd_arr))
         res = exec_built_in(ms_env, cur_cmd->cmd_arr);
     else
@@ -70,7 +69,8 @@ int execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 
 void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
-	pid_t pid;
+	pid_t	pid;
+	int		res;
 
 	pid = fork();
 	if (pid == -1)
@@ -82,9 +82,9 @@ void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 	if (pid == 0)
 	{
 		signal_child_process();
-		pipe_fd_control_pipe(p, cmd, p->pipefd, mem);
-		execute_command(ms_env, cmd, mem);
-		exit(EXIT_SUCCESS);
+		pipe_fd_control(p, cmd, p->pipefd, mem);
+		res = execute_command(ms_env, cmd, mem);
+		exit(res);
 	}
 }
 
@@ -100,8 +100,7 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 	else
 		i = p->num_cmds;
 	index = 0;
-	printf("i: %d", i);
-	res = -13;
+	res = 0;
 	while (index < i)
 	{
 		if (WIFSIGNALED(status[index]))
@@ -126,8 +125,9 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	int		status;
 	char	**cmd_arr;
 	int		res;
+	int		result;
 
-	res = -14;
+	res = -1;
 	cmd_arr = cmd->cmd_arr;
 	if (!is_built_in(cmd_arr))
 	{
@@ -140,9 +140,9 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 		if (pid == 0)
 		{
 			signal_child_process();
-			// fd_input_redir(&cmd->input_lst, mem);
-			// fd_output_redir(&cmd->output_lst, mem);
-			pipe_fd_control_single_cmd(cmd, mem);
+			res = pipe_fd_control_single_cmd(cmd, mem);
+			if (res != 0 && res == 255)
+				exit(res);
 			execute_command(ms_env, cmd, mem);
 			exit(EXIT_SUCCESS);
 		}
@@ -152,7 +152,13 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 		res = print_child_statuses(NULL, &status);
 	}
 	else
-		res = execute_command(ms_env, cmd, mem);
+	{
+		result = pipe_fd_control_single_cmd(cmd, mem);
+		if (result == 0)
+			res = execute_command(ms_env, cmd, mem);
+		else
+			res = 1;
+	}
 	return (res);
 }
 
@@ -169,7 +175,7 @@ int	wait_for_all_children(t_pipe_data p)
 		if (p.child_pids[i] > 0)
 		{
 			waitpid(p.child_pids[i], &status, 0);
-			p.status_arr[p.i] = status;
+			p.status_arr[i] = status;
 		}
 		i++;
 	}
@@ -212,7 +218,7 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 	int		status;
 	pid_t	pid;
 
-	res = -15;
+	res = -1;
     if (!root) 
 		return (0);
 	if ((*root)->type == NODE_COMMAND)

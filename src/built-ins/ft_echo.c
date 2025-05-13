@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:52:39 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 16:48:30 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:19:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	ft_echo(char **cmd_arr)
 	bool	flag;
 
 	i = 0;
-	j = 0;
 	flag = false;
 	while (cmd_arr[i] != NULL)
 		i++;
