@@ -4,8 +4,6 @@ READLINE 	=	src/readline.c \
 
 HEREDOC 	=	src/heredocs.c \
 
-EXECUTE 	=	src/execute.c \
-
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
@@ -19,11 +17,17 @@ ENVIRON 	=	src/environs.c \
 OPERATORS 	=	src/operators.c \
 
 PARSER		=	src/parsing.c \
-				# src/luis_redirections.c \
-				# src/luis_commands_utils.c \
-				# src/luis_commands.c \
-				# src/luis_org_tok.c \
-				# src/luis_ast_create.c \
+
+AST 		=	src/ast.c \
+
+EXECUTE		= 	src/execution.c \
+				src/exec_block_treatment.c \
+				src/exec_built_in.c \
+				src/exec_ext_cmd.c \
+				src/exec_redir_control.c \
+				src/exec_exit_code.c \
+
+SIGNALS		= 	src/signals.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
@@ -33,21 +37,23 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
+CHECK		= 	src/checks.c \
 
-
- 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
 			$(TOKEN:.c=.o) \
 			$(ENVIRON:.c=.o) \
-			$(EXECUTE:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
 			$(PARSER:.c=.o) \
+			$(AST:.c=.o) \
+			$(EXECUTE:.c=.o) \
+			$(SIGNALS:.c=.o) \
 			$(INTERACTIVE:.c=.o) \
+			$(CHECK:.c=.o) \
 
 
 CC = cc
@@ -84,3 +90,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+#strace -f -e trace=execve -e verbose=all ./minishell

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:37:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>						// for malloc etc
 # include <readline/readline.h>				// for readline
 # include <readline/history.h>				// for history
+# include <signal.h>						// handle signals
 
 typedef struct s_hdc_mem t_hdc_mem;
 typedef struct s_tok_mem t_tok_mem;
@@ -54,12 +55,16 @@ typedef struct	s_mem
 }	t_mem;
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
-char	*ft_execute(char *line, t_mem **mem);
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
 char	*ft_capture_in_interactive_mode(char *prompt);
 
-
+// handle signals
+void	handle_signal_prompt(int signo);
+void	handle_signal_cmd(int signo);
+void	signal_before_wait(void);
+void	signal_after_wait(void);
+void	signal_child_process(void);
 
 
 
@@ -67,6 +72,12 @@ char	*ft_capture_in_interactive_mode(char *prompt);
 
 //------------------------------------------------------------------------------
 
+// typedef struct s_redir_control
+// {
+// 	int	fd_in;
+// 	int	fd_out;
+// 	int	err;
+// }	t_redir_control;
 
 typedef enum e_node_mode
 {
@@ -86,6 +97,16 @@ typedef struct s_cmd_node t_cmd_node;
 
 typedef struct s_ast_node t_ast_node;
 
+typedef struct s_pipe_data
+{
+	pid_t	child_pids[100];
+	int	status_arr[100];
+	int	pipefd[2];
+	int i;
+	int	num_cmds;
+	int	prev_fd;
+}		t_pipe_data;
+
 typedef struct s_pipe_info
 {
 	t_list	*cmds;					// t_list of t_cmd_node
@@ -104,13 +125,25 @@ typedef struct s_subshell_data
 	t_ast_node	*body;
 }	t_subshell_data;
 
+typedef struct s_block_node // esse é s_cmd_node
+{
+	char	**cmd_arr;
+	t_list	*input_lst;
+	t_list	*output_lst;
+	t_list	*redirs_lst;
+	int		err;				// deixei, mas näo sei para que serve
+}			t_block_node;
+
 typedef struct s_ast_node
 {
 	node_mode 		type;
-	t_cmd_node		*cmd;
-	t_pipe_info		*pipeline;
-	t_logical_data	*logical;
-	t_subshell_data *subshell;
+	union
+	{
+		t_block_node	*block_node;
+		t_pipe_info		*pipeline;
+		t_logical_data	*logical;
+		t_subshell_data *subshell;
+	};
 }	t_ast_node;
 
 typedef struct s_output_node
@@ -134,7 +167,8 @@ typedef struct s_input_node
 
 
 
-
+t_ast_node *parse_expression(t_list **parlst);
+void print_ast(t_ast_node *node, int depth);
 
 // //luis part 
 // int	ft_ast_create(t_mem **mem);

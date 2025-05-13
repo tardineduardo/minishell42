@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   luis_org_tok.c                                     :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/04/19 17:02:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:03:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "../include/minishell.h"
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
+#include "../include/checks.h"
+
 
 // RETORNA O POINTER PARA ROOT DE AST
 void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
@@ -27,11 +29,11 @@ void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
 
-	if (!ft_check_syntax(tok->toklst))
-	{
-		ft_printf("invalid sintax\n");
-		return (NULL);
-	}
+	// if (!ft_check_syntax(tok->toklst))
+	// {
+	// 	ft_printf("invalid sintax\n");
+	// 	return (NULL);
+	// }
 	ft_create_parlst(&tok->toklst, &par->parlst);
 	
 	
@@ -57,7 +59,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 	num_parsnodes = count_num_parsnodes(toklst);
 	
 	//debug
-	ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
+	//ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
 
 	a = 0;
 	// começa a preencher os nodes de parlst.	
@@ -80,7 +82,7 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
 	}
 
 	//debug
-	print_debug_parsing(parlst);
+	//print_debug_parsing(parlst);
 	return (*parlst);
 }
 
@@ -162,7 +164,7 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
 	redirnode->type = oper;
 	redirnode->create = true;
 	if(oper == IN_R || oper == OUT_R || oper == APPD_R)
-		redirnode->name = ft_strdup(toknode->value); 		//AQUI PRECISA PEGAR O FULL PATH AINDA!!!!!
+		redirnode->name = ft_strdup(toknode->value);
 	if(oper == HDC_R)
 		redirnode->name = ft_strdup(toknode->heredoc_path);
 	if(oper == APPD_R)
@@ -260,7 +262,7 @@ t_block_node *intit_block_node(t_par_node **parnode, t_dlist **toklst)
 	assim não preciso realocar memória dinamicamente a cada nova entrada.*/
 	nb_of_tokens = ft_dlstsize(*toklst);
 	(*parnode)->block_node = malloc(sizeof(t_block_node));
-	(*parnode)->block_node->cmd_arr = ft_calloc(nb_of_tokens, sizeof(char *) + 1);
+	(*parnode)->block_node->cmd_arr = ft_calloc(2 * nb_of_tokens, sizeof(char *) + 1); //REVISAR AQUI
 	if (!(*parnode)->block_node || !(*parnode)->block_node->cmd_arr)
 		return (NULL);
 	(*parnode)->block_node->input_lst = NULL;
@@ -605,7 +607,7 @@ void print_debug_parsing(t_list **parslst)
 	{
 		par = (t_par_node *)trav->content;
 
-		ft_printf("\n\n----- Node %i-----\n", a);
+		ft_printf("\n----- Node %i-----\n", a);
 		ft_printf("oper\t%i (", par->oper);
 		ft_print_oper_par(par->oper);
 		ft_printf(")\n");
@@ -645,8 +647,11 @@ void print_debug_parsing(t_list **parslst)
 				print_redir_list(par->block_node->redirs_lst);
 				ft_printf("\n");
 			}
+
 			else
 				ft_printf("redirs_lst: NULL\n");
+			ft_printf("\n");
+
 		}
 		a++;
 		trav = trav->next;
@@ -705,7 +710,6 @@ void print_redir_list(t_list *redirs)
 	t_list *trav;
 	t_redirs_node *redir;
 
-
 	trav = redirs;
 	int a = 1;
 	while(trav)
@@ -713,15 +717,14 @@ void print_redir_list(t_list *redirs)
 		redir = (t_redirs_node *)trav->content;
 		ft_printf("%i) " , a);		
 		ft_print_oper_par(redir->type);
-		ft_printf(" [%s]" , redir->name);
+		ft_printf(" [%s] " , redir->name);
 		if (redir->create)
 			ft_printf("create = true");
 		else
 			ft_printf("create = false");
 		trav = trav->next;
 		a++;
-		if(trav)
-			ft_printf(" ");
+		ft_printf(" ");
+
 	}
 }
-

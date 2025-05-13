@@ -2,7 +2,7 @@
 # define EXPAND_H
 
 # include "../libs/libft/libft.h"
-# include "minishell.h"  
+# include "minishell.h"
 # include "heredoc.h"
 # include "expand.h"
 # include "tokenize.h"
@@ -13,6 +13,9 @@
 # define NEXT_CHAR (*exp)->raw[(*exp)->a + 1]
 # define A (*exp)->a
 # define B (*exp)->b
+
+typedef struct	s_mem t_mem;
+typedef enum e_quote t_quote;
 
 typedef enum e_delim
 {

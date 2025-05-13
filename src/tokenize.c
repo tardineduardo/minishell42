@@ -31,10 +31,10 @@ void	*ft_tokenize(char **line, t_mem **mem)
 
 
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
-	ft_expand_toklist(&tok->toklst, mem);			//DEBUG
-	ft_debug_list(&tok->toklst);					//DEBUG
-	ft_debug_indexes(&tok->toklst);					//DEBUG
-	ft_printf("\n");								//DEBUG
+	//ft_expand_toklist(&tok->toklst, mem);			//DEBUG
+	//ft_debug_list(&tok->toklst);					//DEBUG
+	//ft_debug_indexes(&tok->toklst);					//DEBUG
+	//ft_printf("\n");								//DEBUG
 	
 	return (mem);
 }
@@ -447,6 +447,11 @@ void ft_expand_toklist(t_dlist **toklst, t_mem **mem)
 	trav = *toklst;
 	while (trav)
 	{
+		if (!trav->content)
+		{
+			trav = trav->next;
+			continue ;
+		}
 		tok_node = (t_tok_node *)trav->content;
 
 		tok_node->value = ft_expand(&tok_node->value, TOKEN, mem);
