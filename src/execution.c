@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/12 17:56:30 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:52:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 		i = p->num_cmds;
 	index = 0;
 	res = 0;
-	printf("status: %d", res);
 	while (index < i)
 	{
 		if (WIFSIGNALED(status[index]))

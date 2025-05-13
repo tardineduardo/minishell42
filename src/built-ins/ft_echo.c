@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:52:39 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/07 13:01:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:48:30 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,24 @@
 #include "../../include/builtins.h"
 
 
+void	ft_print_echo_flag(char **cmd_arr, int i)
+{
+	int	j;
+
+	j = 1;
+	while (cmd_arr[j] != NULL)
+	{
+		if (ft_strcmp(cmd_arr[j], "-n") != 0)
+		{
+			if (j != (i - 1))
+				ft_printf("%s ", cmd_arr[j]);
+			else
+				ft_printf("%s", cmd_arr[j]);
+		}
+		j++;
+	}
+	return ;
+}
 
 void	ft_print_echo(char **cmd_arr, int i)
 {
@@ -36,7 +54,7 @@ void	ft_print_echo(char **cmd_arr, int i)
 	ft_printf("\n");
 	return ;
 }
-
+// TODO: add case when we have -nnnnn, it needs to work
 int	ft_echo(char **cmd_arr)
 {
 	int		i;
@@ -51,7 +69,7 @@ int	ft_echo(char **cmd_arr)
 	j = 0;
 	while (cmd_arr[j] != NULL)
 	{
-		if (ft_strncmp(cmd_arr[j], "-n", 2) == 0)
+		if (ft_strcmp(cmd_arr[j], "-n") == 0)
 		{
 			flag = true;
 			break ;
@@ -60,5 +78,7 @@ int	ft_echo(char **cmd_arr)
 	}
 	if (flag == false)
 		ft_print_echo(cmd_arr, i);
+	else
+		ft_print_echo_flag(cmd_arr, i);
 	return (0);
 }

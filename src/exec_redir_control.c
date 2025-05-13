@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/12 18:02:19 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 13:42:17 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,10 @@ int	file_input_handler(t_list **input_lst, t_mem **mem)
 		cur_input = cur_node_input->content;
 		cur_input_expanded = ft_expand(&cur_input->name, TOKEN, mem);
 		if (access(cur_input_expanded, F_OK) != 0)
-		{
-			//ft_dprintf(2, "%s: No such file or directory", cur_input_expanded);
 			exit(1);
-		}
 		fd = open(cur_input_expanded, O_RDONLY);
 		if (fd == -1)
-		{
-			//ft_dprintf(2, "%s: Permission denied\n", cur_input_expanded);
 			exit(1);
-		}
 		if (cur_node_input->next == NULL)
 			return (fd);
 		close(fd);
@@ -118,10 +112,7 @@ int file_output_handler(t_list **output_lst, t_mem **mem)
 		cur_output_expanded = ft_expand(&cur_output->name, TOKEN, mem);
 		fd = open(cur_output_expanded, O_WRONLY | O_APPEND | O_CREAT, 0644);
 		if (fd == -1)
-		{
-			//ft_dprintf(2, "%s: Permission denied\n", cur_output_expanded);
 			exit(1);
-		}
 		if (cur_node_output->next == NULL)
 			return (fd);
 		close(fd);
