@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 14:22:23 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:27:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_ast_node	*parse_pipeline(t_list **parlst)
 		right = parse_command_or_group(parlst);
 		if (!right || right->type != NODE_COMMAND)
 		{
-			fprintf(stderr, "Invalid pipeline structure\n");
+			ft_dprintf(2, " Invalid pipeline structure\n");
 			exit(1);
 		}
 		new_node = ft_lstnew(right->block_node);
@@ -137,7 +137,7 @@ t_ast_node	*parse_command_or_group(t_list **parlst)
 		node = parse_expression(parlst);
 		if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 3) // ')'
 		{
-			fprintf(stderr, "Error: Unclosed parenthesis\n");
+			ft_dprintf(2, " Error: Unclosed parenthesis\n");
 			exit(1);
 		}
 		*parlst = (*parlst)->next; // Consume ")"
