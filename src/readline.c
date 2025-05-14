@@ -23,7 +23,7 @@ void	*ft_readline(t_mem **mem)
 	t_rdl_mem	*rdl;
 
 	rdl = (*mem)->readline;
-	rdl->line = readline(YELLOW "Minishell> " RESET);
+	rdl->line = readline("Minishell> ");
 	if (!rdl->line)
 		exit(0);
 	if (ft_strlen(rdl->line) == 0)
@@ -48,7 +48,7 @@ char	*ft_rdl_input_loop(t_mem **mem)
 	{
 		if (ft_line_is_incomplete(rdl->line))
 		{
-			rdl->append = (readline(YELLOW "append > " RESET));
+			rdl->append = (readline("append > "));
 			if (!ft_tokenize(&rdl->append, mem))
 				return (NULL);
 			rdl->temp = rdl->line;
