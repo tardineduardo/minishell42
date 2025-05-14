@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 14:07:20 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/06 17:59:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:28:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "../../include/environs.h"
 #include "../../include/heredoc.h"
 #include "../../include/builtins.h"
-
 
 /*
 	**Mandatory: env with no options or with no arguments**
@@ -30,7 +29,6 @@ int	ft_env(t_list *envlist)
 	t_env_node	*current;
 
 	trav = envlist;
-	
 	while (trav)
 	{
 		current = (t_env_node *)trav->content;

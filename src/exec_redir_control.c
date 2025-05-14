@@ -6,10 +6,9 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 17:30:47 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:42:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../include/minishell.h"
 #include "../include/parsing.h"
@@ -22,7 +21,7 @@ int	redir_files_validation(t_list **redir_lst, t_mem **mem)
 	char			*cur_redir_expanded;
 	t_list			*cur_node_redir;
 	t_redirs_node	*cur_redir;
-	
+
 	if (redir_lst == NULL || *redir_lst == NULL)
 		return (-1);
 	cur_node_redir = *redir_lst;
@@ -94,10 +93,10 @@ int	file_input_handler(t_list **input_lst, t_mem **mem)
 		close(fd);
 		cur_node_input = cur_node_input->next;
 	}
-	return (0);              
+	return (0);
 }
 
-int file_output_handler(t_list **output_lst, t_mem **mem)
+int	file_output_handler(t_list **output_lst, t_mem **mem)
 {
 	int				fd;
 	char			*cur_output_expanded;
@@ -157,7 +156,7 @@ int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2]
 	int	res;
 
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
-	if (cur_cmd->input_lst != NULL) 
+	if (cur_cmd->input_lst != NULL)
 		fd_input_redir(&cur_cmd->input_lst, mem);
 	else if (pipe_data->i > 0)
 	{
@@ -182,7 +181,7 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
 	if (!is_built_in(cur_cmd->cmd_arr))
 	{
-		if (cur_cmd->input_lst != NULL) 
+		if (cur_cmd->input_lst != NULL)
 			fd_input_redir(&cur_cmd->input_lst, mem);
 	}
 	if (cur_cmd->output_lst != NULL)

@@ -6,13 +6,12 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 11:35:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:35:17 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
-
 
 /*
 	**Mandatory: export with no options**
@@ -31,10 +30,10 @@
 			to mark with it is exported or not?
 */
 t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
-t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
+t_list		*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 
-void	ft_ms_env_add(t_list **envlist, char *variable_value);
-void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
+void		ft_ms_env_add(t_list **envlist, char *variable_value);
+void		ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 //@luiscarvalhofrade essa lógica a gente preisa rever depois, pois
 //podemos passar uma variável vazia, tipo "NOVA_VAR="
 
@@ -42,10 +41,10 @@ void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 // não podem começar com um número. validar isso.
 int	ft_export(t_list **envlist, char *variable_value)
 {
-	int	i;
-	char **result;
-	t_list *trav;
-	t_env_node *current;
+	int			i;
+	char		**result;
+	t_list		*trav;
+	t_env_node	*current;
 
 	if (!envlist)
 		return (1);
@@ -95,7 +94,10 @@ int	ft_export(t_list **envlist, char *variable_value)
 			if (!current->readonly && !current->block_unset)
 			{
 				free(current->value);
-				current->value = ft_strdup(result[1] ? result[1] : "");
+				if (result[1] != NULL)
+					current->value = ft_strdup(result[1]);
+				else
+					current->value = ft_strdup("");
 				current->visible = true;
 			}
 			ft_free_split(result, 2);
@@ -120,16 +122,15 @@ void	ft_ms_env_add(t_list **envlist, char *variable_value)
 		new_env_node = ft_init_env_node_expbuiltin(result[0], " ", false);
 	else
 		new_env_node = ft_init_env_node_expbuiltin(result[0], result[1], true);
-	if(!ft_add_to_envlist_expbuiltin(envlist, new_env_node))
-
-	ft_free_and_null_str_array(&result);
+	if (!ft_add_to_envlist_expbuiltin(envlist, new_env_node))
+		ft_free_and_null_str_array(&result);
 	return ;
 }
 
 void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value)
 {
-	t_list *trav;
-	t_env_node *current;
+	t_list		*trav;
+	t_env_node	*current;
 
 	if (!envlist || !variable || !value)
 		return ;
@@ -148,19 +149,15 @@ void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value)
 	return ;
 }
 
-
-
 // @luiscarvalhofrade criei essas duas funções abaixo como duplicadas do
 // arquivo environ.c. eu acho melhor no começo a gente isolar as funções
 // para evitar mudar uma coisa em um lugar e quebrar em outro. no fim do
 // projeto, a gente pode criar uma lista de shared functions.   
 t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible)
 {
-	t_env_node *new;
+	t_env_node	*new;
 
 	new = malloc(sizeof(t_env_node));
-	//if (!new)
-		//return (ft_env_syscall_error("Init node malloc error"));
 	new->variable = ft_strdup(variable);
 	new->value = ft_strdup(value);
 	new->readonly = false;
@@ -171,12 +168,11 @@ t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visibl
 
 t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node)
 {
-	t_list *new_envlist_node;
+	t_list	*new_envlist_node;
 
 	new_envlist_node = ft_lstnew(new_node);
 	if (!(new_envlist_node))
 		return (NULL);
-
 	ft_lstadd_back(envlist, new_envlist_node);
 	return (*envlist);
 }
