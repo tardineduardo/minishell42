@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 11:51:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 19:38:15 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ t_ast_node *parse_logical_and(t_list **parlst);
 t_ast_node *parse_pipeline(t_list **parlst);
 t_ast_node *parse_command_or_group(t_list **parlst);
 t_ast_node *parse_command(t_list **parlst);
-// void free_ast(t_ast_node *node);
 
 // Create a new command node
 t_ast_node *create_command_node(t_block_node *block_node)

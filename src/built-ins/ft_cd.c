@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/07 13:13:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 19:32:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist, char *value)
 
 int	ft_cd(t_list **envlist, char **cmd_arr)
 {
-	if (cmd_arr[2] != NULL)
+	if (cmd_arr[1] != NULL && cmd_arr[2] != NULL)
 	{
-		ft_dprintf(2, " too many arguments");
+		ft_dprintf(2, "%s: too many arguments\n", cmd_arr[0]);
 		return (1);
 	}
 	if (chdir(cmd_arr[1]) == 0)
@@ -70,9 +70,9 @@ int	ft_cd(t_list **envlist, char **cmd_arr)
 	else
 	{
 		if (errno == 2 || errno == 20)
-			ft_dprintf(2, " No such file or directory");
+			ft_dprintf(2, "%s: No such file or directory", cmd_arr[0]);
 		else if (errno == 13)
-			ft_dprintf(2, " Permission denied");
+			ft_dprintf(2, "%s: Permission denied", cmd_arr[0]);
 		return (1);
 	}
 	return (0);
