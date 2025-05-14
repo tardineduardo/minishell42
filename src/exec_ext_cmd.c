@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/12 14:59:07 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:16:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd)
 			exit(126);
 		}
 	}
-	else
-	{
-		ft_dprintf(2, "%s: No such file or directory\n", cmd_arr[0]);
-		exit(127);
-	}
+	// else
+	// {
+	// 	ft_dprintf(2, "%s: No such file or directory12\n", cmd_arr[0]);
+	// 	exit(127);
+	// }
 	stat(cmd_arr[0], &sb);
 	if (S_ISDIR(sb.st_mode))
 	{
