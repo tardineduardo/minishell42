@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 17:11:34 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:40:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,55 +20,54 @@
 #include "../include/builtins.h"
 #include "../include/execution.h"
 
-int execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
+int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 {
-    char    **cmd_arr;
-    char    **final_cmd_arr;
-    int     res;
-    int     size_arr;
-    int     i;
+	char	**cmd_arr;
+	char	**final_cmd_arr;
+	int		res;
+	int		size_arr;
+	int		i;
 
-    res = -1;
-    i = 0;
-    if (!cur_cmd || !ms_env)
-    {
-        ft_putstr_fd("cmd or ms_env: cmd executor: NULL pointer\n", STDERR_FILENO);
-        exit(EXIT_FAILURE);
-    }
-    cmd_arr = cur_cmd->cmd_arr;
-    size_arr = ft_count_items(cmd_arr);
-    final_cmd_arr = malloc(sizeof(char *) * (size_arr));
-    if (!final_cmd_arr)
-    {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-    while (cmd_arr[i] != NULL)
-    {
-        final_cmd_arr[i] = ft_strdup(ft_expand(&cur_cmd->cmd_arr[i], TOKEN, mem));
-        if (!final_cmd_arr[i])
-        {
-            perror("ft_strdup");
-            while (--i >= 0)
-                free(final_cmd_arr[i]);
-            free(final_cmd_arr);
-            exit(EXIT_FAILURE);
-        }
-        free(cur_cmd->cmd_arr[i]);
-        i++;
-    }
-    final_cmd_arr[i] = NULL;
-    free(cur_cmd->cmd_arr);
-    cur_cmd->cmd_arr = final_cmd_arr;
-
-    if (is_built_in(cur_cmd->cmd_arr))
-        res = exec_built_in(ms_env, cur_cmd->cmd_arr);
-    else
-        exec_external_cmd(ms_env, cur_cmd);
-    return (res);
+	res = -1;
+	i = 0;
+	if (!cur_cmd || !ms_env)
+	{
+		ft_putstr_fd("cmd or ms_env: cmd executor: NULL pointer\n", STDERR_FILENO);
+		exit(EXIT_FAILURE);
+	}
+	cmd_arr = cur_cmd->cmd_arr;
+	size_arr = ft_count_items(cmd_arr);
+	final_cmd_arr = malloc(sizeof(char *) * (size_arr));
+	if (!final_cmd_arr)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	while (cmd_arr[i] != NULL)
+	{
+		final_cmd_arr[i] = ft_strdup(ft_expand(&cur_cmd->cmd_arr[i], TOKEN, mem));
+		if (!final_cmd_arr[i])
+		{
+			perror("ft_strdup");
+			while (--i >= 0)
+				free(final_cmd_arr[i]);
+			free(final_cmd_arr);
+			exit(EXIT_FAILURE);
+		}
+		free(cur_cmd->cmd_arr[i]);
+		i++;
+	}
+	final_cmd_arr[i] = NULL;
+	free(cur_cmd->cmd_arr);
+	cur_cmd->cmd_arr = final_cmd_arr;
+	if (is_built_in(cur_cmd->cmd_arr))
+		res = exec_built_in(ms_env, cur_cmd->cmd_arr);
+	else
+		exec_external_cmd(ms_env, cur_cmd);
+	return (res);
 }
 
-void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
+void	execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	pid_t	pid;
 	int		res;
@@ -91,7 +90,7 @@ void execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 
 int	print_child_statuses(t_pipe_data *p, int *status)
 {
-	int sig;
+	int	sig;
 	int	index;
 	int	i;
 	int	res;
@@ -108,7 +107,7 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 		{
 			sig = WTERMSIG(status[index]);
 			if (sig == SIGQUIT)
-				return(ft_printf("Quit (core dumped)\n"));
+				return (ft_printf("Quit (core dumped)\n"));
 			if (sig == SIGINT)
 				res = (sig + 128);
 			return (res);
@@ -182,14 +181,14 @@ int	wait_for_all_children(t_pipe_data p)
 		}
 		i++;
 	}
-	return(print_child_statuses(&p, p.status_arr));
+	return (print_child_statuses(&p, p.status_arr));
 }
 
-int exec_pipeline(t_list **env, t_list **parlst, int num_cmds, t_mem **mem)
+int	exec_pipeline(t_list **env, t_list **parlst, int num_cmds, t_mem **mem)
 {
-	t_pipe_data p;
-	t_list *node;
-	
+	t_pipe_data	p;
+	t_list		*node;
+
 	ft_bzero(p.child_pids, sizeof(pid_t) * num_cmds);
 	ft_bzero(p.status_arr, sizeof(pid_t) * num_cmds);
 	node = *parlst;
@@ -211,7 +210,7 @@ int exec_pipeline(t_list **env, t_list **parlst, int num_cmds, t_mem **mem)
 		p.i++;
 		node = node->next;
 	}
-	return(wait_for_all_children(p));
+	return (wait_for_all_children(p));
 }
 
 int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
@@ -222,7 +221,7 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 	pid_t	pid;
 
 	res = -1;
-    if (!root) 
+	if (!root)
 		return (0);
 	if ((*root)->type == NODE_COMMAND)
 		res = exec_single_cmd(ms_env, (*root)->block_node, mem);
@@ -256,5 +255,5 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 		res = exec_pipeline(ms_env, &(*root)->pipeline->cmds, (*root)->pipeline->cmd_count, mem);
-    return (res);
+	return (res);
 }

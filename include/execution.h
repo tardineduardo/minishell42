@@ -26,4 +26,18 @@ int		ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem);
 void	ft_ms_env_add_exit_code(t_list **envlist, char *variable, int value);
 void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value);
 
+//ast utils
+t_ast_node	*create_command_node(t_block_node *block_node);
+t_ast_node	*create_pipeline_node(t_list *cmds_lst);
+t_ast_node	*create_logical_node(logical_op op, t_ast_node *left, t_ast_node *right);
+t_ast_node	*create_group_node(t_ast_node *body);
+
+//ast parsing
+t_ast_node	*parse_expression(t_list **parlst);
+t_ast_node	*parse_logical_or(t_list **parlst);
+t_ast_node	*parse_logical_and(t_list **parlst);
+t_ast_node	*parse_pipeline(t_list **parlst);
+t_ast_node	*parse_command_or_group(t_list **parlst);
+t_ast_node	*parse_command(t_list **parlst);
+
 #endif

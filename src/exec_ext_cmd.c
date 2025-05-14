@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 17:16:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:43:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ char	**ft_ms_env_arr(t_list **ms_env)
 
 void	exec_external_cmd(t_list **ms_env, t_block_node *cmd)
 {
-	char	**cmd_arr;
-	char	**ms_env_arr;
-	struct stat sb;
-
+	char		**cmd_arr;
+	char		**ms_env_arr;
+	struct stat	sb;
 
 	cmd_arr = cmd->cmd_arr;
 	cmd_arr = update_cmd_arr(ms_env, cmd_arr);
@@ -62,15 +61,10 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd)
 			exit(126);
 		}
 	}
-	// else
-	// {
-	// 	ft_dprintf(2, "%s: No such file or directory12\n", cmd_arr[0]);
-	// 	exit(127);
-	// }
 	stat(cmd_arr[0], &sb);
 	if (S_ISDIR(sb.st_mode))
 	{
-        ft_dprintf(2, "%s: Is a directory\n", cmd_arr[0]);
+		ft_dprintf(2, "%s: Is a directory\n", cmd_arr[0]);
 		exit(126);
 	}
 	if (execve(cmd_arr[0], cmd_arr, ms_env_arr) == -1)

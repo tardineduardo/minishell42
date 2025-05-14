@@ -19,6 +19,7 @@ OPERATORS 	=	src/operators.c \
 PARSER		=	src/parsing.c \
 
 AST 		=	src/ast.c \
+				src/ast_utils.c \
 
 EXECUTE		= 	src/execution.c \
 				src/exec_block_treatment.c \

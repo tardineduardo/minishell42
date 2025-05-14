@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:52:39 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/13 17:19:28 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:27:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "../../include/environs.h"
 #include "../../include/heredoc.h"
 #include "../../include/builtins.h"
-
 
 void	ft_print_echo_flag(char **cmd_arr, int i)
 {
@@ -54,6 +53,7 @@ void	ft_print_echo(char **cmd_arr, int i)
 	ft_printf("\n");
 	return ;
 }
+
 // TODO: add case when we have -nnnnn, it needs to work
 int	ft_echo(char **cmd_arr)
 {
