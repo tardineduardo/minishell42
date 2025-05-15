@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/15 15:31:00 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:45:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../include/parsing.h"
 #include "../include/expand.h"
 #include "../include/execution.h"
+#include <termios.h>
 
 int	redir_files_validation(t_list **redir_lst, t_mem **mem)
 {
@@ -154,10 +155,27 @@ void	fd_output_redir(t_list **output_lst, t_mem **mem)
 	}
 }
 
+bool save_termios(struct termios *saved)
+{
+	if (isatty(STDIN_FILENO))
+		return tcgetattr(STDIN_FILENO, saved) == 0;
+	return false;
+}
+
+bool restore_termios(struct termios *saved)
+{
+	if (isatty(STDIN_FILENO))
+		return tcsetattr(STDIN_FILENO, TCSANOW, saved) == 0;
+	return false;
+}
+
 int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2], t_mem **mem)
 {
-	int	res;
+	int res;
+	struct termios old_termios;
+	bool has_termios;
 
+	has_termios = save_termios(&old_termios);
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
 	if (cur_cmd->input_lst != NULL)
 		fd_input_redir(&cur_cmd->input_lst, mem);
@@ -174,13 +192,19 @@ int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2]
 		close(pipefd[1]);
 		close(pipefd[0]);
 	}
+	if (has_termios)
+		restore_termios(&old_termios); 
+
 	return (res);
 }
 
 int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 {
-	int	res;
+	int res;
+	struct termios old_termios;
+	bool has_termios;
 
+	has_termios = save_termios(&old_termios);
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
 	if (!is_built_in(cur_cmd->cmd_arr))
 	{
@@ -189,5 +213,7 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 	}
 	if (cur_cmd->output_lst != NULL)
 		fd_output_redir(&cur_cmd->output_lst, mem);
+	if (has_termios)
+		restore_termios(&old_termios); 
 	return (res);
 }
