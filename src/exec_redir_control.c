@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 13:42:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:31:00 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,10 @@ int	file_output_handler(t_list **output_lst, t_mem **mem)
 	{
 		cur_output = cur_node_output->content;
 		cur_output_expanded = ft_expand(&cur_output->name, TOKEN, mem);
-		fd = open(cur_output_expanded, O_WRONLY | O_APPEND | O_CREAT, 0644);
+		if (cur_output->type == OUT_R)
+			fd = open(cur_output_expanded, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			fd = open(cur_output_expanded, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1)
 			exit(1);
 		if (cur_node_output->next == NULL)
