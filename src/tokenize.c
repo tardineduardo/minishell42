@@ -4,12 +4,6 @@
 #include "../include/tokenize.h"
 #include "../include/parsing.h"
 
-/*return = NULL = erro. Eu ainda não gosto dessa versão. Se a ideia é que cada
-módulo do programa seja realmente independente, cada chamada para tokenize
-deveria receber uma **string e uma **t_list. a string seria tokenizada e os
-os novos tokens salvos em t_list - que podia já estar preenchida ou não. 
-Do jeito que está hoje, tokenize sempre preenche a mesma lista e fica segurando
-a memória dos tokens em tok_mem mesmo depois que a tokenização já terminou.*/
 void	*ft_tokenize(char **line, t_mem **mem)
 {
 	t_tok_mem	*tok;
@@ -26,16 +20,22 @@ void	*ft_tokenize(char **line, t_mem **mem)
 			break ;
 	}
 	ft_free_and_null((void *)&tok->remain);
-	
-	//LIMPAR WHITE TOKENS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
 	//ft_expand_toklist(&tok->toklst, mem);			//DEBUG
-	//ft_debug_list(&tok->toklst);					//DEBUG
+	ft_debug_list(&tok->toklst);					//DEBUG
+	ft_debug_indexes(&tok->toklst);					//DEBUG
+	ft_printf("\n");								//DEBUG
+
+	ft_remove_empty_tokens(&tok->toklst);
+
+	//RETIRAR ESSAS ESPANSOES E APAGAR FUNCOES, É SO PRA DEBUG
+	//ft_expand_toklist(&tok->toklst, mem);			//DEBUG
+	ft_debug_list(&tok->toklst);					//DEBUG
 	//ft_debug_indexes(&tok->toklst);					//DEBUG
-	//ft_printf("\n");								//DEBUG
-	
+	ft_printf("\n");								//DEBUG
+
+
 	return (mem);
 }
 
@@ -251,6 +251,51 @@ void	ft_tokeniztion_escape(int *i)
 	(*i)++;
 	(*i)++;
 	return ;
+}
+
+t_dlist **ft_remove_empty_tokens(t_dlist **toklst)
+{
+	t_dlist		*trav;
+	t_dlist		*temp;
+	t_tok_node	*toknode;
+
+	if (!toklst || !*toklst)
+		return (NULL);	
+	trav = *toklst;
+	while (trav)
+	{
+		ft_debug_list(toklst);
+		ft_printf("\n");					//DEBUG
+		toknode = (t_tok_node *)trav->content;
+		if (!toknode || is_token_empty(toknode->value))
+		{
+			temp = trav->next;
+			ft_dlst_destroy_node(toklst, trav, ft_del_token_node);
+			trav = temp;
+		}
+		else
+			trav = trav->next;
+	}
+	return (toklst);
+}
+
+bool is_token_empty(char *value)
+{
+	int	a;
+	int	len;
+
+	if (!value)
+		return (true);
+
+	a = 0;
+	len = ft_strlen(value);
+	while (a < len)
+	{
+		if (!ft_strchr("\"\' ", value[a]))
+			return (false);
+		a++;
+	}
+	return (true);
 }
 
 int		ft_find_word_limit(t_tok_mem **tok, char *str)

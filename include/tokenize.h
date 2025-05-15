@@ -62,6 +62,8 @@ void		*ft_init_operators(t_tok_mem **tok);
 void		ft_del_token_node(void *content);
 void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem);
 void	capture_values_for_parsing_later(char *newstring, t_tok_node *node, t_tok_mem **tok);
+t_dlist	**ft_remove_empty_tokens(t_dlist **toklst);
+bool	is_token_empty(char *value);
 
 
 
