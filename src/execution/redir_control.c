@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_redir_control.c                               :+:      :+:    :+:   */
+/*   redir_control.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 15:19:32 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 18:01:51 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,15 +158,21 @@ void	fd_output_redir(t_list **output_lst, t_mem **mem)
 bool save_termios(struct termios *saved)
 {
 	if (isatty(STDIN_FILENO))
-		return tcgetattr(STDIN_FILENO, saved) == 0;
-	return false;
+	{
+		if (tcgetattr(STDIN_FILENO, saved) == 0)
+			return (true);
+	}
+	return (false);
 }
 
 bool restore_termios(struct termios *saved)
 {
 	if (isatty(STDIN_FILENO))
-		return tcsetattr(STDIN_FILENO, TCSANOW, saved) == 0;
-	return false;
+	{
+		if (tcsetattr(STDIN_FILENO, TCSANOW, saved) == 0)
+			return (true);
+	}
+	return (false);
 }
 
 int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2], t_mem **mem)
@@ -193,8 +199,7 @@ int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2]
 		close(pipefd[0]);
 	}
 	if (has_termios)
-		restore_termios(&old_termios); 
-
+		restore_termios(&old_termios);
 	return (res);
 }
 

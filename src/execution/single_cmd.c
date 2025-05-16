@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_single_cmd.c                             :+:      :+:    :+:   */
+/*   single_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:05:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 15:19:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 18:03:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	single_built_in(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		result;
 	int		res;
-	
+
 	result = 0;
 	if (cmd->redirs_lst != NULL)
 		result = pipe_fd_control_single_cmd(cmd, mem);
