@@ -6,14 +6,14 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 14:27:39 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:20:33 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/heredoc.h"
-#include "../include/tokenize.h"
-#include "../include/execution.h"
+#include "../../include/minishell.h"
+#include "../../include/heredoc.h"
+#include "../../include/tokenize.h"
+#include "../../include/execution.h"
 
 // Parse an expression
 t_ast_node	*parse_expression(t_list **parlst)

@@ -6,14 +6,14 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:52 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 14:20:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:20:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/heredoc.h"
-#include "../include/tokenize.h"
-#include "../include/execution.h"
+#include "../../include/minishell.h"
+#include "../../include/heredoc.h"
+#include "../../include/tokenize.h"
+#include "../../include/execution.h"
 
 // Create a new command node
 t_ast_node	*create_command_node(t_block_node *block_node)

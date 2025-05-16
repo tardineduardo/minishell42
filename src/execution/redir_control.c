@@ -6,14 +6,14 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/15 17:45:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:19:32 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/parsing.h"
-#include "../include/expand.h"
-#include "../include/execution.h"
+#include "../../include/minishell.h"
+#include "../../include/parsing.h"
+#include "../../include/expand.h"
+#include "../../include/execution.h"
 #include <termios.h>
 
 int	redir_files_validation(t_list **redir_lst, t_mem **mem)
