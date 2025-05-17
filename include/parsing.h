@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 14:12:07 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/17 18:27:51 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:50:47 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,16 @@
 
 # include "minishell.h" 
 # include "../libs/libft/libft.h"
+
+# define EIVOPERS 33
+# define EIVOPERS 33
+# define EIVOPERS 33
+# define EIVOPERS 33
+# define EIVOPERS 33
+# define EIVOPERS 33
+# define EIVOPERS 33
+# define EIVOPERS 33
+
 
 typedef struct s_mem	t_mem;
 
@@ -70,7 +80,7 @@ typedef struct s_par_mem
 	int				errnmb;
 }					t_par_mem;
 
-int			ft_parsing(t_mem **mem);
+int				ft_parsing(t_mem **mem);
 void			*ft_init_par_memory(t_mem **mem);
 void			ft_clear_par_mem(t_par_mem **par);
 bool			ft_check_syntax(t_dlist *parlst, t_par_mem **par);

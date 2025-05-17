@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/17 18:26:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:49:49 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_parsing(t_mem **mem)
 	if (!ft_check_syntax(tok->toklst, &par))
 		return (par->errnmb);
 
-	par->errnmb = 0; //mover para init
 
 	ft_create_parlst(&tok->toklst, &par->parlst, &par);
 	return (par->errnmb);
@@ -86,7 +85,7 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_par_me
 	(*parnode)->block_node = NULL;
 
 	// se não for um operador de comando.
-	if(is_pipe_logical_or_subshell(toknode))
+	if(is_pipe_logical_subshell(toknode))
 	{
 		// registra o tipo de operador.
 		(*parnode)->oper = toknode->oper;
@@ -228,7 +227,7 @@ int    count_num_parsnodes(t_dlist **toklst)
 			total_parsnodes++;	
 		else if(is_command(toknode) && !is_command(prevtok))
 			total_parsnodes++;	
-		else if(is_pipe_logical_or_subshell(toknode))
+		else if(is_pipe_logical_subshell(toknode))
 			total_parsnodes++;	
 		prevtok = toknode;
 		trav = trav->next;
@@ -261,8 +260,8 @@ aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
 
 bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
 {
-	//if(!operators_are_supported(parlst, par))
-	// 	return (false);
+	if(!operators_are_supported(parlst, par))
+		return (false);
 	if (!redirects_are_complete(parlst, par))
 		return (false);
 	// if (pipe_at_invalid_position(parlst))
@@ -285,12 +284,15 @@ void	*operators_are_supported(t_dlist *toklst, t_par_mem **par)
 		tknd = (t_tok_node *)trav->content;
 		if (tknd->oper != WORD)
 		{
-			if (tknd->oper != PIPE_O	&&
-				tknd->oper != OUT_R	&&
-				tknd->oper != IN_R	&&
-				tknd->oper != APPD_R	&&
-				tknd->oper != HDC_R)
-
+			if (tknd->oper != PIPE_O
+				&& tknd->oper != OUT_R
+				&& tknd->oper != IN_R
+				&& tknd->oper != APPD_R
+				&& tknd->oper != HDC_R
+				&& tknd->oper != AND_O
+				&& tknd->oper != OR_O
+				&& tknd->oper != GSTART_O
+				&& tknd->oper != GEND_O)
 				return (ft_par_syntax_error(EIVOPERS, getop(tknd), par, 33));
 		}
 		trav = trav->next;
@@ -303,23 +305,17 @@ void	*redirects_are_complete(t_dlist *toklst, t_par_mem **par)
 {
 	t_dlist		*trav;
 	t_tok_node	*tknd;
-	t_tok_node	*next;	
-
-
-	(void)par;
+	t_tok_node	*next;
 
 	trav = toklst;
 	while(trav)
 	{
 		tknd = (t_tok_node *)trav->content;	
-		// se o token é um operador de redirecionamento...
 		if(is_redir(tknd)) 				
 		{
-			// ... ele não pode ser último token...
 			if(!trav->next)
 				return (ft_par_syntax_error(EINCRDIR , getop(tknd), par, 2));
 			next = (t_tok_node *)trav->next->content;
-			// ... e precisa ser seguido de word.
 			if(!next || next->oper != WORD)
 				return (ft_par_syntax_error(EINCRDIR, getop(tknd), par, 2));
 		}
@@ -339,14 +335,12 @@ bool is_redir(t_tok_node *toknode)
 	if (toknode->oper == IN_R	|| toknode->oper ==  OUT_R	||  
 		toknode->oper == HDC_R	|| toknode->oper ==  APPD_R)
 		return (true);
-	//separando os mandatórios do bônus para melhor visualização.
 	if (toknode->oper == WILD_R	|| toknode->oper ==  ERROR_R ||  
 		toknode->oper == HSTR_R	|| toknode->oper ==  OERR_R)
 		return (true);
 	return (false);
 }
 
-// Mesmo sendo curta, ajuda a padronização e leitura.
 bool is_word(t_tok_node *toknode)
 {
 	if (toknode->oper == WORD)
@@ -354,7 +348,6 @@ bool is_word(t_tok_node *toknode)
 	return (false);
 }
 
-// Verifica se é um word ou um redirect
 bool is_command(t_tok_node *toknode)
 {
 	if (toknode->oper == WORD)
@@ -362,15 +355,13 @@ bool is_command(t_tok_node *toknode)
 	if (toknode->oper == IN_R	|| toknode->oper ==  OUT_R	||  
 		toknode->oper == HDC_R	|| toknode->oper ==  APPD_R)
 		return (true);
-	//separando os mandatórios do bônus para melhor visualização.
 	if (toknode->oper == WILD_R	|| toknode->oper ==  ERROR_R ||  
 		toknode->oper == HSTR_R	|| toknode->oper ==  OERR_R)
 		return (true);
 	return (false);
 }
 
-
-bool	is_pipe_logical_or_subshell(t_tok_node *toknode)
+bool	is_pipe_logical_subshell(t_tok_node *toknode)
 {
 	if (toknode->oper == PIPE_O || toknode->oper == GSTART_O	||
 		toknode->oper == GEND_O	|| toknode->oper == AND_O		||
@@ -406,8 +397,7 @@ void *ft_par_syntax_error(t_syntax st_err, char *str, t_par_mem **par, int a)
 	if (st_err == EIVOPERS)
 		ft_dprintf(STDERR_FILENO, "bash: invalid operator `%s'\n", str);
 	else if (st_err == EINCRDIR)
-		ft_dprintf(STDERR_FILENO,
-		"bash: syntax error near unexpected token `%s'\n", str);
+		ft_dprintf(STDERR_FILENO, "bash: syntax error near unexpected token `%s'\n", str);
 
 
 	return(NULL);
@@ -420,7 +410,6 @@ void *ft_par_syntax_error(t_syntax st_err, char *str, t_par_mem **par, int a)
 void *ft_parsing_syscall_error(t_par_mem **par)
 {
 	(*par)->errnmb = errno;
-
 	(*par)->errmsg = strerror(errno);
 	return(NULL);
 }
@@ -433,6 +422,8 @@ void	*ft_init_par_memory(t_mem **mem)
 	(*mem)->parsing = malloc(sizeof(t_par_mem));
 	if (!(*mem)->parsing)
 		return (NULL);
+	(*mem)->parsing->errnmb = 0;
+	(*mem)->parsing->errmsg = NULL;
 	(*mem)->parsing->parlst = NULL;
 	return ((*mem)->parsing);
 }
