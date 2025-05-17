@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 14:12:07 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/17 14:12:27 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/17 15:43:55 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef struct s_mem	t_mem;
 
 typedef enum e_syntax
 {
+	EIVOPERS = 2,
+	EINCRDIR = 2,
 	ERROR1 = 0,
 	ERROR2 = 0,
 	ERROR3 = 0,	
@@ -64,21 +66,24 @@ typedef struct s_par_node
 typedef struct s_par_mem
 {
 	t_list			*parlst;
-	char			*syntax_error;
+	char			*errmsg;
+	int				errnmb;
 }					t_par_mem;
 
 void			*ft_parsing(t_mem **mem);
 void			*ft_init_par_memory(t_mem **mem);
 void			ft_clear_par_mem(t_par_mem **par);
-t_syntax		ft_check_syntax(t_dlist *parlst);
-t_list			*ft_create_parlst(t_dlist **toklst, t_list **parlst);
+bool			ft_check_syntax(t_dlist *parlst, t_par_mem **par);
+t_list			*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par);
 int				count_num_parsnodes(t_dlist **toklst);
-t_syntax		operators_are_supported(t_dlist *parlst);
-t_syntax		redirects_are_complete(t_dlist *parlst);
-t_par_node		*init_parnode(int a, t_par_node **parnode, t_dlist **toklst);
-t_block_node	*intit_block_node(t_par_node **parnode, t_dlist **toklst);
-void			*fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode);
-void			*fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode);
+void			*operators_are_supported(t_dlist *parlst, t_par_mem **par);
+void			*redirects_are_complete(t_dlist *parlst, t_par_mem **par);
+t_par_node		*init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_par_mem **par);
+t_block_node	*intit_block_node(t_par_node **parnode, t_dlist **toklst, t_par_mem **par);
+void			*fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_par_mem **par);
+void			*fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode, t_par_mem **par);
+void			*ft_parsing_syscall_error(t_par_mem **par);
+void			*ft_parsing_syntax_error(t_syntax st_err, char *str, t_par_mem **par);
 
 //debug
 void			ft_print_oper_par(t_oper oper);

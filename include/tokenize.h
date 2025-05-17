@@ -70,6 +70,7 @@ bool	is_word(t_tok_node *toknode);
 bool	is_redir(t_tok_node *toknode);
 bool	is_pipe_logical_or_subshell(t_tok_node *toknode);
 bool	is_command(t_tok_node *toknode);
+char *getop(t_tok_node *tok);
 
 
 
