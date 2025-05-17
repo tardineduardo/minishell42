@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/12 17:03:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/17 14:12:27 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst)
 			fill_blocknode_redirs(toklst, parnode);
 		// se o token for uma word
 		else if (is_word(toknode)) 
-			fill_blocknode_cmdarray(toklst, parnode);
+			fill_blcknode_cmdarray(toklst, parnode);
 	}
 	// no parnode, o campo oper passa a ser CMD.
 	(*parnode)->oper = CMD; 
@@ -225,7 +225,7 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode)
 
 
 
-void *fill_blocknode_cmdarray(t_dlist **toklst, t_par_node **parnode)
+void *fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode)
 {
 	t_tok_node	*toknode;
 	char		**arraytrav;
