@@ -29,10 +29,8 @@ bool	is_built_in(char **cmd_arr)
 
 int	exec_built_in(t_list **ms_env, char	**cmd_arr)
 {
-	bool	flag;
 	int		res;
 
-	flag = false;
 	res = -1;
 	if (!cmd_arr || !cmd_arr[0])
 	{

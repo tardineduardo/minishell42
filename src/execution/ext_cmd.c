@@ -28,7 +28,7 @@ char	**ft_ms_env_arr(t_list **ms_env)
 	if (!ms_env || !*ms_env)
 		return (NULL);
 	lst_size = ft_lstsize(*ms_env);
-	ms_env_cpy = (char **)calloc(sizeof(char *), (lst_size + 1));
+	ms_env_cpy = (char **)calloc((lst_size + 1), sizeof(char *));
 	i = 0;
 	current = *ms_env;
 	while (current)
