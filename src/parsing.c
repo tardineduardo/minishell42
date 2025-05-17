@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/17 15:47:19 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:26:28 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../include/tokenize.h"
 #include "../include/checks.h"
 
-void	*ft_parsing(t_mem **mem)
+int	ft_parsing(t_mem **mem)
 {
 	t_par_mem	*par;
 	t_tok_mem	*tok;
@@ -24,10 +24,12 @@ void	*ft_parsing(t_mem **mem)
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
 	if (!ft_check_syntax(tok->toklst, &par))
-		return (NULL);
+		return (par->errnmb);
+
+	par->errnmb = 0; //mover para init
 
 	ft_create_parlst(&tok->toklst, &par->parlst, &par);
-	return (mem);
+	return (par->errnmb);
 }
 
 t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par)
@@ -259,8 +261,8 @@ aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
 
 bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
 {
-	if(!operators_are_supported(parlst, par))
-	 	return (false);
+	//if(!operators_are_supported(parlst, par))
+	// 	return (false);
 	if (!redirects_are_complete(parlst, par))
 		return (false);
 	// if (pipe_at_invalid_position(parlst))
@@ -289,7 +291,7 @@ void	*operators_are_supported(t_dlist *toklst, t_par_mem **par)
 				tknd->oper != APPD_R	&&
 				tknd->oper != HDC_R)
 
-				return (ft_parsing_syntax_error(EIVOPERS, getop(tknd), par));
+				return (ft_par_syntax_error(EIVOPERS, getop(tknd), par, 33));
 		}
 		trav = trav->next;
 	}
@@ -300,26 +302,26 @@ void	*operators_are_supported(t_dlist *toklst, t_par_mem **par)
 void	*redirects_are_complete(t_dlist *toklst, t_par_mem **par)
 {
 	t_dlist		*trav;
-	t_tok_node	*toknode;
+	t_tok_node	*tknd;
 	t_tok_node	*next;	
-	
+
 
 	(void)par;
 
 	trav = toklst;
 	while(trav)
 	{
-		toknode = (t_tok_node *)trav->content;	
+		tknd = (t_tok_node *)trav->content;	
 		// se o token é um operador de redirecionamento...
-		if(is_redir(toknode)) 				
+		if(is_redir(tknd)) 				
 		{
 			// ... ele não pode ser último token...
 			if(!trav->next)
-				return (NULL); 			
+				return (ft_par_syntax_error(EINCRDIR , getop(tknd), par, 2));
 			next = (t_tok_node *)trav->next->content;
 			// ... e precisa ser seguido de word.
 			if(!next || next->oper != WORD)
-				return (NULL);
+				return (ft_par_syntax_error(EINCRDIR, getop(tknd), par, 2));
 		}
 		trav = trav->next;
 	}
@@ -397,16 +399,17 @@ bool	is_pipe_logical_or_subshell(t_tok_node *toknode)
 
 
 
-void *ft_parsing_syntax_error(t_syntax st_err, char *str, t_par_mem **par)
+void *ft_par_syntax_error(t_syntax st_err, char *str, t_par_mem **par, int a)
 {
-
-
-	(*par)->errnmb = st_err;
+	(*par)->errnmb = a;
 
 	if (st_err == EIVOPERS)
-		ft_dprintf(STDERR_FILENO, "Invalid operators");
-	if (st_err == EINCRDIR)
-		ft_dprintf(STDERR_FILENO, "syntax error near unexpected token `%s'", str);
+		ft_dprintf(STDERR_FILENO, "bash: invalid operator `%s'\n", str);
+	else if (st_err == EINCRDIR)
+		ft_dprintf(STDERR_FILENO,
+		"bash: syntax error near unexpected token `%s'\n", str);
+
+
 	return(NULL);
 }
 
@@ -417,6 +420,7 @@ void *ft_parsing_syntax_error(t_syntax st_err, char *str, t_par_mem **par)
 void *ft_parsing_syscall_error(t_par_mem **par)
 {
 	(*par)->errnmb = errno;
+
 	(*par)->errmsg = strerror(errno);
 	return(NULL);
 }

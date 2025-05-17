@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/13 17:06:53 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:08:29 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,33 +35,34 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
-		// if(!ft_readline(&mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
-		ft_readline(&mem);
-		// if(!ft_parsing(&mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
-		ft_parsing(&mem);
+		if(!ft_readline(&mem))
+		{
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
+		res = ft_parsing(&mem);
+		if (res !=0)		
+		{
+			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
 		root = parse_expression(&mem->parsing->parlst);
-		//print_ast(root, 0);
 		res = ft_execute(&(*mem).environs->envlist, &root, &mem);
-		
-		ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
-		// if(!ft_execute(mem->readline->line, &mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
+		if(res != 0)
+		{
+			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
 		ft_clean_mem_loop(&mem);
 	}
 	ft_clear_mem_and_exit(&mem);
 	return (0);
 }
+
+
+
 
 void ft_clean_mem_loop(t_mem **mem)
 {
