@@ -3,178 +3,187 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 20:03:43 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:37:07 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libs/libft/libft.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-#include <assert.h>						// REMOVE LATER
-#include <stdlib.h>						// for malloc etc
-#include <readline/readline.h>			// for readline
-#include <readline/history.h>			// for history
+# include "../libs/libft/libft.h"
+# include <assert.h>						// REMOVE LATER
+# include <stdlib.h>						// for malloc etc
+# include <readline/readline.h>				// for readline
+# include <readline/history.h>				// for history
+# include <signal.h>						// handle signals
 
-
-//------------- UM ENUM BESTA QUE EU VO TENTAR NAO USAR --------------
-
-typedef enum e_tok_exit
-{
-	CONTINUE,
-	END,
-	ERROR,
-}	t_tok_exit;
+typedef struct s_hdc_mem t_hdc_mem;
+typedef struct s_tok_mem t_tok_mem;
+typedef struct s_exp_mem t_exp_mem;
+typedef struct s_rdl_mem t_rdl_mem;
+typedef struct s_env_mem t_env_mem;
+typedef struct s_par_mem t_par_mem;
 
 typedef enum e_quote
 {
-	SINGLE,
-	DOUBLE,
-	OFF
-}	t_quote;
+	Q_OFF,
+	Q_SINGLE,
+	Q_DOUBLE,
+	Q_NULL,
+}	t_quote;		//compartilhado por expand e heredoc. tentar tirar daqui.
 
-typedef enum e_exp_mode
+typedef enum e_mode
 {
 	TOKEN,
+	EXPORT,
 	HEREDOC,
-	HEREDOC_NORMAL,
-	HEREDOC_QUOTED,	
-}	t_exp_mode;
-
-
-
-//------------- STRUCTS DOS NODES DE CADA ÁREA --------------
-
-typedef struct 	s_hd_node
-{
-	char		*fpath_node;
-}	t_hd_node;
-
-typedef struct 	s_tok_node
-{
-	char		*tokstr;
-	bool		double_quote;
-	bool		single_quote;
-}	t_tok_node;
-
-typedef struct 	s_env_node
-{
-	char	*variable;
-	char	*value;
-	bool	readonly;
-	bool	block_unset;
-}	t_env_node;
-
-
-//------------- STRUCTS DA MEMÓRIA DE CADA ÁREA --------------
-
-typedef struct	s_tok_mem
-{
-	t_list		*toklst;
-	char		**operators;
-	t_list		*last_of_list;
-	t_tok_node	*last_of_toks;
-	t_list		*new;
-	t_tok_node	*node;
-	char		*str;
-	t_quote		quote;
-	char		*remain;
-}	t_tok_mem;
-
-
-
-
-typedef struct	s_cap_mem
-{
-	char		*line;
-	char		*trim;
-	char		*temp;
-	char		*append;
-}	t_cap_mem;
-
-typedef struct s_hd_mem
-{
-	t_list		*list;
-	char		*delim;
-	char		*fpath_cap;
-}	t_hd_mem;
-
-typedef struct s_env_mem
-{
-	t_list		*envlist;
-	t_env_node	*new_node;
-	char		**result;
-}	t_env_mem;
-
-
-typedef struct s_exp_mem
-{
-	int		i;
-	char	*new;
-	t_quote	quote;
-}	t_exp_mem;
-
-
-//------------- STRUCT PRINCPAL DE MEMÓRIA --------------
+	DELIMITER,
+	INIT_MODE,
+}	t_mode;			//compartilhado por expand e heredoc. tentar tirar daqui.
 
 typedef struct	s_mem
 {
-	t_cap_mem	*capture;
-	t_hd_mem	*heredoc;
-	t_tok_mem	*tokenize;
-	t_exp_mem	*expand;
-	t_env_mem	*environs;
+	t_rdl_mem		*readline;
+	t_hdc_mem		*heredoc;
+	t_tok_mem		*tokenize;
+	t_exp_mem		*expand;
+	t_env_mem		*environs;
+	t_par_mem		*parsing;
 }	t_mem;
 
-
-
-// main
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
-void	*ft_readline(t_mem **mem);
-char	*ft_execute(char *line, t_mem **mem);
-
-
-// heredocs
-char	*ft_heredoc(t_hd_mem **hd, t_list **envlist);
-void	ft_del_heredoc_node(void *content); // needed for EXIT
-
-//tokens
-void	*ft_tokenize(char **line, t_mem **mem);
-void	*ft_init_operators(t_tok_mem **tok);
-void	ft_del_token_node(void *content);
-
-//environs
-void	*ft_init_environs(t_env_mem **env, char **envp);
-void	ft_del_env_node(void *content);
-
-//operators
-void *ft_init_operators(t_tok_mem **tok);
-
-// erros and exits
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
+char	*ft_capture_in_interactive_mode(char *prompt);
+
+// handle signals
+void	handle_signal_prompt(int signo);
+void	handle_signal_cmd(int signo);
+void	signal_before_wait(void);
+void	signal_after_wait(void);
+void	signal_child_process(void);
 
 
-//expand
-char *ft_expand_string(char *string, t_exp_mode mode, t_list **envlist);
 
 
 
-// built-ins
-void	ft_env(t_list *envlist);
-void	ft_pwd(t_list **envlist);
-void	ft_echo(char *line, bool flag);
-void	ft_cd(t_list **envlist, char *new_path);
-void	ft_exit(void);
-void	ft_export(t_list **envlist, char *variable_value);
-void	ft_unset(t_list **envlist, char *variable);
+//------------------------------------------------------------------------------
 
-// built-ins helpers
-void	ft_ms_env_add(t_list **envlist, char *variable_value);
-void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
-void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
+// typedef struct s_redir_control
+// {
+// 	int	fd_in;
+// 	int	fd_out;
+// 	int	err;
+// }	t_redir_control;
+
+typedef enum e_node_mode
+{
+	NODE_COMMAND,
+	NODE_PIPELINE,
+	NODE_LOGICAL,
+	NODE_SUBSHELL
+}	node_mode;
+
+typedef enum e_logical_op
+{
+	OP_AND,
+	OP_OR
+}	logical_op;
+
+typedef struct s_cmd_node t_cmd_node;
+
+typedef struct s_ast_node t_ast_node;
+
+typedef struct s_pipe_data
+{
+	pid_t	child_pids[100];
+	int	status_arr[100];
+	int	pipefd[2];
+	int i;
+	int	num_cmds;
+	int	prev_fd;
+}		t_pipe_data;
+
+typedef struct s_pipe_info
+{
+	t_list	*cmds;					// t_list of t_cmd_node
+	int		cmd_count;
+}	t_pipe_info;
+
+typedef struct s_logical_data
+{
+	logical_op	op;
+	t_ast_node	*left;
+	t_ast_node	*right;
+}	t_logical_data;
+
+typedef struct s_subshell_data
+{
+	t_ast_node	*body;
+}	t_subshell_data;
+
+typedef struct s_block_node // esse é s_cmd_node
+{
+	char	**cmd_arr;
+	t_list	*input_lst;
+	t_list	*output_lst;
+	t_list	*redirs_lst;
+	int		err;				// deixei, mas näo sei para que serve
+}			t_block_node;
+
+typedef struct s_ast_node
+{
+	node_mode 		type;
+	union
+	{
+		t_block_node	*block_node;
+		t_pipe_info		*pipeline;
+		t_logical_data	*logical;
+		t_subshell_data *subshell;
+	};
+}	t_ast_node;
+
+typedef struct s_output_node
+{
+	char	*name;
+	bool	create;
+}			t_output_node;
+
+// typedef struct s_cmd_node
+// {
+// 	char	**cmd_arr;
+// 	t_list	*input_lst;
+// 	t_list	*output_lst;
+// 	int		err;
+// }			t_cmd_node;
+
+typedef struct s_input_node
+{
+	char	*name;
+}	t_input_node;
 
 
-//DEBUG - REMOVER DEPOIS
-void		ft_debug_list(t_list **head);
+
+t_ast_node *parse_expression(t_list **parlst);
+void print_ast(t_ast_node *node, int depth);
+
+// //luis part 
+// int	ft_ast_create(t_mem **mem);
+
+// //command utils
+// t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
+// char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
+// void			*ft_cmd_org(t_list **org_tok);
+
+// //redirections
+// int		is_redirection(char *value);
+// void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
+
+// //ast create
+// t_ast_node	*parse_expression(t_list **tokens);
+// void		print_ast(t_ast_node *node, int depth);
+
+#endif

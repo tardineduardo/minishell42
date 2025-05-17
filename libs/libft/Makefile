@@ -44,6 +44,7 @@ MEM = 	mem/ft_bzero.c \
 		mem/ft_memmove.c \
 		mem/ft_free_str_array.c \
 		mem/ft_free_and_null_str_array.c \
+		mem/ft_realloc_string.c \
 
 STRING = string/ft_concatenate.c \
 		string/ft_concatenate_var.c \
@@ -70,6 +71,7 @@ STRING = string/ft_concatenate.c \
 		string/ft_strtok_r.c \
 		string/ft_fn_to_str.c \
 		string/ft_cat.c	\
+		string/ft_strremove_set.c \
 
 VALID =	valid/ft_isalnum.c \
 		valid/ft_isalpha.c \
@@ -77,6 +79,7 @@ VALID =	valid/ft_isalnum.c \
 		valid/ft_isdigit.c \
 		valid/ft_isprint.c \
 		valid/ft_isspace.c \
+		valid/ft_isquote.c \
 		valid/ft_is_line_empty.c \
 		valid/ft_is_single_quote.c \
 		valid/ft_is_double_quote.c \
@@ -96,15 +99,40 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/slist/ft_lstmap.c \
 		lists/slist/ft_lstnew.c \
 		lists/slist/ft_lstsize.c \
-		lists/slist/ft_lst_remove_node.c \
+		lists/slist/ft_lst_destroy_node.c \
+		lists/slist/ft_lst_unlink_node.c \
 		lists/clist/ft_clistsize.c \
+		lists/slist/ft_lstcopy.c \
 		lists/dclist/ft_dclistsize.c \
+		lists/dclist/ft_dclst_circle_sorted.c \
+		lists/dclist/ft_dclst_clock_sortd.c \
+		lists/dclist/ft_dclst_dist_head_bidi_len.c \
+		lists/dclist/ft_dclst_dist_head_bidi.c \
+		lists/dclist/ft_dclst_find_highest_int.c \
+		lists/dclist/ft_dclst_find_lowest_int.c \
+		lists/dclist/ft_dclst_find_node.c \
+		lists/dclist/ft_dclst_find_value.c \
+		lists/dclist/ft_dclstadd_back.c \
+		lists/dclist/ft_dclstclear_simple.c \
+		lists/dclist/ft_dclstnew.c \
+		lists/dlist/ft_dlstclear.c \
+		lists/dlist/ft_dlst_destroy_node.c \
+		lists/dlist/ft_dlst_unlink_node.c \
+		lists/dlist/ft_dlstadd_back.c \
+		lists/dlist/ft_dlstadd_front.c \
+		lists/dlist/ft_dlstclear.c \
+		lists/dlist/ft_dlstcopy.c \
+		lists/dlist/ft_dlstdelone.c \
+		lists/dlist/ft_dlstiter.c \
+		lists/dlist/ft_dlstlast.c \
+		lists/dlist/ft_dlstmap.c \
+		lists/dlist/ft_dlstnew.c \
+		lists/dlist/ft_dlstsize.c \
 
-
-DEBUG =	debug/ft_debug_print_array_of_ints.c \
-		debug/ft_debug_print_array_of_strings.c \
-		debug/ft_debug_print_dclist.c \
-		debug/ft_debug_print_list.c \
+DEBUG =	debug/ft_debug_print_array_of_strings.c \
+		# debug/ft_debug_print_array_of_ints.c \
+		# debug/ft_debug_print_dclist.c \
+		# debug/ft_debug_print_list.c \
 
 OBJS =	$(PRINT:.c=.o) \
 		$(CONV:.c=.o) \

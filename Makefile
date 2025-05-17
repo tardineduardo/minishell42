@@ -4,16 +4,34 @@ READLINE 	=	src/readline.c \
 
 HEREDOC 	=	src/heredocs.c \
 
-EXECUTE 	=	src/execute.c \
-
 MEMORY 		=	src/memory.c \
 
 TOKEN 		=	src/tokenize.c \
-				src/expand.c \
+
+EXPAND		=	src/expand.c \
+
+INTERACTIVE =	src/interactive.c
 
 ENVIRON 	=	src/environs.c \
 
 OPERATORS 	=	src/operators.c \
+
+PARSER		=	src/parsing.c \
+
+AST 		=	src/ast/ast.c \
+				src/ast/ast_utils.c \
+
+EXECUTE		= 	src/execution/execution.c \
+				src/execution/single_cmd.c \
+				src/execution/pipe_cmd.c \
+				src/execution/utils.c \
+				src/execution/block_treatment.c \
+				src/execution/built_in.c \
+				src/execution/ext_cmd.c \
+				src/execution/redir_control.c \
+				src/execution/exit_code.c \
+
+SIGNALS		= 	src/signals.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
@@ -23,18 +41,23 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 
-
-
+CHECK		= 	src/checks.c \
 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
 			$(TOKEN:.c=.o) \
 			$(ENVIRON:.c=.o) \
-			$(EXECUTE:.c=.o) \
 			$(READLINE:.c=.o) \
+			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
 			$(OPERATORS:.c=.o) \
+			$(PARSER:.c=.o) \
+			$(AST:.c=.o) \
+			$(EXECUTE:.c=.o) \
+			$(SIGNALS:.c=.o) \
+			$(INTERACTIVE:.c=.o) \
+			$(CHECK:.c=.o) \
 
 
 CC = cc
@@ -71,3 +94,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+#strace -f -e trace=execve -e verbose=all ./minishell

@@ -34,38 +34,52 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-# define RESET       "\033[0m"
+# define RESET       "\001\033[0m\002"
 
-# define RED         "\033[31m"
-# define GREEN       "\033[32m"
-# define YELLOW      "\033[33m"
-# define BLUE        "\033[34m"
-# define MAGENTA     "\033[35m"
-# define CYAN        "\033[36m"
-# define WHITE       "\033[37m"
-# define GREY        "\033[90m" 
-# define BRIGHT_RED     "\033[91m"
-# define BRIGHT_GREEN   "\033[92m"
-# define BRIGHT_YELLOW  "\033[93m"
-# define BRIGHT_BLUE    "\033[94m"
-# define BRIGHT_MAGENTA "\033[95m"
-# define BRIGHT_CYAN    "\033[96m"
-# define BRIGHT_WHITE   "\033[97m"
+# define RED         "\001\033[31m\002"
+# define GREEN       "\001\033[32m\002"
+# define YELLOW      "\001\033[33m\002"
+# define BLUE        "\001\033[34m\002"
+# define MAGENTA     "\001\033[35m\002"
+# define CYAN        "\001\033[36m\002"
+# define WHITE       "\001\033[37m\002"
+# define GREY        "\001\033[90m\002" 
+# define BRIGHT_RED     "\001\033[91m\002"
+# define BRIGHT_GREEN   "\001\033[92m\002"
+# define BRIGHT_YELLOW  "\001\033[93m\002"
+# define BRIGHT_BLUE    "\001\033[94m\002"
+# define BRIGHT_MAGENTA "\001\033[95m\002"
+# define BRIGHT_CYAN    "\001\033[96m\002"
+# define BRIGHT_WHITE   "\001\033[97m\002"
 
 //TYPEDEFS
 typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-}				t_list;
+} t_list;
 
 typedef struct s_dlist
 {
 	void			*content;
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
+} t_dlist;
 
-}				t_dll;
+typedef struct s_dll
+{
+	void			*content;
+	struct s_dll	*next;
+	struct s_dll	*prev;
+} t_dll;
+
+typedef struct s_btree
+{
+struct s_btree	*left;
+struct s_btree	*right;
+void			*data;
+} t_btree;
+
 
 typedef long long	t_llong;
 
@@ -112,6 +126,8 @@ bool	ft_free_and_true(void **ptr);
 void	*ft_free_and_null(void **ptr);
 void	*ft_free_and_null_str_array(char ***array_of_strings);
 void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
+char	*ft_realloc_string(char **string, size_t newlen);
+
 
 // validations
 int		ft_isalnum(int c);
@@ -120,6 +136,7 @@ int		ft_isascii(int c);
 int		ft_isdigit(int c);
 int		ft_isprint(int c);
 int		ft_isspace(int c);
+int		ft_isquote(int c);
 bool	ft_is_line_empty(char *s);
 bool	ft_is_single_quote(char *c);
 bool	ft_is_double_quote(char *c);
@@ -151,7 +168,9 @@ char	*ft_strtok(char *string, char *set);
 char	*ft_strtok_r(char *input_str, char *delimiters, char **saveptr);
 char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
-void	ft_free_split(char **results, size_t r_index);
+void	ft_free_split(char **results, size_t r_index); //?
+char	*ft_strremove_set(char *str, char *set);
+
 
 
 // printing
@@ -196,9 +215,8 @@ void	*ft_lstclear_null(t_list **lst, void (*del)(void*));
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
-void	ft_lst_remove_node(t_list **head, t_list *node, void (*del)(void*));
-
-
+void	ft_lst_destroy_node(t_list **head, t_list *node, void (*del)(void*));
+void	ft_lst_unlink_node(t_list **head, t_list *node);
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstlast(t_list *lst);
@@ -206,9 +224,47 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
 int		ft_clstsize(t_list **tail);
-int		ft_dclstsize(t_dll **tail);
 void	ft_debug_print_list(t_list **head, char *type, size_t offset);
+t_list	*ft_lstcopy(t_list *source);
 
+
+
+
+void	ft_dlstadd_front(t_dlist **lst, t_dlist *new);
+void	ft_dlstadd_back(t_dlist **lst, t_dlist *new);
+void	ft_dlstclear(t_dlist **lst, void (*del)(void*));
+t_dlist	*ft_dlst_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*));
+t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*));
+
+t_dlist	*ft_dlst_unlink_node(t_dlist **head, t_dlist *node);
+t_dlist	*ft_dlst_quick_unlink_node(t_dlist **head, t_dlist *node);
+void	ft_dlstdelone(t_dlist *lst, void (*del)(void*));
+void	ft_dlstiter(t_dlist *lst, void (*f)(void *));
+t_dlist	*ft_dlstlast(t_dlist *lst);
+t_dlist	*ft_dlstmap(t_dlist *lst, void *(*f)(void *), void (*del)(void *));
+t_dlist	*ft_dlstnew(void *content);
+int		ft_dlstsize(t_dlist *lst);
+
+
+
+
+//lists - dclist
+t_dll		*ft_dclstnew(void *content);
+t_dll		*ft_dclst_find_lo_int(t_dll **tail, int offset);
+t_dll		*ft_dclst_find_hi_int(t_dll **tail, int offset);
+t_dll		*ft_dclst_find_value(t_dll **tail, int value, int offset);
+t_dll		*ft_dclst_find_node(t_dll **tail, t_dll *node);
+bool		ft_dclst_clock_sortd(t_dll **tail, char mode, int offset);
+bool		ft_dclst_circ_sortd(t_dll **tail, char mode, int offset);
+void		ft_dclstadd_back(t_dll **tail, t_dll *new);
+void		ft_dclstclear_simple(t_dll **lst);
+int			ft_dclstsize(t_dll **tail);
+int			ft_dclst_dist_head_bidi(t_dll **tail, t_dll *node);
+int			ft_dclst_dist_head_bidi_len(t_dll **tail, t_dll *nd, int list_len);
+
+
+//debug
+void	ft_debug_print_array_of_strings_line(char **array, int fd);
 
 
 #endif

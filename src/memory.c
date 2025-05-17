@@ -3,130 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 20:12:07 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/04/19 16:39:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-void ft_clear_hd_mem(t_hd_mem **hdoc);
-void ft_clear_cap_mem(t_cap_mem **cap);
-void ft_clear_tok_mem(t_tok_mem **tok);
-void ft_clear_env_mem(t_env_mem **env);
-void ft_clear_exp_mem(t_exp_mem **tok);
+#include "../include/heredoc.h"
+#include "../include/tokenize.h"
+#include "../include/expand.h"
+#include "../include/parsing.h"
+#include "../include/environs.h"
+#include "../include/readline.h"
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
-	//malloc main memory struct ------------------------------------------------
 	*mem = malloc(sizeof(t_mem));
 	if (!(*mem))
 		exit(1);//improve error message and code
-
-	//malloc sub memory structs ------------------------------------------------
-	(*mem)->heredoc = malloc(sizeof(t_hd_mem));
-	(*mem)->capture = malloc(sizeof(t_cap_mem));
-	(*mem)->tokenize = malloc(sizeof(t_tok_mem));
-	(*mem)->environs = malloc(sizeof(t_env_mem));
-	(*mem)->expand = malloc(sizeof(t_exp_mem));
-	
-	//check for errors ---------------------------------------------------------
-	if (!(*mem) || !(*mem)->heredoc || !(*mem)->capture || !(*mem)->tokenize
-		|| !(*mem)->environs || !(*mem)->expand)
-		exit(1);//improve error message and code
-
-	//set everything to NULL ---------------------------------------------------
-	(*mem)->capture->line = NULL;
-	(*mem)->capture->trim = NULL;
-	(*mem)->capture->temp = NULL;
-	(*mem)->capture->append = NULL;
-	(*mem)->heredoc->delim = NULL;
-	(*mem)->heredoc->list = NULL;
-	(*mem)->heredoc->fpath_cap = NULL;
-	(*mem)->tokenize->toklst = NULL;
-	(*mem)->tokenize->operators = NULL;
-	(*mem)->tokenize->last_of_list = NULL;
-	(*mem)->tokenize->new = NULL;
-	(*mem)->tokenize->node = NULL;
-	(*mem)->tokenize->str = NULL;
-	(*mem)->tokenize->remain = NULL;
-	(*mem)->environs->envlist = NULL;
-	(*mem)->environs->new_node = NULL;
-	(*mem)->environs->result = NULL;
-	(*mem)->expand->i = 0;
-	(*mem)->expand->new = NULL;
-	(*mem)->expand->quote = OFF;
-
-	//init operators -----------------------------------------------------------
+	ft_init_env_memory(mem);
+	ft_init_exp_memory(mem);
+	ft_init_hdc_memory(mem);
+	ft_init_tok_memory(mem);
+	ft_init_rdl_memory(mem);
+	ft_init_par_memory(mem);
+	if (!(*mem)->heredoc 	|| !(*mem)->readline || 
+		!(*mem)->tokenize 	|| !(*mem)->environs ||
+		!(*mem)->expand 	|| !(*mem)->parsing)
+		exit(1);
 	if (!ft_init_operators(&(*mem)->tokenize))
 		ft_clear_mem_and_exit(mem);
-
-	//init environs ------------------------------------------------------------
 	if (!ft_init_environs(&(*mem)->environs, envp))
-		ft_clear_mem_and_exit(mem);		
+		ft_clear_mem_and_exit(mem);
 }
 
-// FUNCÃO PRINCIPAL DE ENCERRAMENTO DO MINISHELL -------------------------------
 void	ft_clear_mem_and_exit(t_mem **mem)
 {
-	//Chama cada limpador individual -------------------------------------------
-	ft_clear_hd_mem(&(*mem)->heredoc);
-	ft_clear_cap_mem(&(*mem)->capture);
+	ft_clear_hdc_mem(&(*mem)->heredoc);
+	ft_clear_rdl_mem(&(*mem)->readline);
 	ft_clear_tok_mem(&(*mem)->tokenize);
-	ft_clear_env_mem(&(*mem)->environs);
 	ft_clear_exp_mem(&(*mem)->expand);
-
-
+	ft_clear_par_mem(&(*mem)->parsing);
+	ft_clear_env_mem(&(*mem)->environs);
 	rl_clear_history();
 	free(*mem);
 	exit(0);
-}
-
-
-//FUNCOES DE LIMPAR MEMEORIA DE CADA SECAO -------------------------------------
-
-void	ft_clear_hd_mem(t_hd_mem **hd)
-{
-	ft_free_and_null((void *)&(*hd)->delim);
-	ft_lstclear(&(*hd)->list, ft_del_heredoc_node);
-	ft_free_and_null((void *)&(*hd)->list);
-	free(*hd);
-	return ;
-}
-
-void	ft_clear_cap_mem(t_cap_mem **cap)
-{
-	ft_free_and_null((void *)&(*cap)->line);
-	ft_free_and_null((void *)&(*cap)->trim);
-	ft_free_and_null((void *)&(*cap)->temp);
-	free(*cap);
-	return ;
-}
-
-void	ft_clear_tok_mem(t_tok_mem **tok)
-{
-	ft_lstclear(&(*tok)->toklst, ft_del_token_node);
-	ft_free_str_array((*tok)->operators);
-	ft_free_and_null((void *)&(*tok)->str);
-	ft_free_and_null((void *)&(*tok)->remain);
-	free(*tok);
-	return ;
-}
-
-void	ft_clear_env_mem(t_env_mem **env)
-{
-	ft_lstclear(&(*env)->envlist, ft_del_env_node);
-	ft_free_and_null_str_array(&(*env)->result);
-	free(*env);
-	return ;
-}
-
-
-void	ft_clear_exp_mem(t_exp_mem **exp)
-{
-	ft_free_and_null((void *)&(*exp)->new);
-	free(*exp);
-	return ;
 }
