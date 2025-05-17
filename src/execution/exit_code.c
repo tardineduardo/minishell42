@@ -6,12 +6,12 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:03:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 13:45:17 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:19:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/environs.h"
+#include "../../include/minishell.h"
+#include "../../include/environs.h"
 
 void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value)
 {

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_block_treatment.c                             :+:      :+:    :+:   */
+/*   block_treatment.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:22:44 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 13:23:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:56:58 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/environs.h"
+#include "../../include/minishell.h"
+#include "../../include/environs.h"
 
 int	ft_count_items(char **str_arr)
 {

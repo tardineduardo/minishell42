@@ -6,14 +6,14 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:52 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 14:20:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 18:05:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/heredoc.h"
-#include "../include/tokenize.h"
-#include "../include/execution.h"
+#include "../../include/minishell.h"
+#include "../../include/heredoc.h"
+#include "../../include/tokenize.h"
+#include "../../include/execution.h"
 
 // Create a new command node
 t_ast_node	*create_command_node(t_block_node *block_node)
@@ -82,3 +82,33 @@ t_ast_node	*create_group_node(t_ast_node *body)
 	node->subshell->body = body;
 	return (node);
 }
+
+
+// Free AST memory
+// void free_ast(t_ast_node *node)
+// {
+// 	int	i;
+
+// 	i = 0;
+//     if (!node)
+// 		return ;
+//     if (node->type == NODE_PIPELINE)
+// 	{
+// 		while (i < node->pipeline->cmd_count)
+// 		{
+// 			free_block_node(((t_block_node *)node->pipeline->cmds->content));
+// 			i++;
+// 		}
+// 		free(node->pipeline->cmds);
+// 	}
+// 	else if (node->type == NODE_COMMAND)
+//         free_block_node(node->block_node);
+// 	else if (node->type == NODE_LOGICAL)
+// 	{
+// 		free_ast(node->logical->left);
+// 		free_ast(node->logical->right);
+// 	}
+// 	else if (node->type == NODE_SUBSHELL)
+// 		free_ast(node->subshell->body);
+//     free(node);
+// }

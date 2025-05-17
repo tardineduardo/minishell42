@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_built_in.c                                    :+:      :+:    :+:   */
+/*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:21:27 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 13:58:00 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:57:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/builtins.h"
+#include "../../include/minishell.h"
+#include "../../include/builtins.h"
 
 bool	is_built_in(char **cmd_arr)
 {

@@ -18,18 +18,18 @@ OPERATORS 	=	src/operators.c \
 
 PARSER		=	src/parsing.c \
 
-AST 		=	src/ast.c \
-				src/ast_utils.c \
+AST 		=	src/ast/ast.c \
+				src/ast/ast_utils.c \
 
-EXECUTE		= 	src/execution.c \
-				src/execution_single_cmd.c \
-				src/execution_pipe_cmd.c \
-				src/execution_utils.c \
-				src/exec_block_treatment.c \
-				src/exec_built_in.c \
-				src/exec_ext_cmd.c \
-				src/exec_redir_control.c \
-				src/exec_exit_code.c \
+EXECUTE		= 	src/execution/execution.c \
+				src/execution/single_cmd.c \
+				src/execution/pipe_cmd.c \
+				src/execution/utils.c \
+				src/execution/block_treatment.c \
+				src/execution/built_in.c \
+				src/execution/ext_cmd.c \
+				src/execution/redir_control.c \
+				src/execution/exit_code.c \
 
 SIGNALS		= 	src/signals.c \
 

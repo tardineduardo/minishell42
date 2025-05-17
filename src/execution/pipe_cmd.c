@@ -6,19 +6,19 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 15:13:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:19:45 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/heredoc.h"
-#include "../include/tokenize.h"
-#include "../include/expand.h"
-#include "../include/parsing.h"
-#include "../include/environs.h"
-#include "../include/readline.h"
-#include "../include/builtins.h"
-#include "../include/execution.h"
+#include "../../include/minishell.h"
+#include "../../include/heredoc.h"
+#include "../../include/tokenize.h"
+#include "../../include/expand.h"
+#include "../../include/parsing.h"
+#include "../../include/environs.h"
+#include "../../include/readline.h"
+#include "../../include/builtins.h"
+#include "../../include/execution.h"
 
 void	execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
