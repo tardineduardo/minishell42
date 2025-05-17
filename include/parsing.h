@@ -6,13 +6,14 @@
 
 typedef struct	s_mem t_mem;
 
-typedef enum e_syntax
+typedef enum e_par_exit
 {
-	ERROR1 = 0,
-	ERROR2 = 0,
-	ERROR3 = 0,	
-	SUCCESS_P = 1,
-}	t_syntax;
+	P_INCOMPLETE_REDIRS,
+	P_OPERATORS_NOT_SUPPORTED,
+	P_MALLOC_ERROR,
+	P_ERROR3 = 0,	
+	P_SUCCESS = 1,
+}	t_par_exit;
 
 
 typedef enum e_oper
@@ -51,43 +52,35 @@ typedef struct s_par_node // s_ork_tok
 	t_block_node	*block_node;
 }	t_par_node;
 
-
-// typedef struct s_org_tok
-// {
-// 	char	*value;
-// 	int		oper;
-// 	int		cmd;
-// 	t_cmd_node	*cmd_node;
-// } t_org_tok;
-
-
-
-
-
 typedef struct s_par_mem
 {
-	t_list			*parlst;
-	char			*syntax_error;
-}					t_par_mem;
+	t_list		*lstnode;
+	t_par_node	*parnode;
+	t_list		*parlst;
+	char		*error_message;
+	int			error_number;
+
+}				t_par_mem;
 
 void		*ft_init_par_memory(t_mem **mem);
 void		ft_clear_par_mem(t_par_mem **par);
-t_syntax	ft_check_syntax(t_dlist *parlst);
-t_list		*ft_create_parlst(t_dlist **toklst, t_list **parlst);
+t_par_exit	ft_check_syntax(t_dlist *parlst);
+t_list		*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par);
 int			count_num_parsnodes(t_dlist **toklst);
-t_syntax	operators_are_supported(t_dlist *parlst);
-t_syntax	redirects_are_complete(t_dlist *parlst);
+t_par_exit	operators_are_supported(t_dlist *parlst);
+t_par_exit	redirects_are_complete(t_dlist *parlst);
 
-t_par_node		*init_parnode(int a, t_par_node **parnode, t_dlist **toklst);
+t_par_node *init_parnode(int a, t_par_mem **par, t_dlist **toklst);
 t_block_node	*intit_block_node(t_par_node **parnode, t_dlist **toklst);
 void			*fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode);
 void			*fill_blocknode_cmdarray(t_dlist **toklst, t_par_node **parnode);
+int	extract_command(int a, t_par_node **parnode, t_dlist **toklst);
 
 
 
 
 
-void		*ft_parsing(t_mem **mem);
+int		ft_parsing(t_mem **mem);
 
 
 //debug

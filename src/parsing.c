@@ -18,128 +18,100 @@
 
 
 // RETORNA O POINTER PARA ROOT DE AST
-void	*ft_parsing(t_mem **mem) // antiga ft_ast_create()
+int	ft_parsing(t_mem **mem) // antiga ft_ast_create()
 {
 	t_ast_node *root;
 	t_par_mem	*par;
 	t_tok_mem	*tok;
+	int			res;
 
 	(void)root;
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
 
-	// if (!ft_check_syntax(tok->toklst))
-	// {
-	// 	ft_printf("invalid sintax\n");
-	// 	return (NULL);
-	// }
-	ft_create_parlst(&tok->toklst, &par->parlst);
-	
-	
-	// É AQUI QUE CONTINUA. parse expression está em ast.c	
-	//root = parse_expression(&par->parlst);
-	
-
-
-	//print_ast(root, 0);
-	return (mem); //trocar para rotrnar o pointer para árvore.
+	if (!ft_check_syntax(tok->toklst))
+	{
+		ft_printf("invalid sintax\n");
+		return (1);
+	}
+	ft_create_parlst(&tok->toklst, &par->parlst, &par);
+	res = 0;
+	return (res); //trocar para rotrnar o pointer para árvore.
 }
 
-// Cria uma lista de nodes do tipo par_node (antigo org_tok)
-t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst)
+t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par)
 {
-	t_list		*new;
-	t_list		*lstnode;
-	t_par_node	*parnode;
-	int			num_parsnodes;
 	int			a;
+	int			num_parsnodes;
 
-	// checa quantos nodes serão criados.
 	num_parsnodes = count_num_parsnodes(toklst);
-	
-	//debug
-	//ft_printf("num_parsnodes == %i\n\n", num_parsnodes);
-
 	a = 0;
-	// começa a preencher os nodes de parlst.	
 	while(a < num_parsnodes)
 	{		
-		// aloca memória para os nodes de t_list e t_par_node
-		parnode = malloc(sizeof(t_par_node));
-		lstnode = malloc(sizeof(t_list));
-		if (!parnode || !lstnode)
+		(*par)->parnode = malloc(sizeof(t_par_node));
+		(*par)->lstnode = malloc(sizeof(t_list));
+		 
+		if (!(*par)->parnode || !(*par)->lstnode)
 			return (NULL);
-	
-		// inicializa as informações de cada parnode a partir de toklst
-		if(!init_parnode(a, &parnode, toklst))
+		if(!init_parnode(a, par, toklst))
 			return (NULL);
-
-		// adiciona o novo parnode em parlst.
-		new = ft_lstnew(parnode);
-		ft_lstadd_back(parlst, new);
+		ft_lstadd_back(parlst, ft_lstnew((*par)->parnode));
 		a++;
 	}
-
-	//debug
-	//print_debug_parsing(parlst);
 	return (*parlst);
 }
 
-// inicializa as informações de cada parnode a partir de toklst
-t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst)
+t_par_node *init_parnode(int a, t_par_mem **par, t_dlist **toklst)
 {
 	t_dlist		*first;
 	t_tok_node	*toknode;
 
-
-	/* a lógica aqui é processar node a node, sempre apagando os nodes já 
-	processados. por isso sempre se retorna para o head de toklst */
-
-
 	first = *toklst;
 	toknode = (t_tok_node *)first->content;
 
-	// essas são infos básicas que valem para qualquer tipo de parnode.
-	(*parnode)->block_index = toknode->block_index;
-	(*parnode)->block_node = NULL;
-
-	// se não for um operador de comando.
+	(*par)->parnode->block_index = toknode->block_index;
+	(*par)->parnode->block_node = NULL;
 	if(is_pipe_logical_or_subshell(toknode))
 	{
-		// registra o tipo de operador.
-		(*parnode)->oper = toknode->oper;
-		
-		// apaga o primeiro node de toklst.
+		(*par)->parnode->oper = toknode->oper;
 		ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
-
-		// retorna e encerra a inicialização do parnode.
-		return (*parnode);
+		return ((*par)->parnode);
 	}
+	else 
+		extract_command(a, &(*par)->parnode, toklst);
+	
 
-	/* caso seja um node de comando (redir ou word), começa um loop infinito
-	para capturar todos os nodes necessários.*/
+	(*par)->parnode->oper = CMD; 
+	return ((*par)->parnode);
+}
+
+int	extract_command(int a, t_par_node **parnode, t_dlist **toklst)
+{
+	t_dlist		*first;
+	t_tok_node	*toknode;
+
 	while(1)
 	{
 		first = *toklst;
-		if (!first)		// todos os tokens em toklist foram consumidos
-			break ;		// encerra a incialização pois acabaram os tokens
+		if (!first)
+			break ;
 		toknode = (t_tok_node *)first->content;
-		if (toknode->block_index > a || toknode->block_index == -1) // chegou ao bloco seguinte
-			break ;													// encerra porque acabou bloco
-		// se o token for de um operador de redirecionamento
+		if (toknode->block_index > a || toknode->block_index == -1)
+			break ;
 		if (is_redir(toknode))
-			fill_blocknode_redirs(toklst, parnode);
-		// se o token for uma word
+		{
+			if(!fill_blocknode_redirs(toklst, parnode))
+				return(1);
+		}
 		else if (is_word(toknode)) 
-			fill_blocknode_cmdarray(toklst, parnode);
+		{
+			if(!fill_blocknode_cmdarray(toklst, parnode))
+				return(1);
+		}
 	}
-	// no parnode, o campo oper passa a ser CMD.
-	(*parnode)->oper = CMD; 
-	return (*parnode);
+	return (0);
 }
-
-
 
 /*Essa função está muito longa e um pouco confusa pois está lidando com
 input_list, output_list e redir_list. Dá para deixar menor depois.*/
@@ -322,22 +294,22 @@ aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
 
 */
 
-t_syntax	ft_check_syntax(t_dlist *parlst)
+t_par_exit	ft_check_syntax(t_dlist *parlst)
 {
 	if(!operators_are_supported(parlst))
-	 	return (ERROR1);
+	 	return (P_OPERATORS_NOT_SUPPORTED);
 	if (!redirects_are_complete(parlst))
-		return (ERROR1);
+		return (P_INCOMPLETE_REDIRS);
 	// if (pipe_at_invalid_position(parlst))
 	// 	return (ERROR1);
 	// if (and_or_at_invalid_positions(parlst))
 	// 	return (ERROR1);
 	// if (empty_parentheses(parlst))
 	// 	return (ERROR1);
-	return(SUCCESS_P);
+	return(P_SUCCESS);
 }
 
-t_syntax	operators_are_supported(t_dlist *toklst)
+t_par_exit	operators_are_supported(t_dlist *toklst)
 {
 	t_dlist		*trav;
 	t_tok_node	*toknode;
@@ -354,15 +326,15 @@ t_syntax	operators_are_supported(t_dlist *toklst)
 				toknode->oper != APPD_R	&&
 				toknode->oper != HDC_R)
 
-				return (ERROR1);
+				return (P_OPERATORS_NOT_SUPPORTED);
 		}
 		trav = trav->next;
 	}
-	return(SUCCESS_P);
+	return(P_SUCCESS);
 
 }
 
-t_syntax	redirects_are_complete(t_dlist *toklst)
+t_par_exit	redirects_are_complete(t_dlist *toklst)
 {
 	t_dlist		*trav;
 	t_tok_node	*toknode;
@@ -377,15 +349,15 @@ t_syntax	redirects_are_complete(t_dlist *toklst)
 		{
 			// ... ele não pode ser último token...
 			if(!trav->next)
-				return (ERROR1); 			
+				return (P_ERROR3); 			
 			next = (t_tok_node *)trav->next->content;
 			// ... e precisa ser seguido de word.
 			if(!next || next->oper != WORD)
-				return (ERROR1);
+				return (P_ERROR3);
 		}
 		trav = trav->next;
 	}
-	return(SUCCESS_P);
+	return(P_SUCCESS);
 }
 
 
@@ -441,7 +413,30 @@ bool	is_pipe_logical_or_subshell(t_tok_node *toknode)
 
 
 
+void *ft_parsing_error(t_par_exit exit)
+{
+	int		err;
+	char	*msg;
 
+	err = errno;
+
+	if (exit == P_INCOMPLETE_REDIRS);
+	{
+		err = 2;
+		
+	}
+
+	msg = strerror(errno);
+	
+	
+
+
+
+
+	return (NULL);
+
+
+}
 
 
 
