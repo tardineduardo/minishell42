@@ -81,14 +81,14 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
 		right_option = get_right_path(path_options, cmd_arr[0]);
 		if (!right_option)
 		{
-			if (path_options != NULL)
-				ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
+			//if (path_options != NULL)
+				//ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
 			free(right_option);
 		}
 		else
 		{
 			cmd_arr[0] = ft_strdup(right_option);
-			ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
+			// ft_free_split(path_options, sizeof(path_options) / sizeof(path_options[0]));
 			free(right_option);
 		}
 	}
