@@ -41,7 +41,7 @@ int	main(int argc, char *argv[], char *envp[])
 			continue ;
 		}
 		res = ft_parsing(&mem);
-		if (res !=0)		
+		if (res !=0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);

@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../include/minishell.h"
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
@@ -25,8 +24,7 @@ int	ft_parsing(t_mem **mem)
 	par = (*mem)->parsing;
 	if (!ft_check_syntax(tok->toklst, &par))
 		return (par->errnmb);
-
-
+	(*mem)->parsing->errnmb = 0;
 	ft_create_parlst(&tok->toklst, &par->parlst, &par);
 	return (par->errnmb);
 }
@@ -42,27 +40,22 @@ t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par)
 	num_parsnodes = count_num_parsnodes(toklst);
 
 	a = 0;
-	// começa a preencher os nodes de parlst.	
 	while(a < num_parsnodes)
 	{		
-		// aloca memória para os nodes de t_list e t_par_node
 		parnode = malloc(sizeof(t_par_node));
+		if (!parnode)
+			return (ft_par_syscall_error(par, "ft_create_parlst"));
 		lstnode = malloc(sizeof(t_list));
-		if (!parnode || !lstnode)
-			return (NULL);
-	
-		// inicializa as informações de cada parnode a partir de toklst
+		if (!lstnode)
+			return (ft_par_syscall_error(par, "ft_create_parlst"));
 		if(!init_parnode(a, &parnode, toklst, par))
 			return (NULL);
-
-		// adiciona o novo parnode em parlst.
 		new = ft_lstnew(parnode);
+		if (!new)
+			return (ft_par_syscall_error(par, "ft_create_parlst"));
 		ft_lstadd_back(parlst, new);
 		a++;
 	}
-
-	//debug
-	//print_debug_parsing(parlst);
 	return (*parlst);
 }
 
@@ -107,12 +100,16 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_par_me
 		toknode = (t_tok_node *)first->content;
 		if (toknode->block_index > a || toknode->block_index == -1) // chegou ao bloco seguinte
 			break ;													// encerra porque acabou bloco
-		// se o token for de um operador de redirecionamento
 		if (is_redir(toknode))
-			fill_blocknode_redirs(toklst, parnode, par);
-		// se o token for uma word
+		{
+			if(!fill_blocknode_redirs(toklst, parnode, par))
+				return (NULL);
+		}
 		else if (is_word(toknode)) 
-			fill_blcknode_cmdarray(toklst, parnode, par);
+		{
+			if(!fill_blcknode_cmdarray(toklst, parnode, par))
+				return (NULL);
+		}
 	}
 	// no parnode, o campo oper passa a ser CMD.
 	(*parnode)->oper = CMD; 
@@ -130,7 +127,7 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_par_mem **
 	if(!(*parnode)->block_node)
 		if(!intit_block_node(parnode, toklst, par))
 			return (NULL);
-			
+
 	redirnode = malloc(sizeof(t_redirs_node));
 	if(!redirnode)
 		return (NULL);
@@ -166,7 +163,7 @@ void *fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode, t_par_mem *
 
 	if(!(*parnode)->block_node)
 		if(!intit_block_node(parnode, toklst, par))
-			return (ft_parsing_syscall_error(par));
+			return (NULL);
 
 	arraytrav = (*parnode)->block_node->cmd_arr;
 	toknode = (t_tok_node *)(*toklst)->content;
@@ -177,7 +174,7 @@ void *fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode, t_par_mem *
 
 	arraytrav[a] = ft_strdup(toknode->value);
 	if (!arraytrav[a])
-		return (ft_parsing_syscall_error(par));
+		return (ft_par_syscall_error(par, "fill_blcknode_cmdarray"));
 
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	
@@ -192,10 +189,10 @@ t_block_node *intit_block_node(t_par_node **pn, t_dlist **toklst, t_par_mem **pa
 	nb_tkns = ft_dlstsize(*toklst);
 	(*pn)->block_node = malloc(sizeof(t_block_node));
 	if (!(*pn)->block_node)
-		return (ft_parsing_syscall_error(par));
+		return (ft_par_syscall_error(par, "intit_block_node"));
 	(*pn)->block_node->cmd_arr = ft_calloc(2 * nb_tkns + 1, sizeof(char *));
 	if(!(*pn)->block_node->cmd_arr)
-		return (ft_parsing_syscall_error(par));
+		return (ft_par_syscall_error(par, "intit_block_node"));
 	(*pn)->block_node->input_lst = NULL;
 	(*pn)->block_node->output_lst = NULL;
 	(*pn)->block_node->redirs_lst = NULL;
@@ -293,7 +290,7 @@ void	*operators_are_supported(t_dlist *toklst, t_par_mem **par)
 				&& tknd->oper != OR_O
 				&& tknd->oper != GSTART_O
 				&& tknd->oper != GEND_O)
-				return (ft_par_syntax_error(EIVOPERS, getop(tknd), par, 33));
+				return (ft_par_syntax_error(XEIVOPERS, getop(tknd), par));
 		}
 		trav = trav->next;
 	}
@@ -314,10 +311,10 @@ void	*redirects_are_complete(t_dlist *toklst, t_par_mem **par)
 		if(is_redir(tknd)) 				
 		{
 			if(!trav->next)
-				return (ft_par_syntax_error(EINCRDIR , getop(tknd), par, 2));
+				return (ft_par_syntax_error(XEINCRDIR , "newline", par));
 			next = (t_tok_node *)trav->next->content;
 			if(!next || next->oper != WORD)
-				return (ft_par_syntax_error(EINCRDIR, getop(tknd), par, 2));
+				return (ft_par_syntax_error(XEINCRDIR, getop(next), par));
 		}
 		trav = trav->next;
 	}
@@ -390,27 +387,25 @@ bool	is_pipe_logical_subshell(t_tok_node *toknode)
 
 
 
-void *ft_par_syntax_error(t_syntax st_err, char *str, t_par_mem **par, int a)
+
+
+void *ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
 {
-	(*par)->errnmb = a;
-
-	if (st_err == EIVOPERS)
-		ft_dprintf(STDERR_FILENO, "bash: invalid operator `%s'\n", str);
-	else if (st_err == EINCRDIR)
-		ft_dprintf(STDERR_FILENO, "bash: syntax error near unexpected token `%s'\n", str);
-
-
+	(*par)->errnmb = st_err;
+	if (st_err == XEIVOPERS)
+		ft_dprintf(STDERR_FILENO, "minishell: invalid operator `%s'\n", str);
+	else if (st_err == XEINCRDIR)
+		ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `%s'\n", str);
 	return(NULL);
 }
 
 
 
 
-
-void *ft_parsing_syscall_error(t_par_mem **par)
+void *ft_par_syscall_error(t_par_mem **par, char *ftname)
 {
 	(*par)->errnmb = errno;
-	(*par)->errmsg = strerror(errno);
+	ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", ftname, strerror(errno));
 	return(NULL);
 }
 
@@ -422,7 +417,6 @@ void	*ft_init_par_memory(t_mem **mem)
 	(*mem)->parsing = malloc(sizeof(t_par_mem));
 	if (!(*mem)->parsing)
 		return (NULL);
-	(*mem)->parsing->errnmb = 0;
 	(*mem)->parsing->errmsg = NULL;
 	(*mem)->parsing->parlst = NULL;
 	return ((*mem)->parsing);

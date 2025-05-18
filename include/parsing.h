@@ -16,14 +16,10 @@
 # include "minishell.h" 
 # include "../libs/libft/libft.h"
 
-# define EIVOPERS 33
-# define EIVOPERS 33
-# define EIVOPERS 33
-# define EIVOPERS 33
-# define EIVOPERS 33
-# define EIVOPERS 33
-# define EIVOPERS 33
-# define EIVOPERS 33
+# define XEIVOPERS 55
+# define XEINCRDIR 2
+	
+	
 
 
 typedef struct s_mem	t_mem;
@@ -92,8 +88,8 @@ t_par_node		*init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_par_m
 t_block_node	*intit_block_node(t_par_node **parnode, t_dlist **toklst, t_par_mem **par);
 void			*fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_par_mem **par);
 void			*fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode, t_par_mem **par);
-void			*ft_parsing_syscall_error(t_par_mem **par);
-void			*ft_par_syntax_error(t_syntax st_err, char *str, t_par_mem **par, int a);
+void			*ft_par_syscall_error(t_par_mem **par, char *ftname);
+void			*ft_par_syntax_error(int st_err, char *str, t_par_mem **par);
 
 //debug
 void			ft_print_oper_par(t_oper oper);
