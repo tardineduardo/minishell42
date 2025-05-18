@@ -9,7 +9,7 @@ int	ft_env(t_list *envlist);
 int	ft_pwd(t_list **envlist);
 int	ft_echo(char **cmd_arr);
 int	ft_cd(t_list **envlist, char **cmd_arr);
-int	ft_exit(char **cmd_arr);
+int	ft_exit(char **cmd_arr, t_mem **mem);
 int	ft_export(t_list **envlist, char *variable_value);
 int	ft_unset(t_list **envlist, char *variable);
 

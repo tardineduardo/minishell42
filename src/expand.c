@@ -56,19 +56,6 @@ void	*start_expansion_for_mode(t_exp_mem **exp, t_mem **mem, t_mode mode)
 	return (NULL);
 }
 
-/*
-                                                                     
-                                          88                         
-                                          88                         
-                                          88                         
-88,dPYba,,adPYba,    ,adPPYba,    ,adPPYb,88   ,adPPYba,  ,adPPYba,  
-88P'   "88"    "8a  a8"     "8a  a8"    `Y88  a8P_____88  I8[    ""  
-88      88      88  8b       d8  8b       88  8PP"""""""   `"Y8ba,   
-88      88      88  "8a,   ,a8"  "8a,   ,d88  "8b,   ,aa  aa    ]8I  
-88      88      88   `"YbbdP"'    `"8bbdP"Y8   `"Ybbd8"'  `"YbbdP"'  
-                                                                     
-                                                                     
-*/
 void	*copy_to_new_str_token_mode(t_exp_mem **exp, t_mem **mem)
 {
 	t_quote	quote;
