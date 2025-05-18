@@ -27,7 +27,7 @@ t_dll	*ft_dclst_find_lo_int(t_dll **tail, int offset)
 	trav = *tail;
 	lowest_node = trav;
 	while (1)
-	{	
+	{
 		value = *(int *)((char *)trav + offset);
 		lowest_val = *(int *)((char *)lowest_node + offset);
 		if (value < lowest_val)

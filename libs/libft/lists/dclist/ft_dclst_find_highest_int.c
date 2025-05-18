@@ -26,7 +26,7 @@ t_dll	*ft_dclst_find_hi_int(t_dll **tail, int offset)
 	trav = *tail;
 	highest_node = trav;
 	while (1)
-	{	
+	{
 		value = *(int *)((char *)trav + offset);
 		highest_val = *(int *)((char *)highest_node + offset);
 		if (value > highest_val)

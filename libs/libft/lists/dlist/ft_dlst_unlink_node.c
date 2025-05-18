@@ -1,9 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_dlst_unlink_node.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/21 14:33:44 by eduribei          #+#    #+#             */
+/*   Updated: 2025/03/06 22:46:50 by eduribei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../libft.h"
 
-
-/* safe version, returns NULL if params are NULL or node is not found in head.
-returns a pointer to head (or the new head) when node is found and removed */
 t_dlist	*ft_dlst_unlink_node(t_dlist **head, t_dlist *node)
 {
 	t_dlist	*trav;
