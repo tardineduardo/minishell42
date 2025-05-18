@@ -76,14 +76,13 @@ void ft_clean_mem_loop(t_mem **mem)
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
 	par = (*mem)->parsing;
-	//PASRSING
 
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
+	ft_lstclear(&par->parlst, ft_del_par_node);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
-	ft_free_and_null((void *)&par->parlst); ///// TEM LEAK AQUI
 	tok->block_count = 0;
 	tok->index_count = 0;	
 	return ;
