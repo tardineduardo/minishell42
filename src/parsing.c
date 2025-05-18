@@ -32,21 +32,16 @@ int	ft_parsing(t_mem **mem)
 t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par)
 {
 	t_list		*new;
-	t_list		*lstnode;
 	t_par_node	*parnode;
 	int			num_parsnodes;
 	int			a;
 
 	num_parsnodes = count_num_parsnodes(toklst);
-
 	a = 0;
 	while(a < num_parsnodes)
 	{		
 		parnode = malloc(sizeof(t_par_node));
 		if (!parnode)
-			return (ft_par_syscall_error(par, "ft_create_parlst"));
-		lstnode = malloc(sizeof(t_list));
-		if (!lstnode)
 			return (ft_par_syscall_error(par, "ft_create_parlst"));
 		if(!init_parnode(a, &parnode, toklst, par))
 			return (NULL);
@@ -65,41 +60,24 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_par_me
 	t_dlist		*first;
 	t_tok_node	*toknode;
 
-
-	/* a lógica aqui é processar node a node, sempre apagando os nodes já 
-	processados. por isso sempre se retorna para o head de toklst */
-
-
 	first = *toklst;
 	toknode = (t_tok_node *)first->content;
-
-	// essas são infos básicas que valem para qualquer tipo de parnode.
 	(*parnode)->block_index = toknode->block_index;
 	(*parnode)->block_node = NULL;
-
-	// se não for um operador de comando.
 	if(is_pipe_logical_subshell(toknode))
 	{
-		// registra o tipo de operador.
 		(*parnode)->oper = toknode->oper;
-		
-		// apaga o primeiro node de toklst.
 		ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
-
-		// retorna e encerra a inicialização do parnode.
 		return (*parnode);
 	}
-
-	/* caso seja um node de comando (redir ou word), começa um loop infinito
-	para capturar todos os nodes necessários.*/
 	while(1)
 	{
 		first = *toklst;
-		if (!first)		// todos os tokens em toklist foram consumidos
-			break ;		// encerra a incialização pois acabaram os tokens
+		if (!first)
+			break ;
 		toknode = (t_tok_node *)first->content;
-		if (toknode->block_index > a || toknode->block_index == -1) // chegou ao bloco seguinte
-			break ;													// encerra porque acabou bloco
+		if (toknode->block_index > a || toknode->block_index == -1)
+			break ;
 		if (is_redir(toknode))
 		{
 			if(!fill_blocknode_redirs(toklst, parnode, par))
@@ -111,7 +89,6 @@ t_par_node *init_parnode(int a, t_par_node **parnode, t_dlist **toklst, t_par_me
 				return (NULL);
 		}
 	}
-	// no parnode, o campo oper passa a ser CMD.
 	(*parnode)->oper = CMD; 
 	return (*parnode);
 }
@@ -127,11 +104,9 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_par_mem **
 	if(!(*parnode)->block_node)
 		if(!intit_block_node(parnode, toklst, par))
 			return (NULL);
-
 	redirnode = malloc(sizeof(t_redirs_node));
 	if(!redirnode)
 		return (NULL);
-
 	oper = ((t_tok_node *)(*toklst)->content)->oper;
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	toknode = (t_tok_node *)(*toklst)->content;
@@ -154,7 +129,6 @@ void *fill_blocknode_redirs(t_dlist **toklst, t_par_node **parnode, t_par_mem **
 	return (*parnode);
 }
 
-
 void *fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode, t_par_mem **par)
 {
 	t_tok_node	*toknode;
@@ -164,20 +138,15 @@ void *fill_blcknode_cmdarray(t_dlist **toklst, t_par_node **parnode, t_par_mem *
 	if(!(*parnode)->block_node)
 		if(!intit_block_node(parnode, toklst, par))
 			return (NULL);
-
 	arraytrav = (*parnode)->block_node->cmd_arr;
 	toknode = (t_tok_node *)(*toklst)->content;
-	
 	a = 0;
 	while(arraytrav[a])
 		a++;
-
 	arraytrav[a] = ft_strdup(toknode->value);
 	if (!arraytrav[a])
 		return (ft_par_syscall_error(par, "fill_blcknode_cmdarray"));
-
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
-	
 	return (*parnode);
 }
 
@@ -196,17 +165,9 @@ t_block_node *intit_block_node(t_par_node **pn, t_dlist **toklst, t_par_mem **pa
 	(*pn)->block_node->input_lst = NULL;
 	(*pn)->block_node->output_lst = NULL;
 	(*pn)->block_node->redirs_lst = NULL;
-
 	return ((*pn)->block_node);
 }
 
-
-
-
-
-
-
-// para contar o número de parsenodes que serão criados.
 int    count_num_parsnodes(t_dlist **toklst)
 {
 	t_dlist		*trav;
@@ -232,41 +193,18 @@ int    count_num_parsnodes(t_dlist **toklst)
 	return (total_parsnodes);
 }
 
-
-
-
-
-
-
-
-
-/*
-                                                                                                                                     
-                                                                                             
-                                      ,d                                       
-                                      88                                             
-,adPPYba,  8b       d8  8b,dPPYba,  MM88MMM  ,adPPYYba,  8b,     ,d8
-I8[    ""  `8b     d8'  88P'   `"8a   88     ""     `Y8   `Y8, ,8P'
- `"Y8ba,    `8b   d8'   88       88   88     ,adPPPPP88     )888(
-aa    ]8I    `8b,d8'    88       88   88,    88,    ,88   ,d8" "8b,
-`"YbbdP"'      Y88'     88       88   "Y888  `"8bbdP"Y8  8P'     `Y8
-               d8'                                                                                                                   
-              d8'                                                                                                                    
-
-*/
-
-bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
-{
-	if(!operators_are_supported(parlst, par))
-		return (false);
-	if (!redirects_are_complete(parlst, par))
-		return (false);
 	// if (pipe_at_invalid_position(parlst))
 	// 	return (ERROR1);
 	// if (and_or_at_invalid_positions(parlst))
 	// 	return (ERROR1);
 	// if (empty_parentheses(parlst))
 	// 	return (ERROR1);
+bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
+{
+	if(!operators_are_supported(parlst, par))
+		return (false);
+	if (!redirects_are_complete(parlst, par))
+		return (false);
 	return(true);
 }
 
@@ -295,7 +233,6 @@ void	*operators_are_supported(t_dlist *toklst, t_par_mem **par)
 		trav = trav->next;
 	}
 	return(toklst);
-
 }
 
 void	*redirects_are_complete(t_dlist *toklst, t_par_mem **par)
@@ -320,12 +257,6 @@ void	*redirects_are_complete(t_dlist *toklst, t_par_mem **par)
 	}
 	return(toklst);
 }
-
-
-
-
-
-
 
 bool is_redir(t_tok_node *toknode)
 {
@@ -367,28 +298,6 @@ bool	is_pipe_logical_subshell(t_tok_node *toknode)
 	return (false);
 }
 
-
-
-
-
-
-
-/*
-                                                                                          
-88,dPYba,,adPYba,    ,adPPYba,  88,dPYba,,adPYba,    ,adPPYba,   8b,dPPYba,  8b       d8  
-88P'   "88"    "8a  a8P_____88  88P'   "88"    "8a  a8"     "8a  88P'   "Y8  `8b     d8'  
-88      88      88  8PP"""""""  88      88      88  8b       d8  88           `8b   d8'   
-88      88      88  "8b,   ,aa  88      88      88  "8a,   ,a8"  88            `8b,d8'    
-88      88      88   `"Ybbd8"'  88      88      88   `"YbbdP"'   88              Y88'     
-                                                                                 d8'      
-                                                                                d8'    */
-
-
-
-
-
-
-
 void *ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
 {
 	(*par)->errnmb = st_err;
@@ -399,18 +308,12 @@ void *ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
 	return(NULL);
 }
 
-
-
-
 void *ft_par_syscall_error(t_par_mem **par, char *ftname)
 {
 	(*par)->errnmb = errno;
 	ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", ftname, strerror(errno));
 	return(NULL);
 }
-
-
-
 
 void	*ft_init_par_memory(t_mem **mem)
 {
@@ -429,259 +332,136 @@ void	ft_clear_par_mem(t_par_mem **par)
 	return ;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void print_debug_parsing(t_list **parslst)
-{
-	int			a;
-	t_list		*trav;
-	t_par_node	*par;
-
-	a = 1;
-	trav = *parslst;
-	while(trav)
-	{
-		par = (t_par_node *)trav->content;
-
-		ft_printf("\n----- Node %i-----\n", a);
-		ft_printf("oper\t%i (", par->oper);
-		ft_print_oper_par(par->oper);
-		ft_printf(")\n");
-		ft_printf("cmd\t%i\n", par->block_index);
-		if (par->block_node)
-		{
-			if(par->block_node->cmd_arr)
-			{
-				ft_printf("cmdarray: {");
-				ft_debug_print_array_of_strings_line(par->block_node->cmd_arr, STDOUT_FILENO);
-				ft_printf("}\n");
-			}
-			else
-				ft_printf("cmdarray: NULL\n");
-
-			if(par->block_node->input_lst)
-			{
-				ft_printf("input_lst: ");
-				print_redir_list(par->block_node->input_lst);
-				ft_printf("\n");
-			}
-			else
-				ft_printf("input_lst: NULL\n");	
-
-			if(par->block_node->output_lst)
-			{
-				ft_printf("output_lst: ");
-				print_redir_list(par->block_node->output_lst);
-				ft_printf("\n");
-			}
-			else
-				ft_printf("output_lst: NULL\n");	
-
-			if(par->block_node->redirs_lst)
-			{
-				ft_printf("redirs_lst: ");
-				print_redir_list(par->block_node->redirs_lst);
-				ft_printf("\n");
-			}
-
-			else
-				ft_printf("redirs_lst: NULL\n");
-			ft_printf("\n");
-
-		}
-		a++;
-		trav = trav->next;
-	}
-
-
-}
-
-
-
-
-
-
-
-void	ft_print_oper_par(t_oper oper)
-{
-	if (oper == AND_O)
-		ft_printf(BRIGHT_MAGENTA "AND_O" RESET);
-	else if (oper == OR_O)
-		ft_printf(BRIGHT_MAGENTA "OR_O" RESET);
-	else if (oper == GSTART_O)
-		ft_printf(BRIGHT_MAGENTA "GSTART_O" RESET);
-	else if (oper == GEND_O)
-		ft_printf(BRIGHT_MAGENTA "GEND_O" RESET);
-	else if (oper == PIPE_O)
-		ft_printf(YELLOW "PIPE_O" RESET);
-	else if (oper == BCKG_O)
-		ft_printf(BRIGHT_CYAN "BCKG_O" RESET);
-	else if (oper == IN_R)
-		ft_printf(BRIGHT_BLUE "IN_R" RESET);
-	else if (oper == OUT_R)
-		ft_printf(BRIGHT_BLUE "OUT_R" RESET);
-	else if (oper == APPD_R)
-		ft_printf(BRIGHT_BLUE "APPD_R" RESET);
-	else if (oper == ERROR_R)
-		ft_printf(BRIGHT_CYAN "ERROR_R" RESET);
-	else if (oper == HDC_R)
-		ft_printf(BRIGHT_BLUE "HDC_R" RESET);
-	else if (oper == HSTR_R)
-		ft_printf(BRIGHT_CYAN "HSTR_R" RESET);
-	else if (oper == WILD_R)
-		ft_printf(BRIGHT_MAGENTA "WILD_R" RESET);
-	else if (oper == OERR_R)
-		ft_printf(BRIGHT_CYAN "OERR_R" RESET);
-	else if (oper == CMD)
-		ft_printf(GREEN "CMD" RESET);	
-	else if (oper == WORD)
-		ft_printf(GREEN "WORD" RESET);
-	else
-		ft_printf("UNKNOWN_OPERATOR (%d)", oper);
-}
-
-
-void print_redir_list(t_list *redirs)
-{
-	t_list *trav;
-	t_redirs_node *redir;
-
-	trav = redirs;
-	int a = 1;
-	while(trav)
-	{
-		redir = (t_redirs_node *)trav->content;
-		ft_printf("%i) " , a);		
-		ft_print_oper_par(redir->type);
-		ft_printf(" [%s] " , redir->name);
-		if (redir->create)
-			ft_printf("create = true");
-		else
-			ft_printf("create = false");
-		trav = trav->next;
-		a++;
-		ft_printf(" ");
-
-	}
-}
+// void print_debug_parsing(t_list **parslst)
+// {
+// 	int			a;
+// 	t_list		*trav;
+// 	t_par_node	*par;
+
+// 	a = 1;
+// 	trav = *parslst;
+// 	while(trav)
+// 	{
+// 		par = (t_par_node *)trav->content;
+
+// 		ft_printf("\n----- Node %i-----\n", a);
+// 		ft_printf("oper\t%i (", par->oper);
+// 		ft_print_oper_par(par->oper);
+// 		ft_printf(")\n");
+// 		ft_printf("cmd\t%i\n", par->block_index);
+// 		if (par->block_node)
+// 		{
+// 			if(par->block_node->cmd_arr)
+// 			{
+// 				ft_printf("cmdarray: {");
+// 				ft_debug_print_array_of_strings_line(par->block_node->cmd_arr, STDOUT_FILENO);
+// 				ft_printf("}\n");
+// 			}
+// 			else
+// 				ft_printf("cmdarray: NULL\n");
+
+// 			if(par->block_node->input_lst)
+// 			{
+// 				ft_printf("input_lst: ");
+// 				print_redir_list(par->block_node->input_lst);
+// 				ft_printf("\n");
+// 			}
+// 			else
+// 				ft_printf("input_lst: NULL\n");	
+
+// 			if(par->block_node->output_lst)
+// 			{
+// 				ft_printf("output_lst: ");
+// 				print_redir_list(par->block_node->output_lst);
+// 				ft_printf("\n");
+// 			}
+// 			else
+// 				ft_printf("output_lst: NULL\n");	
+
+// 			if(par->block_node->redirs_lst)
+// 			{
+// 				ft_printf("redirs_lst: ");
+// 				print_redir_list(par->block_node->redirs_lst);
+// 				ft_printf("\n");
+// 			}
+
+// 			else
+// 				ft_printf("redirs_lst: NULL\n");
+// 			ft_printf("\n");
+
+// 		}
+// 		a++;
+// 		trav = trav->next;
+// 	}
+
+
+// }
+
+
+
+
+
+
+
+// void	ft_print_oper_par(t_oper oper)
+// {
+// 	if (oper == AND_O)
+// 		ft_printf(BRIGHT_MAGENTA "AND_O" RESET);
+// 	else if (oper == OR_O)
+// 		ft_printf(BRIGHT_MAGENTA "OR_O" RESET);
+// 	else if (oper == GSTART_O)
+// 		ft_printf(BRIGHT_MAGENTA "GSTART_O" RESET);
+// 	else if (oper == GEND_O)
+// 		ft_printf(BRIGHT_MAGENTA "GEND_O" RESET);
+// 	else if (oper == PIPE_O)
+// 		ft_printf(YELLOW "PIPE_O" RESET);
+// 	else if (oper == BCKG_O)
+// 		ft_printf(BRIGHT_CYAN "BCKG_O" RESET);
+// 	else if (oper == IN_R)
+// 		ft_printf(BRIGHT_BLUE "IN_R" RESET);
+// 	else if (oper == OUT_R)
+// 		ft_printf(BRIGHT_BLUE "OUT_R" RESET);
+// 	else if (oper == APPD_R)
+// 		ft_printf(BRIGHT_BLUE "APPD_R" RESET);
+// 	else if (oper == ERROR_R)
+// 		ft_printf(BRIGHT_CYAN "ERROR_R" RESET);
+// 	else if (oper == HDC_R)
+// 		ft_printf(BRIGHT_BLUE "HDC_R" RESET);
+// 	else if (oper == HSTR_R)
+// 		ft_printf(BRIGHT_CYAN "HSTR_R" RESET);
+// 	else if (oper == WILD_R)
+// 		ft_printf(BRIGHT_MAGENTA "WILD_R" RESET);
+// 	else if (oper == OERR_R)
+// 		ft_printf(BRIGHT_CYAN "OERR_R" RESET);
+// 	else if (oper == CMD)
+// 		ft_printf(GREEN "CMD" RESET);	
+// 	else if (oper == WORD)
+// 		ft_printf(GREEN "WORD" RESET);
+// 	else
+// 		ft_printf("UNKNOWN_OPERATOR (%d)", oper);
+// }
+
+
+// void print_redir_list(t_list *redirs)
+// {
+// 	t_list *trav;
+// 	t_redirs_node *redir;
+
+// 	trav = redirs;
+// 	int a = 1;
+// 	while(trav)
+// 	{
+// 		redir = (t_redirs_node *)trav->content;
+// 		ft_printf("%i) " , a);		
+// 		ft_print_oper_par(redir->type);
+// 		ft_printf(" [%s] " , redir->name);
+// 		if (redir->create)
+// 			ft_printf("create = true");
+// 		else
+// 			ft_printf("create = false");
+// 		trav = trav->next;
+// 		a++;
+// 		ft_printf(" ");
+
+// 	}
+// }
