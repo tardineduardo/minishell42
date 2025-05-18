@@ -21,7 +21,7 @@ int	print_child_statuses(t_pipe_data *p, int *status);
 
 //exec built in
 bool	is_built_in(char **cmd_arr);
-int	exec_built_in(t_list **ms_env, char	**cmd_arr);
+int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem);
 
 int		ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem);
 

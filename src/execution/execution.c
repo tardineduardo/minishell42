@@ -32,7 +32,7 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 	}
 	cur_cmd->cmd_arr = ft_expand_cmd_arr(cur_cmd->cmd_arr, mem);
 	if (is_built_in(cur_cmd->cmd_arr))
-		res = exec_built_in(ms_env, cur_cmd->cmd_arr);
+		res = exec_built_in(ms_env, cur_cmd->cmd_arr, mem);
 	else
 		exec_external_cmd(ms_env, cur_cmd);
 	return (res);
