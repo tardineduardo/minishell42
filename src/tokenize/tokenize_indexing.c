@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenize_indexing.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
+/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/expand.h"
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
@@ -72,6 +84,7 @@ t_oper	ft_get_oper(char *value)
 		return (OERR_R);
 	return (WORD);
 }
+
 int	ft_count_spaces(char *s)
 {
 	int	a;

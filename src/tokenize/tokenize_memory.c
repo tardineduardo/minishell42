@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenize_memory.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
+/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/expand.h"
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
@@ -19,7 +31,7 @@ void	*ft_init_tok_memory(t_mem **mem)
 	(*mem)->tokenize->remain = NULL;
 	(*mem)->tokenize->get_delimiter = false;
 	(*mem)->tokenize->index_count = 0;
-	(*mem)->tokenize->block_count = 0;		
+	(*mem)->tokenize->block_count = 0;
 	(*mem)->tokenize->quote = Q_OFF;
 	return ((*mem)->tokenize);
 }
