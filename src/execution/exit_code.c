@@ -38,10 +38,13 @@ void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value)
 void	ft_ms_env_add_exit_code(t_list **envlist, char *variable, int value)
 {
 	t_env_node	*new_env_node;
+	char		*val;
 
 	if (!(*envlist) || !variable)
 		return ;
-	new_env_node = ft_init_env_node(variable, ft_itoa(value), false);
-	if (!ft_add_to_envlist(envlist, new_env_node))
-		return ;
+
+	val = ft_itoa(value);
+	new_env_node = ft_init_env_node(variable, val, false);
+	free(val);
+	ft_add_to_envlist(envlist, new_env_node);
 }
