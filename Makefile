@@ -6,7 +6,12 @@ HEREDOC 	=	src/heredocs.c \
 
 MEMORY 		=	src/memory.c \
 
-TOKEN 		=	src/tokenize.c \
+TOKEN 		=	src/tokenize/tokenize_helpers.c \
+				src/tokenize/tokenize_heredoc.c \
+				src/tokenize/tokenize_indexing.c \
+				src/tokenize/tokenize_limits.c \
+				src/tokenize/tokenize_memory.c \
+				src/tokenize/tokenize.c \
 
 EXPAND		=	src/expand.c \
 
