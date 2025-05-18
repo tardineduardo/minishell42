@@ -16,20 +16,11 @@
 # include "minishell.h"
 # include "../libs/libft/libft.h"
 
-# define XEIVOPERS 55
-# define XEINCRDIR 2
+# define E_NO_SUPPRT 56
+# define E_INVAL_OPS 2
+# define E_NO_SUBSHE 55
 
 typedef struct s_mem	t_mem;
-
-typedef enum e_syntax
-{
-	EIVOPERS,
-	EINCRDIR,
-	ERROR1,
-	ERROR2,
-	ERROR3,	
-	SUCCESS_P,
-}	t_syntax;
 
 typedef enum e_oper
 {
@@ -79,7 +70,10 @@ bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par);
 t_list	*ft_create_parlst(t_dlist **toklst, t_list **parlst, t_par_mem **par);
 int		count_num_parsnodes(t_dlist **toklst);
 void	*operators_are_supported(t_dlist *parlst, t_par_mem **par);
+void	*subshell_opers_are_correct(t_dlist *toklst, t_par_mem **par);
 void	*redirects_are_complete(t_dlist *parlst, t_par_mem **par);
+void	*logic_opers_are_correct(t_dlist *toklst, t_par_mem **par);
+void	*pipe_opers_are_correct(t_dlist *toklst, t_par_mem **par);
 t_par_node	*init_pnd(int a, t_par_node **pnd, t_dlist **toklst, t_par_mem **par);
 t_block_node	*intit_bnd(t_par_node **pnd, t_dlist **toklst, t_par_mem **par);
 void	*fill_bnode_redir(t_dlist **toklst, t_par_node **pnd, t_par_mem **par);
@@ -87,11 +81,10 @@ void	*fill_bnode_cmdsa(t_dlist **toklst, t_par_node **pnd, t_par_mem **par);
 void	*ft_par_syscall_error(t_par_mem **par, char *ftname);
 void	*ft_par_syntax_error(int st_err, char *str, t_par_mem **par);
 
+
 void	ft_clear_par_mem(t_par_mem **par);
 void	ft_del_par_node(void *content);
 void	ft_del_redir_node(void *content);
-
-
 
 //debug
 // void	ft_print_oper_par(t_oper oper);

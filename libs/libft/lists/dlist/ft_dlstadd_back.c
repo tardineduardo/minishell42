@@ -15,17 +15,20 @@
 // back means the end of the list, far from head.
 void	ft_dlstadd_back(t_dlist **lst, t_dlist *new)
 {
-	t_dlist	*temp;
+	t_dlist	*last;
 
 	if (lst == NULL || new == NULL)
 		return ;
+	new->next = NULL;
 	if (*lst == NULL)
 	{
+		new->prev = NULL;
 		*lst = new;
 	}
 	else
 	{
-		temp = ft_dlstlast(*lst);
-		temp->next = new;
+		last = ft_dlstlast(*lst);
+		last->next = new;
+		new->prev = last;
 	}
 }

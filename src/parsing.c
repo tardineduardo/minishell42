@@ -204,6 +204,13 @@ bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
 		return (false);
 	if (!redirects_are_complete(parlst, par))
 		return (false);
+	if (!subshell_opers_are_correct(parlst, par))
+		return (false);
+	if (!logic_opers_are_correct(parlst, par))
+		return (false);
+	if (!pipe_opers_are_correct(parlst, par))
+		return (false);	
+		
 	return (true);
 }
 
@@ -227,7 +234,8 @@ void	*operators_are_supported(t_dlist *toklst, t_par_mem **par)
 				&& tknd->oper != OR_O
 				&& tknd->oper != GSTART_O
 				&& tknd->oper != GEND_O)
-				return (ft_par_syntax_error(XEIVOPERS, getop(tknd), par));
+				return (ft_par_syntax_error(E_NO_SUPPRT, getop(tknd), par));
+
 		}
 		trav = trav->next;
 	}
@@ -247,10 +255,88 @@ void	*redirects_are_complete(t_dlist *toklst, t_par_mem **par)
 		if (is_redir(tknd))
 		{
 			if (!trav->next)
-				return (ft_par_syntax_error(XEINCRDIR, "newline", par));
+				return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
 			next = (t_tok_node *)trav->next->content;
 			if (!next || next->oper != WORD)
-				return (ft_par_syntax_error(XEINCRDIR, getop(next), par));
+				return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+		}
+		trav = trav->next;
+	}
+	return (toklst);
+}
+
+void	*subshell_opers_are_correct(t_dlist *toklst, t_par_mem **par)
+{
+	t_dlist		*trav;
+	t_tok_node	*tknd;
+	t_tok_node	*next;
+
+	trav = toklst;
+	while (trav)
+	{
+		tknd = (t_tok_node *)trav->content;
+	
+		if (tknd->oper == GSTART_O)
+		{
+			if (!trav->next)
+				return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			next = (t_tok_node *)trav->next->content;
+			if (!is_word(next))
+				return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+			if (next->oper == GSTART_O)
+				return (ft_par_syntax_error(E_NO_SUBSHE, "((", par));
+				
+		}
+		trav = trav->next;
+	}
+	return (toklst);
+}
+
+void	*logic_opers_are_correct(t_dlist *toklst, t_par_mem **par)
+{
+	t_dlist		*trav;
+	t_tok_node	*tknd;
+	t_tok_node	*next;
+
+	trav = toklst;
+	while (trav)
+	{
+		tknd = (t_tok_node *)trav->content;	
+		if (tknd->oper == AND_O || tknd->oper == OR_O)
+		{
+			if (!trav->prev)
+				return (ft_par_syntax_error(E_INVAL_OPS, getop(tknd), par));
+			if (!trav->next)
+				return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			next = (t_tok_node *)trav->next->content;
+			if (!is_word(next) && next->oper != GSTART_O)
+				return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+		}
+		trav = trav->next;
+	}
+	return (toklst);
+}
+
+void	*pipe_opers_are_correct(t_dlist *toklst, t_par_mem **par)
+{
+	t_dlist		*trav;
+	t_tok_node	*tknd;
+	t_tok_node	*next;
+
+	trav = toklst;
+	while (trav)
+	{
+		tknd = (t_tok_node *)trav->content;
+	
+		if (tknd->oper == PIPE_O)
+		{
+			if (!trav->prev)
+				return (ft_par_syntax_error(E_INVAL_OPS, getop(tknd), par));
+			if (!trav->next)
+				return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			next = (t_tok_node *)trav->next->content;
+			if (next->oper == GEND_O || next->oper == AND_O || next->oper == OR_O)
+				return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));				
 		}
 		trav = trav->next;
 	}
@@ -300,11 +386,12 @@ bool	is_pipe_logical_subshell(t_tok_node *toknode)
 void	*ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
 {
 	(*par)->errnmb = st_err;
-	if (st_err == XEIVOPERS)
-		ft_dprintf(STDERR_FILENO, "minishell: invalid operator `%s'\n", str);
-	else if (st_err == XEINCRDIR)
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `%s'\n", str);
+	if (st_err == E_NO_SUPPRT)
+		ft_dprintf(STDERR_FILENO, "minishell: operator not supported `%s'\n", str);
+	else if (st_err == E_INVAL_OPS)
+		ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `%s'\n", str);
+	else if (st_err == E_NO_SUBSHE)
+		ft_dprintf(STDERR_FILENO, "minishell: subshell `%s' not supported\n", str);
 	return (NULL);
 }
 
