@@ -27,7 +27,7 @@ bool	is_built_in(char **cmd_arr)
 		return (false);
 }
 
-int	exec_built_in(t_list **ms_env, char	**cmd_arr)
+int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 {
 	int		res;
 
@@ -50,7 +50,7 @@ int	exec_built_in(t_list **ms_env, char	**cmd_arr)
 	else if (ft_strncmp(cmd_arr[0], "unset", 5) == 0)
 		res = ft_unset(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "exit", 4) == 0)
-		ft_exit(cmd_arr);
+		ft_exit(cmd_arr, mem);
 	else
 	{
 		perror("built-in executor");
