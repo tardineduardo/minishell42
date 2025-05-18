@@ -129,11 +129,6 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/dlist/ft_dlstnew.c \
 		lists/dlist/ft_dlstsize.c \
 
-DEBUG =	debug/ft_debug_print_array_of_strings.c \
-		# debug/ft_debug_print_array_of_ints.c \
-		# debug/ft_debug_print_dclist.c \
-		# debug/ft_debug_print_list.c \
-
 OBJS =	$(PRINT:.c=.o) \
 		$(CONV:.c=.o) \
 		$(CALC:.c=.o) \
@@ -146,7 +141,6 @@ OBJS =	$(PRINT:.c=.o) \
 		$(VALID:.c=.o) \
 		$(GNL:.c=.o) \
 		$(SORT:.c=.o) \
-		$(DEBUG:.c=.o) \
 
 CC = cc
 

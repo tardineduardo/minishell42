@@ -22,7 +22,7 @@ void	ft_free_str_array(char **array_of_strings)
 	while ((array_of_strings)[a])
 	{
 		if (array_of_strings[a])
-		free(array_of_strings[a]);
+			free(array_of_strings[a]);
 		a++;
 	}
 	free(array_of_strings);
