@@ -34,7 +34,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 	hd_count_int++;
 	if (hd_count_int == INT_MAX)
 		return (NULL);
-	ft_free_and_null((void *)&hd->delim);	
+	ft_free_and_null((void *)&hd->delim);
 	return (hd->filepath);
 }
 
@@ -71,8 +71,6 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem)
 		ft_free_and_null((void *)&(hd->loopinput));
 		return (NULL);
 	}
-
-	// handle the first line and line breaks
 	if (hd_loop_count != 0)
 		ft_dprintf(hd_temp_file, "\n");
 	if ((hd->loopinput)[0] == '\0')
@@ -89,20 +87,16 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem)
 char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 {
 	int			hd_loop_count;
-	t_hdc_mem	*hd; 
-
+	t_hdc_mem	*hd;
+	
 	hd =(*mem)->heredoc;
 	(void)envlist;
 	hd_loop_count = 0;
 	while(1)
 	{
-		char *prompt = ft_concatenate("heredoc [", hd->delim, "] > ");
-		hd->loopinput = ft_capture_in_interactive_mode(prompt);
-		free(prompt);
+		hd->loopinput = ft_capture_in_interactive_mode(makeprompt(hd->delim));
 		if (!hd->loopinput)
 			return (NULL);
-			
-		// Primeiro compara, SÓ DEPOIS expande.
 		if (ft_strcmp(hd->delim, hd->loopinput) == 0)
 			break ;
 
@@ -114,74 +108,12 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		hd_loop_count++;
 	}
 	ft_free_and_null((void *)&hd->loopinput);
-
-	(*mem)->expand->hd_mode = EXPAND; ///////////////////////////////////////////////////////////TIRAR ISSO DAQUI E LEVAR PARA DENTRO DE EXPAND
-
-
+	(*mem)->expand->hd_mode = EXPAND;
 	return (hd->filepath);
 }
 
-//Helpers da create file.
-char	*ft_hd_validate_path(char **filepath, int *hd_count_int)
+char	*makeprompt(char *delim)
 {
-	char		*hd_count_str;
-	char		*hd_temp;
-
-	while (1)
-	{
-		if (access(*filepath, F_OK) != 0 || access(*filepath, W_OK) == 0)
-			break ;
-		else
-		{
-			(*hd_count_int)++;
-			hd_count_str = ft_itoa(*hd_count_int);
-			if (!hd_count_str)
-				return (NULL);
-			hd_temp = *filepath;
-			*filepath = ft_strjoin("ms_temp_heredoc_", hd_count_str);       
-			ft_free_and_null((void *)&hd_count_str);
-			if (!(*filepath))
-			{
-				ft_free_and_null((void *)&hd_temp); // reduzir aqui (juntar no return)
-				return (NULL);
-			}
-			ft_free_and_null((void *)&hd_temp);
-		}
-	}
-	return (*filepath);
-}
-
-int	ft_hd_init_file(char **filepath)
-{
-	int		hd_open_file;
-
-	hd_open_file = open(*filepath, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (hd_open_file == -1)
-	{
-		ft_dprintf(STDERR_FILENO, "fd error: %s [%i])\n", strerror(errno), errno);
-		return (-1);
-	}
-	close(hd_open_file);
-	return (0);
 }
 
 
-void	*ft_init_hdc_memory(t_mem **mem)
-{
-	(*mem)->heredoc = malloc(sizeof(t_hdc_mem));
-	if(!(*mem)->heredoc)
-		return (NULL);
-	(*mem)->heredoc->delim = NULL;
-	(*mem)->heredoc->filepath = NULL;
-	(*mem)->heredoc->looptemp = NULL;
-	(*mem)->heredoc->loopinput = NULL;
-	(*mem)->heredoc->mode = INIT_MODE;
-	return ((*mem)->heredoc);
-}
-
-void	ft_clear_hdc_mem(t_hdc_mem **hd)
-{
-	ft_free_and_null((void *)&(*hd)->delim);
-	free(*hd);
-	return ;
-}
