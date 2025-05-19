@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/17 18:49:49 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:43:10 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,8 +208,8 @@ bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
 		return (false);
 	if (!logic_opers_are_correct(parlst, par))
 		return (false);
-	if (!pipe_opers_are_correct(parlst, par))
-		return (false);	
+	// if (!pipe_opers_are_correct(parlst, par))
+	// 	return (false);	
 		
 	return (true);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_ext_cmd.c                                     :+:      :+:    :+:   */
+/*   ext_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 15:19:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:13:23 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../../include/execution.h"
 #include <sys/stat.h>
 
-char	**ft_ms_env_arr(t_list **ms_env)
+char	**ft_ms_env_arr(t_list **ms_env, t_mem **mem)
 {
 	t_env_node	*cur_ms_env_node;
 	t_list		*current;
@@ -25,6 +25,7 @@ char	**ft_ms_env_arr(t_list **ms_env)
 	int			lst_size;
 	int			i;
 
+	(void)mem;
 	if (!ms_env || !*ms_env)
 		return (NULL);
 	lst_size = ft_lstsize(*ms_env);
@@ -44,7 +45,7 @@ char	**ft_ms_env_arr(t_list **ms_env)
 	return (ms_env_cpy);
 }
 
-void	exec_external_cmd(t_list **ms_env, t_block_node *cmd)
+void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	char		**cmd_arr;
 	char		**ms_env_arr;
@@ -52,7 +53,7 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd)
 
 	cmd_arr = cmd->cmd_arr;
 	cmd_arr = update_cmd_arr(ms_env, cmd_arr);
-	ms_env_arr = ft_ms_env_arr(ms_env);
+	ms_env_arr = ft_ms_env_arr(ms_env, mem);
 	if (access(cmd_arr[0], F_OK) == 0)
 	{
 		if (access(cmd_arr[0], R_OK) != 0)

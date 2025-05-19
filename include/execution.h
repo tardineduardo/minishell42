@@ -11,7 +11,7 @@ int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2]
 int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem);
 
 //exec external cmd
-void	exec_external_cmd(t_list **ms_env, t_block_node *cmd);
+void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem);
 int		ft_count_items(char **str_arr);
 char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
 
