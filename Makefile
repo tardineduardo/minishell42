@@ -13,7 +13,14 @@ TOKEN 		=	src/tokenize/tokenize_helpers.c \
 				src/tokenize/tokenize_memory.c \
 				src/tokenize/tokenize.c \
 
-EXPAND		=	src/expand.c \
+EXPAND		=	src/expand/expand_findvar.c \
+				src/expand/expand_midreset.c \
+				src/expand/expand_ops.c \
+				src/expand/expand_reallocs.c \
+				src/expand/expand_steps_1.c \
+				src/expand/expand_steps_2.c \
+				src/expand/expand_valids.c \
+				src/expand/expand.c \
 
 INTERACTIVE =	src/interactive.c
 

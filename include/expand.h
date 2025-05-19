@@ -45,7 +45,7 @@ typedef struct s_exp_mem
 	bool	braces;
 	char	*value;
 	t_list	*sortedvars;
-	size_t	allocated;
+	size_t	alloct;
 	t_delim	hd_mode;
 	t_mode	mode;     //misturar esses dois
 	t_exit	exit;
@@ -71,7 +71,7 @@ void	*copy_to_new_str_heredoc_mode(t_exp_mem **exp, t_mem **mem);
 void	update_quote_flag(char *s, t_quote *quote, int index);
 bool	skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev);
 bool	process_inside_single_quotes(t_exp_mem **exp, t_quote quote);
-bool	process_inside_double_quotes(t_exp_mem **exp, t_mem **mem, t_quote quote);
+bool	process_inside_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote);
 bool	process_unquoted_sequence(t_exp_mem **exp, t_mem **mem);
 bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem);
 bool	handle_backslash(t_exp_mem **exp, t_mode mode, t_quote quote);
