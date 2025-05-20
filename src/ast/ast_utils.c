@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:52 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 18:05:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:10:50 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,31 +84,50 @@ t_ast_node	*create_group_node(t_ast_node *body)
 }
 
 
-// Free AST memory
-// void free_ast(t_ast_node *node)
-// {
-// 	int	i;
+//Free AST memory
+void free_ast(t_ast_node *node)
+{
+	int	i;
 
-// 	i = 0;
-//     if (!node)
-// 		return ;
-//     if (node->type == NODE_PIPELINE)
-// 	{
-// 		while (i < node->pipeline->cmd_count)
-// 		{
-// 			free_block_node(((t_block_node *)node->pipeline->cmds->content));
-// 			i++;
-// 		}
-// 		free(node->pipeline->cmds);
-// 	}
-// 	else if (node->type == NODE_COMMAND)
-//         free_block_node(node->block_node);
-// 	else if (node->type == NODE_LOGICAL)
-// 	{
-// 		free_ast(node->logical->left);
-// 		free_ast(node->logical->right);
-// 	}
-// 	else if (node->type == NODE_SUBSHELL)
-// 		free_ast(node->subshell->body);
-//     free(node);
-// }
+	i = 0;
+    if (!node)
+		return ;
+    if (node->type == NODE_PIPELINE)
+	{
+		while (i < node->pipeline->cmd_count)
+		{
+			free_block_node(((t_block_node *)node->pipeline->cmds->content));
+			i++;
+		}
+		free(node->pipeline);
+	}
+	else if (node->type == NODE_COMMAND)
+        free(node);
+	else if (node->type == NODE_LOGICAL)
+	{
+		free_ast(node->logical->left);
+		free_ast(node->logical->right);
+	}
+	else if (node->type == NODE_SUBSHELL)
+		free_ast(node->subshell->body);
+    free(node);
+}
+
+void ft_del_ast_node(void *content)
+{
+	t_ast_node	*node;
+
+	if (!content)
+		return ;
+	node = (t_ast_node *)content;
+	ft_free_and_null((void *)&node->variable);
+	ft_free_and_null((void *)&node->value);
+	ft_free_and_null((void *)&node);
+}
+
+void	ft_clear_ast_mem(t_ast_node **root)
+{
+	ft_lstclear(&(*root), ft_del_ast_node);
+	free(*root);
+	return ;
+}
