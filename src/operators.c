@@ -1,10 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   operators.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
+/*   Updated: 2025/05/17 18:08:29 by eduribei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/tokenize.h"
 
-void *ft_init_operators(t_tok_mem **tok)
+void	*ft_init_operators(t_tok_mem **tok)
 {
 	(*tok)->operators = malloc(15 * sizeof(char *));
-
+	if (!(*tok)->operators)
+		return (NULL);
 	(*tok)->operators[0] = ft_strdup("<<<");
 	(*tok)->operators[1] = ft_strdup(">>");
 	(*tok)->operators[2] = ft_strdup("<<");
@@ -20,8 +33,25 @@ void *ft_init_operators(t_tok_mem **tok)
 	(*tok)->operators[12] = ft_strdup("(");
 	(*tok)->operators[13] = ft_strdup(")");
 	(*tok)->operators[14] = NULL;
-
-	//protect
-
+	if (!ft_check_success(tok))
+		return (NULL);
 	return (tok);
+}
+
+bool	ft_check_success(t_tok_mem **tok)
+{
+	int		a;
+
+	a = 0;
+	while (a < 15)
+	{
+		if (!(*tok)->operators[a])
+		{
+			while (a >= 0)
+				free((*tok)->operators[a--]);
+			free((*tok)->operators);
+			return (NULL);
+		}
+		a++;
+	}
 }
