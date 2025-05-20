@@ -16,6 +16,16 @@
 
 char	*ft_heredoc(char *delimiter, t_mem **mem)
 {
+	int pip[2];
+	int pid;
+
+	pipe(pip);
+	pid = fork();
+	
+
+
+
+
 	static int	hd_count_int;
 	t_hdc_mem	*hd;
 	t_env_mem	*env;
