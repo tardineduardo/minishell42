@@ -19,25 +19,32 @@
 #include "../include/heredoc.h"
 #include "../include/expand.h"
 
-void	run_heredoc_child(int write_fd, char *delimiter, t_mem **mem, int count)
+void	run_heredoc_child(int write_fd, char *filepath, char *delimiter)
 {
-	t_hdc_mem	*hd;
-	t_env_mem	*env;
+	char	*line;
+	char	*prompt;
+	int		fd;
 
 	close(write_fd - 1);
-	hd  = (*mem)->heredoc;
-	env = (*mem)->environs;
-	hd->delim = ft_strdup(delimiter);
-	ft_expand(&hd->delim, DELIMITER, mem);
-	if (!hd->delim)
+	fd = open(filepath, O_WRONLY | O_APPEND);
+	if (fd < 0)
 		exit(EXIT_FAILURE);
-	if (!ft_hd_create_file(&count, &hd->filepath))
-		exit(EXIT_FAILURE);
-	if (!ft_hd_input_loop(&env->envlist, mem))
-		exit(EXIT_FAILURE);
-	ft_free_and_null((void *)&hd->delim);
-	write(write_fd, hd->filepath, strlen(hd->filepath));
-	close(write_fd);
+	while (1)
+	{
+		prompt = ft_concatenate("heredoc [", delimiter, "] > ");
+		line = ft_capture_in_interactive_mode(prompt);
+		free(prompt);
+		if (!line)
+			exit(EXIT_FAILURE);
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		ft_dprintf(fd, "%s\n", line);
+		free(line);
+	}
+	close(fd);
 	exit(EXIT_SUCCESS);
 }
 
@@ -45,29 +52,23 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 {
 	int			pip[2];
 	pid_t		pid;
-	char		buf[100];
-	ssize_t		len;
+	char		*filename;
 	static int	hd_count_int;
 
+	(void)mem;
+	if (!ft_hd_create_file(&hd_count_int, &filename))
+		return (NULL);
 	if (pipe(pip) < 0)
 		return (NULL);
 	pid = fork();
 	if (pid < 0)
 		return (NULL);
 	if (pid == 0)
-		run_heredoc_child(pip[1], delimiter, mem, hd_count_int);
+		run_heredoc_child(pip[1], filename, delimiter);
 	close(pip[1]);
 	waitpid(pid, NULL, 0);
-	len = read(pip[0], buf, sizeof(buf) - 1);
 	close(pip[0]);
-	if (len <= 0)
-		return (NULL);
-	buf[len] = '\0';
-	(*mem)->heredoc->filepath = ft_strdup(buf);
-	hd_count_int++;
-	if (hd_count_int == INT_MAX)
-		return (NULL);
-	return ((*mem)->heredoc->filepath);
+	return (filename);
 }
 
 char	*ft_hd_create_file(int *hd_count_int, char **filepath)
@@ -85,6 +86,8 @@ char	*ft_hd_create_file(int *hd_count_int, char **filepath)
 		return (NULL);
 	if (ft_hd_init_file(filepath) == -1)
 		return (NULL);
+
+	(*hd_count_int)++;
 	return (*filepath);
 }
 
@@ -137,7 +140,7 @@ char	*ft_hd_input_loop(t_list **envlist, t_mem **mem)
 		hd_loop_count++;
 	}
 	ft_free_and_null((void *)&hd->loopinput);
-	(*mem)->expand->hd_mode = EXPAND; //TIRAR, LEVAR PARA DENTRO DE EXPAND
+	//(*mem)->expand->hd_mode = EXPAND; //TIRAR, LEVAR PARA DENTRO DE EXPAND
 	return (hd->filepath);
 }
 
