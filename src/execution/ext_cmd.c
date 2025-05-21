@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 14:13:23 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:41:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,27 @@
 char	**ft_ms_env_arr(t_list **ms_env, t_mem **mem)
 {
 	t_env_node	*cur_ms_env_node;
-	t_list		*current;
-	char		**ms_env_cpy;
 	char		*temp_key_value;
 	char		*temp_key_sign;
 	int			lst_size;
 	int			i;
 
-	(void)mem;
 	if (!ms_env || !*ms_env)
 		return (NULL);
 	lst_size = ft_lstsize(*ms_env);
-	ms_env_cpy = (char **)calloc((lst_size + 1), sizeof(char *));
+	(*mem)->environs->ms_env_cpy = calloc((lst_size + 1), sizeof(char *));
 	i = 0;
-	current = *ms_env;
-	while (current)
+	while (*ms_env)
 	{
-		cur_ms_env_node = current->content;
+		cur_ms_env_node = (*ms_env)->content;
 		temp_key_sign = ft_strjoin(cur_ms_env_node->variable, "=");
 		temp_key_value = ft_strjoin(temp_key_sign, cur_ms_env_node->value);
 		free(temp_key_sign);
-		ms_env_cpy[i] = temp_key_value;
+		(*mem)->environs->ms_env_cpy[i] = temp_key_value;
 		i++;
-		current = current->next;
+		*ms_env = (*ms_env)->next;
 	}
-	return (ms_env_cpy);
+	return ((*mem)->environs->ms_env_cpy);
 }
 
 void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)

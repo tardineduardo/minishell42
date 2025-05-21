@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/17 18:08:29 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:56:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@
 #include "../include/environs.h"
 #include "../include/readline.h"
 #include "../include/execution.h"
+#include "../include/ast.h"
 
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mem		*mem;
-	t_ast_node	*root;
+	//t_ast_node	*root;
 	int			res;
 
 	(void)argc;
@@ -47,8 +48,8 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		root = parse_expression(&mem->parsing->parlst);
-		res = ft_execute(&(*mem).environs->envlist, &root, &mem);
+		parse_expression(&mem->parsing->parlst, &mem);
+		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
 		if(res != 0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
@@ -70,15 +71,18 @@ void ft_clean_mem_loop(t_mem **mem)
 	t_tok_mem *tok;
 	t_hdc_mem *hd;
 	t_par_mem *par;
+	t_ast_mem *ast;
 
 
 	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
 	par = (*mem)->parsing;
+	ast = (*mem)->ast;
 
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
 	ft_lstclear(&par->parlst, ft_del_par_node);
+	free_ast(ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:52 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 16:10:50 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:04:23 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
 #include "../../include/execution.h"
+#include "../../include/ast.h"
 
 // Create a new command node
 t_ast_node	*create_command_node(t_block_node *block_node)
@@ -83,51 +84,75 @@ t_ast_node	*create_group_node(t_ast_node *body)
 	return (node);
 }
 
+void	free_block_node(void *ptr)
+{
+	t_block_node	*blk;
+	
+	blk = (t_block_node *)ptr;
+	if (!blk)
+		return;
+	// here I only free cmd_arr because I manipulate it and I dont know why when edu frees it 
+	// it doesnt work there, but here works... needs a better understand
+	ft_free_and_null_str_array(&blk->cmd_arr);
+	// ft_lstclear(&blk->input_lst, free);
+	// ft_lstclear(&blk->output_lst, free);
+	// ft_lstclear(&blk->redirs_lst, free);
+	free(blk);
+}
 
 //Free AST memory
-void free_ast(t_ast_node *node)
+void	free_ast(t_ast_node *node)
 {
-	int	i;
+	t_block_node	*blk;
+	t_pipe_info		*pipe;
+	t_logical_data	*log;
+	t_subshell_data	*sub;
 
-	i = 0;
-    if (!node)
-		return ;
-    if (node->type == NODE_PIPELINE)
+	if (!node)
+		return;
+
+	if (node->type == NODE_COMMAND)
 	{
-		while (i < node->pipeline->cmd_count)
-		{
-			free_block_node(((t_block_node *)node->pipeline->cmds->content));
-			i++;
-		}
-		free(node->pipeline);
+		blk = node->block_node;
+		if (blk)
+			free_block_node(blk);
 	}
-	else if (node->type == NODE_COMMAND)
-        free(node);
+	else if (node->type == NODE_PIPELINE)
+	{
+		pipe = node->pipeline;
+		if (pipe)
+		{
+			ft_lstclear(&pipe->cmds, free_block_node);
+			free(pipe);
+		}
+	}
 	else if (node->type == NODE_LOGICAL)
 	{
-		free_ast(node->logical->left);
-		free_ast(node->logical->right);
+		log = node->logical;
+		if (log)
+		{
+			free_ast(log->left);
+			free_ast(log->right);
+			free(log);
+		}
 	}
 	else if (node->type == NODE_SUBSHELL)
-		free_ast(node->subshell->body);
-    free(node);
+	{
+		sub = node->subshell;
+		if (sub)
+		{
+			free_ast(sub->body);
+			free(sub);
+		}
+	}
+	free(node);
+	//node = NULL;   falar com edu sobre isso aqui TODO
+	//node = NULL;
 }
 
-void ft_del_ast_node(void *content)
+void	ft_clear_ast_mem(t_ast_mem **ast)
 {
-	t_ast_node	*node;
-
-	if (!content)
-		return ;
-	node = (t_ast_node *)content;
-	ft_free_and_null((void *)&node->variable);
-	ft_free_and_null((void *)&node->value);
-	ft_free_and_null((void *)&node);
-}
-
-void	ft_clear_ast_mem(t_ast_node **root)
-{
-	ft_lstclear(&(*root), ft_del_ast_node);
-	free(*root);
+	free_ast((*ast)->root);
+	free(*ast);
 	return ;
 }
