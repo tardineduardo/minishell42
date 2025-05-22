@@ -30,7 +30,9 @@ OPERATORS 	=	src/operators.c \
 
 PARSER		=	src/parsing.c \
 
-AST 		=	src/ast/ast.c \
+AST 		=	src/ast/init_ast.c \
+				src/ast/parse_ast.c \
+				src/ast/free_ast.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \

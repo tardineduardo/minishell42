@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast.c                                              :+:      :+:    :+:   */
+/*   parse_ast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/21 12:46:10 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:55:30 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,7 @@
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
 #include "../../include/execution.h"
-#include "../../include/ast.h"
-
-void	*ft_init_ast_memory(t_mem **mem)
-{
-	(*mem)->ast = malloc(sizeof(t_ast_mem));
-	if (!(*mem)->ast)
-		return (NULL);
-	(*mem)->ast->root = NULL;
-	return ((*mem)->ast);
-}
-// Parse an expression
-t_ast_node	*parse_expression(t_list **parlst, t_mem **mem)
-{
-	t_ast_node	*root;
-
-	root = parse_logical_or(parlst, mem);
-	(*mem)->ast->root = root;
-	return (root);
-}
+#include "../../include/parsing.h"
 
 // Parse logical OR (||)
 t_ast_node	*parse_logical_or(t_list **parlst, t_mem **mem)
@@ -87,16 +69,14 @@ t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem)
 	node = parse_command_or_group(parlst, mem);
 	if (!node)
 		return (NULL);
-	// If we don't have a pipe, return the single command
 	if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 4)
 		return (node);
-	// We have a pipeline - create a list of commands
 	cmds_lst = ft_lstnew(node->block_node);
 	if (!cmds_lst)
 		return (NULL);
 	while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 4)
 	{
-		*parlst = (*parlst)->next; // Consume '|'
+		*parlst = (*parlst)->next;
 		right = parse_command_or_group(parlst, mem);
 		if (!right || right->type != NODE_COMMAND)
 		{
@@ -106,7 +86,6 @@ t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem)
 		new_node = ft_lstnew(right->block_node);
 		if (!new_node)
 		{
-			// Free the list we created
 			while (cmds_lst)
 			{
 				next = cmds_lst->next;
@@ -116,14 +95,11 @@ t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem)
 			return (NULL);
 		}
 		ft_lstadd_back(&cmds_lst, new_node);
-		// Free the right node (we only need its cmd)
 		free(right);
 	}
-	// Create the pipeline node with all commands
 	pipeline_node = create_pipeline_node(cmds_lst);
 	if (!pipeline_node)
 	{
-		// Free the list we created
 		while (cmds_lst)
 		{
 			next = cmds_lst->next;
@@ -144,16 +120,16 @@ t_ast_node	*parse_command_or_group(t_list **parlst, t_mem **mem)
 	if (!parlst || !*parlst)
 		return (NULL);
 	cur = *parlst;
-	if (((t_par_node *)cur->content)->oper == 2) // '('
+	if (((t_par_node *)cur->content)->oper == 2)
 	{
-		*parlst = (*parlst)->next; // Consume "("
+		*parlst = (*parlst)->next;
 		node = parse_expression(parlst, mem);
-		if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 3) // ')'
+		if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 3)
 		{
 			ft_dprintf(2, " Error: Unclosed parenthesis\n");
 			exit(1);
 		}
-		*parlst = (*parlst)->next; // Consume ")"
+		*parlst = (*parlst)->next;
 		return (create_group_node(node));
 	}
 	return (parse_command(parlst, mem));

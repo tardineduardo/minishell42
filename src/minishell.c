@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/21 12:56:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:54:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "../include/environs.h"
 #include "../include/readline.h"
 #include "../include/execution.h"
-#include "../include/ast.h"
 
 
 int	main(int argc, char *argv[], char *envp[])

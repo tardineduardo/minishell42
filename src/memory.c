@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/20 17:24:39 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:54:41 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "../include/parsing.h"
 #include "../include/environs.h"
 #include "../include/readline.h"
-#include "../include/ast.h"
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
