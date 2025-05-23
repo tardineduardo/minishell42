@@ -209,8 +209,7 @@ bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
 	if (!logic_opers_are_correct(parlst, par))
 		return (false);
 	// if (!pipe_opers_are_correct(parlst, par))
-	// 	return (false);	
-		
+	// 	return (false);
 	return (true);
 }
 
