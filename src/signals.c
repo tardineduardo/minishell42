@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:29:11 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/08 13:31:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/23 14:23:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	signal_after_wait(void)
 
 void	signal_child_process(void)
 {
+	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, SIG_DFL);   // Ctrl+C should kill
 	signal(SIGQUIT, SIG_DFL);  // Ctrl+\ should quit with core dump
 }

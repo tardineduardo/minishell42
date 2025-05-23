@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 14:12:07 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/17 18:50:47 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:54:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,11 @@ typedef struct s_par_mem
 	int				errnmb;
 }					t_par_mem;
 
+typedef struct s_ast_mem
+{
+	t_ast_node	*root;
+}	t_ast_mem;
+
 int		ft_parsing(t_mem **mem);
 void	*ft_init_par_memory(t_mem **mem);
 void	ft_clear_par_mem(t_par_mem **par);
@@ -85,6 +90,10 @@ void	*ft_par_syntax_error(int st_err, char *str, t_par_mem **par);
 void	ft_clear_par_mem(t_par_mem **par);
 void	ft_del_par_node(void *content);
 void	ft_del_redir_node(void *content);
+
+// ast
+void	*ft_init_ast_memory(t_mem **mem);
+void	ft_clear_ast_mem(t_ast_mem **ast);
 
 //debug
 // void	ft_print_oper_par(t_oper oper);

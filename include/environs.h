@@ -23,6 +23,7 @@ typedef struct s_env_mem
 {
 	t_list		*envlist;
 	t_env_node	*new_node;
+	char		**ms_env_cpy;
 	char		**result;
 }	t_env_mem;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/17 18:32:15 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:43:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_exp_mem t_exp_mem;
 typedef struct s_rdl_mem t_rdl_mem;
 typedef struct s_env_mem t_env_mem;
 typedef struct s_par_mem t_par_mem;
+typedef struct s_ast_mem t_ast_mem;
 
 typedef enum e_quote
 {
@@ -52,6 +53,7 @@ typedef struct	s_mem
 	t_exp_mem		*expand;
 	t_env_mem		*environs;
 	t_par_mem		*parsing;
+	t_ast_mem		*ast;
 }	t_mem;
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
@@ -144,6 +146,6 @@ typedef struct s_input_node
 	char	*name;
 }	t_input_node;
 
-t_ast_node *parse_expression(t_list **parlst);
-
+t_ast_node *parse_expression(t_list **parlst, t_mem **mem);
+void	free_ast(t_ast_node *node);
 #endif
