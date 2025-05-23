@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/22 12:54:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/22 13:10:47 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,4 @@ void	ft_clear_mem_and_exit(t_mem **mem)
 	ft_clear_ast_mem(&(*mem)->ast);
 	rl_clear_history();
 	free(*mem);
-	exit(0);
 }

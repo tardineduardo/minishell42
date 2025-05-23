@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/21 14:06:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:06:46 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_export(t_list **envlist, char *variable_value)
 		while (trav)
 		{
 			current = (t_env_node *)trav->content;
-			if (current->visible)
+			if (ft_strcmp(current->variable, "?") != 0)
 				ft_dprintf(1, "declare -x %s=\"%s\"\n", current->variable, current->value);
 			trav = trav->next;
 		}
