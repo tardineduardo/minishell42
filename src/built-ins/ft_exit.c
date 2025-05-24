@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:11:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 14:12:03 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:10:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 int	ft_exit(char **cmd_arr, t_mem **mem)
 {
 	int	exit_code;
+	int	size_cmd_arr;
 
 	(void)mem;
-	if (cmd_arr[2] != NULL)
+	size_cmd_arr = ft_count_items(cmd_arr);
+	if (size_cmd_arr > 2)
 	{
 		ft_dprintf(2, "%s: too many arguments", cmd_arr[0]);
 		ft_clear_mem_and_exit(mem);

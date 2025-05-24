@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/21 12:43:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:09:46 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	handle_signal_cmd(int signo);
 void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
+
+int		ft_count_items(char **str_arr);
 
 typedef enum e_node_mode
 {
