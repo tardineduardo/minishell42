@@ -25,8 +25,6 @@ EXPAND		=	src/expand/expand_findvar.c \
 				src/expand/expand_valids.c \
 				src/expand/expand.c \
 
-INTERACTIVE =	src/interactive.c
-
 ENVIRON 	=	src/environs/environs_errors.c \
 				src/environs/environs_memory.c \
 				src/environs/environs.c \
@@ -72,9 +70,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(AST:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(SIGNALS:.c=.o) \
-			$(INTERACTIVE:.c=.o) \
 			$(CHECK:.c=.o) \
-
 
 CC = cc
 RM = rm -f
