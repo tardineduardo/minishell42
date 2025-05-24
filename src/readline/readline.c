@@ -13,6 +13,7 @@
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
 
+
 void	*ft_readline(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
@@ -77,6 +78,15 @@ bool	ft_line_is_incomplete(char *s)
 		return (true);
 	}
 	free(new);
+	return (false);
+}
+
+bool	ft_has_unclosed_operators(char *s)
+{
+	if (has_unclosed_quotes(s))
+		return (true);
+	// if (has_unclosed_parens(s)) // add when needed
+	//	return (true);
 	return (false);
 }
 
