@@ -66,7 +66,7 @@ void	run_heredoc_child(int write_fd, char *filepath, char *delimiter)
 	exit(EXIT_SUCCESS);
 }
 
-char *ft_capture_in_interactive_mode(char *prompt)
+char	*ft_capture_in_interactive_mode(char *prompt)
 {
-	return(readline(prompt));
+	return (readline(prompt));
 }
