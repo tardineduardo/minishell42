@@ -2,7 +2,9 @@ MAIN 		=  	src/minishell.c \
 
 READLINE 	=	src/readline.c \
 
-HEREDOC 	=	src/heredocs.c \
+HEREDOC 	=	src/heredoc/heredocs.c \
+				src/heredoc/heredocs_file.c \
+				src/heredoc/heredocs_memory.c \
 
 MEMORY 		=	src/memory.c \
 
