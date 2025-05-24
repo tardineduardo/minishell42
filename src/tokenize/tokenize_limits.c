@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_indexing.c                                :+:      :+:    :+:   */
+/*   tokenize_limits.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/24 10:06:07 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 			ft_tokeniztion_escape(&i);
 		if (ft_isspace(str[i]))
 			break ;
-		if (ft_is_oper_token(&str[i], tok, &operator_len))
+		if (ft_is_oper_token(&str[i], &operator_len))
 		{
 			if (i == 0)
 				return (operator_len);
@@ -66,7 +66,7 @@ int	ft_find_word_limit(t_tok_mem **tok, char *str)
 			(*tok)->quote = Q_SINGLE;
 		else if ((ft_is_double_quote(&str[i]) && (*tok)->quote == Q_OFF))
 			(*tok)->quote = Q_DOUBLE;
-		else if ((ft_isspace(str[i]) || ft_is_oper_token((&str[i]), tok, NULL))
+		else if ((ft_isspace(str[i]) || ft_is_oper_token((&str[i]), NULL))
 			&& (*tok)->quote == Q_OFF)
 			return (i);
 		i++;

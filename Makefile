@@ -13,7 +13,6 @@ TOKEN 		=	src/tokenize/tokenize_helpers.c \
 				src/tokenize/tokenize_indexing.c \
 				src/tokenize/tokenize_limits.c \
 				src/tokenize/tokenize_memory.c \
-				src/tokenize/tokenize_operators.c \
 				src/tokenize/tokenize.c \
 
 EXPAND		=	src/expand/expand_findvar.c \

@@ -47,7 +47,7 @@ void		*ft_tokenize(char **line, t_mem **mem);
 int			ft_count_spaces(char *s);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
-bool		ft_is_oper_token(char *str, t_tok_mem **tok, int *op_len);
+bool		ft_is_oper_token(char *str, int *op_len);
 bool		ft_is_operator_parsing(char *string);
 void		ft_del_token_node(void *content);
 void		ft_expand_toklist(t_dlist **toklst, t_mem **mem);

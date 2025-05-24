@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/23 15:16:50 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/24 10:08:17 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 		!(*mem)->expand 	|| !(*mem)->parsing ||
 		!(*mem)->ast)
 		exit(1);
-	if (!ft_init_operators(&(*mem)->tokenize))
-		ft_clear_mem_and_exit(mem);
 	if (!ft_init_environs(&(*mem)->environs, envp))
 		ft_clear_mem_and_exit(mem);
 }

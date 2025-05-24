@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/24 10:05:30 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
 #include "../../include/parsing.h"
+
+const char *g_operators[] = {"<<<",">>", "<<", "&&", "||", "2>", "&>", "<",
+	">", "|", "&", "*", "(", ")"};
 
 void	ft_tokeniztion_escape(int *i)
 {
@@ -49,15 +52,15 @@ char	*getop(t_tok_node *tok)
 		return (NULL);
 }
 
-bool	ft_is_oper_token(char *str, t_tok_mem **tok, int *operator_len)
+bool	ft_is_oper_token(char *str, int *operator_len)
 {
-	int		i;
-	char	*curr_operator;
+	int			i;
+	const char	*curr_operator;
 
 	i = 0;
-	while ((*tok)->operators[i])
+	while (g_operators[i])
 	{
-		curr_operator = (*tok)->operators[i];
+		curr_operator = g_operators[i];
 		if (ft_strncmp(str, curr_operator, ft_strlen(curr_operator)) == 0)
 		{
 			if (operator_len)
