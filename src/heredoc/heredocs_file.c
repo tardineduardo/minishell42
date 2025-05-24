@@ -17,10 +17,9 @@
 void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem)
 {
 	int			hd_temp_file;
-	t_hdc_mem	*hd; 
+	t_hdc_mem	*hd;
 
 	hd = (*mem)->heredoc;
-
 	hd_temp_file = open(hd->filepath, O_WRONLY | O_APPEND, 0644);
 	if (hd_temp_file == -1)
 	{
@@ -53,7 +52,6 @@ char	*ft_hd_create_file(int *hd_count_int, char **filepath)
 		return (NULL);
 	if (ft_hd_init_file(filepath) == -1)
 		return (NULL);
-
 	(*hd_count_int)++;
 	return (*filepath);
 }
@@ -74,7 +72,7 @@ char	*ft_hd_validate_path(char **filepath, int *hd_count_int)
 			if (!hd_count_str)
 				return (NULL);
 			hd_temp = *filepath;
-			*filepath = ft_strjoin("ms_temp_heredoc_", hd_count_str);      
+			*filepath = ft_strjoin("ms_temp_heredoc_", hd_count_str);
 			ft_free_and_null((void *)&hd_count_str);
 			if (!(*filepath))
 				return (ft_free_and_null((void *)&hd_temp));
