@@ -63,6 +63,7 @@ void		ft_del_token_node(void *content);
 void		*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem);
 void		capture_values_for_parsing_later(char *newstr, t_tok_node *node,
 				t_tok_mem **tok);
+bool		ft_check_success(t_tok_mem **tok);
 
 //needed later for parsing 
 bool		is_word(t_tok_node *toknode);

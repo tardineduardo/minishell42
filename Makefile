@@ -13,6 +13,7 @@ TOKEN 		=	src/tokenize/tokenize_helpers.c \
 				src/tokenize/tokenize_indexing.c \
 				src/tokenize/tokenize_limits.c \
 				src/tokenize/tokenize_memory.c \
+				src/tokenize/tokenize_operators.c \
 				src/tokenize/tokenize.c \
 
 EXPAND		=	src/expand/expand_findvar.c \
@@ -29,8 +30,6 @@ INTERACTIVE =	src/interactive.c
 ENVIRON 	=	src/environs/environs_errors.c \
 				src/environs/environs_memory.c \
 				src/environs/environs.c \
-
-OPERATORS 	=	src/operators.c \
 
 PARSER		=	src/parsing.c \
 
@@ -69,7 +68,6 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
-			$(OPERATORS:.c=.o) \
 			$(PARSER:.c=.o) \
 			$(AST:.c=.o) \
 			$(EXECUTE:.c=.o) \
