@@ -10,20 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-//#include "../include/heredoc.h"
-//#include "../include/tokenize.h"
-//#include "../include/expand.h"
-//#include "../include/parsing.h"
-//#include "../include/environs.h"
-#include "../include/readline.h"
+#include "../../include/minishell.h"
+#include "../../include/readline.h"
 
 void	*ft_readline(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
 
 	rdl = (*mem)->readline;
-	rdl->line = readline("Minishell> ");
+	rdl->line = readline(YELLOW "Minishell> " RESET);
 	if (!rdl->line)
 	{
 		ft_clear_mem_and_exit(mem);
@@ -35,7 +30,6 @@ void	*ft_readline(t_mem **mem)
 		return (NULL);
 	if (!ft_rdl_input_loop(mem))
 		return (NULL);
-
 	add_history(rdl->line);
 	return (mem);
 }
@@ -43,15 +37,13 @@ void	*ft_readline(t_mem **mem)
 char	*ft_rdl_input_loop(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
-	t_tok_mem	*tok;
 
 	rdl = (*mem)->readline;
-	tok = (*mem)->tokenize;
-	while(1)
+	while (1)
 	{
 		if (ft_line_is_incomplete(rdl->line))
 		{
-			rdl->append = (readline("append > "));
+			rdl->append = (readline(YELLOW "append > " RESET));
 			if (!ft_tokenize(&rdl->append, mem))
 				return (NULL);
 			rdl->temp = rdl->line;
@@ -59,17 +51,16 @@ char	*ft_rdl_input_loop(t_mem **mem)
 			ft_free_and_null((void *)&rdl->temp);
 			if (ft_line_is_incomplete(rdl->line))
 				continue ;
-			if (!tok->remain)
-				break;
+			if (!(*mem)->tokenize->remain)
+				break ;
 			ft_free_and_null((void *)&rdl->append);
 			continue ;
 		}
-		ft_free_and_null((void *)&tok->remain);	
+		ft_free_and_null((void *)&(*mem)->tokenize->remain);
 		break ;
 	}
 	return (rdl->line);
 }
-
 
 bool	ft_line_is_incomplete(char *s)
 {
