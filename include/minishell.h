@@ -20,6 +20,11 @@
 # include <readline/history.h>				// for history
 # include <signal.h>						// handle signals
 
+# include <unistd.h>
+# include <sys/wait.h>
+# include <string.h>
+# include <limits.h>
+
 typedef struct s_hdc_mem t_hdc_mem;
 typedef struct s_tok_mem t_tok_mem;
 typedef struct s_exp_mem t_exp_mem;
