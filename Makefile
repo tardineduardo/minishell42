@@ -26,7 +26,9 @@ EXPAND		=	src/expand/expand_findvar.c \
 
 INTERACTIVE =	src/interactive.c
 
-ENVIRON 	=	src/environs.c \
+ENVIRON 	=	src/environs/environs_errors.c \
+				src/environs/environs_memory.c \
+				src/environs/environs.c \
 
 OPERATORS 	=	src/operators.c \
 
