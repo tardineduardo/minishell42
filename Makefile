@@ -31,7 +31,13 @@ ENVIRON 	=	src/environs/environs_errors.c \
 				src/environs/environs_memory.c \
 				src/environs/environs.c \
 
-PARSER		=	src/parsing.c \
+PARSER		=	src/parsing/parsing_command.c \
+				src/parsing/parsing_errors.c \
+				src/parsing/parsing_memory.c \
+				src/parsing/parsing_syntax_cases.c \
+				src/parsing/parsing_syntax.c \
+				src/parsing/parsing_valids.c \
+				src/parsing/parsing.c \
 
 AST 		=	src/ast/init_ast.c \
 				src/ast/parse_ast.c \
