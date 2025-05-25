@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/24 17:33:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 11:02:30 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 {
 	int		i;
 	char	*new_node_value;
+	char	*equal_sign;
 
 	if (!envp)
 		return (NULL);
@@ -32,10 +33,15 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 	{
 		ft_get_var_and_value(*envp);
 
+		equal_sign = ft_strchr(*envp, '=');
+		(*env)->value = ft_strdup(++equal_sign);
+		(*env)->var = ft_substr(*envp)
 
-		(*env)->value = ft_strchr(*envp, '=') + 1;
+		(*env)->value =  + 1;
 		if (!(*env)->value)
 			return (ft_env_error("Envp split error", env));
+
+
 		(*env)->new_node = ft_init_env_node;
 
 
