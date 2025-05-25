@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 13:22:05 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 14:07:33 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ typedef struct s_env_node
 {
 	char	*variable;
 	char	*value;
-	bool	readonly;
-	bool	block_unset;
+	// bool	readonly;
+	// bool	block_unset;
 	bool	visible;
 }	t_env_node;
 
