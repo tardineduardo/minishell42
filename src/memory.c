@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/23 15:16:50 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 15:35:15 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,19 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 
 void	ft_clear_mem_and_exit(t_mem **mem)
 {
-	if (!(*mem)->heredoc)
+	if ((*mem)->heredoc)
 		ft_clear_hdc_mem(&(*mem)->heredoc);
-	if (!(*mem)->readline)
+	if ((*mem)->readline)
 		ft_clear_rdl_mem(&(*mem)->readline);
-	if (!(*mem)->tokenize)
+	if ((*mem)->tokenize)
 		ft_clear_tok_mem(&(*mem)->tokenize);
-	if (!(*mem)->expand)
+	if ((*mem)->expand)
 		ft_clear_exp_mem(&(*mem)->expand);
-	if (!(*mem)->parsing)
+	if ((*mem)->parsing)
 		ft_clear_par_mem(&(*mem)->parsing);
-	if (!(*mem)->environs)
+	if ((*mem)->environs)
 		ft_clear_env_mem(&(*mem)->environs);
-	if (!(*mem)->ast)
+	if ((*mem)->ast)
 		ft_clear_ast_mem(&(*mem)->ast);
 	rl_clear_history();
 	free(*mem);

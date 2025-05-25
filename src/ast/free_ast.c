@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/22 12:55:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 16:03:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ void	free_block_node(void *ptr)
 	if (!blk)
 		return ;
 	ft_free_and_null_str_array(&blk->cmd_arr);
-	free(blk);
 }
 
 //Free AST memory
-void	free_ast(t_ast_node *node)
+void	ft_free_ast(t_ast_node *node)
 {
 	t_block_node	*blk;
 	t_pipe_info		*pipe;
@@ -41,7 +40,10 @@ void	free_ast(t_ast_node *node)
 	{
 		blk = node->block_node;
 		if (blk)
+		{
 			free_block_node(blk);
+			free(blk);
+		}
 	}
 	else if (node->type == NODE_PIPELINE)
 	{
@@ -57,8 +59,8 @@ void	free_ast(t_ast_node *node)
 		log = node->logical;
 		if (log)
 		{
-			free_ast(log->left);
-			free_ast(log->right);
+			ft_free_ast(log->left);
+			ft_free_ast(log->right);
 			free(log);
 		}
 	}
@@ -67,7 +69,7 @@ void	free_ast(t_ast_node *node)
 		sub = node->subshell;
 		if (sub)
 		{
-			free_ast(sub->body);
+			ft_free_ast(sub->body);
 			free(sub);
 		}
 	}
@@ -76,7 +78,6 @@ void	free_ast(t_ast_node *node)
 
 void	ft_clear_ast_mem(t_ast_mem **ast)
 {
-	free_ast((*ast)->root);
 	free(*ast);
 	return ;
 }
