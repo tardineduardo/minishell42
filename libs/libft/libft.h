@@ -57,29 +57,28 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-} t_list;
+}	t_list;
 
 typedef struct s_dlist
 {
 	void			*content;
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
-} t_dlist;
+}	t_dlist;
 
 typedef struct s_dll
 {
 	void			*content;
 	struct s_dll	*next;
 	struct s_dll	*prev;
-} t_dll;
+}	t_dll;
 
 typedef struct s_btree
 {
-struct s_btree	*left;
-struct s_btree	*right;
-void			*data;
-} t_btree;
-
+	struct s_btree	*left;
+	struct s_btree	*right;
+	void			*data;
+}	t_btree;
 
 typedef long long	t_llong;
 
@@ -99,7 +98,7 @@ int		greatest(int a, int b);
 // errors
 void	ft_print_error_and_exit(char *message,
 			int exit_number) __attribute__((noreturn));
-void	ft_error_exit(char *message, int exit_number) __attribute__((noreturn));			
+void	ft_error_exit(char *message, int exit_number) __attribute__((noreturn));
 bool	ft_print_error_and_false(char *message);
 bool	ft_print_error_and_true(char *message);
 void	*ft_print_error_and_null(char *message);
@@ -128,7 +127,6 @@ void	*ft_free_and_null_str_array(char ***array_of_strings);
 void	*ft_free_and_exit(void **ptr, char *msg, int errnum);
 char	*ft_realloc_string(char **string, size_t newlen);
 
-
 // validations
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
@@ -140,7 +138,6 @@ int		ft_isquote(int c);
 bool	ft_is_line_empty(char *s);
 bool	ft_is_single_quote(char *c);
 bool	ft_is_double_quote(char *c);
-
 
 // strings
 char	**ft_split_char(char const *s, char c);
@@ -170,8 +167,6 @@ char	*ft_fn_to_str(char *filename);
 void	ft_cat(const char *filename);
 void	ft_free_split(char **results, size_t r_index); //?
 char	*ft_strremove_set(char *str, char *set);
-
-
 
 // printing
 int		ft_putchar_fd(char c, int fd);
@@ -227,15 +222,14 @@ int		ft_clstsize(t_list **tail);
 void	ft_debug_print_list(t_list **head, char *type, size_t offset);
 t_list	*ft_lstcopy(t_list *source);
 
-
-
-
+//lists - dlist
 void	ft_dlstadd_front(t_dlist **lst, t_dlist *new);
 void	ft_dlstadd_back(t_dlist **lst, t_dlist *new);
 void	ft_dlstclear(t_dlist **lst, void (*del)(void*));
-t_dlist	*ft_dlst_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*));
-t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node, void (*del)(void*));
-
+t_dlist	*ft_dlst_destroy_node(t_dlist **head, t_dlist *node,
+			void (*del)(void*));
+t_dlist	*ft_dlst_quick_destroy_node(t_dlist **head, t_dlist *node,
+			void (*del)(void*));
 t_dlist	*ft_dlst_unlink_node(t_dlist **head, t_dlist *node);
 t_dlist	*ft_dlst_quick_unlink_node(t_dlist **head, t_dlist *node);
 void	ft_dlstdelone(t_dlist *lst, void (*del)(void*));
@@ -245,26 +239,21 @@ t_dlist	*ft_dlstmap(t_dlist *lst, void *(*f)(void *), void (*del)(void *));
 t_dlist	*ft_dlstnew(void *content);
 int		ft_dlstsize(t_dlist *lst);
 
-
-
-
 //lists - dclist
-t_dll		*ft_dclstnew(void *content);
-t_dll		*ft_dclst_find_lo_int(t_dll **tail, int offset);
-t_dll		*ft_dclst_find_hi_int(t_dll **tail, int offset);
-t_dll		*ft_dclst_find_value(t_dll **tail, int value, int offset);
-t_dll		*ft_dclst_find_node(t_dll **tail, t_dll *node);
-bool		ft_dclst_clock_sortd(t_dll **tail, char mode, int offset);
-bool		ft_dclst_circ_sortd(t_dll **tail, char mode, int offset);
-void		ft_dclstadd_back(t_dll **tail, t_dll *new);
-void		ft_dclstclear_simple(t_dll **lst);
-int			ft_dclstsize(t_dll **tail);
-int			ft_dclst_dist_head_bidi(t_dll **tail, t_dll *node);
-int			ft_dclst_dist_head_bidi_len(t_dll **tail, t_dll *nd, int list_len);
-
+t_dll	*ft_dclstnew(void *content);
+t_dll	*ft_dclst_find_lo_int(t_dll **tail, int offset);
+t_dll	*ft_dclst_find_hi_int(t_dll **tail, int offset);
+t_dll	*ft_dclst_find_value(t_dll **tail, int value, int offset);
+t_dll	*ft_dclst_find_node(t_dll **tail, t_dll *node);
+bool	ft_dclst_clock_sortd(t_dll **tail, char mode, int offset);
+bool	ft_dclst_circ_sortd(t_dll **tail, char mode, int offset);
+void	ft_dclstadd_back(t_dll **tail, t_dll *new);
+void	ft_dclstclear_simple(t_dll **lst);
+int		ft_dclstsize(t_dll **tail);
+int		ft_dclst_dist_head_bidi(t_dll **tail, t_dll *node);
+int		ft_dclst_dist_head_bidi_len(t_dll **tail, t_dll *nd, int list_len);
 
 //debug
 void	ft_debug_print_array_of_strings_line(char **array, int fd);
-
 
 #endif

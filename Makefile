@@ -1,24 +1,45 @@
 MAIN 		=  	src/minishell.c \
 
-READLINE 	=	src/readline.c \
+READLINE 	=	src/readline/readline.c \
 
-HEREDOC 	=	src/heredocs.c \
+HEREDOC 	=	src/heredoc/heredocs.c \
+				src/heredoc/heredocs_file.c \
+				src/heredoc/heredocs_memory.c \
 
 MEMORY 		=	src/memory.c \
 
-TOKEN 		=	src/tokenize.c \
+TOKEN 		=	src/tokenize/tokenize_helpers.c \
+				src/tokenize/tokenize_heredoc.c \
+				src/tokenize/tokenize_indexing.c \
+				src/tokenize/tokenize_limits.c \
+				src/tokenize/tokenize_memory.c \
+				src/tokenize/tokenize_operators.c \
+				src/tokenize/tokenize.c \
 
-EXPAND		=	src/expand.c \
+EXPAND		=	src/expand/expand_findvar.c \
+				src/expand/expand_midreset.c \
+				src/expand/expand_ops.c \
+				src/expand/expand_reallocs.c \
+				src/expand/expand_steps_1.c \
+				src/expand/expand_steps_2.c \
+				src/expand/expand_valids.c \
+				src/expand/expand.c \
 
-INTERACTIVE =	src/interactive.c
+ENVIRON 	=	src/environs/environs_errors.c \
+				src/environs/environs_memory.c \
+				src/environs/environs.c \
 
-ENVIRON 	=	src/environs.c \
+PARSER		=	src/parsing/parsing_command.c \
+				src/parsing/parsing_errors.c \
+				src/parsing/parsing_memory.c \
+				src/parsing/parsing_syntax_cases.c \
+				src/parsing/parsing_syntax.c \
+				src/parsing/parsing_valids.c \
+				src/parsing/parsing.c \
 
-OPERATORS 	=	src/operators.c \
-
-PARSER		=	src/parsing.c \
-
-AST 		=	src/ast/ast.c \
+AST 		=	src/ast/init_ast.c \
+				src/ast/parse_ast.c \
+				src/ast/free_ast.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \
@@ -51,14 +72,11 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(READLINE:.c=.o) \
 			$(EXPAND:.c=.o) \
 			$(BUILTIN:.c=.o) \
-			$(OPERATORS:.c=.o) \
 			$(PARSER:.c=.o) \
 			$(AST:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(SIGNALS:.c=.o) \
-			$(INTERACTIVE:.c=.o) \
 			$(CHECK:.c=.o) \
-
 
 CC = cc
 RM = rm -f

@@ -1,0 +1,72 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredocs.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
+/*   Updated: 2025/03/30 19:15:02 by eduribei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../include/minishell.h"
+#include "../../include/heredoc.h"
+#include "../../include/expand.h"
+
+char	*ft_heredoc(char *delimiter, t_mem **mem)
+{
+	int			pip[2];
+	pid_t		pid;
+	char		*filename;
+	static int	hd_count_int;
+
+	(void)mem;
+	if (!ft_hd_create_file(&hd_count_int, &filename))
+		return (NULL);
+	if (pipe(pip) < 0)
+		return (NULL);
+	pid = fork();
+	if (pid < 0)
+		return (NULL);
+	if (pid == 0)
+		run_heredoc_child(pip[1], filename, delimiter);
+	close(pip[1]);
+	waitpid(pid, NULL, 0);
+	close(pip[0]);
+	return (filename);
+}
+
+void	run_heredoc_child(int write_fd, char *filepath, char *delimiter)
+{
+	char	*line;
+	char	*prompt;
+	int		fd;
+
+	close(write_fd - 1);
+	fd = open(filepath, O_WRONLY | O_APPEND);
+	if (fd < 0)
+		exit(EXIT_FAILURE);
+	while (1)
+	{
+		prompt = ft_concatenate("heredoc [", delimiter, "] > ");
+		line = ft_capture_in_interactive_mode(prompt);
+		free(prompt);
+		if (!line)
+			exit(EXIT_FAILURE);
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		ft_dprintf(fd, "%s\n", line);
+		free(line);
+	}
+	close(fd);
+	exit(EXIT_SUCCESS);
+}
+
+char	*ft_capture_in_interactive_mode(char *prompt)
+{
+	return (readline(prompt));
+}

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:45:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 18:06:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:28:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	**ft_expand_cmd_arr(char **cmd_arr, t_mem **mem)
 
 	i = 0;
 	size_arr = ft_count_items(cmd_arr);
-	final_cmd_arr = malloc(sizeof(char *) * (size_arr + 1));
+	final_cmd_arr = ft_calloc(sizeof(char *), (size_arr + 1));
 	if (!final_cmd_arr)
 	{
 		perror("malloc");

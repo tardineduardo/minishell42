@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:21:27 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 17:57:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:54:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	is_built_in(char **cmd_arr)
 		return (false);
 }
 
-int	exec_built_in(t_list **ms_env, char	**cmd_arr)
+int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 {
 	int		res;
 
@@ -44,13 +44,13 @@ int	exec_built_in(t_list **ms_env, char	**cmd_arr)
 	else if (ft_strncmp(cmd_arr[0], "env", 3) == 0)
 		res = ft_env(*ms_env);
 	else if (ft_strncmp(cmd_arr[0], "cd", 2) == 0)
-		res = ft_cd(ms_env, cmd_arr);
+		res = ft_cd(ms_env, cmd_arr, mem);
 	else if (ft_strncmp(cmd_arr[0], "export", 5) == 0)
 		res = ft_export(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "unset", 5) == 0)
 		res = ft_unset(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "exit", 4) == 0)
-		ft_exit(cmd_arr);
+		ft_exit(cmd_arr, mem);
 	else
 	{
 		perror("built-in executor");

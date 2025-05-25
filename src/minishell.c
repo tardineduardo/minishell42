@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/13 17:06:53 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 16:03:15 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mem		*mem;
-	t_ast_node	*root;
+	//t_ast_node	*root;
 	int			res;
 
 	(void)argc;
@@ -35,33 +35,34 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
-		// if(!ft_readline(&mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
-		ft_readline(&mem);
-		// if(!ft_parsing(&mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
-		ft_parsing(&mem);
-		root = parse_expression(&mem->parsing->parlst);
-		//print_ast(root, 0);
-		res = ft_execute(&(*mem).environs->envlist, &root, &mem);
-		
-		ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
-		// if(!ft_execute(mem->readline->line, &mem))
-		// {
-		// 	ft_clean_mem_loop(&mem);
-		// 	continue ;
-		// }
+		if(!ft_readline(&mem))
+		{
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
+		res = ft_parsing(&mem);
+		if (res !=0)
+		{
+			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
+		parse_expression(&mem->parsing->parlst, &mem);
+		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
+		if(res != 0)
+		{
+			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
 		ft_clean_mem_loop(&mem);
 	}
 	ft_clear_mem_and_exit(&mem);
 	return (0);
 }
+
+
+
 
 void ft_clean_mem_loop(t_mem **mem)
 {
@@ -69,20 +70,22 @@ void ft_clean_mem_loop(t_mem **mem)
 	t_tok_mem *tok;
 	t_hdc_mem *hd;
 	t_par_mem *par;
+	t_ast_mem *ast;
 
 
 	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
 	par = (*mem)->parsing;
-	//PASRSING
+	ast = (*mem)->ast;
 
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
+	ft_lstclear(&par->parlst, ft_del_par_node);
+	ft_free_ast(ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
-	ft_free_and_null((void *)&par->parlst); ///// TEM LEAK AQUI
 	tok->block_count = 0;
 	tok->index_count = 0;	
 	return ;

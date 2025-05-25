@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/10 17:37:07 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 15:15:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,18 @@
 # include <readline/history.h>				// for history
 # include <signal.h>						// handle signals
 
+# include <unistd.h>
+# include <sys/wait.h>
+# include <string.h>
+# include <limits.h>
+
 typedef struct s_hdc_mem t_hdc_mem;
 typedef struct s_tok_mem t_tok_mem;
 typedef struct s_exp_mem t_exp_mem;
 typedef struct s_rdl_mem t_rdl_mem;
 typedef struct s_env_mem t_env_mem;
 typedef struct s_par_mem t_par_mem;
+typedef struct s_ast_mem t_ast_mem;
 
 typedef enum e_quote
 {
@@ -52,6 +58,7 @@ typedef struct	s_mem
 	t_exp_mem		*expand;
 	t_env_mem		*environs;
 	t_par_mem		*parsing;
+	t_ast_mem		*ast;
 }	t_mem;
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
@@ -66,18 +73,7 @@ void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
 
-
-
-
-
-//------------------------------------------------------------------------------
-
-// typedef struct s_redir_control
-// {
-// 	int	fd_in;
-// 	int	fd_out;
-// 	int	err;
-// }	t_redir_control;
+int		ft_count_items(char **str_arr);
 
 typedef enum e_node_mode
 {
@@ -100,16 +96,16 @@ typedef struct s_ast_node t_ast_node;
 typedef struct s_pipe_data
 {
 	pid_t	child_pids[100];
-	int	status_arr[100];
-	int	pipefd[2];
-	int i;
-	int	num_cmds;
-	int	prev_fd;
-}		t_pipe_data;
+	int		status_arr[100];
+	int		pipefd[2];
+	int		i;
+	int		num_cmds;
+	int		prev_fd;
+}	t_pipe_data;
 
 typedef struct s_pipe_info
 {
-	t_list	*cmds;					// t_list of t_cmd_node
+	t_list	*cmds;
 	int		cmd_count;
 }	t_pipe_info;
 
@@ -125,13 +121,13 @@ typedef struct s_subshell_data
 	t_ast_node	*body;
 }	t_subshell_data;
 
-typedef struct s_block_node // esse é s_cmd_node
+typedef struct s_block_node
 {
 	char	**cmd_arr;
 	t_list	*input_lst;
 	t_list	*output_lst;
 	t_list	*redirs_lst;
-	int		err;				// deixei, mas näo sei para que serve
+	int		err;
 }			t_block_node;
 
 typedef struct s_ast_node
@@ -152,38 +148,11 @@ typedef struct s_output_node
 	bool	create;
 }			t_output_node;
 
-// typedef struct s_cmd_node
-// {
-// 	char	**cmd_arr;
-// 	t_list	*input_lst;
-// 	t_list	*output_lst;
-// 	int		err;
-// }			t_cmd_node;
-
 typedef struct s_input_node
 {
 	char	*name;
 }	t_input_node;
 
-
-
-t_ast_node *parse_expression(t_list **parlst);
-void print_ast(t_ast_node *node, int depth);
-
-// //luis part 
-// int	ft_ast_create(t_mem **mem);
-
-// //command utils
-// t_cmd_builder	*create_cmd_builder(t_list **org_tok, int index_cmd);
-// char			**extract_cmd(t_cmd_builder *cmd_builder, int index_cmd);
-// void			*ft_cmd_org(t_list **org_tok);
-
-// //redirections
-// int		is_redirection(char *value);
-// void	extract_redirections(t_list **org_tok, t_cmd_node *cmd, int index_cmd);
-
-// //ast create
-// t_ast_node	*parse_expression(t_list **tokens);
-// void		print_ast(t_ast_node *node, int depth);
-
+t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
+void		ft_free_ast(t_ast_node *node);
 #endif

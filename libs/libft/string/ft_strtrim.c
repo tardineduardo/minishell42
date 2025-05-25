@@ -82,7 +82,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	char	*start;
 	char	*end;
 
-	if(!s1 || s1[0] == '\0')
+	if (!s1 || s1[0] == '\0')
 		return (ft_calloc(1, sizeof(char)));
 	len = ft_strlen(s1);
 	start = ft_find_start((char *)s1, (char *)set, len);

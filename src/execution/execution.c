@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 15:20:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:05:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 	}
 	cur_cmd->cmd_arr = ft_expand_cmd_arr(cur_cmd->cmd_arr, mem);
 	if (is_built_in(cur_cmd->cmd_arr))
-		res = exec_built_in(ms_env, cur_cmd->cmd_arr);
+		res = exec_built_in(ms_env, cur_cmd->cmd_arr, mem);
 	else
-		exec_external_cmd(ms_env, cur_cmd);
+		exec_external_cmd(ms_env, cur_cmd, mem);
 	return (res);
 }
 
