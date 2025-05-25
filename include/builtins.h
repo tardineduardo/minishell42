@@ -20,4 +20,9 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
 
 char *get_relative_path(char *relative_path, t_mem **mem);
 
+
+
+
+
+
 #endif
