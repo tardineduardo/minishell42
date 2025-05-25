@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 18:15:58 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 18:29:53 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	*ft_get_var_and_value(char *envp, char **var, char **val)
 	return(envp);
 }
 
-t_env_node	*ft_init_env_node(char *var, char *val, bool visible)
+t_env_node	*ft_init_env_node(char *var, char *val, bool isvisible)
 {
 	t_env_node	*new;
 
@@ -68,7 +68,7 @@ t_env_node	*ft_init_env_node(char *var, char *val, bool visible)
 		return (ft_env_syscall_error("Init node malloc error"));
 	new->variable = var;
 	new->value = val;
-	new->visible = visible;
+	new->visible = isvisible;
 	return (new);
 }
 

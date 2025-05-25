@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 18:16:38 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:01:54 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,27 @@ void	ft_update_envnode_value(t_list *var_found, char *val)
 	node = (t_env_node *)var_found->content;
 	if (node->value)
 		free(node->value);
+	if (val[0] != '\0' && node->visible == false)
+		node->visible = true;		
 	node->value = val;
 }
 
 void	*ft_ms_env_add(t_list **envlist, char *var, char *val)
 {
 	t_env_node	*new_env_node;
+	bool		isvisible;
 
 	if (!(*envlist) || !var || !val)
 		return (NULL);
-
-	new_env_node = ft_init_env_node(var, val, true);
+	if (val[0] != '\0')
+		isvisible = true;
+	else
+		isvisible = false;
+	new_env_node = ft_init_env_node(var, val, isvisible);
 	if (!new_env_node)
 		return (NULL);
-
 	if (!ft_add_to_envlist(envlist, new_env_node))
 		return (NULL);
-
 	return (*envlist);
 }
 
