@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing_memory.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 12:43:10 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 15:33:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	ft_del_par_node(void *content)
 			ft_lstclear(&par_node->block_node->redirs_lst, ft_del_redir_node);
 		if (par_node->block_node->cmd_arr)
 			ft_free_str_array(par_node->block_node->cmd_arr);
+		//added this part, because it was missing (i discussed this point with edu)
+		free(par_node->block_node);
 	}
 	ft_free_and_null((void *)&par_node);
 }
