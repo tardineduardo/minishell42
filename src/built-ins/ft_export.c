@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 15:06:46 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:39:09 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ int	ft_export(t_list **envlist, char *variable_value)
 	t_list		*trav;
 	t_env_node	*current;
 
+	//Ok, varificando NULL
 	if (!envlist)
 		return (1);
+
+	//WHAT
 	if (!variable_value)
 	{
 		trav = *envlist;
@@ -60,11 +63,15 @@ int	ft_export(t_list **envlist, char *variable_value)
 		}
 		return (0);
 	}
+
+	//Nao entendi essa checagem
 	if (ft_strcmp(variable_value, "=") == 0)
 	{
 		ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable_value);
 		return (1);
 	}
+
+	//Aqui vamos refazer, não usaremos mais o split
 	result = ft_split_char(variable_value, '=');
 	if (!result || !result[0])
 		return (1);
