@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 13:20:30 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 18:15:58 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 	{
 		if (!ft_get_var_and_value(*envp, &var, &val))
 			return(NULL);
-		(*env)->new_node = ft_init_env_node(&var, &val, true);
+		(*env)->new_node = ft_init_env_node(var, val, true);
 		if (!(*env)->new_node)
 			return (NULL);
 		if (!ft_add_to_envlist(&(*env)->envlist, (*env)->new_node))
@@ -49,22 +49,25 @@ void	*ft_get_var_and_value(char *envp, char **var, char **val)
 	char *equal_sign;
 	
 	equal_sign = ft_strchr(envp, '=');
-	*val = ft_strdup(equal_sign + 1);
+	if (equal_sign)
+		*val = ft_strdup(equal_sign + 1);
+	else
+		*val = ft_strdup("");
 	*var = ft_substr(envp, 0, ft_env_varlen(envp));
 	if (!*val || !*var)
 		return (NULL);
 	return(envp);
 }
 
-t_env_node	*ft_init_env_node(char **var, char **val, bool visible)
+t_env_node	*ft_init_env_node(char *var, char *val, bool visible)
 {
 	t_env_node	*new;
 
 	new = malloc(sizeof(t_env_node));
 	if (!new)
 		return (ft_env_syscall_error("Init node malloc error"));
-	new->variable = *var;
-	new->value = *val;
+	new->variable = var;
+	new->value = val;
 	new->visible = visible;
 	return (new);
 }
@@ -84,8 +87,8 @@ int ft_env_varlen(char *s)
 {
 	int a;
 
-	a = 0;  // Initialize to 0
-	while (s && s[a] != '=')
+	a = 0;
+	while (s[a] != '\0' && s[a] != '=')
 		a++;
 	return (a);
 }

@@ -6,17 +6,24 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 15:47:25 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 18:16:38 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
 
+
 t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
 t_list		*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 void		*ft_ms_env_add(t_list **envlist, char *var, char *val);
 void		ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
+t_list	*ft_find_var(t_list *envlist, char *var);
+void	ft_export_list(t_list **envlist);
+bool	ft_is_valid_varname(char *varname, char *variable_value);
+void	ft_update_envnode_value(t_list *var_found, char *val);
+
+
 
 int	ft_export(t_list **envlist, char *variable_value)
 {
@@ -30,10 +37,16 @@ int	ft_export(t_list **envlist, char *variable_value)
 	if (!variable_value)
 		ft_export_list(envlist);
 
+	if (variable_value[0] == '=')
+	{
+		ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
+			variable_value);
+		return (EXIT_FAILURE);
+	}
 	if(!ft_get_var_and_value(variable_value, &var, &val))
 		return (EXIT_FAILURE);
 
-	if (!ft_validate_var_name)
+	if (!ft_is_valid_varname(var, variable_value))
 		return (EXIT_FAILURE);
 
 	var_found = ft_find_var(*envlist, var);
@@ -80,40 +93,15 @@ void	*ft_ms_env_add(t_list **envlist, char *var, char *val)
 	if (!(*envlist) || !var || !val)
 		return (NULL);
 
-	new_env_node = ft_init_env_node_expbuiltin(var, val, true);
+	new_env_node = ft_init_env_node(var, val, true);
 	if (!new_env_node)
 		return (NULL);
 
-	if (!ft_add_to_envlist_expbuiltin(envlist, new_env_node))
+	if (!ft_add_to_envlist(envlist, new_env_node))
 		return (NULL);
 
 	return (*envlist);
 }
-
-
-t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible)
-{
-	t_env_node	*new;
-
-	new = malloc(sizeof(t_env_node));
-	new->variable = ft_strdup(variable);
-	new->value = ft_strdup(value);
-	new->visible = visible;
-	return (new);
-}
-
-t_list	*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node)
-{
-	t_list	*new_envlist_node;
-
-	new_envlist_node = ft_lstnew(new_node);
-	if (!(new_envlist_node))
-		return (NULL);
-	ft_lstadd_back(envlist, new_envlist_node);
-	return (*envlist);
-}
-
-
 
 void	ft_export_list(t_list **envlist)
 {
@@ -129,32 +117,31 @@ void	ft_export_list(t_list **envlist)
 				envnode->value);
 		trav = trav->next;
 	}
-	return (EXIT_SUCCESS);
 }
 
 
-int	ft_validate_var_name(char *varname, char *variable_value)
+bool	ft_is_valid_varname(char *var, char *variable_value)
 {
 	int	a;
 	int	len;
 
-	if (!ft_isalpha(varname[0]) && !varname[0] != '_')
+	if (!ft_isalpha(var[0]) && var[0] != '_')
 	{
 		ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
 			variable_value);
-		return (EXIT_FAILURE);
+		return (false);
 	}
 	a = 1;
-	len = ft_strlen(varname);
+	len = ft_strlen(var);
 	while (a < len)
 	{
-		if (!ft_isalnum(varname[a]) && varname[a] != '_')
+		if (!ft_isalnum(var[a]) && var[a] != '_')
 		{
 			ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
 				variable_value);
-			return (EXIT_FAILURE);
+			return (false);
 		}
 		a++;
 	}
-	return (EXIT_SUCCESS);
+	return (true);
 }
