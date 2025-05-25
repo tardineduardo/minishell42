@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_code.c                                        :+:      :+:    :+:   */
+/*   exec_exit_code.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:03:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 17:22:09 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:19:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,6 @@ void	ft_ms_env_add_exit_code(t_list **envlist, char *variable, int value)
 
 	val = ft_itoa(value);
 	new_env_node = ft_init_env_node(variable, val, false);
+	free(val);
 	ft_add_to_envlist(envlist, new_env_node);
 }
