@@ -45,6 +45,8 @@ void		ft_env_block_unset(t_list **envlist);
 void		ft_env_readonly(t_list **envlist);
 void		*ft_env_syscall_error(char *message);
 void		*ft_env_error(char *message, t_env_mem **env);
+void		*ft_get_var_and_value(char *envp, t_env_mem **env);
+int			ft_env_varlen(char *s);
 t_env_node	*ft_init_env_node(char *variable, char *value, bool visible);
 t_list		*ft_add_to_envlist(t_list **envlist, t_env_node *new_node);
 void		*ft_init_env_memory(t_mem **mem);
