@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/20 13:41:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 18:46:17 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,39 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	struct stat	sb;
 
 	cmd_arr = cmd->cmd_arr;
-	cmd_arr = update_cmd_arr(ms_env, cmd_arr);
-	ms_env_arr = ft_ms_env_arr(ms_env, mem);
-	if (access(cmd_arr[0], F_OK) == 0)
+	if (ft_strchr(cmd_arr[0], '/'))
 	{
-		if (access(cmd_arr[0], R_OK) != 0)
+		if (access(cmd_arr[0], F_OK) != 0)
+		{
+			ft_dprintf(2, "%s: No such file or directory\n", cmd_arr[0]);
+			exit(127);
+		}
+		if (access(cmd_arr[0], X_OK) != 0)
 		{
 			ft_dprintf(2, "%s: Permission denied\n", cmd_arr[0]);
 			exit(126);
 		}
+		if (stat(cmd_arr[0], &sb) != 0)
+		{
+			perror(cmd_arr[0]);
+			exit(127);
+		}
+		if (S_ISDIR(sb.st_mode))
+		{
+			ft_dprintf(2, "%s: Is a directory\n", cmd_arr[0]);
+			exit(126);
+		}
 	}
-	stat(cmd_arr[0], &sb);
-	if (S_ISDIR(sb.st_mode))
+	else
 	{
-		ft_dprintf(2, "%s: Is a directory\n", cmd_arr[0]);
-		exit(126);
+		cmd_arr = update_cmd_arr(ms_env, cmd_arr);
+		if (!cmd_arr)
+		{
+			ft_dprintf(2, "%s: command not found\n", cmd_arr);
+			exit(127);
+		}
 	}
+	ms_env_arr = ft_ms_env_arr(ms_env, mem);
 	if (execve(cmd_arr[0], cmd_arr, ms_env_arr) == -1)
 	{
 		ft_dprintf(2, "%s: command not found\n", cmd_arr[0]);
