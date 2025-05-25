@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:29:11 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 14:23:31 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:26:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	handle_signal_prompt(int signo)
     return ;
 }
 
-void	handle_signal_cmd(int signo)
-{
-	(void)signo;
-	signal(SIGINT, SIG_DFL);
-	//clean everything that needs to be cleaned
-	exit(130);
-}
+// void	handle_signal_cmd(int signo)
+// {
+// 	(void)signo;
+// 	signal(SIGINT, SIG_DFL);
+// 	//clean everything that needs to be cleaned
+// 	exit(130);
+// }
 
 void	signal_before_wait(void)
 {

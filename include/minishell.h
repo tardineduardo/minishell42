@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/25 15:15:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:26:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ char	*ft_capture_in_interactive_mode(char *prompt);
 
 // handle signals
 void	handle_signal_prompt(int signo);
-void	handle_signal_cmd(int signo);
 void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
