@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 19:01:54 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:23:47 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,13 @@ void	ft_update_envnode_value(t_list *var_found, char *val)
 	t_env_node *node;
 
 	node = (t_env_node *)var_found->content;
-	if (node->value)
+	if (node->value && val[0] != '\0')
+	{
 		free(node->value);
-	if (val[0] != '\0' && node->visible == false)
-		node->visible = true;		
-	node->value = val;
+		node->value = val;
+		if (node->visible == false)
+			node->visible = true;
+	}
 }
 
 void	*ft_ms_env_add(t_list **envlist, char *var, char *val)
