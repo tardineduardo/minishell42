@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 13:03:31 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/25 18:29:53 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,52 +21,54 @@
 
 void	*ft_init_environs(t_env_mem **env, char **envp)
 {
-	int		i;
-	char	*new_node_value;
+	char *var;
+	char *val;
 
+	var = NULL;
+	val = NULL;
 	if (!envp)
 		return (NULL);
 	if (!(*envp))
 		return (envp);
 	while (*envp != NULL)
 	{
-		(*env)->result = ft_split_char(*envp, '=');
-		if (!(*env)->result)
-			return (ft_env_error("Envp split error", env));
-		i = ft_count_items((*env)->result);
-		if (i <= 2)
-		{
-			if ((*env)->result[1])
-				(*env)->new_node = ft_init_env_node((*env)->result[0], (*env)->result[1], true);
-			else
-				(*env)->new_node = ft_init_env_node((*env)->result[0], "", true);
-		}
-		else
-		{
-			new_node_value = ft_concatenate((*env)->result[1], "=", (*env)->result[2]);
-			(*env)->new_node = ft_init_env_node((*env)->result[0], new_node_value, true);
-			free(new_node_value);
-		}
+		if (!ft_get_var_and_value(*envp, &var, &val))
+			return(NULL);
+		(*env)->new_node = ft_init_env_node(var, val, true);
 		if (!(*env)->new_node)
-			return (ft_env_error("Init node error", env));
+			return (NULL);
 		if (!ft_add_to_envlist(&(*env)->envlist, (*env)->new_node))
-			return (ft_env_error("Add to envlist error", env));
-		ft_free_and_null_str_array(&(*env)->result);
+			return (NULL);
 		envp++;
 	}
 	return ((*env)->envlist);
 }
 
-t_env_node	*ft_init_env_node(char *variable, char *value, bool visible)
+void	*ft_get_var_and_value(char *envp, char **var, char **val)
+{
+	char *equal_sign;
+	
+	equal_sign = ft_strchr(envp, '=');
+	if (equal_sign)
+		*val = ft_strdup(equal_sign + 1);
+	else
+		*val = ft_strdup("");
+	*var = ft_substr(envp, 0, ft_env_varlen(envp));
+	if (!*val || !*var)
+		return (NULL);
+	return(envp);
+}
+
+t_env_node	*ft_init_env_node(char *var, char *val, bool isvisible)
 {
 	t_env_node	*new;
 
 	new = malloc(sizeof(t_env_node));
 	if (!new)
 		return (ft_env_syscall_error("Init node malloc error"));
-	new->variable = ft_strdup(variable);
-	new->value = ft_strdup(value);
-	new->visible = visible;
+	new->variable = var;
+	new->value = val;
+	new->visible = isvisible;
 	return (new);
 }
 
@@ -79,4 +81,14 @@ t_list	*ft_add_to_envlist(t_list **envlist, t_env_node *new_node)
 		return (NULL);
 	ft_lstadd_back(envlist, new_envlist_node);
 	return (*envlist);
+}
+
+int ft_env_varlen(char *s)
+{
+	int a;
+
+	a = 0;
+	while (s[a] != '\0' && s[a] != '=')
+		a++;
+	return (a);
 }
