@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environs_memory.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/20 14:08:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 17:39:20 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	ft_del_env_node(void *content)
 	if (!content)
 		return ;
 	node = (t_env_node *)content;
-	ft_free_and_null((void *)&node->variable);
-	ft_free_and_null((void *)&node->value);
+	// ft_free_and_null((void *)&node->variable);
+	// ft_free_and_null((void *)&node->value);
 	ft_free_and_null((void *)&node);
 }
 
