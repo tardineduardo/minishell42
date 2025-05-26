@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/25 16:03:15 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:30:49 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
-	ft_ms_env_add_exit_code(&(*mem).environs->envlist, "?", 0);
+	ft_ms_env_add_exit_code(&(*mem).environs->envlist, ft_strdup("?"), 0);
 	while (1)
 	{
 		signal(SIGINT, handle_signal_prompt);
