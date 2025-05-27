@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/26 17:39:20 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:42:36 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	ft_del_env_node(void *content)
 	if (!content)
 		return ;
 	node = (t_env_node *)content;
-	// ft_free_and_null((void *)&node->variable);
-	// ft_free_and_null((void *)&node->value);
+	ft_free_and_null((void *)&node->variable);
+	ft_free_and_null((void *)&node->value);
 	ft_free_and_null((void *)&node);
 }
 
@@ -38,7 +38,6 @@ void	*ft_init_env_memory(t_mem **mem)
 		return (NULL);
 	(*mem)->environs->envlist = NULL;
 	(*mem)->environs->new_node = NULL;
-	(*mem)->environs->result = NULL;
 	(*mem)->environs->ms_env_cpy = NULL;
 	return (mem);
 }
@@ -46,7 +45,6 @@ void	*ft_init_env_memory(t_mem **mem)
 void	ft_clear_env_mem(t_env_mem **env)
 {
 	ft_lstclear(&(*env)->envlist, ft_del_env_node);
-	ft_free_and_null_str_array(&(*env)->result);
 	ft_free_and_null_str_array(&(*env)->ms_env_cpy);
 	free(*env);
 	return ;
