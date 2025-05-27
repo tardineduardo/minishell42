@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/25 15:15:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:34:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct	s_mem
 	t_par_mem		*parsing;
 	t_ast_mem		*ast;
 }	t_mem;
+
+extern volatile int	g_signal;
 
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
 void	ft_clean_mem_loop(t_mem **mem);

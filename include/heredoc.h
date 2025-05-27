@@ -26,5 +26,6 @@ void	*ft_hd_write_to_file(int hd_loop_count, t_mem **mem);
 char	*ft_hd_validate_path(char **filepath, int *hd_count_int);
 int		ft_hd_init_file(char **filepath);
 char	*ft_capture_in_interactive_mode(char *prompt);
+void	heredoc_signal(void);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_memory.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/26 19:28:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:35:24 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ void	ft_del_par_node(void *content)
 	ft_free_and_null((void *)&par_node);
 }
 
-void	ft_del_redir_node(void *content)
-{
-	t_redirs_node	*redir_node;
+// void	ft_del_redir_node(void *content)
+// {
+// 	t_redirs_node	*redir_node;
 
-	if (!content)
-		return ;
-	redir_node = (t_redirs_node *)content;
-	ft_free_and_null((void *)&redir_node->name);
-	ft_free_and_null((void *)&redir_node);
-}
+// 	if (!content)
+// 		return ;
+// 	redir_node = (t_redirs_node *)content;
+// 	ft_free_and_null((void *)&redir_node->name);
+// 	ft_free_and_null((void *)&redir_node);
+// }

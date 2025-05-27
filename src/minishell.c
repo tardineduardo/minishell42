@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/26 19:30:49 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:04:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 #include "../include/readline.h"
 #include "../include/execution.h"
 
+volatile sig_atomic_t	g_signal;
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mem		*mem;
-	//t_ast_node	*root;
 	int			res;
 
 	(void)argc;

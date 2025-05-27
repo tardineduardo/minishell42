@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 14:05:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:18:17 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 		if (WIFSIGNALED(status[index]))
 		{
 			sig = WTERMSIG(status[index]);
+			if (sig == SIGPIPE)
+				ft_dprintf(STDERR_FILENO, " Broken pipe\n");
 			if (sig == SIGQUIT)
 				return (ft_printf("Quit (core dumped)\n"));
 			if (sig == SIGINT)
