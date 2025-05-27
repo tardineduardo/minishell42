@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_memory.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 15:33:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:28:57 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,26 @@ void	ft_clear_par_mem(t_par_mem **par)
 
 void	ft_del_par_node(void *content)
 {
+	// @luiscarvalhofrade toda a parte de liberar o block node e os redirs 
+	//	deve ser feita na hora de liberar AST node.
 	t_par_node	*par_node;
 
 	if (!content)
 		return ;
 	par_node = (t_par_node *)content;
-	if (par_node->block_node)
-	{
-		if (par_node->block_node->output_lst)
-			ft_lstclear(&par_node->block_node->output_lst, ft_del_redir_node);
-		if (par_node->block_node->input_lst)
-			ft_lstclear(&par_node->block_node->input_lst, ft_del_redir_node);
-		if (par_node->block_node->redirs_lst)
-			ft_lstclear(&par_node->block_node->redirs_lst, ft_del_redir_node);
-		if (par_node->block_node->cmd_arr)
-			ft_free_str_array(par_node->block_node->cmd_arr);
-		//added this part, because it was missing (i discussed this point with edu)
-		free(par_node->block_node);
-	}
+	// if (par_node->block_node)
+	// {
+	// 	if (par_node->block_node->output_lst)
+	// 		ft_lstclear(&par_node->block_node->output_lst, ft_del_redir_node);
+	// 	if (par_node->block_node->input_lst)
+	// 		ft_lstclear(&par_node->block_node->input_lst, ft_del_redir_node);
+	// 	if (par_node->block_node->redirs_lst)
+	// 		ft_lstclear(&par_node->block_node->redirs_lst, ft_del_redir_node);
+	// 	if (par_node->block_node->cmd_arr)
+	// 		ft_free_str_array(par_node->block_node->cmd_arr);
+	// 	//added this part, because it was missing (i discussed this point with edu)
+	// 	free(par_node->block_node);
+	// }
 	ft_free_and_null((void *)&par_node);
 }
 

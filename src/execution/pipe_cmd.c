@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 14:23:33 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:45:15 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 		signal_child_process();
 		pipe_fd_control(p, cmd, p->pipefd, mem);
 		res = execute_command(ms_env, cmd, mem);
+		if (is_built_in(cmd->cmd_arr))
+			ft_clear_mem_and_exit(mem);
 		exit(res);
 	}
 }
