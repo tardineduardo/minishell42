@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/26 22:59:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:31:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,11 +226,9 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem)
 {
 	int res;
-	int saved_stdout;
 	struct termios old_termios;
 	bool has_termios;
 
-	saved_stdout = -1;
 	has_termios = save_termios(&old_termios);
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
 	if (cur_cmd->input_lst != NULL)
