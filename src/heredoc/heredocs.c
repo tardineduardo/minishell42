@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 19:15:02 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:47:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	run_heredoc_child(int write_fd, char *filepath, char *delimiter)
 	char	*prompt;
 	int		fd;
 
+	heredoc_signal();
 	close(write_fd - 1);
 	fd = open(filepath, O_WRONLY | O_APPEND);
 	if (fd < 0)

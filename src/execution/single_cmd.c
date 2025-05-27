@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:05:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 18:03:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:49:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,23 @@ int	single_built_in(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		result;
 	int		res;
+	int		saved_stdout;
 
 	result = 0;
+	saved_stdout = -1;
+	if (cmd->output_lst != NULL)
+		saved_stdout = dup(STDOUT_FILENO);
 	if (cmd->redirs_lst != NULL)
 		result = pipe_fd_control_single_cmd(cmd, mem);
 	if (result == 0)
 		res = execute_command(ms_env, cmd, mem);
 	else
 		res = 1;
+	if (saved_stdout != -1)
+	{
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdout);
+	}
 	return (res);
 }
 
@@ -67,6 +76,23 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		res;
 
+	if (cmd->cmd_arr[0] == NULL)
+	{
+		pid_t pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			exit(1);
+		}
+		if (pid == 0) {
+			int res = pipe_fd_control_only_redir(cmd, mem);
+			ft_clear_mem_and_exit(mem);
+			exit(res);
+		}
+		int status;
+		waitpid(pid, &status, 0);
+		return print_child_statuses(NULL, &status);
+	}
 	if (!is_built_in(cmd->cmd_arr))
 		res = single_ext_cmd(ms_env, cmd, mem);
 	else
