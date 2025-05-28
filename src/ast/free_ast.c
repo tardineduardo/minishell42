@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/28 14:16:34 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:15:43 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../../include/execution.h"
 #include "../../include/parsing.h"
 
-void	ft_del_redir_node(void *content)
+void	ft_del_redirs_nodes(void *content)
 {
 	t_redirs_node	*redir_node;
 
@@ -24,9 +24,14 @@ void	ft_del_redir_node(void *content)
 		return ;
 	redir_node = (t_redirs_node *)content;
 	if (redir_node->type == HDC_R)
-		unlink(redir_node->name);
-	ft_free_and_null((void *)&redir_node->name);
-	//ft_free_and_null((void *)&redir_node);
+	{
+		if (redir_node->name != NULL)
+			unlink(redir_node->name);
+	}
+	if (redir_node->name)
+		ft_free_and_null((void *)&redir_node->name);
+	if (redir_node)
+		ft_free_and_null((void *)&redir_node);
 }
 
 void	free_block_node(void *ptr)
@@ -36,12 +41,12 @@ void	free_block_node(void *ptr)
 	blk = (t_block_node *)ptr;
 	if (!blk)
 		return ;
-	if (blk->output_lst)
-		ft_lstclear(&blk->output_lst, ft_del_redir_node);
-	if (blk->input_lst)
-		ft_lstclear(&blk->input_lst, ft_del_redir_node);
 	if (blk->redirs_lst)
-		ft_lstclear(&blk->redirs_lst, ft_del_redir_node);
+		ft_lstclear(&blk->redirs_lst, ft_del_redirs_nodes);
+	if (blk->output_lst)
+		ft_lstclear(&blk->output_lst, NULL);
+	if (blk->input_lst)
+		ft_lstclear(&blk->input_lst, NULL);
 	if (blk->cmd_arr)
 		ft_free_and_null_str_array(&blk->cmd_arr);
 	free(blk);
