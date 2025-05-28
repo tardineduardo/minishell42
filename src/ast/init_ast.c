@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:46:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/22 12:55:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 23:26:45 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	*ft_init_ast_memory(t_mem **mem)
 }
 
 // Parse an expression
-t_ast_node	*parse_expression(t_list **parlst, t_mem **mem)
+t_ast_node	*parse_expression(t_list *parlst, t_mem **mem)
 {
 	t_ast_node	*root;
 

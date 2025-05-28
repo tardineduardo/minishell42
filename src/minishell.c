@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/27 21:38:08 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 23:25:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		parse_expression(&mem->parsing->parlst, &mem);
+		parse_expression(mem->parsing->parlst, &mem);
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
 		if(res != 0)
 		{
