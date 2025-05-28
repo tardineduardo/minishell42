@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/28 12:16:20 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 14:16:34 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,7 @@ void	ft_free_ast(t_ast_node **node)
 		pipe = (*node)->pipeline;
 		if (pipe)
 		{
-			ft_lstiter(pipe->cmds, (void (*)(void *))ft_free_ast);
-			ft_lstclear(&pipe->cmds, NULL);
+			ft_lstclear(&pipe->cmds, free_block_node);
 			free(pipe);
 		}
 	}
