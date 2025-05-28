@@ -9,6 +9,7 @@
 //redir control
 int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2], t_mem **mem);
 int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem);
+int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem);
 
 //exec external cmd
 void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem);

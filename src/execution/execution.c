@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 14:05:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:13:46 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 {
 	int		res;
+	char	**old_cmd_arr;
 
 	res = -1;
 	if (!cur_cmd || !ms_env)
@@ -30,11 +31,14 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 		ft_dprintf(2, "cmd or ms_env: cmd executor: NULL pointer\n");
 		exit(EXIT_FAILURE);
 	}
-	cur_cmd->cmd_arr = ft_expand_cmd_arr(cur_cmd->cmd_arr, mem);
+	old_cmd_arr = cur_cmd->cmd_arr;
+	cur_cmd->cmd_arr = ft_expand_cmd_arr(old_cmd_arr, mem);
+	free(old_cmd_arr);
 	if (is_built_in(cur_cmd->cmd_arr))
 		res = exec_built_in(ms_env, cur_cmd->cmd_arr, mem);
 	else
 		exec_external_cmd(ms_env, cur_cmd, mem);
+	//ft_free_and_null_str_array(&cur_cmd->cmd_arr);
 	return (res);
 }
 
@@ -55,6 +59,8 @@ int	print_child_statuses(t_pipe_data *p, int *status)
 		if (WIFSIGNALED(status[index]))
 		{
 			sig = WTERMSIG(status[index]);
+			if (sig == SIGPIPE)
+				ft_dprintf(STDERR_FILENO, " Broken pipe\n");
 			if (sig == SIGQUIT)
 				return (ft_printf("Quit (core dumped)\n"));
 			if (sig == SIGINT)

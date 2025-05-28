@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:45:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/21 12:28:12 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:39:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ char	**ft_expand_cmd_arr(char **cmd_arr, t_mem **mem)
 	char	**final_cmd_arr;
 	char	*char_expanded;
 	int		size_arr;
-	int		i;
-	int		j;
+	int		i, j;
 
 	i = 0;
+	j = 0;
 	size_arr = ft_count_items(cmd_arr);
 	final_cmd_arr = ft_calloc(sizeof(char *), (size_arr + 1));
 	if (!final_cmd_arr)
@@ -36,13 +36,12 @@ char	**ft_expand_cmd_arr(char **cmd_arr, t_mem **mem)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	j = 0;
 	while (cmd_arr[i] != NULL)
 	{
 		char_expanded = ft_expand(&cmd_arr[i], TOKEN, mem);
 		if (ft_strcmp(char_expanded, "") != 0)
 		{
-			final_cmd_arr[j] = ft_strdup(char_expanded);			
+			final_cmd_arr[j] = ft_strdup(char_expanded);
 			if (!final_cmd_arr[j])
 			{
 				perror("ft_strdup");

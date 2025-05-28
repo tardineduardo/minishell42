@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 18:01:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:38:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	redir_files_validation(t_list **redir_lst, t_mem **mem)
 		{
 			if (access(cur_redir_expanded, F_OK) != 0)
 			{
-				ft_dprintf(2, "%s: No such file or directory", cur_redir_expanded);
+				ft_dprintf(2, "%s: No such file or directory\n", cur_redir_expanded);
 				exit(1);
 			}
 			fd = open(cur_redir_expanded, O_RDONLY);
@@ -216,6 +216,23 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 		if (cur_cmd->input_lst != NULL)
 			fd_input_redir(&cur_cmd->input_lst, mem);
 	}
+	if (cur_cmd->output_lst != NULL)
+		fd_output_redir(&cur_cmd->output_lst, mem);
+	if (has_termios)
+		restore_termios(&old_termios); 
+	return (res);
+}
+
+int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem)
+{
+	int res;
+	struct termios old_termios;
+	bool has_termios;
+
+	has_termios = save_termios(&old_termios);
+	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
+	if (cur_cmd->input_lst != NULL)
+		fd_input_redir(&cur_cmd->input_lst, mem);
 	if (cur_cmd->output_lst != NULL)
 		fd_output_redir(&cur_cmd->output_lst, mem);
 	if (has_termios)
