@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/27 23:25:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 00:25:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ volatile sig_atomic_t	g_signal;
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mem		*mem;
+	t_list		*head_parlst;
 	int			res;
 
 	(void)argc;
@@ -47,7 +48,8 @@ int	main(int argc, char *argv[], char *envp[])
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		parse_expression(mem->parsing->parlst, &mem);
+		head_parlst = mem->parsing->parlst;
+		parse_expression(&head_parlst, &mem);
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
 		if(res != 0)
 		{
