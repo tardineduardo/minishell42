@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/27 21:55:39 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/28 12:16:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,54 +46,6 @@ void	free_block_node(void *ptr)
 		ft_free_and_null_str_array(&blk->cmd_arr);
 	free(blk);
 }
-
-//Free AST memory
-// void	ft_free_ast(t_ast_node *node)
-// {
-// 	t_block_node	*blk;
-// 	t_pipe_info		*pipe;
-// 	t_logical_data	*log;
-// 	t_subshell_data	*sub;
-
-// 	if (!node)
-// 		return ;
-// 	if (node->type == NODE_COMMAND)
-// 	{
-// 		blk = node->block_node;
-// 		if (blk)
-// 			free_block_node(blk);
-// 	}
-// 	else if (node->type == NODE_PIPELINE)
-// 	{
-// 		pipe = node->pipeline;
-// 		if (pipe)
-// 		{
-// 			ft_lstiter(pipe->cmds, (void (*)(void *))ft_free_ast);
-// 			ft_lstclear(&pipe->cmds, NULL);
-// 			free(pipe);
-// 		}
-// 	}
-// 	else if (node->type == NODE_LOGICAL)
-// 	{
-// 		log = node->logical;
-// 		if (log)
-// 		{
-// 			ft_free_ast(log->left);
-// 			ft_free_ast(log->right);
-// 			free(log);
-// 		}
-// 	}
-// 	else if (node->type == NODE_SUBSHELL)
-// 	{
-// 		sub = node->subshell;
-// 		if (sub)
-// 		{
-// 			ft_free_ast(sub->body);
-// 			free(sub);
-// 		}
-// 	}
-// 	free(node);
-// }
 
 void	ft_free_ast(t_ast_node **node)
 {
