@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:11:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/24 17:10:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 21:52:15 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	ft_exit(char **cmd_arr, t_mem **mem)
 		ft_clear_mem_and_exit(mem);
 		exit(exit_code);
 	}
+	//ft_clean_mem_loop(mem);
 	ft_clear_mem_and_exit(mem);
 	exit(0);
 }
