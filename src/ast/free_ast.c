@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/27 21:40:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 21:55:39 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void	ft_free_ast(t_ast_node **node)
 			free(sub);
 		}
 	}
-	ft_free_and_null((void*)&node);
+	ft_free_and_null((void**)node);
 }
 
 void	ft_clear_ast_mem(t_ast_mem **ast)
