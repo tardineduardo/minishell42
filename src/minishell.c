@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/26 23:04:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 21:38:08 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void ft_clean_mem_loop(t_mem **mem)
 
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
 	ft_lstclear(&par->parlst, ft_del_par_node);
-	ft_free_ast(ast->root);
+	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);
