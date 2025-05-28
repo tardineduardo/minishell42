@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/27 23:27:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 00:30:35 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "../../include/parsing.h"
 
 // Parse logical OR (||)
-t_ast_node	*parse_logical_or(t_list *parlst, t_mem **mem)
+t_ast_node	*parse_logical_or(t_list **parlst, t_mem **mem)
 {
 	t_ast_node	*node;
 	t_ast_node	*right;
@@ -25,9 +25,9 @@ t_ast_node	*parse_logical_or(t_list *parlst, t_mem **mem)
 	node = parse_logical_and(parlst, mem);
 	if (!node)
 		return (NULL);
-	while (parlst && ((t_par_node *)(parlst)->content)->oper == 1)
+	while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 1)
 	{
-		parlst = (parlst)->next;
+		*parlst = (*parlst)->next;
 		right = parse_logical_and(parlst, mem);
 		if (!right)
 			return (NULL);
@@ -37,7 +37,7 @@ t_ast_node	*parse_logical_or(t_list *parlst, t_mem **mem)
 }
 
 // Parse logical AND (&&)
-t_ast_node	*parse_logical_and(t_list *parlst, t_mem **mem)
+t_ast_node	*parse_logical_and(t_list **parlst, t_mem **mem)
 {
 	t_ast_node	*node;
 	t_ast_node	*right;
@@ -45,9 +45,9 @@ t_ast_node	*parse_logical_and(t_list *parlst, t_mem **mem)
 	node = parse_pipeline(parlst, mem);
 	if (!node)
 		return (NULL);
-	while (parlst && ((t_par_node *)(parlst)->content)->oper == 0)
+	while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 0)
 	{
-		parlst = (parlst)->next;
+		*parlst = (*parlst)->next;
 		right = parse_pipeline(parlst, mem);
 		if (!right)
 			return (NULL);
@@ -57,7 +57,7 @@ t_ast_node	*parse_logical_and(t_list *parlst, t_mem **mem)
 }
 
 // Parse pipeline (|)
-t_ast_node	*parse_pipeline(t_list *parlst, t_mem **mem)
+t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem)
 {
 	t_ast_node	*node;
 	t_list		*cmds_lst;
@@ -69,15 +69,15 @@ t_ast_node	*parse_pipeline(t_list *parlst, t_mem **mem)
 	node = parse_command_or_group(parlst, mem);
 	if (!node)
 		return (NULL);
-	if (!parlst || ((t_par_node *)(parlst)->content)->oper != 4)
+	if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 4)
 		return (node);
 	cmds_lst = ft_lstnew(node->block_node);
 	if (!cmds_lst)
 		return (NULL);
 	free(node);
-	while (parlst && ((t_par_node *)(parlst)->content)->oper == 4)
+	while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 4)
 	{
-		parlst = (parlst)->next;
+		*parlst = (*parlst)->next;
 		right = parse_command_or_group(parlst, mem);
 		if (!right || right->type != NODE_COMMAND)
 		{
@@ -113,45 +113,45 @@ t_ast_node	*parse_pipeline(t_list *parlst, t_mem **mem)
 }
 
 // Parse either a command or a group
-t_ast_node	*parse_command_or_group(t_list *parlst, t_mem **mem)
+t_ast_node	*parse_command_or_group(t_list **parlst, t_mem **mem)
 {
 	t_list		*cur;
 	t_ast_node	*node;
 
-	if (!parlst)
+	if (!parlst || !*parlst)
 		return (NULL);
-	cur = parlst;
+	cur = *parlst;
 	if (((t_par_node *)cur->content)->oper == 2)
 	{
-		parlst = (parlst)->next;
+		*parlst = (*parlst)->next;
 		node = parse_expression(parlst, mem);
-		if (!parlst || ((t_par_node *)(parlst)->content)->oper != 3)
+		if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 3)
 		{
 			ft_dprintf(2, " Error: Unclosed parenthesis\n");
 			exit(1);
 		}
-		parlst = (parlst)->next;
+		*parlst = (*parlst)->next;
 		return (create_group_node(node));
 	}
 	return (parse_command(parlst, mem));
 }
 
 // Parse a simple command
-t_ast_node	*parse_command(t_list *parlst, t_mem **mem)
+t_ast_node	*parse_command(t_list **parlst, t_mem **mem)
 {
 	t_list		*cur;
 	t_ast_node	*node;
 
 	(void)mem;
-	if (!parlst)
+	if (!parlst || !*parlst)
 		return (NULL);
-	cur = parlst;
+	cur = *parlst;
 	if (((t_par_node *)cur->content)->block_index == -1)
 		return (NULL);
 	node = create_command_node(((t_par_node *)cur->content)->block_node);
 	if (!node)
 		return (NULL);
-	parlst = (parlst)->next;
+	*parlst = (*parlst)->next;
 	return (node);
 }
 

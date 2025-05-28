@@ -45,11 +45,11 @@ t_ast_node	*create_logical_node(logical_op op, t_ast_node *left, t_ast_node *rig
 t_ast_node	*create_group_node(t_ast_node *body);
 
 //ast parsing
-t_ast_node	*parse_expression(t_list *parlst, t_mem **mem);
-t_ast_node	*parse_logical_or(t_list *parlst, t_mem **mem);
-t_ast_node	*parse_logical_and(t_list *parlst, t_mem **mem);
-t_ast_node	*parse_pipeline(t_list *parlst, t_mem **mem);
-t_ast_node	*parse_command_or_group(t_list *parlst, t_mem **mem);
-t_ast_node	*parse_command(t_list *parlst, t_mem **mem);
+t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
+t_ast_node	*parse_logical_or(t_list **parlst, t_mem **mem);
+t_ast_node	*parse_logical_and(t_list **parlst, t_mem **mem);
+t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem);
+t_ast_node	*parse_command_or_group(t_list **parlst, t_mem **mem);
+t_ast_node	*parse_command(t_list **parlst, t_mem **mem);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/27 23:24:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/28 00:31:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,6 @@ typedef struct s_input_node
 	char	*name;
 }	t_input_node;
 
-t_ast_node	*parse_expression(t_list *parlst, t_mem **mem);
+t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
 void		ft_free_ast(t_ast_node **node);
 #endif
