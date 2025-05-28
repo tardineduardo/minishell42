@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/27 16:40:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/27 20:54:08 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	ft_del_redir_node(void *content)
 	if (redir_node->type == HDC_R)
 		unlink(redir_node->name);
 	ft_free_and_null((void *)&redir_node->name);
+	//ft_free_and_null((void *)&redir_node);
 }
 
 void	free_block_node(void *ptr)
@@ -143,6 +144,8 @@ void	ft_free_ast(t_ast_node *node)
 
 void	ft_clear_ast_mem(t_ast_mem **ast)
 {
+	// if ((*ast)->root != NULL)
+	// 	ft_free_ast((*ast)->root);
 	free(*ast);
 	return ;
 }
