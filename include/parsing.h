@@ -71,15 +71,9 @@ typedef struct s_ast_mem
 int				ft_parsing(t_mem **mem);
 void			*ft_init_par_memory(t_mem **mem);
 void			ft_clear_par_mem(t_par_mem **par);
-bool			ft_check_syntax(t_dlist *parlst, t_par_mem **par);
 t_list			*ft_create_parlst(t_dlist **toklst, t_list **parlst,
 					t_par_mem **par);
 int				count_num_parsnodes(t_dlist **toklst);
-void			*operators_are_supported(t_dlist *parlst, t_par_mem **par);
-void			*subshell_opers_are_correct(t_dlist *toklst, t_par_mem **par);
-void			*redirects_are_complete(t_dlist *parlst, t_par_mem **par);
-void			*logic_opers_are_correct(t_dlist *toklst, t_par_mem **par);
-void			*pipe_opers_are_correct(t_dlist *toklst, t_par_mem **par);
 t_par_node		*init_pnd(int a, t_par_node **pnd, t_dlist **toklst,
 					t_par_mem **par);
 t_block_node	*init_bnd(t_par_node **pnd, t_dlist **toklst, t_par_mem **par);
@@ -88,11 +82,19 @@ void			*fill_bnode_redir(t_dlist **toklst, t_par_node **pnd,
 void			*fill_bnode_cmdsa(t_dlist **toklst, t_par_node **pnd,
 					t_par_mem **par);
 void			*ft_par_syscall_error(t_par_mem **par, char *ftname);
-void			*ft_par_syntax_error(int st_err, char *str, t_par_mem **par);
 void			ft_clear_par_mem(t_par_mem **par);
 void			ft_del_par_node(void *content);
 void			ft_del_redir_node(void *content);
 void			*ft_init_ast_memory(t_mem **mem);
 void			ft_clear_ast_mem(t_ast_mem **ast);
+
+//syntax
+bool			ft_check_syntax(t_dlist *parlst, t_par_mem **par);
+bool			operators_are_supported(t_dlist *parlst, t_par_mem **par);
+bool			subshell_opers_are_correct(t_dlist *toklst, t_par_mem **par);
+bool			redirects_are_complete(t_dlist *parlst, t_par_mem **par);
+bool			logic_opers_are_correct(t_dlist *toklst, t_par_mem **par);
+bool			pipe_opers_are_correct(t_dlist *toklst, t_par_mem **par);
+bool			ft_par_syntax_error(int st_err, char *str, t_par_mem **par);
 
 #endif

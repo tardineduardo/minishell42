@@ -15,7 +15,7 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-void	*ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
+bool	ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
 {
 	(*par)->errnmb = st_err;
 	if (st_err == E_NO_SUPPRT)
@@ -27,7 +27,7 @@ void	*ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
 	else if (st_err == E_NO_SUBSHE)
 		ft_dprintf(STDERR_FILENO,
 			"minishell: subshell `%s' not supported\n", str);
-	return (NULL);
+	return (false);
 }
 
 void	*ft_par_syscall_error(t_par_mem **par, char *ftname)
