@@ -61,13 +61,14 @@ t_tok_exit	ft_append_tknde(char **rem, t_tok_mem **tok, int tklimit, t_mem **m)
 	toknode = malloc(sizeof(t_tok_node));
 	if (!toknode)
 		return (TOK_ERROR);
-	if (!ft_init_tknd(new_str, toknode, tok, m))
+	if (!ft_init_tknd(new_str, toknode, tok))
 		return (TOK_ERROR);
-	ft_free_and_null((void *)&new_str);
 	append = ft_dlstnew(toknode);
 	if (!append)
 		return (TOK_ERROR);
 	ft_dlstadd_back(&(*tok)->toklst, append);
+	if (!ft_init_heredoc(toknode, tok, m))
+		return (TOK_ERROR);
 	temp = *rem;
 	*rem = ft_strdup(&(*rem)[tklimit]);
 	ft_free_and_null((void *)&temp);
@@ -78,15 +79,21 @@ t_tok_exit	ft_append_tknde(char **rem, t_tok_mem **tok, int tklimit, t_mem **m)
 	return (TOK_CONTINUE);
 }
 
-t_tok_node	*ft_init_tknd(char *newstr, t_tok_node *node, t_tok_mem **tok,
-	t_mem **mem)
+t_tok_node	*ft_init_tknd(char *newstr, t_tok_node *node, t_tok_mem **tok)
 {
 	node->value = ft_strdup(newstr);
 	if (!node->value)
 		return (NULL);
 	node->oper = ft_get_oper(newstr);
+	node->heredoc_path = NULL;
+	capture_values_for_parsing_later(newstr, node, tok);
+	ft_free_and_null((void *)&newstr);
+	return (node);
+}
+
+t_tok_node	*ft_init_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
+{
 	if (!process_heredoc(node, tok, mem))
 		return (NULL);
-	capture_values_for_parsing_later(newstr, node, tok);
 	return (node);
 }

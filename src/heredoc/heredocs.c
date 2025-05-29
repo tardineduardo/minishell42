@@ -37,7 +37,8 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 	return (filename);
 }
 
-void	run_heredoc_child(int write_fd, char *filepath, char *delimiter, t_mem **mem)
+void	run_heredoc_child(int write_fd, char *filepath, char *delimiter,
+	t_mem **mem)
 {
 	char	*line;
 	char	*prompt;
@@ -62,16 +63,23 @@ void	run_heredoc_child(int write_fd, char *filepath, char *delimiter, t_mem **me
 		ft_dprintf(fd, "%s\n", ft_expand(&line, HEREDOC, mem));
 		free(line);
 	}
-	close(fd);
-	ft_clear_mem_and_exit(mem);
+	ft_free_mem_in_heredoc_child(fd, filepath, mem);
 	exit(EXIT_SUCCESS);
 }
 
 char	*ft_capture_in_interactive_mode(char *prompt)
 {
-	char *line;	
-	
+	char	*line;
+
 	line = readline(prompt);
 	free(prompt);
 	return (line);
+}
+
+void	ft_free_mem_in_heredoc_child(int fd, char *filepath, t_mem **mem)
+{
+	close(fd);
+	free(filepath);
+	ft_clear_mem_and_exit(mem);
+	return ;
 }
