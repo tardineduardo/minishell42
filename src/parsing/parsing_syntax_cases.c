@@ -15,8 +15,6 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-
-
 bool	operators_are_supported(t_dlist *trav, t_par_mem **par)
 {
 	t_tok_node	*tknd;
