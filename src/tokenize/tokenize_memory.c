@@ -54,8 +54,7 @@ void	ft_del_token_node(void *content)
 		return ;
 	tok_node = (t_tok_node *)content;
 	if (tok_node->heredoc_path)
-		if (access(tok_node->heredoc_path, F_OK) == 0)
-			ft_free_and_null((void *)&tok_node->heredoc_path);
+		ft_free_and_null((void *)&tok_node->heredoc_path);
 	ft_free_and_null((void *)&tok_node->value);
 	ft_free_and_null((void *)&tok_node);
 }

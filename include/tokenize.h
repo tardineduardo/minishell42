@@ -53,8 +53,8 @@ bool		ft_is_operator_parsing(char *string);
 void		ft_del_token_node(void *content);
 void		ft_expand_toklist(t_dlist **toklst, t_mem **mem);
 void		ft_tokeniztion_escape(int *i);
-t_tok_node	*ft_init_tknd(char *newstr, t_tok_node *node, t_tok_mem **tok,
-				t_mem **mem);
+t_tok_node	*ft_init_tknd(char *newstr, t_tok_node *node, t_tok_mem **tok);
+t_tok_node	*ft_init_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem);
 t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem);
 t_tok_exit	ft_append_tknde(char **remain, t_tok_mem **tok,
 				int token_limit, t_mem **mem);
