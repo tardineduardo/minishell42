@@ -13,6 +13,7 @@
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
 
+
 void	*ft_readline(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
@@ -20,12 +21,14 @@ void	*ft_readline(t_mem **mem)
 	rdl = (*mem)->readline;
 	rdl->line = readline(YELLOW "Minishell> " RESET);
 	if (!rdl->line)
-	{
-		ft_clear_mem_and_exit(mem);
-		exit(0);
-	}
+		return (NULL);
 	if (ft_strlen(rdl->line) == 0)
 		return (NULL);
+	if (ft_has_unclosed_operators(rdl->line))
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: unclosed operator error\n");
+		return (NULL);
+	}
 	if (!ft_tokenize(&rdl->line, mem))
 		return (NULL);
 	if (!ft_rdl_input_loop(mem))
@@ -46,6 +49,11 @@ char	*ft_rdl_input_loop(t_mem **mem)
 			rdl->append = (readline(YELLOW "append > " RESET));
 			if (!ft_tokenize(&rdl->append, mem))
 				return (NULL);
+			if (ft_has_unclosed_operators(rdl->line))
+			{
+				ft_dprintf(STDERR_FILENO, "minishell: unclosed operator error\n");
+				return (NULL);
+			}	
 			rdl->temp = rdl->line;
 			rdl->line = ft_strjoin(rdl->line, rdl->append);
 			ft_free_and_null((void *)&rdl->temp);
@@ -77,6 +85,15 @@ bool	ft_line_is_incomplete(char *s)
 		return (true);
 	}
 	free(new);
+	return (false);
+}
+
+bool	ft_has_unclosed_operators(char *s)
+{
+	if (has_unclosed_quotes(s))
+		return (true);
+	// if (has_unclosed_parens(s)) // add when needed
+	//	return (true);
 	return (false);
 }
 

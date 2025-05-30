@@ -1,6 +1,7 @@
 MAIN 		=  	src/minishell.c \
 
 READLINE 	=	src/readline/readline.c \
+				src/readline/readline_validation.c \
 
 HEREDOC 	=	src/heredoc/heredocs.c \
 				src/heredoc/heredocs_file.c \
