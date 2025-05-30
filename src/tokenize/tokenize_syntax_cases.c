@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   toksing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-bool	operators_are_supported(t_dlist *trav, t_par_mem **par)
+bool	operators_are_supported(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 
@@ -27,13 +27,13 @@ bool	operators_are_supported(t_dlist *trav, t_par_mem **par)
 			&& tknd->oper != HDC_R && tknd->oper != AND_O
 			&& tknd->oper != OR_O && tknd->oper != GSTART_O
 			&& tknd->oper != GEND_O)
-			return (ft_par_syntax_error(E_NO_SUPPRT, getop(tknd), par));
+			return (ft_tok_syntax_error(E_NO_SUPPRT, getop(tknd), tok));
 		trav = trav->next;
 	}
 	return (true);
 }
 
-bool	redirects_are_complete(t_dlist *trav, t_par_mem **par)
+bool	redirects_are_complete(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -42,15 +42,15 @@ bool	redirects_are_complete(t_dlist *trav, t_par_mem **par)
 	if (is_redir(tknd))
 	{
 		if (!trav->next)
-			return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
 		next = (t_tok_node *)trav->next->content;
 		if (!next || next->oper != WORD)
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(next), tok));
 	}
 	return (true);
 }
 
-bool	subshell_opers_are_correct(t_dlist *trav, t_par_mem **par)
+bool	subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -59,17 +59,17 @@ bool	subshell_opers_are_correct(t_dlist *trav, t_par_mem **par)
 	if (tknd->oper == GSTART_O)
 	{
 		if (!trav->next)
-			return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
 		next = (t_tok_node *)trav->next->content;
 		if (!is_word(next))
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(next), tok));
 		if (next->oper == GSTART_O)
-			return (ft_par_syntax_error(E_NO_SUBSHE, "((", par));
+			return (ft_tok_syntax_error(E_NO_SUBSHE, "((", tok));
 	}
 	return (true);
 }
 
-bool	logic_opers_are_correct(t_dlist *trav, t_par_mem **par)
+bool	logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -78,17 +78,17 @@ bool	logic_opers_are_correct(t_dlist *trav, t_par_mem **par)
 	if (tknd->oper == AND_O || tknd->oper == OR_O)
 	{
 		if (!trav->prev)
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(tknd), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(tknd), tok));
 		if (!trav->next)
-			return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
 		next = (t_tok_node *)trav->next->content;
 		if (!is_word(next) && next->oper != GSTART_O)
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(next), tok));
 	}
 	return (true);
 }
 
-bool	pipe_opers_are_correct(t_dlist *trav, t_par_mem **par)
+bool	pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -97,15 +97,15 @@ bool	pipe_opers_are_correct(t_dlist *trav, t_par_mem **par)
 	if (tknd->oper == PIPE_O)
 	{
 		if (!trav->prev)
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(tknd), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(tknd), tok));
 		if (!trav->next)
-			return (ft_par_syntax_error(E_INVAL_OPS, "newline", par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
 		next = (t_tok_node *)trav->next->content;
 		if (next->oper == GEND_O || next->oper == AND_O
 			|| next->oper == OR_O)
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(next), tok));
 		if (next->oper == PIPE_O)
-			return (ft_par_syntax_error(E_INVAL_OPS, getop(next), par));
+			return (ft_tok_syntax_error(E_INVAL_OPS, getop(next), tok));
 	}
 	return (true);
 }

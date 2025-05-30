@@ -89,12 +89,5 @@ void			*ft_init_ast_memory(t_mem **mem);
 void			ft_clear_ast_mem(t_ast_mem **ast);
 
 //syntax
-bool			ft_check_syntax(t_dlist *parlst, t_par_mem **par);
-bool			operators_are_supported(t_dlist *parlst, t_par_mem **par);
-bool			subshell_opers_are_correct(t_dlist *toklst, t_par_mem **par);
-bool			redirects_are_complete(t_dlist *parlst, t_par_mem **par);
-bool			logic_opers_are_correct(t_dlist *toklst, t_par_mem **par);
-bool			pipe_opers_are_correct(t_dlist *toklst, t_par_mem **par);
-bool			ft_par_syntax_error(int st_err, char *str, t_par_mem **par);
 
 #endif

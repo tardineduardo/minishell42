@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   toksing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,24 +15,39 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-bool	ft_check_syntax(t_dlist *toklst, t_par_mem **par)
+int	ft_check_syntax(t_dlist *toklst, t_tok_mem **tok)
 {
 	t_dlist		*trav;
 
 	trav = toklst;
 	while (trav)
 	{
-		if (!operators_are_supported(trav, par))
-			return (false);
-		if (!redirects_are_complete(trav, par))
-			return (false);
-		if (!subshell_opers_are_correct(trav, par))
-			return (false);
-		if (!logic_opers_are_correct(trav, par))
-			return (false);
-		if (!pipe_opers_are_correct(trav, par))
-			return (false);
+		if (!operators_are_supported(trav, tok))
+			return (1);
+		if (!redirects_are_complete(trav, tok))
+			return (1);
+		if (!subshell_opers_are_correct(trav, tok))
+			return (1);
+		if (!logic_opers_are_correct(trav, tok))
+			return (1);
+		if (!pipe_opers_are_correct(trav, tok))
+			return (1);
 		trav = trav->next;
 	}
-	return (true);
+	return (0);
+}
+
+int	ft_tok_syntax_error(int st_err, char *str, t_tok_mem **tok)
+{
+	(*tok)->errnmb = st_err;
+	if (st_err == E_NO_SUPPRT)
+		ft_dprintf(STDERR_FILENO,
+			"minishell: operator not supported `%s'\n", str);
+	else if (st_err == E_INVAL_OPS)
+		ft_dprintf(STDERR_FILENO,
+			"minishell: syntax error near unexpected token `%s'\n", str);
+	else if (st_err == E_NO_SUBSHE)
+		ft_dprintf(STDERR_FILENO,
+			"minishell: subshell `%s' not supported\n", str);
+	return (false);
 }

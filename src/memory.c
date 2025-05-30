@@ -14,6 +14,7 @@
 #include "../include/heredoc.h"
 #include "../include/tokenize.h"
 #include "../include/expand.h"
+#include "../include/execution.h"
 #include "../include/parsing.h"
 #include "../include/environs.h"
 #include "../include/readline.h"
@@ -30,15 +31,15 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 	ft_init_rdl_memory(mem);
 	ft_init_par_memory(mem);
 	ft_init_ast_memory(mem);
-	if (!(*mem)->heredoc 	|| !(*mem)->readline || 
-		!(*mem)->tokenize 	|| !(*mem)->environs ||
-		!(*mem)->expand 	|| !(*mem)->parsing ||
-		!(*mem)->ast)
+	if (!(*mem)->heredoc || !(*mem)->readline || !(*mem)->tokenize
+		|| !(*mem)->environs || !(*mem)->expand || !(*mem)->parsing
+		|| !(*mem)->ast)
 		exit(1);
 	if (!ft_init_operators(&(*mem)->tokenize))
 		ft_clear_mem_and_exit(mem);
 	if (!ft_init_environs(&(*mem)->environs, envp))
 		ft_clear_mem_and_exit(mem);
+	ft_ms_env_add_exit_code(&(*mem)->environs->envlist, ft_strdup("?"), 0);
 }
 
 void	ft_clear_mem_and_exit(t_mem **mem)

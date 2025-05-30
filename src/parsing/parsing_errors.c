@@ -15,21 +15,6 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-bool	ft_par_syntax_error(int st_err, char *str, t_par_mem **par)
-{
-	(*par)->errnmb = st_err;
-	if (st_err == E_NO_SUPPRT)
-		ft_dprintf(STDERR_FILENO,
-			"minishell: operator not supported `%s'\n", str);
-	else if (st_err == E_INVAL_OPS)
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `%s'\n", str);
-	else if (st_err == E_NO_SUBSHE)
-		ft_dprintf(STDERR_FILENO,
-			"minishell: subshell `%s' not supported\n", str);
-	return (false);
-}
-
 void	*ft_par_syscall_error(t_par_mem **par, char *ftname)
 {
 	(*par)->errnmb = errno;

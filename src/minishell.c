@@ -31,18 +31,19 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
-	ft_ms_env_add_exit_code(&(*mem).environs->envlist, ft_strdup("?"), 0);
 	while (1)
 	{
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
-		if(!ft_readline(&mem))
+		res = ft_readline(&mem);
+		if (res != 0)
 		{
+			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
 		res = ft_parsing(&mem);
-		if (res !=0)
+		if (res != 0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);
@@ -51,7 +52,7 @@ int	main(int argc, char *argv[], char *envp[])
 		head_parlst = mem->parsing->parlst;
 		parse_expression(&head_parlst, &mem);
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
-		if(res != 0)
+		if (res != 0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);
@@ -73,7 +74,6 @@ void ft_clean_mem_loop(t_mem **mem)
 	t_hdc_mem *hd;
 	t_par_mem *par;
 	t_ast_mem *ast;
-
 
 	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;

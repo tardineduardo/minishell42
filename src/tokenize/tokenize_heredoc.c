@@ -21,10 +21,8 @@ void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 	if ((*tok)->get_delimiter)
 	{
 		if (node->oper != WORD)
-		{
-			// PREENCHER ERRO !!!!!!!!!
 			return (NULL);
-		}
+		node->heredoc_path = NULL;
 		node->heredoc_path = ft_heredoc(node->value, mem);
 		(*tok)->get_delimiter = false;
 	}

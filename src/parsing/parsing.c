@@ -22,8 +22,6 @@ int	ft_parsing(t_mem **mem)
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
-	if (!ft_check_syntax(tok->toklst, &par))
-		return (par->errnmb);
 	(*mem)->parsing->errnmb = 0;
 	ft_create_parlst(&tok->toklst, &par->parlst, &par);
 	return (par->errnmb);
