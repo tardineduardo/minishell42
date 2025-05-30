@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/28 00:25:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/30 19:01:51 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
 		res = ft_readline(&mem);
+		if (ft_strlen((*mem).readline->line) == 0)
+		{
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
 		if (res != 0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);

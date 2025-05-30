@@ -25,8 +25,6 @@ int	ft_readline(t_mem **mem)
 		ft_clear_mem_and_exit(mem);
 		exit(0);
 	}
-	if (ft_strlen(rdl->line) == 0)
-		return (1);
 	tokresult = ft_tokenize(&rdl->line, mem);
 	if (tokresult != 0)
 		return (tokresult);
