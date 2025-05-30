@@ -15,17 +15,24 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-bool	ft_check_syntax(t_dlist *parlst, t_par_mem **par)
+bool	ft_check_syntax(t_dlist *toklst, t_par_mem **par)
 {
-	if (!operators_are_supported(parlst, par))
-		return (false);
-	if (!redirects_are_complete(parlst, par))
-		return (false);
-	if (!subshell_opers_are_correct(parlst, par))
-		return (false);
-	if (!logic_opers_are_correct(parlst, par))
-		return (false);
-	// if (!pipe_opers_are_correct(parlst, par))
-	// 	return (false);
+	t_dlist		*trav;
+
+	trav = toklst;
+	while (trav)
+	{
+		if (!operators_are_supported(trav, par))
+			return (false);
+		if (!redirects_are_complete(trav, par))
+			return (false);
+		if (!subshell_opers_are_correct(trav, par))
+			return (false);
+		if (!logic_opers_are_correct(trav, par))
+			return (false);
+		if (!pipe_opers_are_correct(trav, par))
+			return (false);
+		trav = trav->next;
+	}
 	return (true);
 }
