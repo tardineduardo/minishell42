@@ -38,12 +38,13 @@ typedef struct s_tok_mem
 	char		*remain;
 	size_t		block_count;
 	size_t		index_count;
+	int			errnmb;
 	bool		get_delimiter;
 }	t_tok_mem;
 
 void		*ft_init_tok_memory(t_mem **mem);
 void		ft_clear_tok_mem(t_tok_mem **tok);
-void		*ft_tokenize(char **line, t_mem **mem);
+int	ft_tokenize(char **line, t_mem **mem);
 int			ft_count_spaces(char *s);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
 int			ft_find_word_limit(t_tok_mem **tok, char *str);
@@ -71,5 +72,16 @@ bool		is_redir(t_tok_node *toknode);
 bool		is_pipe_logical_subshell(t_tok_node *toknode);
 bool		is_command(t_tok_node *toknode);
 char		*getop(t_tok_node *tok);
+
+int	ft_capture_heredocs(t_tok_mem **tok, t_mem **mem);
+
+
+int			ft_check_syntax(t_dlist *toklst, t_tok_mem **tok);
+int			ft_tok_syntax_error(int st_err, char *str, t_tok_mem **tok);
+bool		operators_are_supported(t_dlist *trav, t_tok_mem **tok);
+bool		redirects_are_complete(t_dlist *trav, t_tok_mem **tok);
+bool		subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
+bool		logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
+bool		pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 
 #endif

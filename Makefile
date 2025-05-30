@@ -14,6 +14,8 @@ TOKEN 		=	src/tokenize/tokenize_helpers.c \
 				src/tokenize/tokenize_limits.c \
 				src/tokenize/tokenize_memory.c \
 				src/tokenize/tokenize_operators.c \
+				src/tokenize/tokenize_syntax_cases.c \
+				src/tokenize/tokenize_syntax.c \
 				src/tokenize/tokenize.c \
 
 EXPAND		=	src/expand/expand_findvar.c \
@@ -32,8 +34,6 @@ ENVIRON 	=	src/environs/environs_errors.c \
 PARSER		=	src/parsing/parsing_command.c \
 				src/parsing/parsing_errors.c \
 				src/parsing/parsing_memory.c \
-				src/parsing/parsing_syntax_cases.c \
-				src/parsing/parsing_syntax.c \
 				src/parsing/parsing_valids.c \
 				src/parsing/parsing.c \
 
