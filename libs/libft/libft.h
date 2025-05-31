@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 17:02:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 20:22:45 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/30 22:57:01 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,7 @@ void	*ft_lstclear_null(t_list **lst, void (*del)(void*));
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
+void	ft_lstclear2(t_list **lst, void (*del)(void**));
 void	ft_lst_destroy_node(t_list **head, t_list *node, void (*del)(void*));
 void	ft_lst_unlink_node(t_list **head, t_list *node);
 void	ft_lstdelone(t_list *lst, void (*del)(void*));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/28 15:15:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/30 23:04:20 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 #include "../../include/execution.h"
 #include "../../include/parsing.h"
 
-void	ft_del_redirs_nodes(void *content)
+void	ft_del_redirs_nodes(void **content)
 {
 	t_redirs_node	*redir_node;
 
-	if (!content)
+	if (!(*content))
 		return ;
-	redir_node = (t_redirs_node *)content;
+	redir_node = (t_redirs_node *)(*content);
 	if (redir_node->type == HDC_R)
 	{
 		if (redir_node->name != NULL)
@@ -34,22 +34,24 @@ void	ft_del_redirs_nodes(void *content)
 		ft_free_and_null((void *)&redir_node);
 }
 
-void	free_block_node(void *ptr)
+void	free_block_node(t_block_node **node)
 {
-	t_block_node	*blk;
-
-	blk = (t_block_node *)ptr;
-	if (!blk)
+	if (!*node)
 		return ;
-	if (blk->redirs_lst)
-		ft_lstclear(&blk->redirs_lst, ft_del_redirs_nodes);
-	if (blk->output_lst)
-		ft_lstclear(&blk->output_lst, NULL);
-	if (blk->input_lst)
-		ft_lstclear(&blk->input_lst, NULL);
-	if (blk->cmd_arr)
-		ft_free_and_null_str_array(&blk->cmd_arr);
-	free(blk);
+	if ((*node)->redirs_lst)
+		ft_lstclear2(&(*node)->redirs_lst, ft_del_redirs_nodes);
+	if ((*node)->output_lst)
+		ft_lstclear2(&(*node)->output_lst, ft_del_redirs_nodes);
+	if ((*node)->input_lst)
+		ft_lstclear2(&(*node)->input_lst, ft_del_redirs_nodes);
+	if ((*node)->cmd_arr)
+		ft_free_and_null_str_array(&(*node)->cmd_arr);
+	free(*node);
+}
+
+void	free_block_node_wrapper(void **ptr)
+{
+	free_block_node((t_block_node **)ptr);
 }
 
 void	ft_free_ast(t_ast_node **node)
@@ -65,14 +67,14 @@ void	ft_free_ast(t_ast_node **node)
 	{
 		blk = (*node)->block_node;
 		if (blk)
-			free_block_node(blk);
+			free_block_node(&blk);
 	}
 	else if ((*node)->type == NODE_PIPELINE)
 	{
 		pipe = (*node)->pipeline;
 		if (pipe)
 		{
-			ft_lstclear(&pipe->cmds, free_block_node);
+			ft_lstclear2(&pipe->cmds, free_block_node_wrapper);
 			free(pipe);
 		}
 	}
