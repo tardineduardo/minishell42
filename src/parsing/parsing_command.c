@@ -15,37 +15,56 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
+static t_redirs_node	*ft_inits(t_dlist **toklst, t_par_node **parnd,
+	t_par_mem **par)
+{
+	t_redirs_node	*redirnode;
+
+	if (!(*parnd)->block_node)
+		if (!init_bnd(parnd, toklst, par))
+			return (ft_par_syscall_error(par, "blocknode init error\n"));
+	redirnode = malloc(sizeof(t_redirs_node));
+	if (!redirnode)
+		return (ft_par_syscall_error(par, "redirnode init error\n"));
+	return (redirnode);
+}
+
+static void	*ft_paths(t_redirs_node **rnode, t_par_mem **par, t_tok_node *tknd)
+{
+	if ((*par)->oper == IN_R || (*par)->oper == OUT_R || (*par)->oper == APPD_R)
+		(*rnode)->name = ft_strdup(tknd->value);
+	if ((*par)->oper == HDC_R)
+		(*rnode)->name = ft_strdup(tknd->heredoc_path);
+	if ((*par)->oper == APPD_R)
+		(*rnode)->create = false;
+	if (!(*rnode)->name)
+		return (ft_par_syscall_error(par, "redir strdup error\n"));
+	return (*rnode);
+}
+
 void	*fill_bnode_redir(t_dlist **toklst, t_par_node **parnd, t_par_mem **par)
 {
 	t_list			*redirlse;
 	t_list			*copy;
 	t_tok_node		*toknode;
 	t_redirs_node	*redirnode;
-	t_oper			oper;
 
-	if (!(*parnd)->block_node)
-		if (!init_bnd(parnd, toklst, par))
-			return (NULL);
-	redirnode = malloc(sizeof(t_redirs_node));
+	redirnode = ft_inits(toklst, parnd, par);
 	if (!redirnode)
 		return (NULL);
-	oper = ((t_tok_node *)(*toklst)->content)->oper;
+	(*par)->oper = ((t_tok_node *)(*toklst)->content)->oper;
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	toknode = (t_tok_node *)(*toklst)->content;
-	redirnode->type = oper;
+	redirnode->type = (*par)->oper;
 	redirnode->create = true;
-	if (oper == IN_R || oper == OUT_R || oper == APPD_R)
-		redirnode->name = ft_strdup(toknode->value); //RETORNAR ERRO
-	if (oper == HDC_R)
-		redirnode->name = ft_strdup(toknode->heredoc_path); //RETORNAR ERRO
-	if (oper == APPD_R)
-		redirnode->create = false;
+	if (!ft_paths(&redirnode, (*par)->oper, toknode))
+		return (NULL);
 	redirlse = ft_lstnew(redirnode);
 	ft_lstadd_back(&(*parnd)->block_node->redirs_lst, redirlse);
 	copy = ft_lstnew(redirnode);
-	if (oper == IN_R || oper == HDC_R)
+	if ((*par)->oper == IN_R || (*par)->oper == HDC_R)
 		ft_lstadd_back(&(*parnd)->block_node->input_lst, copy);
-	else if (oper == OUT_R || oper == APPD_R)
+	else if ((*par)->oper == OUT_R || (*par)->oper == APPD_R)
 		ft_lstadd_back(&(*parnd)->block_node->output_lst, copy);
 	ft_dlst_quick_destroy_node(toklst, *toklst, ft_del_token_node);
 	return (*parnd);
