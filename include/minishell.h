@@ -126,6 +126,7 @@ typedef struct s_subshell_data
 typedef struct s_block_node
 {
 	char	**cmd_arr;
+	t_list	*cmd_lst;
 	t_list	*input_lst;
 	t_list	*output_lst;
 	t_list	*redirs_lst;
