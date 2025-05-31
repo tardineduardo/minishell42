@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:29:11 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 14:23:31 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:43:44 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,24 @@ void	handle_signal_prompt(int signo)
     rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-    return ;
+	g_signal = SIGINT;
 }
 
-void	handle_signal_cmd(int signo)
+void	handle_heredoc(int sig)
 {
-	(void)signo;
-	signal(SIGINT, SIG_DFL);
-	//clean everything that needs to be cleaned
-	exit(130);
+	(void)sig;
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	close(STDIN_FILENO);
+	g_signal = SIGINT;
+}
+
+void	heredoc_signal(void)
+{
+	signal(SIGINT, handle_heredoc);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
 }
 
 void	signal_before_wait(void)
@@ -45,7 +54,7 @@ void	signal_after_wait(void)
 
 void	signal_child_process(void)
 {
-	signal(SIGPIPE, SIG_IGN);
+	//signal(SIGPIPE, SIG_DFL);
 	signal(SIGINT, SIG_DFL);   // Ctrl+C should kill
 	signal(SIGQUIT, SIG_DFL);  // Ctrl+\ should quit with core dump
 }

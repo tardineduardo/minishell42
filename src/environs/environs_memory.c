@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environs_memory.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/20 14:08:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:42:36 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	*ft_init_env_memory(t_mem **mem)
 		return (NULL);
 	(*mem)->environs->envlist = NULL;
 	(*mem)->environs->new_node = NULL;
-	(*mem)->environs->result = NULL;
 	(*mem)->environs->ms_env_cpy = NULL;
 	return (mem);
 }
@@ -46,7 +45,6 @@ void	*ft_init_env_memory(t_mem **mem)
 void	ft_clear_env_mem(t_env_mem **env)
 {
 	ft_lstclear(&(*env)->envlist, ft_del_env_node);
-	ft_free_and_null_str_array(&(*env)->result);
 	ft_free_and_null_str_array(&(*env)->ms_env_cpy);
 	free(*env);
 	return ;

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:05:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 18:03:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:30:24 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,33 @@
 #include "../../include/readline.h"
 #include "../../include/builtins.h"
 #include "../../include/execution.h"
+
+int	only_redir(t_block_node *cmd, t_mem **mem)
+{
+	pid_t	pid;
+	int		res;
+	int		status;
+
+	if (cmd->cmd_arr[0] == NULL && 
+		cmd->redirs_lst != NULL)
+	{
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			exit(1);
+		}
+		if (pid == 0)
+		{
+			res = pipe_fd_control_only_redir(cmd, mem);
+			ft_clear_mem_and_exit(mem);
+			exit(res);
+		}
+		waitpid(pid, &status, 0);
+		return (print_child_statuses(NULL, &status));
+	}
+	return (0);
+}
 
 int	single_ext_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
@@ -44,22 +71,30 @@ int	single_ext_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	signal_before_wait();
 	waitpid(pid, &status, 0);
 	signal_after_wait();
-	res = print_child_statuses(NULL, &status);
-	return (res);
+	return (print_child_statuses(NULL, &status));
 }
 
 int	single_built_in(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		result;
 	int		res;
+	int		saved_stdout;
 
 	result = 0;
+	saved_stdout = -1;
+	if (cmd->output_lst != NULL)
+		saved_stdout = dup(STDOUT_FILENO);
 	if (cmd->redirs_lst != NULL)
 		result = pipe_fd_control_single_cmd(cmd, mem);
 	if (result == 0)
 		res = execute_command(ms_env, cmd, mem);
 	else
 		res = 1;
+	if (saved_stdout != -1)
+	{
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdout);
+	}
 	return (res);
 }
 
@@ -67,6 +102,9 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		res;
 
+	cmd->cmd_arr = ft_create_cmd_arr_and_expand(&cmd->cmd_lst, mem);
+	if (cmd->cmd_arr[0] == NULL)
+		return (only_redir(cmd, mem));
 	if (!is_built_in(cmd->cmd_arr))
 		res = single_ext_cmd(ms_env, cmd, mem);
 	else

@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/24 15:15:12 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 20:08:48 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,37 +19,45 @@
 #include "../include/readline.h"
 #include "../include/execution.h"
 
+volatile sig_atomic_t	g_signal;
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mem		*mem;
-	//t_ast_node	*root;
+	t_list		*head_parlst;
 	int			res;
 
 	(void)argc;
 	(void)argv;
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
-	ft_ms_env_add_exit_code(&(*mem).environs->envlist, "?", 0);
 	while (1)
 	{
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
-		if(!ft_readline(&mem))
+		res = ft_readline(&mem);
+		if (ft_strlen((*mem).readline->line) == 0)
 		{
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		res = ft_parsing(&mem);
-		if (res !=0)
+		if (res != 0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);
 			continue ;
 		}
-		parse_expression(&mem->parsing->parlst, &mem);
+		res = ft_parsing(&mem);
+		if (res != 0)
+		{
+			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
+			ft_clean_mem_loop(&mem);
+			continue ;
+		}
+		head_parlst = mem->parsing->parlst;
+		parse_expression(&head_parlst, &mem);
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
-		if(res != 0)
+		if (res != 0)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);
@@ -72,7 +80,6 @@ void ft_clean_mem_loop(t_mem **mem)
 	t_par_mem *par;
 	t_ast_mem *ast;
 
-
 	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
@@ -81,7 +88,7 @@ void ft_clean_mem_loop(t_mem **mem)
 
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
 	ft_lstclear(&par->parlst, ft_del_par_node);
-	//free_ast(ast->root);
+	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->str);

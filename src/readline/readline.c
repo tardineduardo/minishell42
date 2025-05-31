@@ -14,9 +14,10 @@
 #include "../../include/readline.h"
 
 
-void	*ft_readline(t_mem **mem)
+int	ft_readline(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
+	int			tokresult;
 
 	rdl = (*mem)->readline;
 	rdl->line = readline(YELLOW "Minishell> " RESET);
@@ -32,9 +33,9 @@ void	*ft_readline(t_mem **mem)
 	if (!ft_tokenize(&rdl->line, mem))
 		return (NULL);
 	if (!ft_rdl_input_loop(mem))
-		return (NULL);
+		return (1);
 	add_history(rdl->line);
-	return (mem);
+	return (0);
 }
 
 char	*ft_rdl_input_loop(t_mem **mem)

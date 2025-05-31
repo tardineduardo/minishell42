@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_exit_code.c                                   :+:      :+:    :+:   */
+/*   exit_code.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:03:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/16 15:19:20 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:32:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value)
 		if (ft_strcmp(current->variable, variable) == 0)
 		{
 			free(current->value);
-			current->value = ft_strdup(ft_itoa(value));
+			current->value = ft_itoa(value);
 			return ;
 		}
 		trav = trav->next;
@@ -45,6 +45,5 @@ void	ft_ms_env_add_exit_code(t_list **envlist, char *variable, int value)
 
 	val = ft_itoa(value);
 	new_env_node = ft_init_env_node(variable, val, false);
-	free(val);
 	ft_add_to_envlist(envlist, new_env_node);
 }

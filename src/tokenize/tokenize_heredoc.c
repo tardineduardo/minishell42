@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/30 19:16:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 	if ((*tok)->get_delimiter)
 	{
 		if (node->oper != WORD)
-		{
-			// PREENCHER ERRO !!!!!!!!!
 			return (NULL);
-		}
 		node->heredoc_path = ft_heredoc(node->value, mem);
 		(*tok)->get_delimiter = false;
 	}

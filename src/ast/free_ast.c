@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/22 12:55:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/30 23:04:20 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,42 @@
 #include "../../include/execution.h"
 #include "../../include/parsing.h"
 
+void	ft_del_redirs_nodes(void *content)
+{
+	t_redirs_node	*redir_node;
+
+	if (!content)
+		return ;
+	redir_node = (t_redirs_node *)content;
+	if (redir_node->type == HDC_R)
+	{
+		if (redir_node->name != NULL)
+			unlink(redir_node->name);
+	}
+	if (redir_node->name)
+		ft_free_and_null((void *)&redir_node->name);
+	if (redir_node)
+		ft_free_and_null((void *)&redir_node);
+}
+
+//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+void	ft_del_cmd_nodes(void *content)
+{
+	t_cmd_node	*cmdnode;
+
+	if (!content)
+		return ;
+	cmdnode = (t_cmd_node *)content;
+	if (cmdnode->cmdvalue)
+		free(cmdnode->cmdvalue);
+}
+
+
+
 void	free_block_node(void *ptr)
 {
 	t_block_node	*blk;
@@ -23,60 +59,76 @@ void	free_block_node(void *ptr)
 	blk = (t_block_node *)ptr;
 	if (!blk)
 		return ;
-	ft_free_and_null_str_array(&blk->cmd_arr);
+	if (blk->redirs_lst)
+		ft_lstclear(&blk->redirs_lst, ft_del_redirs_nodes);
+	if (blk->output_lst)
+		ft_lstclear(&blk->output_lst, NULL);
+	if (blk->input_lst)
+		ft_lstclear(&blk->input_lst, NULL);
+	if (blk->cmd_arr)
+		ft_free_and_null_str_array(&blk->cmd_arr);
+
+
+	//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+	//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+	//NOVA FUNÇÃO PARA LIMPAR CMDLIST
+	if (blk->cmd_lst)
+		ft_lstclear(&blk->cmd_lst, ft_del_cmd_nodes);
+
+
 	free(blk);
 }
 
-//Free AST memory
-void	free_ast(t_ast_node *node)
+void	ft_free_ast(t_ast_node **node)
 {
 	t_block_node	*blk;
 	t_pipe_info		*pipe;
 	t_logical_data	*log;
 	t_subshell_data	*sub;
 
-	if (!node)
+	if (!(*node))
 		return ;
-	if (node->type == NODE_COMMAND)
+	if ((*node)->type == NODE_COMMAND)
 	{
-		blk = node->block_node;
+		blk = (*node)->block_node;
 		if (blk)
 			free_block_node(blk);
 	}
-	else if (node->type == NODE_PIPELINE)
+	else if ((*node)->type == NODE_PIPELINE)
 	{
-		pipe = node->pipeline;
+		pipe = (*node)->pipeline;
 		if (pipe)
 		{
 			ft_lstclear(&pipe->cmds, free_block_node);
 			free(pipe);
 		}
 	}
-	else if (node->type == NODE_LOGICAL)
+	else if ((*node)->type == NODE_LOGICAL)
 	{
-		log = node->logical;
+		log = (*node)->logical;
 		if (log)
 		{
-			free_ast(log->left);
-			free_ast(log->right);
+			ft_free_ast(&log->left);
+			ft_free_ast(&log->right);
 			free(log);
 		}
 	}
-	else if (node->type == NODE_SUBSHELL)
+	else if ((*node)->type == NODE_SUBSHELL)
 	{
-		sub = node->subshell;
+		sub = (*node)->subshell;
 		if (sub)
 		{
-			free_ast(sub->body);
+			ft_free_ast(&sub->body);
 			free(sub);
 		}
 	}
-	free(node);
+	ft_free_and_null((void**)node);
 }
 
 void	ft_clear_ast_mem(t_ast_mem **ast)
 {
-	free_ast((*ast)->root);
+	if ((*ast)->root)
+		ft_free_ast(&(*ast)->root);
 	free(*ast);
 	return ;
 }

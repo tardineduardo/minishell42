@@ -15,6 +15,14 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
+static void			*initloop(int a, t_par_node **pnd, t_dlist **tklst,
+						t_par_mem **par);
+static t_list		*ft_create_parlst(t_dlist **toklst, t_list **parlst,
+						t_par_mem **par);
+static t_par_node	*init_pnd(int a, t_par_node **pnd, t_dlist **tklst,
+						t_par_mem **par);
+static int			count_num_parsnodes(t_dlist **toklst);
+
 int	ft_parsing(t_mem **mem)
 {
 	t_par_mem	*par;
@@ -22,8 +30,6 @@ int	ft_parsing(t_mem **mem)
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
-	if (!ft_check_syntax(tok->toklst, &par))
-		return (par->errnmb);
 	(*mem)->parsing->errnmb = 0;
 	ft_create_parlst(&tok->toklst, &par->parlst, &par);
 	return (par->errnmb);
@@ -69,14 +75,25 @@ t_par_node	*init_pnd(int a, t_par_node **pnd, t_dlist **tklst, t_par_mem **par)
 		ft_dlst_quick_destroy_node(tklst, *tklst, ft_del_token_node);
 		return (*pnd);
 	}
+	if (!initloop(a, pnd, tklst, par))
+		return (NULL);
+	(*pnd)->oper = CMD;
+	return (*pnd);
+}
+
+static void	*initloop(int a, t_par_node **pnd, t_dlist **tklst, t_par_mem **par)
+{
+	t_dlist		*first;
+	t_tok_node	*toknode;
+
 	while (1)
 	{
 		first = *tklst;
 		if (!first)
-			break ;
+			return (*pnd);
 		toknode = (t_tok_node *)first->content;
 		if (toknode->block_index > a || toknode->block_index == -1)
-			break ;
+			return (*pnd);
 		if (is_redir(toknode))
 		{
 			if (!fill_bnode_redir(tklst, pnd, par))
@@ -88,7 +105,6 @@ t_par_node	*init_pnd(int a, t_par_node **pnd, t_dlist **tklst, t_par_mem **par)
 				return (NULL);
 		}
 	}
-	(*pnd)->oper = CMD;
 	return (*pnd);
 }
 

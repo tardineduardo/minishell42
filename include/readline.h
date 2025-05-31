@@ -9,9 +9,9 @@
 
 # include "../libs/libft/libft.h"
 
-typedef struct	s_mem t_mem;
+typedef struct s_mem	t_mem;
 
-typedef struct	s_rdl_mem
+typedef struct s_rdl_mem
 {
 	char		*line;
 	char		*trim;
@@ -19,7 +19,7 @@ typedef struct	s_rdl_mem
 	char		*append;
 }	t_rdl_mem;
 
-void	*ft_readline(t_mem **mem);
+int		ft_readline(t_mem **mem);
 bool	ft_line_is_incomplete(char *s);
 char	*ft_rdl_input_loop(t_mem **mem);
 void	*ft_init_rdl_memory(t_mem **mem);

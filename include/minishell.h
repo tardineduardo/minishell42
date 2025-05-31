@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/21 12:43:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 17:11:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct	s_mem
 	t_ast_mem		*ast;
 }	t_mem;
 
+extern volatile int	g_signal;
+
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
@@ -72,6 +74,8 @@ void	handle_signal_cmd(int signo);
 void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
+
+int		ft_count_items(char **str_arr);
 
 typedef enum e_node_mode
 {
@@ -122,6 +126,7 @@ typedef struct s_subshell_data
 typedef struct s_block_node
 {
 	char	**cmd_arr;
+	t_list	*cmd_lst;
 	t_list	*input_lst;
 	t_list	*output_lst;
 	t_list	*redirs_lst;
@@ -151,6 +156,7 @@ typedef struct s_input_node
 	char	*name;
 }	t_input_node;
 
-t_ast_node *parse_expression(t_list **parlst, t_mem **mem);
-void	free_ast(t_ast_node *node);
+t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
+char	**ft_create_cmd_arr_and_expand(t_list **cmdlst, t_mem **mem);
+void		ft_free_ast(t_ast_node **node);
 #endif

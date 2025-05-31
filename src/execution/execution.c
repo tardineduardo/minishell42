@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 14:05:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:42:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 		ft_dprintf(2, "cmd or ms_env: cmd executor: NULL pointer\n");
 		exit(EXIT_FAILURE);
 	}
-	cur_cmd->cmd_arr = ft_expand_cmd_arr(cur_cmd->cmd_arr, mem);
 	if (is_built_in(cur_cmd->cmd_arr))
 		res = exec_built_in(ms_env, cur_cmd->cmd_arr, mem);
 	else
@@ -38,42 +37,98 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 	return (res);
 }
 
-int	print_child_statuses(t_pipe_data *p, int *status)
+int signal_statuses(int index, int *status)
 {
-	int	sig;
-	int	index;
-	int	i;
-	int	res;
+    int sig;
 
-	i = 1;
-	if (p != NULL)
-		i = p->num_cmds;
-	index = 0;
-	res = 0;
-	while (index < i)
+    if (WIFSIGNALED(status[index]))
+    {
+        sig = WTERMSIG(status[index]);
+        if (sig == SIGPIPE)
+            ft_dprintf(STDERR_FILENO, " Broken pipe\n");
+        if (sig == SIGQUIT)
+        {
+            ft_printf("Quit (core dumped)\n");
+            return (128 + sig);
+        }
+        return (128 + sig);
+    }
+    return (0);
+}
+
+// int print_child_statuses(t_pipe_data *p, int *status)
+// {
+//     int index;
+//     int i;
+//     int res;
+//     int sig_res;
+
+// 	index = 0;
+// 	res = 0;
+// 	if (p != NULL)
+// 		i = p->num_cmds;
+// 	else
+// 		i = 1;
+//     while (index < i)
+//     {
+//         sig_res = signal_statuses(index, status);
+//         if (sig_res != 0)
+//             return (sig_res);
+//         if (WIFEXITED(status[index]))
+//             res = WEXITSTATUS(status[index]);
+//         index++;
+//     }
+//     return res;
+// }
+
+int print_child_statuses(t_pipe_data *p, int *status)
+{
+    int last_index;
+    int last_status;
+
+    if (p != NULL)
+        last_index = p->num_cmds - 1;
+    else
+        last_index = 0;
+
+    last_status = status[last_index];
+
+    if (WIFSIGNALED(last_status))
+        return (128 + WTERMSIG(last_status));
+    else if (WIFEXITED(last_status))
+        return (WEXITSTATUS(last_status));
+    else
+        return (1);  // Generic error if neither.
+}
+
+int ft_exec_subshell(t_list **ms_env, t_ast_node **root, t_mem **mem)
+{
+	int		ret;
+	int		status;
+	pid_t	pid;
+
+	if ((*root)->type == NODE_SUBSHELL)
 	{
-		if (WIFSIGNALED(status[index]))
+		pid = fork();
+		if (pid == 0)
 		{
-			sig = WTERMSIG(status[index]);
-			if (sig == SIGQUIT)
-				return (ft_printf("Quit (core dumped)\n"));
-			if (sig == SIGINT)
-				res = (sig + 128);
-			return (res);
+			ret = ft_execute(ms_env, &(*root)->subshell->body, mem);
+			exit(ret);
 		}
-		if (WIFEXITED(status[index]))
-			res = WEXITSTATUS(status[index]);
-		index++;
+		else
+		{
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				return (WEXITSTATUS(status));
+			return (1);
+		}
 	}
-	return (res);
+	return (0);
 }
 
 int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 {
 	int		res;
-	int		ret;
-	int		status;
-	pid_t	pid;
 
 	res = -1;
 	if (!root)
@@ -93,21 +148,7 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 		return (0);
 	}
 	else if ((*root)->type == NODE_SUBSHELL)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			ret = ft_execute(ms_env, &(*root)->subshell->body, mem);
-			exit(ret);
-		}
-		else
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				return (WEXITSTATUS(status));
-			return (1);
-		}
-	}
+		return (ft_exec_subshell(ms_env, &(*root)->subshell->body, mem));
 	else if ((*root)->type == NODE_PIPELINE)
 		res = exec_pipeline(ms_env, &(*root)->pipeline->cmds, (*root)->pipeline->cmd_count, mem);
 	return (res);
