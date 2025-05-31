@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/26 19:45:15 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:31:36 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 	{
 		signal_child_process();
 		pipe_fd_control(p, cmd, p->pipefd, mem);
+		cmd->cmd_arr = ft_create_cmd_arr_and_expand(&cmd->cmd_lst, mem);
 		res = execute_command(ms_env, cmd, mem);
 		if (is_built_in(cmd->cmd_arr))
 			ft_clear_mem_and_exit(mem);
@@ -63,17 +64,17 @@ int	wait_for_all_children(t_pipe_data p)
 	return (print_child_statuses(&p, p.status_arr));
 }
 
-int	exec_pipeline(t_list **env, t_list **parlst, int num_cmds, t_mem **mem)
+int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 {
 	t_pipe_data	p;
 	t_list		*node;
 
 	ft_bzero(p.child_pids, sizeof(pid_t) * num_cmds);
 	ft_bzero(p.status_arr, sizeof(pid_t) * num_cmds);
-	node = *parlst;
 	p.prev_fd = 0;
 	p.num_cmds = num_cmds;
 	p.i = 0;
+	node = *cmds;
 	while (node && p.i < num_cmds)
 	{
 		if (p.i < num_cmds - 1 && pipe(p.pipefd) == -1)

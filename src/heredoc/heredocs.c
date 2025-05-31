@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/28 12:09:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:37:32 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	run_heredoc_child(int write_fd, char *filepath, char *delimiter,
 {
 	char	*line;
 	char	*prompt;
+	char	*temp;
 	int		fd;
 
 	heredoc_signal();
@@ -60,8 +61,9 @@ void	run_heredoc_child(int write_fd, char *filepath, char *delimiter,
 			free(line);
 			break ;
 		}
-		ft_dprintf(fd, "%s\n", ft_expand(&line, HEREDOC, mem));
-		free(line);
+		temp = ft_expand(&line, HEREDOC, mem);
+		ft_dprintf(fd, "%s\n", temp);
+		free(temp);
 	}
 	ft_free_mem_in_heredoc_child(fd, filepath, mem);
 	exit(EXIT_SUCCESS);

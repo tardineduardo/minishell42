@@ -42,6 +42,11 @@ typedef enum e_oper
 	BCKG_O,
 }	t_oper;
 
+typedef struct s_cmd_node
+{
+	char		*cmdvalue;
+}				t_cmd_node;
+
 typedef struct s_redirs_node
 {
 	t_oper			type;
