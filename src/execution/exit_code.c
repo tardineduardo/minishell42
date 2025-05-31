@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_code.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:03:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 17:22:09 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:32:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_ms_env_update_exit_code(t_list **envlist, char *variable, int value)
 		if (ft_strcmp(current->variable, variable) == 0)
 		{
 			free(current->value);
-			current->value = ft_strdup(ft_itoa(value));
+			current->value = ft_itoa(value);
 			return ;
 		}
 		trav = trav->next;
