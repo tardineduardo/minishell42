@@ -66,6 +66,7 @@ typedef struct s_par_mem
 {
 	t_list			*parlst;
 	int				errnmb;
+	t_oper			oper;
 }					t_par_mem;
 
 typedef struct s_ast_mem
@@ -76,11 +77,6 @@ typedef struct s_ast_mem
 int				ft_parsing(t_mem **mem);
 void			*ft_init_par_memory(t_mem **mem);
 void			ft_clear_par_mem(t_par_mem **par);
-t_list			*ft_create_parlst(t_dlist **toklst, t_list **parlst,
-					t_par_mem **par);
-int				count_num_parsnodes(t_dlist **toklst);
-t_par_node		*init_pnd(int a, t_par_node **pnd, t_dlist **toklst,
-					t_par_mem **par);
 t_block_node	*init_bnd(t_par_node **pnd, t_dlist **toklst, t_par_mem **par);
 void			*fill_bnode_redir(t_dlist **toklst, t_par_node **pnd,
 					t_par_mem **par);
