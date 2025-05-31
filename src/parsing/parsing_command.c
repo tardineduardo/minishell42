@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 18:53:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:28:49 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*fill_bnode_redir(t_dlist **toklst, t_par_node **parnd, t_par_mem **par)
 	toknode = (t_tok_node *)(*toklst)->content;
 	redirnode->type = (*par)->oper;
 	redirnode->create = true;
-	if (!ft_paths(&redirnode, (*par)->oper, toknode))
+	if (!ft_paths(&redirnode, par, toknode))
 		return (NULL);
 	redirlse = ft_lstnew(redirnode);
 	ft_lstadd_back(&(*parnd)->block_node->redirs_lst, redirlse);
