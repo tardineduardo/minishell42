@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline_validation.c                              :+:      :+:    :+:   */
+/*   readline_quotes.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 12:10:02 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/24 12:14:55 by eduribei         ###   ########.fr       */
+/*   Created: 2025/05/31 20:43:01 by eduribei          #+#    #+#             */
+/*   Updated: 2025/05/31 20:49:28 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
 
-bool	is_char_escaped_rdl(char *s, int index)
+static bool	ft_is_char_escaped_rdl(char *s, int index)
 {
 	int	count;
 
@@ -31,9 +31,9 @@ bool	is_char_escaped_rdl(char *s, int index)
 	return (false);
 }
 
-void	update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
+static void	ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
 {
-	if ((c == '\'' || c == '\"') && !is_char_escaped_rdl(s, index))
+	if ((c == '\'' || c == '\"') && !ft_is_char_escaped_rdl(s, index))
 	{
 		if (*quote == Q_OFF)
 		{
@@ -50,7 +50,7 @@ void	update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
 	return ;
 }
 
-bool	has_unclosed_quotes(char *s)
+bool	ft_has_unclosed_quotes(char *s)
 {
 	int		a;
 	t_quote	quote;
@@ -59,7 +59,7 @@ bool	has_unclosed_quotes(char *s)
 	quote = Q_OFF;
 	while (s[a])
 	{
-		update_quote_flag_rdl(s[a], &quote, a, s);
+		ft_update_quote_flag_rdl(s[a], &quote, a, s);
 		a++;
 	}
 	if (quote != Q_OFF)
