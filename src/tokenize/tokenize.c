@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/30 22:06:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ t_tok_exit	ft_append_tknde(char **rem, t_tok_mem **tok, int tklimit, t_mem **m)
 
 t_tok_node	*ft_init_tknd(char *newstr, t_tok_node *node, t_tok_mem **tok)
 {
-	(void)mem;
 	node->value = ft_strdup(newstr);
 	if (!node->value)
 		return (NULL);
