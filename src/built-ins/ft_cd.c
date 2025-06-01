@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/01 16:17:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:04:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,45 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist, char *value, t_mem **mem)
 	free(absolute_path);
 }
 
+char	*ft_set_home_value(t_list **envlist)
+{
+	t_list		*trav;
+	t_env_node	*current;
+	char		*home_value;
+
+	trav = *envlist;
+	while (trav)
+	{
+		current = (t_env_node *)trav->content;
+		if (ft_strcmp(current->variable, "HOME") == 0)
+		{
+			home_value = ft_strdup(current->value);
+			break ;
+		}
+		trav = trav->next;
+	}
+	if (chdir(home_value) == 0)
+	{
+		trav = *envlist;
+		while (trav)
+		{
+			current = (t_env_node *)trav->content;
+			if (ft_strcmp(current->variable, "PWD") == 0)
+			{
+				ft_ms_env_update_cd(envlist, "OLDPWD", current->value);
+				break ;
+			}
+			trav = trav->next;
+		}
+		ft_ms_env_update_cd(envlist, "PWD", home_value);
+	}
+	free(home_value);
+	return (NULL);
+}
+
 int	ft_cd(t_list **envlist, char **cmd_arr, t_mem **mem)
 {
-	int	size_cmd_arr;
+	int		size_cmd_arr;
 
 	size_cmd_arr = ft_count_items(cmd_arr);
 	if (size_cmd_arr > 2)
@@ -71,7 +107,9 @@ int	ft_cd(t_list **envlist, char **cmd_arr, t_mem **mem)
 		ft_dprintf(2, "%s: too many arguments\n", cmd_arr[0]);
 		return (1);
 	}
-	if (chdir(cmd_arr[1]) == 0)
+	if (size_cmd_arr == 1 || ft_strcmp(cmd_arr[1], "~") == 0)
+		ft_set_home_value(envlist);
+	else if (chdir(cmd_arr[1]) == 0)
 		ft_update_pwd_and_oldpwd(envlist, cmd_arr[1], mem);
 	else
 	{
