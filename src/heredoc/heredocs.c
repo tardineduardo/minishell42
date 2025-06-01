@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/30 21:37:32 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:24:38 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 char	*ft_heredoc(char *delimiter, t_mem **mem)
 {
-	int			pip[2];
 	pid_t		pid;
 	char		*filename;
 	static int	hd_count_int;
@@ -24,20 +23,16 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 	(void)mem;
 	if (!ft_hd_create_file(&hd_count_int, &filename))
 		return (NULL);
-	if (pipe(pip) < 0)
-		return (NULL);
 	pid = fork();
 	if (pid < 0)
 		return (NULL);
 	if (pid == 0)
-		run_heredoc_child(pip[1], filename, delimiter, mem);
-	close(pip[1]);
+		run_heredoc_child(filename, delimiter, mem);
 	waitpid(pid, NULL, 0);
-	close(pip[0]);
 	return (filename);
 }
 
-void	run_heredoc_child(int write_fd, char *filepath, char *delimiter,
+void	run_heredoc_child(char *filepath, char *delimiter,
 	t_mem **mem)
 {
 	char	*line;
@@ -46,7 +41,6 @@ void	run_heredoc_child(int write_fd, char *filepath, char *delimiter,
 	int		fd;
 
 	heredoc_signal();
-	close(write_fd - 1);
 	fd = open(filepath, O_WRONLY | O_APPEND);
 	if (fd < 0)
 		exit(EXIT_FAILURE);
