@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:05:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 18:30:24 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 20:12:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		res;
 
-	cmd->cmd_arr = ft_create_cmd_arr_and_expand(&cmd->cmd_lst, mem);
+	ft_create_cmd_arr_and_expand(&cmd->cmd_lst, cmd, mem);
 	if (cmd->cmd_arr[0] == NULL)
 		return (only_redir(cmd, mem));
 	if (!is_built_in(cmd->cmd_arr))
