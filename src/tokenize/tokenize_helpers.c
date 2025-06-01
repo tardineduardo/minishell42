@@ -38,7 +38,7 @@ t_oper	ft_get_oper(char *value)
 	return (WORD);
 }
 
-char	*getop(t_tok_node *tok)
+char	*ft_getop(t_tok_node *tok)
 {
 	if (tok->oper == AND_O)
 		return ("&&");

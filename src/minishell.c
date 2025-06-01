@@ -91,7 +91,6 @@ void ft_clean_mem_loop(t_mem **mem)
 	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
-	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
 	tok->block_count = 0;
 	return ;

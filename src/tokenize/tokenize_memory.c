@@ -20,12 +20,7 @@ void	*ft_init_tok_memory(t_mem **mem)
 		return (NULL);
 	(*mem)->tokenize->operators = NULL;
 	(*mem)->tokenize->toklst = NULL;
-	(*mem)->tokenize->last_of_list = NULL;
-	(*mem)->tokenize->last_of_toks = NULL;
-	(*mem)->tokenize->new = NULL;
-	(*mem)->tokenize->node = NULL;
 	(*mem)->tokenize->previous = NULL;
-	(*mem)->tokenize->str = NULL;
 	(*mem)->tokenize->remain = NULL;
 	(*mem)->tokenize->get_delimiter = false;
 	(*mem)->tokenize->block_count = 0;
@@ -38,7 +33,6 @@ void	ft_clear_tok_mem(t_tok_mem **tok)
 {
 	ft_dlstclear(&(*tok)->toklst, ft_del_token_node);
 	ft_free_str_array((*tok)->operators);
-	ft_free_and_null((void *)&(*tok)->str);
 	ft_free_and_null((void *)&(*tok)->remain);
 	free(*tok);
 	return ;

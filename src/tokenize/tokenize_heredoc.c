@@ -14,7 +14,7 @@
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
 
-void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
+void	*ft_process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 {
 	if ((*tok)->get_delimiter)
 	{

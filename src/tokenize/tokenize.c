@@ -75,7 +75,7 @@ static int	ft_capture_heredocs(t_tok_mem **tok, t_mem **mem)
 	while (trav)
 	{
 		node = (t_tok_node *)trav->content;
-		if (!process_heredoc(node, tok, mem))
+		if (!ft_process_heredoc(node, tok, mem))
 			return (1);
 		trav = trav->next;
 	}
