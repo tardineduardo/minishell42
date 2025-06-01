@@ -6,13 +6,12 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 22:13:26 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 15:27:14 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
-#include "../../include/expand.h"
 
 void	*ft_init_hdc_memory(t_mem **mem)
 {
