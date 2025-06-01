@@ -57,7 +57,7 @@ t_ast_node	*create_pipeline_node(t_list *cmds_lst)
 	return (node);
 }
 
-t_ast_node	*create_logical_node(logical_op op, t_ast_node *left, t_ast_node *right)
+t_ast_node	*create_logical_node(t_logical_op op, t_ast_node *left, t_ast_node *right)
 {
 	t_ast_node		*node;
 	t_logical_data	*logical;
