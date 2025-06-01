@@ -14,6 +14,7 @@
 # define AST_H
 
 # include "minishell.h"
+# include "parsing.h"
 
 typedef enum e_node_mode
 {
@@ -31,6 +32,7 @@ typedef enum e_logical_op
 
 typedef struct s_cmd_node	t_cmd_node;
 typedef struct s_ast_node	t_ast_node;
+typedef struct s_block_node	t_block_node;
 
 typedef struct s_pipe_data
 {
@@ -59,16 +61,6 @@ typedef struct s_subshell_data
 {
 	t_ast_node	*body;
 }	t_subshell_data;
-
-typedef struct s_block_node
-{
-	char	**cmd_arr;
-	t_list	*cmd_lst;
-	t_list	*input_lst;
-	t_list	*output_lst;
-	t_list	*redirs_lst;
-	int		err;
-}			t_block_node;
 
 typedef struct s_ast_node
 {

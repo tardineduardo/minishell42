@@ -13,6 +13,7 @@
 #ifndef PARSING_H
 # define PARSING_H
 
+# include "ast.h"
 # include "minishell.h"
 # include "../libs/libft/libft.h"
 
@@ -54,6 +55,16 @@ typedef struct s_redirs_node
 	bool			create;
 	int				err;
 }					t_redirs_node;
+
+typedef struct s_block_node
+{
+	char	**cmd_arr;
+	t_list	*cmd_lst;
+	t_list	*input_lst;
+	t_list	*output_lst;
+	t_list	*redirs_lst;
+	int		err;
+}			t_block_node;
 
 typedef struct s_par_node
 {

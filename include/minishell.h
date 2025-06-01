@@ -26,17 +26,13 @@
 # include <string.h>
 # include <limits.h>
 
-
-
-
-
-typedef struct s_hdc_mem t_hdc_mem;
-typedef struct s_tok_mem t_tok_mem;
-typedef struct s_exp_mem t_exp_mem;
-typedef struct s_rdl_mem t_rdl_mem;
-typedef struct s_env_mem t_env_mem;
-typedef struct s_par_mem t_par_mem;
-typedef struct s_ast_mem t_ast_mem;
+typedef struct s_hdc_mem	t_hdc_mem;
+typedef struct s_tok_mem	t_tok_mem;
+typedef struct s_exp_mem	t_exp_mem;
+typedef struct s_rdl_mem	t_rdl_mem;
+typedef struct s_env_mem	t_env_mem;
+typedef struct s_par_mem	t_par_mem;
+typedef struct s_ast_mem	t_ast_mem;
 
 typedef enum e_quote
 {
@@ -55,7 +51,7 @@ typedef enum e_mode
 	INIT_MODE,
 }	t_mode;			//compartilhado por expand e heredoc. precisa ficar aqui.
 
-typedef struct	s_mem
+typedef struct s_mem
 {
 	t_rdl_mem		*readline;
 	t_hdc_mem		*heredoc;
@@ -79,9 +75,7 @@ void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
 
+//find a better place for this - builtins and 
 int		ft_count_items(char **str_arr);
-
-
-
 
 #endif
