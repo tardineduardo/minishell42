@@ -14,9 +14,6 @@
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
 
-
-void ft_debug_list(t_dlist **head);
-
 static t_tok_node	*ft_init_tknd(char *str, t_tok_node *node, t_tok_mem **tok)
 {
 	node->value = ft_strdup(str);
@@ -105,67 +102,5 @@ int	ft_tokenize(char **line, t_mem **mem)
 		return (tok->errnmb);
 	if (ft_capture_heredocs(&tok, mem) != 0)
 		return (tok->errnmb);
-
-	//ft_debug_list(&tok->toklst);
-
 	return (0);
-}
-
-
-
-
-
-
-void ft_debug_list(t_dlist **head)
-{
-	t_dlist *trav;
-
-	trav = *head;
-	ft_printf(GREY "HEAD -> " RESET);
-
-	if (!trav)
-	{
-		ft_printf(GREY "NULL\n" RESET);
-		return ;
-	}
-
-	while (trav)
-	{
-		char *tokstr = ((t_tok_node *)trav->content)->value;
-
-		ft_printf(GREY "[" RESET);
-
-		if (ft_strcmp("<<<", tokstr) == 0
-			|| ft_strcmp(">>", tokstr) == 0
-			|| ft_strcmp("<<", tokstr) == 0
-			|| ft_strcmp("2>", tokstr) == 0
-			|| ft_strcmp("&>", tokstr) == 0
-			|| ft_strcmp(">", tokstr) == 0
-			|| ft_strcmp("<", tokstr) == 0)
-		{
-			ft_printf(BRIGHT_BLUE "%s" RESET, tokstr);
-		}
-		else if (ft_strcmp("|", tokstr) == 0)
-		{
-			ft_printf(YELLOW "%s" RESET, tokstr);
-		}
-		else if (ft_strcmp("&", tokstr) == 0
-			|| ft_strcmp("*", tokstr) == 0
-			|| ft_strcmp("&&", tokstr) == 0
-			|| ft_strcmp("||", tokstr) == 0
-			|| ft_strcmp("(", tokstr) == 0
-			|| ft_strcmp(")", tokstr) == 0)
-		{
-			ft_printf(BRIGHT_MAGENTA "%s" RESET, tokstr);
-		}
-		else
-		{
-			ft_printf(GREEN "%s" RESET, tokstr);
-		}
-
-		ft_printf(GREY "] -> " RESET);
-		trav = trav->next;
-	}
-	ft_printf(GREY "NULL\n" RESET);
-
 }
