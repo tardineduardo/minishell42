@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 16:00:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:17:29 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist, char *value, t_mem **mem)
 
 int	ft_cd(t_list **envlist, char **cmd_arr, t_mem **mem)
 {
-	if (cmd_arr[1] != NULL && cmd_arr[2] != NULL)
+	int	size_cmd_arr;
+
+	size_cmd_arr = ft_count_items(cmd_arr);
+	if (size_cmd_arr > 2)
 	{
 		ft_dprintf(2, "%s: too many arguments\n", cmd_arr[0]);
 		return (1);

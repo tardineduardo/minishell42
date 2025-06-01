@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 00:42:10 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:14:41 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char *argv[], char *envp[])
 		head_parlst = mem->parsing->parlst;
 		parse_expression(&head_parlst, &mem);
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
-		if (res != 0)
+		if (res != -1)
 		{
 			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
 			ft_clean_mem_loop(&mem);
