@@ -15,6 +15,7 @@
 #include "../include/tokenize.h"
 #include "../include/expand.h"
 #include "../include/parsing.h"
+#include "../include/ast.h"
 #include "../include/environs.h"
 #include "../include/readline.h"
 #include "../include/execution.h"
