@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/29 17:13:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:35:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	}
 	else
 	{
-		cmd_arr = update_cmd_arr(ms_env, cmd_arr);
+		cmd_arr = update_cmd_arr(ms_env, cmd_arr, mem);
 		if (!cmd_arr)
 		{
 			ft_dprintf(2, "%s: command not found\n", cmd_arr[0]);

@@ -110,6 +110,7 @@ char *get_relative_path(char *relative_path, t_mem **mem)
 			append_to_cwd(&cwd, split[a]);
 		a++;
 	}
+	ft_free_str_array(split);
 	return (cwd);
 }
 

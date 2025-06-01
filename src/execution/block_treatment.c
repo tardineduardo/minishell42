@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:22:44 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/21 14:05:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:34:36 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool	is_already_executable(char *cmd_arr)
 	return (false);
 }
 
-char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
+char	**update_cmd_arr(t_list **ms_env, char **cmd_arr, t_mem **mem)
 {
 	char	**path_options;
 	char	*right_option;
@@ -78,6 +78,12 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
 	if (!is_already_executable(cmd_arr[0]))
 	{
 		path_options = get_path_options(ms_env);
+		if (!path_options)
+		{
+			ft_dprintf(2, "%s: command not found\n", cmd_arr[0]);
+			ft_clear_mem_and_exit(mem);
+			exit(127);
+		}
 		right_option = get_right_path(path_options, cmd_arr[0]);
 		if (!right_option)
 		{

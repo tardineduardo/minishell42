@@ -13,7 +13,7 @@ int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem);
 
 //exec external cmd
 void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem);
-char	**update_cmd_arr(t_list **ms_env, char **cmd_arr);
+char	**update_cmd_arr(t_list **ms_env, char **cmd_arr, t_mem **mem);
 
 //execution
 int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem);
