@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 15:47:36 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 20:16:57 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 	static int	hd_count_int;
 
 	if (!ft_create_hd_filepath(&hd_count_int, &filename))
+		return (NULL);
+	if (!ft_expand(&delimiter, DELIMITER, mem))
 		return (NULL);
 	pid = fork();
 	if (pid < 0)
