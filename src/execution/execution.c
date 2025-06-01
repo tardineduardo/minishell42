@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 18:42:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 20:05:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int print_child_statuses(t_pipe_data *p, int *status)
     else if (WIFEXITED(last_status))
         return (WEXITSTATUS(last_status));
     else
-        return (1);  // Generic error if neither.
+        return (1);
 }
 
 int ft_exec_subshell(t_list **ms_env, t_ast_node **root, t_mem **mem)

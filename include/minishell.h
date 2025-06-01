@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 21:52:51 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:45:38 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,7 @@ typedef struct s_input_node
 }	t_input_node;
 
 t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
-char	**ft_create_cmd_arr_and_expand(t_list **cmdlst, t_mem **mem);
+void		ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node **cmd, t_mem **mem);
 void		ft_free_ast(t_ast_node **node);
+int	only_redir(t_block_node *cmd, t_mem **mem);
 #endif

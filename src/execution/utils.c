@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:45:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 19:06:03 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:39:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "../../include/readline.h"
 #include "../../include/builtins.h"
 #include "../../include/execution.h"
-
 
 int	ft_count_expanded_items(t_list **cmdlst, t_mem **mem)
 {
@@ -51,14 +50,13 @@ void	handle_copy_error(char **cmd_arr, int j)
 	}
 }
 
-char **copy_value_to_cmd_arr(t_list **cmdlst, t_mem **mem, char **cmd_arr)
+char **copy_value_to_cmd_arr(t_list **cmdlst, char **cmd_arr)
 {
 	t_list	*cur_cmd;
 	char	*char_expanded;
 	int		j;
 
 	j = 0;
-	(void)mem;
 	cur_cmd = *cmdlst;
 	while (cur_cmd)
 	{
@@ -76,18 +74,20 @@ char **copy_value_to_cmd_arr(t_list **cmdlst, t_mem **mem, char **cmd_arr)
 	return (cmd_arr);
 }
 
-char	**ft_create_cmd_arr_and_expand(t_list **cmdlst, t_mem **mem)
+void	ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node **cmd, t_mem **mem)
 {
-	char	**cmd_arr;
 	int		size_arr;
 
 	size_arr = ft_count_expanded_items(cmdlst, mem);
-	cmd_arr = ft_calloc(sizeof(char *), (size_arr + 1));
-	if (!cmd_arr)
+	if (size_arr > 0)
 	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
+		(*cmd)->cmd_arr = malloc(sizeof(char *) * (size_arr + 1));
+		if (!(*cmd)->cmd_arr)
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		(*cmd)->cmd_arr = copy_value_to_cmd_arr(cmdlst, (*cmd)->cmd_arr);
 	}
-	cmd_arr = copy_value_to_cmd_arr(cmdlst, mem, cmd_arr);
-	return (cmd_arr);
+	return ;
 }

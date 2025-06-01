@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/30 23:04:20 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 20:16:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	ft_del_cmd_nodes(void *content)
 	cmdnode = (t_cmd_node *)content;
 	if (cmdnode->cmdvalue)
 		free(cmdnode->cmdvalue);
+	free(cmdnode);
 }
 
 
