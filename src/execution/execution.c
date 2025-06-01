@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 20:05:22 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/01 20:30:43 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,31 +56,6 @@ int signal_statuses(int index, int *status)
     return (0);
 }
 
-// int print_child_statuses(t_pipe_data *p, int *status)
-// {
-//     int index;
-//     int i;
-//     int res;
-//     int sig_res;
-
-// 	index = 0;
-// 	res = 0;
-// 	if (p != NULL)
-// 		i = p->num_cmds;
-// 	else
-// 		i = 1;
-//     while (index < i)
-//     {
-//         sig_res = signal_statuses(index, status);
-//         if (sig_res != 0)
-//             return (sig_res);
-//         if (WIFEXITED(status[index]))
-//             res = WEXITSTATUS(status[index]);
-//         index++;
-//     }
-//     return res;
-// }
-
 int print_child_statuses(t_pipe_data *p, int *status)
 {
     int last_index;
@@ -94,7 +69,7 @@ int print_child_statuses(t_pipe_data *p, int *status)
     last_status = status[last_index];
 
     if (WIFSIGNALED(last_status))
-        return (128 + WTERMSIG(last_status));
+        return (signal_statuses(last_index, status));
     else if (WIFEXITED(last_status))
         return (WEXITSTATUS(last_status));
     else
