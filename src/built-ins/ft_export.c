@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 19:23:47 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:02:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ int	ft_export(t_list **envlist, char *variable_value)
 	var_found = ft_find_var(*envlist, var);
 
 	if (var_found)
+	{
 		ft_update_envnode_value(var_found, val);
+		free(var);
+	}
 	else
 		if(!ft_ms_env_add(envlist, var, val))
 			return (EXIT_FAILURE);
