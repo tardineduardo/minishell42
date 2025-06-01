@@ -13,7 +13,7 @@
 #include "../../include/minishell.h"
 #include "../../include/tokenize.h"
 
-int	ft_find_word_limit(t_tok_mem **tok, char *str)
+static int	ft_find_word_limit(t_tok_mem **tok, char *str)
 {
 	int	i;
 
@@ -39,33 +39,49 @@ int	ft_find_word_limit(t_tok_mem **tok, char *str)
 	return (i);
 }
 
+static int	ft_handle_quotes(char *str, t_tok_mem **tok, int *i)
+{
+	if (ft_is_single_quote(&str[*i]) || ft_is_double_quote(&str[*i]))
+	{
+		*i += ft_find_word_limit(tok, &str[*i]);
+		return (1);
+	}
+	return (0);
+}
+
+static int	ft_handle_operator(char *str, t_tok_mem **tok, int i)
+{
+	int	operator_len;
+
+	if (ft_is_oper_token(&str[i], tok, &operator_len))
+	{
+		if (i == 0)
+			return (operator_len);
+		return (i);
+	}
+	return (-1);
+}
+
 int	ft_find_token_limit(char *str, t_tok_mem **tok)
 {
-	int		i;
-	int		operator_len;
+	int	i;
+	int	op_len;
 
 	i = 0;
 	while (str[i])
 	{
 		if (ft_isspace(str[i]))
 			break ;
-		if (ft_is_single_quote(&str[i]) || ft_is_double_quote(&str[i]))
+		if (ft_handle_quotes(str, tok, &i))
+			continue ;
+		if (str[i] == '\\')
 		{
-			i += ft_find_word_limit(tok, &str[i]);
+			i += 2;
 			continue ;
 		}
-		if (ft_isspace(str[i]))
-			break ;
-		if (str[i] == '\\')
-			i += 2;
-		if (ft_isspace(str[i]))
-			break ;
-		if (ft_is_oper_token(&str[i], tok, &operator_len))
-		{
-			if (i == 0)
-				return (operator_len);
-			return (i);
-		}
+		op_len = ft_handle_operator(str, tok, i);
+		if (op_len != -1)
+			return (op_len);
 		i++;
 	}
 	return (i);
