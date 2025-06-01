@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   toksing.c                                          :+:      :+:    :+:   */
+/*   tokenize_syntax_cases.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 12:43:10 by luide-ca         ###   ########.fr       */
+/*   Created: 2025/05/31 23:35:26 by eduribei          #+#    #+#             */
+/*   Updated: 2025/05/31 23:36:57 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/checks.h"
 
-bool	operators_are_supported(t_dlist *trav, t_tok_mem **tok)
+bool	ft_operators_are_supported(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 
@@ -33,7 +31,7 @@ bool	operators_are_supported(t_dlist *trav, t_tok_mem **tok)
 	return (true);
 }
 
-bool	redirects_are_complete(t_dlist *trav, t_tok_mem **tok)
+bool	ft_redirects_are_complete(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -50,7 +48,7 @@ bool	redirects_are_complete(t_dlist *trav, t_tok_mem **tok)
 	return (true);
 }
 
-bool	subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
+bool	ft_subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -69,7 +67,7 @@ bool	subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 	return (true);
 }
 
-bool	logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
+bool	ft_logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
@@ -88,7 +86,7 @@ bool	logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 	return (true);
 }
 
-bool	pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
+bool	ft_pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;

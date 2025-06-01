@@ -6,14 +6,13 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:54:54 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 20:57:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 22:44:44 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef READLINE_H
 # define READLINE_H
 
-# include "../libs/libft/libft.h"
 # include "minishell.h" 
 # include "tokenize.h"
 
