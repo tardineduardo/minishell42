@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 19:28:49 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:29:54 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	*fill_bnode_cmdsa(t_dlist **toklst, t_par_node **pnode, t_par_mem **par)
 			return (NULL);
 
 	//CMDLST - nova versao para criar cmd_lst
-	cmdnode = malloc(sizeof(t_cmd_node *));
+	cmdnode = malloc(sizeof(t_cmd_node));
 	if (!cmdnode)
 		return (ft_par_syscall_error(par, "fill_blcknode_cmdarray"));
 	cmdnode->cmdvalue = ft_strdup(toknode->value);

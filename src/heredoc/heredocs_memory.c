@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 19:15:02 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/05/31 22:13:26 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	*ft_init_hdc_memory(t_mem **mem)
 		return (NULL);
 	(*mem)->heredoc->delim = NULL;
 	(*mem)->heredoc->filepath = NULL;
-	(*mem)->heredoc->looptemp = NULL;
-	(*mem)->heredoc->loopinput = NULL;
 	(*mem)->heredoc->mode = INIT_MODE;
 	return ((*mem)->heredoc);
 }

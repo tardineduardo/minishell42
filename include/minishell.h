@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
 /*   Updated: 2025/05/31 21:45:38 by luide-ca         ###   ########.fr       */
@@ -66,7 +66,6 @@ extern volatile int	g_signal;
 void	ft_init_minishell_memory(t_mem **mem, char **envp);
 void	ft_clean_mem_loop(t_mem **mem);
 void	ft_clear_mem_and_exit(t_mem **mem);
-char	*ft_capture_in_interactive_mode(char *prompt);
 
 // handle signals
 void	handle_signal_prompt(int signo);
