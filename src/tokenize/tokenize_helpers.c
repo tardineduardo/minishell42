@@ -6,24 +6,39 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 00:51:12 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/expand.h"
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/parsing.h"
 
-void	ft_tokeniztion_escape(int *i)
+t_oper	ft_get_oper(char *value)
 {
-	(*i)++;
-	(*i)++;
-	return ;
+	if (ft_strcmp("&&", value) == 0)
+		return (AND_O);
+	else if (ft_strcmp("||", value) == 0)
+		return (OR_O);
+	else if (ft_strcmp("(", value) == 0)
+		return (GSTART_O);
+	else if (ft_strcmp(")", value) == 0)
+		return (GEND_O);
+	else if (ft_strcmp("|", value) == 0)
+		return (PIPE_O);
+	else if (ft_strcmp("<", value) == 0)
+		return (IN_R);
+	else if (ft_strcmp(">", value) == 0)
+		return (OUT_R);
+	else if (ft_strcmp(">>", value) == 0)
+		return (APPD_R);
+	else if (ft_strcmp("<<", value) == 0)
+		return (HDC_R);
+	else if (ft_strcmp("*", value) == 0)
+		return (WILD_R);
+	return (WORD);
 }
 
-char	*getop(t_tok_node *tok)
+char	*ft_getop(t_tok_node *tok)
 {
 	if (tok->oper == AND_O)
 		return ("&&");

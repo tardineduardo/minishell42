@@ -69,7 +69,7 @@ t_par_node	*init_pnd(int a, t_par_node **pnd, t_dlist **tklst, t_par_mem **par)
 	toknode = (t_tok_node *)first->content;
 	(*pnd)->block_index = toknode->block_index;
 	(*pnd)->block_node = NULL;
-	if (is_pipe_logical_subshell(toknode))
+	if (ft_is_pipe_logical_subshell(toknode))
 	{
 		(*pnd)->oper = toknode->oper;
 		ft_dlst_quick_destroy_node(tklst, *tklst, ft_del_token_node);
@@ -94,12 +94,12 @@ static void	*initloop(int a, t_par_node **pnd, t_dlist **tklst, t_par_mem **par)
 		toknode = (t_tok_node *)first->content;
 		if (toknode->block_index > a || toknode->block_index == -1)
 			return (*pnd);
-		if (is_redir(toknode))
+		if (ft_is_redir(toknode))
 		{
 			if (!fill_bnode_redir(tklst, pnd, par))
 				return (NULL);
 		}
-		else if (is_word(toknode))
+		else if (ft_is_word(toknode))
 		{
 			if (!fill_bnode_cmdsa(tklst, pnd, par))
 				return (NULL);
@@ -122,9 +122,9 @@ int	count_num_parsnodes(t_dlist **toklst)
 		toknode = (t_tok_node *)trav->content;
 		if (trav == *toklst)
 			total_parsnodes++;
-		else if (is_command(toknode) && !is_command(prevtok))
+		else if (ft_is_command(toknode) && !ft_is_command(prevtok))
 			total_parsnodes++;
-		else if (is_pipe_logical_subshell(toknode))
+		else if (ft_is_pipe_logical_subshell(toknode))
 			total_parsnodes++;
 		prevtok = toknode;
 		trav = trav->next;

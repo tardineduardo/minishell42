@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 20:08:48 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 00:42:10 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,7 @@ void ft_clean_mem_loop(t_mem **mem)
 	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
-	ft_free_and_null((void *)&tok->str);
 	ft_free_and_null((void *)&tok->remain);
 	tok->block_count = 0;
-	tok->index_count = 0;	
 	return ;
 }

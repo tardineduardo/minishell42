@@ -3,20 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/30 19:16:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/01 00:50:53 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/expand.h"
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/parsing.h"
 
-void	*process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
+void	*ft_process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 {
 	if ((*tok)->get_delimiter)
 	{

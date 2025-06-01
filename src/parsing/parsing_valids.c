@@ -15,7 +15,7 @@
 #include "../../include/tokenize.h"
 #include "../../include/checks.h"
 
-bool	is_redir(t_tok_node *toknode)
+bool	ft_is_redir(t_tok_node *toknode)
 {
 	if (toknode->oper == IN_R || toknode->oper == OUT_R
 		|| toknode->oper == HDC_R || toknode->oper == APPD_R)
@@ -26,14 +26,14 @@ bool	is_redir(t_tok_node *toknode)
 	return (false);
 }
 
-bool	is_word(t_tok_node *toknode)
+bool	ft_is_word(t_tok_node *toknode)
 {
 	if (toknode->oper == WORD)
 		return (true);
 	return (false);
 }
 
-bool	is_command(t_tok_node *toknode)
+bool	ft_is_command(t_tok_node *toknode)
 {
 	if (toknode->oper == WORD)
 		return (true);
@@ -46,7 +46,7 @@ bool	is_command(t_tok_node *toknode)
 	return (false);
 }
 
-bool	is_pipe_logical_subshell(t_tok_node *toknode)
+bool	ft_is_pipe_logical_subshell(t_tok_node *toknode)
 {
 	if (toknode->oper == PIPE_O || toknode->oper == GSTART_O
 		|| toknode->oper == GEND_O || toknode->oper == AND_O

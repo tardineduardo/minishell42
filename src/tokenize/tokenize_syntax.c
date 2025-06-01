@@ -1,19 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   toksing.c                                          :+:      :+:    :+:   */
+/*   tokenize_syntax.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 12:43:10 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 23:38:32 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/checks.h"
 
 int	ft_check_syntax(t_dlist *toklst, t_tok_mem **tok)
 {
@@ -22,15 +20,15 @@ int	ft_check_syntax(t_dlist *toklst, t_tok_mem **tok)
 	trav = toklst;
 	while (trav)
 	{
-		if (!operators_are_supported(trav, tok))
+		if (!ft_operators_are_supported(trav, tok))
 			return (1);
-		if (!redirects_are_complete(trav, tok))
+		if (!ft_redirects_are_complete(trav, tok))
 			return (1);
-		if (!subshell_opers_are_correct(trav, tok))
+		if (!ft_subshell_opers_are_correct(trav, tok))
 			return (1);
-		if (!logic_opers_are_correct(trav, tok))
+		if (!ft_logic_opers_are_correct(trav, tok))
 			return (1);
-		if (!pipe_opers_are_correct(trav, tok))
+		if (!ft_pipe_opers_are_correct(trav, tok))
 			return (1);
 		trav = trav->next;
 	}
