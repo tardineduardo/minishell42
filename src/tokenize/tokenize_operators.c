@@ -18,7 +18,7 @@ static bool	ft_check_success(t_tok_mem **tok)
 	int		a;
 
 	a = 0;
-	while (a < 14)
+	while (a < NBOPERATORS)
 	{
 		if (!(*tok)->operators[a])
 			return (false);
@@ -29,7 +29,7 @@ static bool	ft_check_success(t_tok_mem **tok)
 
 void	*ft_init_operators(t_tok_mem **tok)
 {
-	(*tok)->operators = malloc(15 * sizeof(char *));
+	(*tok)->operators = malloc((NBOPERATORS + 1) * sizeof(char *));
 	if (!(*tok)->operators)
 		return (NULL);
 	(*tok)->operators[0] = ft_strdup("<<<");
