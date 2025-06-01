@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:45:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 20:09:54 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:39:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,20 @@ char **copy_value_to_cmd_arr(t_list **cmdlst, char **cmd_arr)
 	return (cmd_arr);
 }
 
-void	ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node *cmd, t_mem **mem)
+void	ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node **cmd, t_mem **mem)
 {
 	int		size_arr;
 
 	size_arr = ft_count_expanded_items(cmdlst, mem);
-	cmd->cmd_arr = malloc(sizeof(char *) * (size_arr + 1));
-	if (!cmd->cmd_arr)
+	if (size_arr > 0)
 	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
+		(*cmd)->cmd_arr = malloc(sizeof(char *) * (size_arr + 1));
+		if (!(*cmd)->cmd_arr)
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		(*cmd)->cmd_arr = copy_value_to_cmd_arr(cmdlst, (*cmd)->cmd_arr);
 	}
-	cmd->cmd_arr = copy_value_to_cmd_arr(cmdlst, cmd->cmd_arr);
 	return ;
 }
