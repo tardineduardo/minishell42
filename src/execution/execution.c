@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 14:21:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:12:29 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 	else if ((*root)->type == NODE_SUBSHELL)
 		return (ft_exec_subshell(ms_env, &(*root)->subshell->body, mem));
 	else if ((*root)->type == NODE_PIPELINE)
-		res = exec_pipeline(ms_env, &(*root)->pipeline->cmds, (*root)->pipeline->cmd_count, mem);
+		res = exec_pipeline(ms_env, &(*root)->pipeline->cmds,
+				(*root)->pipeline->cmd_count, mem);
 	return (res);
 }

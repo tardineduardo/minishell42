@@ -17,6 +17,8 @@ int			file_input_handler(t_list **input_lst, t_mem **mem);
 int			file_output_handler(t_list **output_lst, t_mem **mem);
 void		fd_input_redir(t_list **input_lst, t_mem **mem);
 void		fd_output_redir(t_list **output_lst, t_mem **mem);
+void		test_input_redir(char *expanded_name, t_mem **mem);
+void		teste_output_redir(char *expanded_name, bool create, t_mem **mem);
 
 //exec external cmd
 void		exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem);
