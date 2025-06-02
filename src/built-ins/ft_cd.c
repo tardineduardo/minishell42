@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/01 17:04:14 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 18:22:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "../../include/environs.h"
 #include "../../include/heredoc.h"
 #include "../../include/builtins.h"
+#include "../../include/checks.h"
 
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value)
 {
@@ -43,7 +44,7 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist, char *value, t_mem **mem)
 {
 	t_list		*trav;
 	t_env_node	*current;
-	char		*absolute_path;
+	char		*path;
 
 	trav = *envlist;
 	while (trav)
@@ -56,9 +57,11 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist, char *value, t_mem **mem)
 		}
 		trav = trav->next;
 	}
-	absolute_path = get_relative_path(value, mem);
-	ft_ms_env_update_cd(envlist, "PWD", absolute_path);
-	free(absolute_path);
+	path = get_abs_path(value);
+	if (path == NULL)
+		path = get_relative_path(value, mem);
+	ft_ms_env_update_cd(envlist, "PWD", path);
+	free(path);
 }
 
 char	*ft_set_home_value(t_list **envlist)
