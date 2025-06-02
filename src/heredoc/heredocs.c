@@ -56,7 +56,7 @@ static void	ft_capture_loop(char *delim, int fd, t_mem **mem)
 		{
 			exit(EXIT_FAILURE);
 			ft_printf("ft_capture_loop 15\n");
-		}	
+		}
 		ft_printf("ft_capture_loop 16\n");
 		ft_dprintf(fd, "%s\n", line);
 		ft_printf("ft_capture_loop 17\n");
@@ -81,23 +81,23 @@ static void	ft_run_heredoc_child(char *filepath, char *delim, t_mem **mem)
 	exit(EXIT_SUCCESS);
 }
 
-char	*ft_heredoc(char *delimiter, t_mem **mem)
+char	*ft_heredoc(char **delimiter, t_mem **mem)
 {
 	pid_t		pid;
 	char		*filename;
 	static int	hd_count_int;
-	int 		status;
+	int			status;
 
 	if (!ft_create_hd_filepath(&hd_count_int, &filename))
-		return (NULL);
-	if (!ft_expand(&delimiter, DELIMITER, mem))
+		return (NULL);	
+	if (!ft_expand(&(*delimiter), DELIMITER, mem))
 		return (NULL);
 	pid = fork();
 	if (pid < 0)
 		return (NULL);
 	if (pid == 0)
 	{
-		ft_run_heredoc_child(filename, delimiter, mem);
+		ft_run_heredoc_child(filename, *delimiter, mem);
 		ft_printf("ft_heredoc (child) 1\n");
 	}
 	ft_printf("ft_heredoc (parent) 2\n");
@@ -109,7 +109,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 		ft_printf("ft_heredoc (parent) 4\n");
 		unlink(filename);
 		ft_printf("ft_heredoc (parent) 5\n");
-		//free(filename);
+		free(filename);
 		ft_printf("ft_heredoc (parent) 6\n");
 		return (NULL);
 	}

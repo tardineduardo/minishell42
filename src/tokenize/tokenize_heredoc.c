@@ -20,7 +20,7 @@ void	*ft_process_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
 	{
 		if (node->oper != WORD)
 			return (NULL);
-		node->heredoc_path = ft_heredoc(node->value, mem);
+		node->heredoc_path = ft_heredoc(&node->value, mem);
 		if (!node->heredoc_path)
 		{
 			(*tok)->errnmb = (*mem)->heredoc->errnum;

@@ -88,6 +88,7 @@ static void	ft_dlstclear_debug_tok(t_dlist **lst, void (*del)(void*))
 		free(curr);
 		curr = next;
 	}
+	(void)tok;
 	*lst = NULL;
 }
 
@@ -113,5 +114,7 @@ void ft_clean_mem_loop(t_mem **mem)
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->remain);
 	tok->block_count = 0;
+	tok->get_delimiter = false;
 	return ;
+
 }
