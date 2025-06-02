@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 15:49:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:45:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 #include "../../include/builtins.h"
 #include "../../include/execution.h"
 
-void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
+void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
+	t_block_node *cmd, t_mem **mem)
 {
 	pid_t	pid;
 	int		res;
@@ -79,10 +80,7 @@ int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 	while (node && p.i < num_cmds)
 	{
 		if (p.i < num_cmds - 1 && pipe(p.pipefd) == -1)
-		{
-			perror("pipe");
-			exit(1);
-		}
+			ft_handle_exec_error("pipe");
 		exec_child_pipe_cmd(&p, env, (t_block_node *)node->content, mem);
 		if (p.i > 0)
 			close(p.prev_fd);

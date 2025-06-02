@@ -52,6 +52,7 @@ EXECUTE		= 	src/execution/execution.c \
 				src/execution/built_in.c \
 				src/execution/ext_cmd.c \
 				src/execution/redir_control.c \
+				src/execution/redir_control_utils.c \
 				src/execution/exit_code.c \
 
 SIGNALS		= 	src/signals.c \
@@ -66,7 +67,8 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 
 CHECK		= 	src/checks.c \
 
-ERROR		=	src/error.c \
+ERROR		=	src/error/error.c \
+				src/error/error_utils.c \
 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \

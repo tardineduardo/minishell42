@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:52 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/22 12:54:45 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:45:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ t_ast_node	*create_pipeline_node(t_list *cmds_lst)
 	return (node);
 }
 
-t_ast_node	*create_logical_node(logical_op op, t_ast_node *left, t_ast_node *right)
+t_ast_node	*create_logical_node(logical_op op,
+	t_ast_node *left, t_ast_node *right)
 {
 	t_ast_node		*node;
 	t_logical_data	*logical;
