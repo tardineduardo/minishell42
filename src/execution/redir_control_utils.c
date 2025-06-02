@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:39:05 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:41:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:00:19 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ int	redir_files_validation(t_list **redir_lst, t_mem **mem)
 		if (cur_redir->type == IN_R || cur_redir->type == HDC_R)
 		{
 			if (access(cur_red_expd, F_OK) != 0)
-			{
-				ft_dprintf(2, "%s: No such file or directory\n", cur_red_expd);
-				exit(1);
-			}
+				ft_error_handler("%s: No such file or directory\n", cur_red_expd, 1, mem);
 			fd = open(cur_red_expd, O_RDONLY);
 			if (fd == -1)
 				exit(1);
@@ -47,20 +44,14 @@ int	redir_files_validation(t_list **redir_lst, t_mem **mem)
 			{
 				fd = open(cur_red_expd, O_WRONLY | O_APPEND | O_CREAT, 0644);
 				if (fd == -1)
-				{
-					ft_dprintf(2, "%s: Permission denied\n", cur_red_expd);
-					exit(1);
-				}
+					ft_error_handler("%s: Permission denied\n", cur_red_expd, 1, mem);
 				close(fd);
 			}
 			else
 			{
 				fd = open(cur_red_expd, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 				if (fd == -1)
-				{
-					ft_dprintf(2, "%s: Permission denied\n", cur_red_expd);
-					return (1);
-				}
+					ft_error_handler("%s: Permission denied\n", cur_red_expd, 1, mem);
 				close(fd);
 			}
 		}

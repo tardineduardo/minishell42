@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 16:31:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:00:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,9 +161,5 @@ void		ft_free_ast(t_ast_node **node);
 int	only_redir(t_block_node *cmd, t_mem **mem);
 
 //error handlers
-void	ft_error_one_hundred_six(char *err_msg, char *world);
-void	ft_error_one_hundred_seven(char *err_msg, char *world);
-void	ft_error_two(char *err_msg, char *world);
-void	ft_error_one(char *err_msg, char *world);
 void	ft_handle_exec_error(const char *context);
 #endif

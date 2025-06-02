@@ -68,7 +68,6 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 CHECK		= 	src/checks.c \
 
 ERROR		=	src/error/error.c \
-				src/error/error_utils.c \
 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
