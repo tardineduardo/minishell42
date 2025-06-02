@@ -40,8 +40,8 @@ PARSER		=	src/parsing/parsing_command.c \
 				src/parsing/parsing.c \
 
 AST 		=	src/ast/init_ast.c \
-				src/ast/parse_ast.c \
-				src/ast/free_ast.c \
+				src/ast/ast_parse.c \
+				src/ast/ast_memory.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \
