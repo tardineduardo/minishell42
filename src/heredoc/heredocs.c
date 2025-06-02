@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 20:16:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:30:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ static void	ft_capture_loop(char *delim, int fd, t_mem **mem)
 		prompt = ft_concatenate("heredoc [", delim, "] > ");
 		line = readline(prompt);
 		free(prompt);
+		if (!line)
+		{
+			if (g_signal == SIGINT)
+				ft_clear_mem_and_exit(mem);
+			exit(EXIT_FAILURE);
+		}
 		if (!line)
 			exit(EXIT_FAILURE);
 		if (ft_strcmp(line, delim) == 0)
@@ -59,6 +65,7 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 	pid_t		pid;
 	char		*filename;
 	static int	hd_count_int;
+	int 		status;
 
 	if (!ft_create_hd_filepath(&hd_count_int, &filename))
 		return (NULL);
@@ -69,6 +76,12 @@ char	*ft_heredoc(char *delimiter, t_mem **mem)
 		return (NULL);
 	if (pid == 0)
 		ft_run_heredoc_child(filename, delimiter, mem);
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
+	{
+		unlink(filename);
+		free(filename);
+		return (NULL);
+	}
 	return (filename);
 }
