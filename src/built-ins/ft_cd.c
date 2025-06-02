@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 18:47:39 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:09:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,27 +39,38 @@ void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value)
 	}
 }
 
-void	ft_update_pwd_and_oldpwd(t_list **envlist)
+char	*ft_get_env_value(t_list **envlist, char *env_variable)
 {
 	t_list		*trav;
 	t_env_node	*current;
-	char		*oldpwd;
-	char		*newpwd;
+	char		*value;
 
-	oldpwd = NULL;
+	value = NULL;
 	trav = *envlist;
 	while (trav)
 	{
 		current = (t_env_node *)trav->content;
-		if (ft_strcmp(current->variable, "PWD") == 0)
+		if (ft_strcmp(current->variable, env_variable) == 0)
 		{
-			oldpwd = current->value;
-			break;
+			value = current->value;
+			break ;
 		}
 		trav = trav->next;
 	}
+	return (value);
+}
+
+void	ft_update_pwd_and_oldpwd(t_list **envlist)
+{
+	char		*oldpwd;
+	char		*newpwd;
+
+	oldpwd = ft_get_env_value(envlist, "PWD");
 	if (oldpwd)
+	{
 		ft_ms_env_update_cd(envlist, "OLDPWD", oldpwd);
+		free(oldpwd);
+	}
 	newpwd = getcwd(NULL, 0);
 	if (newpwd)
 	{
@@ -68,40 +79,23 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist)
 	}
 }
 
-char	*ft_set_home_value(t_list **envlist)
+void	ft_set_home_value(t_list **envlist)
 {
-	t_list		*trav;
-	t_env_node	*current;
 	char		*home_value;
+	char		*oldpwd;
 
-	trav = *envlist;
-	while (trav)
+	home_value = ft_get_env_value(envlist, "HOME");
+	oldpwd = ft_get_env_value(envlist, "PWD");
+	if (oldpwd)
 	{
-		current = (t_env_node *)trav->content;
-		if (ft_strcmp(current->variable, "HOME") == 0)
-		{
-			home_value = ft_strdup(current->value);
-			break ;
-		}
-		trav = trav->next;
+		ft_ms_env_update_cd(envlist, "OLDPWD", oldpwd);
+		free(oldpwd);
 	}
-	if (chdir(home_value) == 0)
+	if (home_value)
 	{
-		trav = *envlist;
-		while (trav)
-		{
-			current = (t_env_node *)trav->content;
-			if (ft_strcmp(current->variable, "PWD") == 0)
-			{
-				ft_ms_env_update_cd(envlist, "OLDPWD", current->value);
-				break ;
-			}
-			trav = trav->next;
-		}
 		ft_ms_env_update_cd(envlist, "PWD", home_value);
+		free(home_value);
 	}
-	free(home_value);
-	return (NULL);
 }
 
 int	ft_cd(t_list **envlist, char **cmd_arr)
