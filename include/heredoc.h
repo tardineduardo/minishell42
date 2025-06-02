@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 22:11:48 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 22:13:37 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:39:58 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 typedef struct s_hdc_mem
 {
+	int			errnum;
 	char		*delim;
 	char		*filepath;
 	t_mode		mode;
