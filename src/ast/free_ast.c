@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 20:16:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:21:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,6 @@ void	ft_del_redirs_nodes(void *content)
 		ft_free_and_null((void *)&redir_node);
 }
 
-//NOVA FUNÇÃO PARA LIMPAR CMDLIST
-//NOVA FUNÇÃO PARA LIMPAR CMDLIST
-//NOVA FUNÇÃO PARA LIMPAR CMDLIST
-//NOVA FUNÇÃO PARA LIMPAR CMDLIST
-//NOVA FUNÇÃO PARA LIMPAR CMDLIST
 void	ft_del_cmd_nodes(void *content)
 {
 	t_cmd_node	*cmdnode;
@@ -50,8 +45,6 @@ void	ft_del_cmd_nodes(void *content)
 		free(cmdnode->cmdvalue);
 	free(cmdnode);
 }
-
-
 
 void	free_block_node(void *ptr)
 {
@@ -68,15 +61,8 @@ void	free_block_node(void *ptr)
 		ft_lstclear(&blk->input_lst, NULL);
 	if (blk->cmd_arr)
 		ft_free_and_null_str_array(&blk->cmd_arr);
-
-
-	//NOVA FUNÇÃO PARA LIMPAR CMDLIST
-	//NOVA FUNÇÃO PARA LIMPAR CMDLIST
-	//NOVA FUNÇÃO PARA LIMPAR CMDLIST
 	if (blk->cmd_lst)
 		ft_lstclear(&blk->cmd_lst, ft_del_cmd_nodes);
-
-
 	free(blk);
 }
 
@@ -123,7 +109,7 @@ void	ft_free_ast(t_ast_node **node)
 			free(sub);
 		}
 	}
-	ft_free_and_null((void**)node);
+	ft_free_and_null((void **)node);
 }
 
 void	ft_clear_ast_mem(t_ast_mem **ast)

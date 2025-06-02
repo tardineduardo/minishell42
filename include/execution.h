@@ -52,4 +52,7 @@ t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem);
 t_ast_node	*parse_command_or_group(t_list **parlst, t_mem **mem);
 t_ast_node	*parse_command(t_list **parlst, t_mem **mem);
 
+int			ft_error_handler(char *err_msg, char *world, int exit_code, t_mem **mem);
+void		ft_handle_exec_error(const char *context);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/01 20:30:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:21:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,46 +37,44 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 	return (res);
 }
 
-int signal_statuses(int index, int *status)
+int	signal_statuses(int index, int *status)
 {
-    int sig;
+	int	sig;
 
-    if (WIFSIGNALED(status[index]))
-    {
-        sig = WTERMSIG(status[index]);
-        if (sig == SIGPIPE)
-            ft_dprintf(STDERR_FILENO, " Broken pipe\n");
-        if (sig == SIGQUIT)
-        {
-            ft_printf("Quit (core dumped)\n");
-            return (128 + sig);
-        }
-        return (128 + sig);
-    }
-    return (0);
+	if (WIFSIGNALED(status[index]))
+	{
+		sig = WTERMSIG(status[index]);
+		if (sig == SIGPIPE)
+			ft_dprintf(STDERR_FILENO, " Broken pipe\n");
+		if (sig == SIGQUIT)
+		{
+			ft_printf("Quit (core dumped)\n");
+			return (128 + sig);
+		}
+		return (128 + sig);
+	}
+	return (0);
 }
 
-int print_child_statuses(t_pipe_data *p, int *status)
+int	print_child_statuses(t_pipe_data *p, int *status)
 {
-    int last_index;
-    int last_status;
+	int	last_index;
+	int	last_status;
 
-    if (p != NULL)
-        last_index = p->num_cmds - 1;
-    else
-        last_index = 0;
-
-    last_status = status[last_index];
-
-    if (WIFSIGNALED(last_status))
-        return (signal_statuses(last_index, status));
-    else if (WIFEXITED(last_status))
-        return (WEXITSTATUS(last_status));
-    else
-        return (1);
+	if (p != NULL)
+		last_index = p->num_cmds - 1;
+	else
+		last_index = 0;
+	last_status = status[last_index];
+	if (WIFSIGNALED(last_status))
+		return (signal_statuses(last_index, status));
+	else if (WIFEXITED(last_status))
+		return (WEXITSTATUS(last_status));
+	else
+		return (1);
 }
 
-int ft_exec_subshell(t_list **ms_env, t_ast_node **root, t_mem **mem)
+int	ft_exec_subshell(t_list **ms_env, t_ast_node **root, t_mem **mem)
 {
 	int		ret;
 	int		status;

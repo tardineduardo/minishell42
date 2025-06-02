@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:03:08 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/30 21:32:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:22:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	ft_ms_env_add_exit_code(t_list **envlist, char *variable, int value)
 
 	if (!(*envlist) || !variable)
 		return ;
-
 	val = ft_itoa(value);
 	new_env_node = ft_init_env_node(variable, val, false);
 	ft_add_to_envlist(envlist, new_env_node);

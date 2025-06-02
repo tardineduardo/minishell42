@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 18:39:16 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:28:30 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	fd_output_redir(t_list **output_lst, t_mem **mem)
 	}
 }
 
-bool save_termios(struct termios *saved)
+bool	save_termios(struct termios *saved)
 {
 	if (isatty(STDIN_FILENO))
 	{
@@ -165,7 +165,7 @@ bool save_termios(struct termios *saved)
 	return (false);
 }
 
-bool restore_termios(struct termios *saved)
+bool	restore_termios(struct termios *saved)
 {
 	if (isatty(STDIN_FILENO))
 	{
@@ -177,9 +177,9 @@ bool restore_termios(struct termios *saved)
 
 int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2], t_mem **mem)
 {
-	int res;
-	struct termios old_termios;
-	bool has_termios;
+	struct termios	old_termios;
+	int				res;
+	bool			has_termios;
 
 	has_termios = save_termios(&old_termios);
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
@@ -205,9 +205,9 @@ int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd, int pipefd[2]
 
 int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 {
-	int res;
-	struct termios old_termios;
-	bool has_termios;
+	struct termios	old_termios;
+	int				res;
+	bool			has_termios;
 
 	has_termios = save_termios(&old_termios);
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
@@ -219,15 +219,15 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 	if (cur_cmd->output_lst != NULL)
 		fd_output_redir(&cur_cmd->output_lst, mem);
 	if (has_termios)
-		restore_termios(&old_termios); 
+		restore_termios(&old_termios);
 	return (res);
 }
 
 int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem)
 {
-	int res;
-	struct termios old_termios;
-	bool has_termios;
+	struct termios	old_termios;
+	int				res;
+	bool			has_termios;
 
 	has_termios = save_termios(&old_termios);
 	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
@@ -236,6 +236,6 @@ int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem)
 	if (cur_cmd->output_lst != NULL)
 		fd_output_redir(&cur_cmd->output_lst, mem);
 	if (has_termios)
-		restore_termios(&old_termios); 
+		restore_termios(&old_termios);
 	return (res);
 }
