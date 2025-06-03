@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:53:05 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 17:53:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:19:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_list	*ft_iterative_pipeline_parse(t_list **parlst,
 	cmds_lst = ft_lstnew(node->block_node);
 	if (!cmds_lst)
 		return (NULL);
+	free(node);
 	while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 4)
 	{
 		*parlst = (*parlst)->next;
