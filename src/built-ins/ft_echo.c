@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:52:39 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 13:27:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 21:47:54 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,66 +18,50 @@
 #include "../../include/heredoc.h"
 #include "../../include/builtins.h"
 
-void	ft_print_echo_flag(char **cmd_arr, int i)
+int	ft_n_combinations_of_n(char *word)
+{
+	int	i;
+
+	if (!word || word[0] != '-')
+		return (1);
+	i = 1;
+	while (word[i])
+	{
+		if (word[i] != 'n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void	ft_print_echo_from(char **cmd_arr, int start, bool newline)
 {
 	int	j;
 
-	j = 1;
-	while (cmd_arr[j] != NULL)
+	j = start;
+	while (cmd_arr[j])
 	{
-		if (ft_strcmp(cmd_arr[j], "-n") != 0)
-		{
-			if (j != (i - 1))
-				ft_printf("%s ", cmd_arr[j]);
-			else
-				ft_printf("%s", cmd_arr[j]);
-		}
+		ft_printf("%s", cmd_arr[j]);
+		if (cmd_arr[j + 1] != NULL)
+			ft_printf(" ");
 		j++;
 	}
-	return ;
+	if (newline)
+		ft_printf("\n");
 }
 
-void	ft_print_echo(char **cmd_arr, int i)
-{
-	int	j;
-
-	j = 1;
-	while (cmd_arr[j] != NULL)
-	{
-		if (j != (i - 1))
-			ft_printf("%s ", cmd_arr[j]);
-		else
-			ft_printf("%s", cmd_arr[j]);
-		j++;
-	}
-	ft_printf("\n");
-	return ;
-}
-
-// TODO: add case when we have -nnnnn, it needs to work
 int	ft_echo(char **cmd_arr)
 {
 	int		i;
-	int		j;
 	bool	flag;
 
-	i = 0;
+	i = 1;
 	flag = false;
-	while (cmd_arr[i] != NULL)
-		i++;
-	j = 0;
-	while (cmd_arr[j] != NULL)
+	while (cmd_arr[i] && ft_n_combinations_of_n(cmd_arr[i]) == 0)
 	{
-		if (ft_strcmp(cmd_arr[j], "-n") == 0)
-		{
-			flag = true;
-			break ;
-		}
-		j++;
+		flag = true;
+		i++;
 	}
-	if (flag == false)
-		ft_print_echo(cmd_arr, i);
-	else
-		ft_print_echo_flag(cmd_arr, i);
+	ft_print_echo_from(cmd_arr, i, !flag);
 	return (0);
 }
