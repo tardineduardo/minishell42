@@ -5,27 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 16:38:15 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 16:42:23 by luide-ca         ###   ########.fr       */
+/*   Created: 2025/06/02 16:29:59 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/06/02 16:59:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	error_control(char *msg)
+#include "../../include/minishell.h"
+
+void	ft_handle_exec_error(const char *context)
 {
-	if ()
-	{
+	perror(context);
+	exit(EXIT_FAILURE);
+}
 
-	}
-	else if ()
-	{
-
-	}
-	else if ()
-	{
-
-	}
-	else if ()
-	{
-		
-	}	
+int	ft_error_handler(char *err_msg, char *world, int exit_code, t_mem **mem)
+{
+	ft_dprintf(2, err_msg, world);
+	ft_clear_mem_and_exit(mem);
+	exit(exit_code);
 }

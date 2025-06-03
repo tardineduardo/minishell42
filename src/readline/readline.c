@@ -13,6 +13,17 @@
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
 
+static void	ft_addhist(char *line)
+{
+	char	*temp;
+
+	temp = ft_strtrim(line, " \t");
+	if (!ft_isspace(temp[0]))
+		add_history(line);
+	free(temp);
+	return ;
+}
+
 static bool	ft_line_is_incomplete(char *s)
 {
 	char	*new;
@@ -83,6 +94,6 @@ int	ft_readline(t_mem **mem)
 		return (tokresult);
 	if (!ft_rdl_input_loop(mem))
 		return (1);
-	add_history(rdl->line);
+	ft_addhist(rdl->line);
 	return (0);
 }

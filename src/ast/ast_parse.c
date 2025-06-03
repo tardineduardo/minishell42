@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_ast.c                                        :+:      :+:    :+:   */
+/*   ast_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/28 00:30:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:23:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,52 +61,20 @@ t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem)
 {
 	t_ast_node	*node;
 	t_list		*cmds_lst;
-	t_ast_node	*right;
-	t_list		*new_node;
 	t_ast_node	*pipeline_node;
-	t_list		*next;
 
 	node = parse_command_or_group(parlst, mem);
 	if (!node)
 		return (NULL);
 	if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 4)
 		return (node);
-	cmds_lst = ft_lstnew(node->block_node);
+	cmds_lst = ft_iterative_pipeline_parse(parlst, mem, node);
 	if (!cmds_lst)
 		return (NULL);
-	free(node);
-	while (*parlst && ((t_par_node *)(*parlst)->content)->oper == 4)
-	{
-		*parlst = (*parlst)->next;
-		right = parse_command_or_group(parlst, mem);
-		if (!right || right->type != NODE_COMMAND)
-		{
-			ft_dprintf(2, " Invalid pipeline structure\n");
-			exit(1);
-		}
-		new_node = ft_lstnew(right->block_node);
-		if (!new_node)
-		{
-			while (cmds_lst)
-			{
-				next = cmds_lst->next;
-				free(cmds_lst);
-				cmds_lst = next;
-			}
-			return (NULL);
-		}
-		ft_lstadd_back(&cmds_lst, new_node);
-		free(right);
-	}
 	pipeline_node = create_pipeline_node(cmds_lst);
 	if (!pipeline_node)
 	{
-		while (cmds_lst)
-		{
-			next = cmds_lst->next;
-			free(cmds_lst);
-			cmds_lst = next;
-		}
+		ft_lstclear(&cmds_lst, NULL);
 		return (NULL);
 	}
 	return (pipeline_node);
@@ -154,38 +122,3 @@ t_ast_node	*parse_command(t_list **parlst, t_mem **mem)
 	*parlst = (*parlst)->next;
 	return (node);
 }
-
-// void print_ast(t_ast_node *node, int depth)
-// {
-// 	if (!node) return;
-// 	for (int i = 0; i < depth; ++i)
-// 		printf("  ");
-// 	switch (node->type)
-// 	{
-// 		case NODE_COMMAND:
-// 			printf("COMMAND: %s\n", node->block_node->cmd_arr[0]);
-// 			break;
-// 		case NODE_PIPELINE:
-// 			printf("PIPELINE:\n");
-// 			for (t_list *cur = node->pipeline->cmds; cur; cur = cur->next)
-// 			{
-// 				for (int i = 0; i < depth + 1; ++i)
-// 					printf("  ");
-// 				t_block_node *block_node = (t_block_node *)cur->content;
-// 				if (block_node && block_node->cmd_arr)
-// 					printf("CMD: %s\n", block_node->cmd_arr[0]);
-// 			}
-// 			break;
-// 		case NODE_LOGICAL:
-// 			printf("LOGICAL: %s\n", node->logical->op == OP_AND ? "&&" : "||");
-// 			print_ast(node->logical->left, depth + 1);
-// 			print_ast(node->logical->right, depth + 1);
-// 			break;
-// 		case NODE_SUBSHELL:
-// 			printf("SUBSHELL:\n");
-// 			print_ast(node->subshell->body, depth + 1);
-// 			break;
-// 		default:
-// 			printf("Unknown node type %d\n", node->type);
-// 	}
-// }

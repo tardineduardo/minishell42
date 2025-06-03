@@ -6,24 +6,21 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/01 16:02:12 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:08:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
 
-
 t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
 t_list		*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
 void		*ft_ms_env_add(t_list **envlist, char *var, char *val);
 void		ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
-t_list	*ft_find_var(t_list *envlist, char *var);
-void	ft_export_list(t_list **envlist);
-bool	ft_is_valid_varname(char *varname, char *variable_value);
-void	ft_update_envnode_value(t_list *var_found, char *val);
-
-
+t_list		*ft_find_var(t_list *envlist, char *var);
+void		ft_export_list(t_list **envlist);
+bool		ft_is_valid_varname(char *varname, char *variable_value);
+void		ft_update_envnode_value(t_list *var_found, char *val);
 
 int	ft_export(t_list **envlist, char *variable_value)
 {
@@ -33,33 +30,27 @@ int	ft_export(t_list **envlist, char *variable_value)
 
 	if (!envlist)
 		return (EXIT_FAILURE);
-
 	if (!variable_value)
 		ft_export_list(envlist);
-
 	if (variable_value[0] == '=')
 	{
 		ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
 			variable_value);
 		return (EXIT_FAILURE);
 	}
-	if(!ft_get_var_and_value(variable_value, &var, &val))
+	if (!ft_get_var_and_value(variable_value, &var, &val))
 		return (EXIT_FAILURE);
-
 	if (!ft_is_valid_varname(var, variable_value))
 		return (EXIT_FAILURE);
-
 	var_found = ft_find_var(*envlist, var);
-
 	if (var_found)
 	{
 		ft_update_envnode_value(var_found, val);
 		free(var);
 	}
 	else
-		if(!ft_ms_env_add(envlist, var, val))
+		if (!ft_ms_env_add(envlist, var, val))
 			return (EXIT_FAILURE);
-
 	return (EXIT_SUCCESS);
 }
 
@@ -69,7 +60,7 @@ t_list	*ft_find_var(t_list *envlist, char *var)
 	t_env_node	*envnode;
 
 	trav = envlist;
-	while(trav)
+	while (trav)
 	{
 		envnode = (t_env_node *)trav->content;
 		if (ft_strcmp(envnode->variable, var) == 0)
@@ -81,7 +72,7 @@ t_list	*ft_find_var(t_list *envlist, char *var)
 
 void	ft_update_envnode_value(t_list *var_found, char *val)
 {
-	t_env_node *node;
+	t_env_node	*node;
 
 	node = (t_env_node *)var_found->content;
 	if (node->value && val[0] != '\0')
@@ -127,7 +118,6 @@ void	ft_export_list(t_list **envlist)
 		trav = trav->next;
 	}
 }
-
 
 bool	ft_is_valid_varname(char *var, char *variable_value)
 {

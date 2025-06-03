@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 21:45:38 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:00:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,10 @@ typedef struct s_input_node
 }	t_input_node;
 
 t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
-void		ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node **cmd, t_mem **mem);
+void		ft_create_arr_and_expd(t_list **cmdlst, t_block_node **cmd, t_mem **mem);
 void		ft_free_ast(t_ast_node **node);
 int	only_redir(t_block_node *cmd, t_mem **mem);
+
+//error handlers
+void	ft_handle_exec_error(const char *context);
 #endif

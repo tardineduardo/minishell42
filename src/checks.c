@@ -100,7 +100,6 @@ char *get_relative_path(char *relative_path, t_mem **mem)
 	split = ft_split_char(relative_path, '/');
 	if (!split || !cwd)
 		return (NULL);
-	
 	a = 0;
 	while (a < count)
 	{

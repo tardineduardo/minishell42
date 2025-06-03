@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 14:12:07 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 23:26:30 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:54:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,7 @@ void			ft_del_par_node(void *content);
 void			ft_del_redir_node(void *content);
 void			*ft_init_ast_memory(t_mem **mem);
 void			ft_clear_ast_mem(t_ast_mem **ast);
+t_list			*ft_iterative_pipeline_parse(t_list **parlst,
+		t_mem **mem, t_ast_node *node);
 
 #endif
