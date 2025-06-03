@@ -3,35 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 20:48:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:21:11 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
 #include "../../include/expand.h"
+#include "../../include/readline.h"
 
-static void	ft_capture_loop(char *delim, int fd, t_mem **mem)
+static char	*ft_message(t_mem **mem, char *delim)
+{
+	char	*msg;
+	char	*line;
+
+	line = ft_itoa((*mem)->readline->count);
+	msg = ft_concatenate_var(5, "\nminishell: warning: here-document at line ",
+		line, " delimited by end-of-file (wanted `", delim, "\')\"\n");
+	free(line);
+	return (msg);
+}
+
+static void	ft_exit_loop(int fd, int exitcode, char *delim, t_mem **mem)
+{
+	if (!delim)
+	{
+		ft_clear_mem_and_exit(mem);
+		close(fd);
+		exit(exitcode);
+	}
+	ft_printf(ft_message(mem, delim));
+	close(fd);
+	ft_clear_mem_and_exit(mem);
+	exit(exitcode);
+}
+
+static void	ft_capture_loop(char *delim, char *prompt, int fd, t_mem **mem)
 {
 	char	*line;
-	char	*prompt;
 
 	while (1)
 	{
-		prompt = ft_concatenate("heredoc [", delim, "] > ");
 		line = readline(prompt);
-		free(prompt);
 		if (!line)
 		{
 			if (g_signal == SIGINT)
-			{
-				ft_clear_mem_and_exit(mem);
-				exit(130);
-			}
-			exit(0);
+				ft_exit_loop(fd, 130, NULL, mem);
+			ft_exit_loop(fd, EXIT_SUCCESS, delim, mem);
 		}
 		if (ft_strcmp(line, delim) == 0)
 		{
@@ -40,7 +61,7 @@ static void	ft_capture_loop(char *delim, int fd, t_mem **mem)
 		}
 		ft_expand(&line, HEREDOC, mem);
 		if (!line)
-			exit(EXIT_FAILURE);
+			ft_exit_loop(fd, EXIT_FAILURE, delim, mem);
 		ft_dprintf(fd, "%s\n", line);
 		free(line);
 	}
@@ -50,14 +71,20 @@ static void	ft_capture_loop(char *delim, int fd, t_mem **mem)
 static void	ft_run_heredoc_child(char *filepath, char *delim, t_mem **mem)
 {
 	int		fd;
+	char 	*prompt;
 
 	fd = open(filepath, O_WRONLY | O_APPEND);
 	if (fd < 0)
+	{
 		exit(EXIT_FAILURE);
+		ft_clear_mem_and_exit(mem);
+	}	
 	heredoc_signal();
-	ft_capture_loop(delim, fd, mem);
+	prompt = ft_concatenate("heredoc [", delim, "] > ");
+	ft_capture_loop(delim, prompt, fd, mem);
 	close(fd);
 	free(filepath);
+	free(prompt);
 	ft_clear_mem_and_exit(mem);
 	exit(EXIT_SUCCESS);
 }
