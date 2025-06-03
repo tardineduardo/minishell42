@@ -43,6 +43,7 @@ AST 		=	src/ast/init_ast.c \
 				src/ast/ast_parse.c \
 				src/ast/ast_parse_utils.c \
 				src/ast/ast_memory.c \
+				src/ast/ast_memory_utils.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \
