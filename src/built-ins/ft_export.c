@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/03 16:50:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:14:41 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,7 @@ int	ft_export(t_list **envlist, char *variable_value)
 	if (!variable_value)
 		ft_export_list(envlist);
 	if (variable_value[0] == '=')
-	{
-		ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
-			variable_value);
-		return (EXIT_FAILURE);
-	}
+		ft_error_export(variable_value);
 	if (!ft_get_var_and_value(variable_value, &var, &val))
 		return (EXIT_FAILURE);
 	if (!ft_is_valid_varname(var, variable_value))

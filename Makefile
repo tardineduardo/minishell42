@@ -58,7 +58,8 @@ EXECUTE		= 	src/execution/execution.c \
 				src/execution/redir_control_utils_2.c \
 				src/execution/exit_code.c \
 
-SIGNALS		= 	src/signals.c \
+SIGNALS		= 	src/signals/signals.c \
+				src/signals/signals_utils.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
@@ -68,8 +69,6 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
 				src/built-ins/utils.c \
-
-CHECK		= 	src/checks.c \
 
 ERROR		=	src/error/error.c \
 
@@ -85,7 +84,6 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(AST:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(SIGNALS:.c=.o) \
-			$(CHECK:.c=.o) \
 			$(ERROR:.c=.o) \
 
 CC = cc

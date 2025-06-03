@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:26:15 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/27 20:06:45 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:16:03 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_init_minishell_memory(t_mem **mem, char **envp)
 {
 	*mem = malloc(sizeof(t_mem));
 	if (!(*mem))
-		exit(1);//improve error message and code
+		exit(1);
 	ft_init_env_memory(mem);
 	ft_init_exp_memory(mem);
 	ft_init_hdc_memory(mem);

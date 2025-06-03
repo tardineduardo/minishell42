@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 16:49:32 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/03 16:53:03 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:14:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,10 @@ bool	ft_is_valid_varname(char *var, char *variable_value)
 		a++;
 	}
 	return (true);
+}
+
+int	ft_error_export(char *variable)
+{
+	ft_dprintf(2, "export: `%s`: not a valid identifier\n", variable);
+	return (EXIT_FAILURE);
 }
