@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 14:12:07 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 17:54:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 17:46:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,11 @@ void			*ft_init_ast_memory(t_mem **mem);
 void			ft_clear_ast_mem(t_ast_mem **ast);
 t_list			*ft_iterative_pipeline_parse(t_list **parlst,
 		t_mem **mem, t_ast_node *node);
+
+void	ft_free_command(t_ast_node **node);
+void	ft_free_pipe(t_ast_node **node);
+void	ft_free_logical(t_ast_node **node);
+void	ft_free_subshell(t_ast_node **node);
+void	free_block_node(void *ptr);
 
 #endif

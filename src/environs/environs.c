@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 18:29:53 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:23:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 
 void	*ft_init_environs(t_env_mem **env, char **envp)
 {
-	char *var;
-	char *val;
+	char	*var;
+	char	*val;
 
 	var = NULL;
 	val = NULL;
@@ -33,7 +33,7 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 	while (*envp != NULL)
 	{
 		if (!ft_get_var_and_value(*envp, &var, &val))
-			return(NULL);
+			return (NULL);
 		(*env)->new_node = ft_init_env_node(var, val, true);
 		if (!(*env)->new_node)
 			return (NULL);
@@ -46,8 +46,8 @@ void	*ft_init_environs(t_env_mem **env, char **envp)
 
 void	*ft_get_var_and_value(char *envp, char **var, char **val)
 {
-	char *equal_sign;
-	
+	char	*equal_sign;
+
 	equal_sign = ft_strchr(envp, '=');
 	if (equal_sign)
 		*val = ft_strdup(equal_sign + 1);
@@ -56,7 +56,7 @@ void	*ft_get_var_and_value(char *envp, char **var, char **val)
 	*var = ft_substr(envp, 0, ft_env_varlen(envp));
 	if (!*val || !*var)
 		return (NULL);
-	return(envp);
+	return (envp);
 }
 
 t_env_node	*ft_init_env_node(char *var, char *val, bool isvisible)
@@ -83,9 +83,9 @@ t_list	*ft_add_to_envlist(t_list **envlist, t_env_node *new_node)
 	return (*envlist);
 }
 
-int ft_env_varlen(char *s)
+int	ft_env_varlen(char *s)
 {
-	int a;
+	int	a;
 
 	a = 0;
 	while (s[a] != '\0' && s[a] != '=')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 23:46:45 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:43:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	*ft_heredoc(char **delimiter, t_mem **mem)
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
 	{
-		(*mem)->heredoc->errnum = status;
+		(*mem)->heredoc->errnum = WEXITSTATUS(status);
 		unlink(filename);
 		free(filename);
 		return (NULL);

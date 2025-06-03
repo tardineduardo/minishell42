@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 23:54:40 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:22:41 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_init_minishell_memory(&mem, envp);
 	while (1)
 	{
+		g_signal = 0;
 		signal(SIGINT, handle_signal_prompt);
-		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
+		signal(SIGQUIT, SIG_IGN);
 		res = ft_readline(&mem);
 		if (ft_strlen((*mem).readline->line) == 0)
 		{
@@ -69,20 +70,19 @@ int	main(int argc, char *argv[], char *envp[])
 	return (0);
 }
 
-void ft_clean_mem_loop(t_mem **mem)
+void	ft_clean_mem_loop(t_mem **mem)
 {
-	t_rdl_mem *cap;
-	t_tok_mem *tok;
-	t_hdc_mem *hd;
-	t_par_mem *par;
-	t_ast_mem *ast;
+	t_rdl_mem	*cap;
+	t_tok_mem	*tok;
+	t_hdc_mem	*hd;
+	t_par_mem	*par;
+	t_ast_mem	*ast;
 
 	cap = (*mem)->readline;
 	tok = (*mem)->tokenize;
 	hd = (*mem)->heredoc;
 	par = (*mem)->parsing;
 	ast = (*mem)->ast;
-
 	ft_dlstclear(&tok->toklst, ft_del_token_node);
 	ft_lstclear(&par->parlst, ft_del_par_node);
 	ft_free_ast(&ast->root);
@@ -92,5 +92,4 @@ void ft_clean_mem_loop(t_mem **mem)
 	tok->block_count = 0;
 	tok->get_delimiter = false;
 	return ;
-
 }
