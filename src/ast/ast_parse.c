@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:01:22 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 17:53:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:23:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem)
 	if (!*parlst || ((t_par_node *)(*parlst)->content)->oper != 4)
 		return (node);
 	cmds_lst = ft_iterative_pipeline_parse(parlst, mem, node);
-	if (cmds_lst == NULL)
+	if (!cmds_lst)
 		return (NULL);
 	pipeline_node = create_pipeline_node(cmds_lst);
 	if (!pipeline_node)
