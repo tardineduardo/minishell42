@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 22:03:28 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:15:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,14 @@ void	ft_set_home_value(t_list **envlist)
 	char		*oldpwd;
 
 	home_value = ft_get_env_value(envlist, "HOME");
-	oldpwd = ft_get_env_value(envlist, "PWD");
-	if (oldpwd)
-		ft_ms_env_update_cd(envlist, "OLDPWD", oldpwd);
-	if (home_value)
-		ft_ms_env_update_cd(envlist, "PWD", home_value);
+	if (chdir(home_value) == 0)
+	{
+		oldpwd = ft_get_env_value(envlist, "PWD");
+		if (oldpwd)
+			ft_ms_env_update_cd(envlist, "OLDPWD", oldpwd);
+		if (home_value)
+			ft_ms_env_update_cd(envlist, "PWD", home_value);
+	}
 }
 
 int	ft_cd(t_list **envlist, char **cmd_arr)
@@ -106,9 +109,9 @@ int	ft_cd(t_list **envlist, char **cmd_arr)
 	else
 	{
 		if (errno == 2 || errno == 20)
-			ft_dprintf(2, "%s: No such file or directory", cmd_arr[0]);
+			ft_dprintf(2, "%s: No such file or directory\n", cmd_arr[0]);
 		else if (errno == 13)
-			ft_dprintf(2, "%s: Permission denied", cmd_arr[0]);
+			ft_dprintf(2, "%s: Permission denied\n", cmd_arr[0]);
 		return (1);
 	}
 	return (0);
