@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 23:45:12 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:45:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 #include "../../include/builtins.h"
 #include "../../include/execution.h"
 
-void	execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *cmd, t_mem **mem)
+void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
+	t_block_node *cmd, t_mem **mem)
 {
 	pid_t	pid;
 	int		res;
@@ -35,7 +36,7 @@ void	execute_child_pipe_command(t_pipe_data *p, t_list **ms_env, t_block_node *c
 	if (pid == 0)
 	{
 		signal_child_process();
-		ft_create_cmd_arr_and_expand(&cmd->cmd_lst, &cmd, mem);
+		ft_create_arr_and_expd(&cmd->cmd_lst, &cmd, mem);
 		res = pipe_fd_control(p, cmd, p->pipefd, mem);
 		if (cmd->cmd_arr != NULL)
 			res = execute_command(ms_env, cmd, mem);
@@ -79,11 +80,8 @@ int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 	while (node && p.i < num_cmds)
 	{
 		if (p.i < num_cmds - 1 && pipe(p.pipefd) == -1)
-		{
-			perror("pipe");
-			exit(1);
-		}
-		execute_child_pipe_command(&p, env, (t_block_node *)node->content, mem);
+			ft_handle_exec_error("pipe");
+		exec_child_pipe_cmd(&p, env, (t_block_node *)node->content, mem);
 		if (p.i > 0)
 			close(p.prev_fd);
 		p.prev_fd = p.pipefd[0];
@@ -92,6 +90,6 @@ int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 		node = node->next;
 	}
 	if (p.prev_fd != 0)
-    	close(p.prev_fd);
+		close(p.prev_fd);
 	return (wait_for_all_children(p));
 }

@@ -40,8 +40,9 @@ PARSER		=	src/parsing/parsing_command.c \
 				src/parsing/parsing.c \
 
 AST 		=	src/ast/init_ast.c \
-				src/ast/parse_ast.c \
-				src/ast/free_ast.c \
+				src/ast/ast_parse.c \
+				src/ast/ast_parse_utils.c \
+				src/ast/ast_memory.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \
@@ -52,6 +53,8 @@ EXECUTE		= 	src/execution/execution.c \
 				src/execution/built_in.c \
 				src/execution/ext_cmd.c \
 				src/execution/redir_control.c \
+				src/execution/redir_control_utils.c \
+				src/execution/redir_control_utils_2.c \
 				src/execution/exit_code.c \
 
 SIGNALS		= 	src/signals.c \
@@ -66,6 +69,8 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 
 CHECK		= 	src/checks.c \
 
+ERROR		=	src/error/error.c \
+
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
 			$(MEMORY:.c=.o) \
@@ -79,6 +84,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(SIGNALS:.c=.o) \
 			$(CHECK:.c=.o) \
+			$(ERROR:.c=.o) \
 
 CC = cc
 RM = rm -f

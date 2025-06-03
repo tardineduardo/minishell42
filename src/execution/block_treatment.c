@@ -6,12 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:22:44 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/01 16:34:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 15:59:38 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
+#include "../../include/execution.h"
 
 int	ft_count_items(char **str_arr)
 {
@@ -79,11 +80,7 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr, t_mem **mem)
 	{
 		path_options = get_path_options(ms_env);
 		if (!path_options)
-		{
-			ft_dprintf(2, "%s: command not found\n", cmd_arr[0]);
-			ft_clear_mem_and_exit(mem);
-			exit(127);
-		}
+			ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem);
 		right_option = get_right_path(path_options, cmd_arr[0]);
 		if (!right_option)
 		{

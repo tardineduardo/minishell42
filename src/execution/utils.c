@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:45:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 21:39:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:20:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,17 @@
 
 int	ft_count_expanded_items(t_list **cmdlst, t_mem **mem)
 {
-	t_list	*cur_cmd;
-	char	*char_expanded;
-	int		size_arr;
+	t_cmd_node	*cmd_node;
+	t_list		*cur_cmd;
+	char		*char_expanded;
+	int			size_arr;
 
 	size_arr = 0;
 	cur_cmd = *cmdlst;
 	while (cur_cmd)
 	{
-		char_expanded = ft_expand(&((t_cmd_node *)cur_cmd->content)->cmdvalue, TOKEN, mem);
+		cmd_node = cur_cmd->content;
+		char_expanded = ft_expand(&cmd_node->cmdvalue, TOKEN, mem);
 		if (ft_strcmp(char_expanded, "") != 0)
 			size_arr++;
 		cur_cmd = cur_cmd->next;
@@ -50,7 +52,7 @@ void	handle_copy_error(char **cmd_arr, int j)
 	}
 }
 
-char **copy_value_to_cmd_arr(t_list **cmdlst, char **cmd_arr)
+char	**copy_value_to_cmd_arr(t_list **cmdlst, char **cmd_arr)
 {
 	t_list	*cur_cmd;
 	char	*char_expanded;
@@ -74,7 +76,7 @@ char **copy_value_to_cmd_arr(t_list **cmdlst, char **cmd_arr)
 	return (cmd_arr);
 }
 
-void	ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node **cmd, t_mem **mem)
+void	ft_create_arr_and_expd(t_list **cmdlst, t_block_node **cmd, t_mem **mem)
 {
 	int		size_arr;
 
@@ -83,10 +85,7 @@ void	ft_create_cmd_arr_and_expand(t_list **cmdlst, t_block_node **cmd, t_mem **m
 	{
 		(*cmd)->cmd_arr = malloc(sizeof(char *) * (size_arr + 1));
 		if (!(*cmd)->cmd_arr)
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
+			ft_handle_exec_error("malloc");
 		(*cmd)->cmd_arr = copy_value_to_cmd_arr(cmdlst, (*cmd)->cmd_arr);
 	}
 	return ;
