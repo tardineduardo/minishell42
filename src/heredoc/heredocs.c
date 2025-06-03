@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 23:21:11 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:46:45 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*ft_message(t_mem **mem, char *delim)
 
 	line = ft_itoa((*mem)->readline->count);
 	msg = ft_concatenate_var(5, "\nminishell: warning: here-document at line ",
-		line, " delimited by end-of-file (wanted `", delim, "\')\"\n");
+			line, " delimited by end-of-file (wanted `", delim, "\')\"\n");
 	free(line);
 	return (msg);
 }
@@ -71,7 +71,7 @@ static void	ft_capture_loop(char *delim, char *prompt, int fd, t_mem **mem)
 static void	ft_run_heredoc_child(char *filepath, char *delim, t_mem **mem)
 {
 	int		fd;
-	char 	*prompt;
+	char	*prompt;
 
 	fd = open(filepath, O_WRONLY | O_APPEND);
 	if (fd < 0)
@@ -97,7 +97,7 @@ char	*ft_heredoc(char **delimiter, t_mem **mem)
 	int			status;
 
 	if (!ft_create_hd_filepath(&hd_count_int, &filename))
-		return (NULL);	
+		return (NULL);
 	if (!ft_expand(&(*delimiter), DELIMITER, mem))
 		return (NULL);
 	pid = fork();
