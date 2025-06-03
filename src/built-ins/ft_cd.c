@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:28:51 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 19:16:16 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 22:03:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	ft_update_pwd_and_oldpwd(t_list **envlist)
 	oldpwd = ft_get_env_value(envlist, "PWD");
 	if (oldpwd)
 		ft_ms_env_update_cd(envlist, "OLDPWD", oldpwd);
-
 	newpwd = getcwd(NULL, 0);
 	if (newpwd)
 	{
