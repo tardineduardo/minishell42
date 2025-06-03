@@ -14,8 +14,6 @@ int	ft_export(t_list **envlist, char *variable_value);
 int	ft_unset(t_list **envlist, char *variable);
 
 // built-ins helpers
-void	ft_ms_env_add(t_list **envlist, char *variable_value);
-void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
-void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
+bool	ft_is_valid_varname(char *var, char *variable_value);
 
 #endif

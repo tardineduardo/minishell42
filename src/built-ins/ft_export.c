@@ -6,53 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:08:22 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:50:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
-
-t_env_node	*ft_init_env_node_expbuiltin(char *variable, char *value, bool visible);
-t_list		*ft_add_to_envlist_expbuiltin(t_list **envlist, t_env_node *new_node);
-void		*ft_ms_env_add(t_list **envlist, char *var, char *val);
-void		ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
-t_list		*ft_find_var(t_list *envlist, char *var);
-void		ft_export_list(t_list **envlist);
-bool		ft_is_valid_varname(char *varname, char *variable_value);
-void		ft_update_envnode_value(t_list *var_found, char *val);
-
-int	ft_export(t_list **envlist, char *variable_value)
-{
-	char	*var;
-	char	*val;
-	t_list	*var_found;
-
-	if (!envlist)
-		return (EXIT_FAILURE);
-	if (!variable_value)
-		ft_export_list(envlist);
-	if (variable_value[0] == '=')
-	{
-		ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
-			variable_value);
-		return (EXIT_FAILURE);
-	}
-	if (!ft_get_var_and_value(variable_value, &var, &val))
-		return (EXIT_FAILURE);
-	if (!ft_is_valid_varname(var, variable_value))
-		return (EXIT_FAILURE);
-	var_found = ft_find_var(*envlist, var);
-	if (var_found)
-	{
-		ft_update_envnode_value(var_found, val);
-		free(var);
-	}
-	else
-		if (!ft_ms_env_add(envlist, var, val))
-			return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-}
+#include "../../include/builtins.h"
 
 t_list	*ft_find_var(t_list *envlist, char *var)
 {
@@ -119,28 +79,34 @@ void	ft_export_list(t_list **envlist)
 	}
 }
 
-bool	ft_is_valid_varname(char *var, char *variable_value)
+int	ft_export(t_list **envlist, char *variable_value)
 {
-	int	a;
-	int	len;
+	char	*var;
+	char	*val;
+	t_list	*var_found;
 
-	if (!ft_isalpha(var[0]) && var[0] != '_')
+	if (!envlist)
+		return (EXIT_FAILURE);
+	if (!variable_value)
+		ft_export_list(envlist);
+	if (variable_value[0] == '=')
 	{
 		ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
 			variable_value);
-		return (false);
+		return (EXIT_FAILURE);
 	}
-	a = 1;
-	len = ft_strlen(var);
-	while (a < len)
+	if (!ft_get_var_and_value(variable_value, &var, &val))
+		return (EXIT_FAILURE);
+	if (!ft_is_valid_varname(var, variable_value))
+		return (EXIT_FAILURE);
+	var_found = ft_find_var(*envlist, var);
+	if (var_found)
 	{
-		if (!ft_isalnum(var[a]) && var[a] != '_')
-		{
-			ft_dprintf(STDERR_FILENO, "export: `%s`: not a valid identifier\n",
-				variable_value);
-			return (false);
-		}
-		a++;
+		ft_update_envnode_value(var_found, val);
+		free(var);
 	}
-	return (true);
+	else
+		if (!ft_ms_env_add(envlist, var, val))
+			return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
