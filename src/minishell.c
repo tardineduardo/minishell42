@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 23:54:40 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:35:51 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_init_minishell_memory(&mem, envp);
 	while (1)
 	{
+		g_signal = 0;
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);				//ignore Ctrl+\ in shell
 		res = ft_readline(&mem);
