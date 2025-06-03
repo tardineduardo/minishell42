@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:21:27 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:06:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 22:00:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 	else if (ft_strncmp(cmd_arr[0], "env", 3) == 0)
 		res = ft_env(*ms_env);
 	else if (ft_strncmp(cmd_arr[0], "cd", 2) == 0)
-		res = ft_cd(ms_env, cmd_arr, mem);
+		res = ft_cd(ms_env, cmd_arr);
 	else if (ft_strncmp(cmd_arr[0], "export", 5) == 0)
 		res = ft_export(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "unset", 5) == 0)

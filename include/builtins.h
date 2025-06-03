@@ -8,7 +8,7 @@
 int	ft_env(t_list *envlist);
 int	ft_pwd(t_list **envlist);
 int	ft_echo(char **cmd_arr);
-int	ft_cd(t_list **envlist, char **cmd_arr, t_mem **mem);
+int	ft_cd(t_list **envlist, char **cmd_arr);
 int	ft_exit(char **cmd_arr, t_mem **mem);
 int	ft_export(t_list **envlist, char *variable_value);
 int	ft_unset(t_list **envlist, char *variable);
@@ -17,7 +17,5 @@ int	ft_unset(t_list **envlist, char *variable);
 void	ft_ms_env_add(t_list **envlist, char *variable_value);
 void	ft_ms_env_update_export(t_list **envlist, char *variable, char *value);
 void	ft_ms_env_update_cd(t_list **envlist, char *variable, char *value);
-
-char *get_relative_path(char *relative_path, t_mem **mem);
 
 #endif
