@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:11:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:19:07 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:27:59 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	ft_exit(char **cmd_arr, t_mem **mem)
 	(void)mem;
 	size_cmd_arr = ft_count_items(cmd_arr);
 	if (size_cmd_arr > 2)
-		ft_error_handler("%s: too many arguments", cmd_arr[0], 1, mem);
+		ft_error_handler("%s: too many arguments\n", cmd_arr[0], 1, mem);
 	if (cmd_arr[1] != NULL && ft_isalpha(cmd_arr[1][0]) != 0)
-		ft_error_handler("%s: numeric argument required", cmd_arr[0], 2, mem);
+		ft_error_handler("%s: numeric argument required\n", cmd_arr[0], 2, mem);
 	if (cmd_arr[1] != NULL && ft_atoi(cmd_arr[1]) == 0)
-		ft_error_handler("%s: numeric argument required", cmd_arr[0], 2, mem);
+		ft_error_handler("%s: numeric argument required\n", cmd_arr[0], 2, mem);
 	else if (cmd_arr[1] != NULL && ft_atoi(cmd_arr[1]) != 0)
 	{
 		exit_code = ft_atoi(cmd_arr[1]);
