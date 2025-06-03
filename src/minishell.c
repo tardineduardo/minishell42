@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 23:29:55 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:50:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,30 +69,6 @@ int	main(int argc, char *argv[], char *envp[])
 	return (0);
 }
 
-static void	ft_dlstclear_debug_tok(t_dlist **lst, void (*del)(void*))
-{
-	t_dlist	*curr;
-	t_dlist	*next;
-	t_tok_node	*tok;
-
-	if (lst == NULL || *lst == NULL)
-		return ;
-	curr = *lst;
-	while (curr)
-	{
-		tok = (t_tok_node *)curr->content;
-		next = curr->next;
-		if (del)
-			if (curr->content)
-				del(curr->content);
-		free(curr);
-		curr = next;
-	}
-	(void)tok;
-	*lst = NULL;
-}
-
-
 void ft_clean_mem_loop(t_mem **mem)
 {
 	t_rdl_mem *cap;
@@ -107,7 +83,7 @@ void ft_clean_mem_loop(t_mem **mem)
 	par = (*mem)->parsing;
 	ast = (*mem)->ast;
 
-	ft_dlstclear_debug_tok(&tok->toklst, ft_del_token_node);
+	ft_lstclear(&tok->toklst, ft_del_token_node);
 	ft_lstclear(&par->parlst, ft_del_par_node);
 	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
