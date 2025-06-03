@@ -6,12 +6,23 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:42:22 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 20:53:00 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/02 20:27:59 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
+
+static void	ft_addhist(char *line)
+{
+	char	*temp;
+
+	temp = ft_strtrim(line, " \t");
+	if (!ft_isspace(temp[0]))
+		add_history(line);
+	free(temp);
+	return ;
+}
 
 static bool	ft_line_is_incomplete(char *s)
 {
@@ -65,7 +76,7 @@ int	ft_readline(t_mem **mem)
 	int			tokresult;
 
 	rdl = (*mem)->readline;
-	rdl->line = readline(YELLOW "Minishell> " RESET);
+	rdl->line = readline("Minishell> ");
 	if (!rdl->line)
 	{
 		ft_clear_mem_and_exit(mem);
@@ -81,6 +92,6 @@ int	ft_readline(t_mem **mem)
 		return (tokresult);
 	if (!ft_rdl_input_loop(mem))
 		return (1);
-	add_history(rdl->line);
+	ft_addhist(rdl->line);
 	return (0);
 }
