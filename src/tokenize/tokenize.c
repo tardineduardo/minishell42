@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 01:14:56 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:38:39 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	ft_capture_heredocs(t_tok_mem **tok, t_mem **mem)
 	{
 		node = (t_tok_node *)trav->content;
 		if (!ft_process_heredoc(node, tok, mem))
-			return (1);
+			return ((*tok)->errnmb);
 		trav = trav->next;
 	}
 	return (0);

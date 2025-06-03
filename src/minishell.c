@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 16:14:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:50:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,6 @@ int	main(int argc, char *argv[], char *envp[])
 	return (0);
 }
 
-
-
-
 void ft_clean_mem_loop(t_mem **mem)
 {
 	t_rdl_mem *cap;
@@ -86,12 +83,14 @@ void ft_clean_mem_loop(t_mem **mem)
 	par = (*mem)->parsing;
 	ast = (*mem)->ast;
 
-	ft_dlstclear(&tok->toklst, ft_del_token_node);
+	ft_lstclear(&tok->toklst, ft_del_token_node);
 	ft_lstclear(&par->parlst, ft_del_par_node);
 	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
 	ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->remain);
 	tok->block_count = 0;
+	tok->get_delimiter = false;
 	return ;
+
 }

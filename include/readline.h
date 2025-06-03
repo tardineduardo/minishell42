@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:54:54 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 22:44:44 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:06:23 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 typedef struct s_rdl_mem
 {
+	int			count;
 	char		*line;
 	char		*trim;
 	char		*temp;

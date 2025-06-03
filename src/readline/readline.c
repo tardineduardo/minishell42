@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:42:22 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 20:27:59 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/02 22:28:26 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,12 @@ static char	*ft_rdl_input_loop(t_mem **mem)
 int	ft_readline(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
+	static int	line_number;
 	int			tokresult;
 
 	rdl = (*mem)->readline;
-	rdl->line = readline("Minishell> ");
+	rdl->count = ++line_number;
+	rdl->line = readline(YELLOW "Minishell> " RESET);
 	if (!rdl->line)
 	{
 		ft_clear_mem_and_exit(mem);
