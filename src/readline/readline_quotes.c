@@ -31,7 +31,8 @@ static bool	ft_is_char_escaped_rdl(char *s, int index)
 	return (false);
 }
 
-static void	ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
+static void	ft_update_quote_flag_rdl(char c, t_quote *quote,
+	int index, char *s)
 {
 	if ((c == '\'' || c == '\"') && !ft_is_char_escaped_rdl(s, index))
 	{

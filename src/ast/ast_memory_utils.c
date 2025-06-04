@@ -24,7 +24,7 @@ void	ft_free_command(t_ast_node **node)
 	{
 		blk = (*node)->block_node;
 		if (blk)
-			free_block_node(blk);
+			ft_free_block_node(blk);
 	}
 }
 
@@ -37,7 +37,7 @@ void	ft_free_pipe(t_ast_node **node)
 		pipe = (*node)->pipeline;
 		if (pipe)
 		{
-			ft_lstclear(&pipe->cmds, free_block_node);
+			ft_lstclear(&pipe->cmds, ft_free_block_node);
 			free(pipe);
 		}
 	}

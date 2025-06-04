@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_steps.c                                     :+:      :+:    :+:   */
+/*   expand_steps_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,22 +11,17 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
 #include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
 
 // used by delim, token
-void	update_quote_flag(char *s, t_quote *quote, int index)
+void	ft_update_quote_flag(char *s, t_quote *quote, int index)
 {
 	char	c;
 
 	c = s[index];
 	if (!ft_isquote(c))
 		return ;
-	if (!is_char_escaped(s, index))
+	if (!ft_is_char_escaped(s, index))
 	{
 		if (c == '\'' && *quote == Q_OFF)
 			*quote = Q_SINGLE;
@@ -41,30 +36,31 @@ void	update_quote_flag(char *s, t_quote *quote, int index)
 }
 
 // used by delim, token
-bool	skip_if_quote_changed(t_exp_mem **exp, t_quote *quote, t_quote *prev)
+bool	ft_skip_if_quote_changd(t_exp_mem **exp, t_quote *quote, t_quote *prev)
 {
 	if (*quote != *prev)
 	{
-		skip_char_no_copy(exp);
+		ft_skip_char_no_copy(exp);
 		return (true);
 	}
 	return (false);
 }
 
 // used by delim, token
-bool	process_inside_single_quotes(t_exp_mem **exp, t_quote quote)
+bool	ft_process_inside_sg_quotes(t_exp_mem **exp, t_quote quote)
 {
 	if (quote == Q_SINGLE)
 	{
-		while (!is_closing_quote(CURRENT_CHAR, &quote))
-			copy_char_and_increment(exp);
+		while (!ft_is_closing_quote((*exp)->raw[(*exp)->a], &quote))
+			ft_copy_char_and_increment(exp);
 		return (true);
 	}
 	return (false);
 }
 
 // used by delim, token
-bool	process_inside_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
+bool	ft_process_inside_db_quote(t_exp_mem **exp, t_mem **mem,
+			t_quote quote)
 {
 	t_mode	mode;
 
@@ -73,36 +69,36 @@ bool	process_inside_double_quote(t_exp_mem **exp, t_mem **mem, t_quote quote)
 	{
 		if (mode == TOKEN)
 		{
-			if (handle_dollar_sign(exp, mem))
+			if (ft_handle_dollar_sign(exp, mem))
 			{
 				if ((*exp)->braces)
-					skip_char_no_copy(exp);
+					ft_skip_char_no_copy(exp);
 				return (true);
 			}
-			if (handle_backslash(exp, TOKEN, Q_DOUBLE))
+			if (ft_handle_backslash(exp, TOKEN, Q_DOUBLE))
 				return (true);
 		}
-		if (is_closing_quote(CURRENT_CHAR, &quote))
+		if (ft_is_closing_quote((*exp)->raw[(*exp)->a], &quote))
 		{
-			skip_char_no_copy(exp);
+			ft_skip_char_no_copy(exp);
 			return (true);
 		}
-		copy_char_and_increment(exp);
+		ft_copy_char_and_increment(exp);
 		return (true);
 	}
 	return (false);
 }
 
 // used by token
-bool	process_unquoted_sequence(t_exp_mem **exp, t_mem **mem)
+bool	ft_process_unquoted_sequence(t_exp_mem **exp, t_mem **mem)
 {
-	if (handle_dollar_sign(exp, mem))
+	if (ft_handle_dollar_sign(exp, mem))
 	{
 		if ((*exp)->braces)
-			skip_char_no_copy(exp);
+			ft_skip_char_no_copy(exp);
 		return (true);
 	}
-	if (handle_backslash(exp, TOKEN, Q_OFF))
+	if (ft_handle_backslash(exp, TOKEN, Q_OFF))
 		return (true);
 	return (false);
 }

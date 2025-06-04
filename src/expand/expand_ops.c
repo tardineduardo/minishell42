@@ -11,67 +11,62 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
 #include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
 
-void	copy_value_and_increment(t_exp_mem **exp)
+void	ft_copy_value_and_increment(t_exp_mem **exp)
 {
 	size_t	len;
 
 	len = ft_strlen((*exp)->value);
 	while (len > 0)
 	{
-		copy_char_and_increment(exp);
+		ft_copy_char_and_increment(exp);
 		len--;
 	}
 	ft_free_and_null((void *)&(*exp)->value);
 	return ;
 }
 
-void	copy_char_and_increment(t_exp_mem **exp)
+void	ft_copy_char_and_increment(t_exp_mem **exp)
 {
-	if (CURRENT_CHAR)
+	if ((*exp)->raw[(*exp)->a])
 	{
-		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
 		(*exp)->b++;
 		(*exp)->a++;
 	}
 	return ;
 }
 
-void	skip_char_no_copy(t_exp_mem **exp)
+void	ft_skip_char_no_copy(t_exp_mem **exp)
 {
 	(*exp)->a++;
 	return ;
 }
 
-bool	skip_slash_copy_next_and_increment(t_exp_mem **exp)
+bool	ft_skip_slash_copy_next_and_increment(t_exp_mem **exp)
 {
 	(*exp)->a++;
-	if (CURRENT_CHAR)
+	if ((*exp)->raw[(*exp)->a])
 	{
-		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
 		(*exp)->a++;
 		(*exp)->b++;
 	}
 	return (true);
 }
 
-bool	copy_char_copy_next_and_increment(t_exp_mem **exp)
+bool	ft_copy_char_copy_next_and_increment(t_exp_mem **exp)
 {
-	if (CURRENT_CHAR)
+	if ((*exp)->raw[(*exp)->a])
 	{
-		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
 		(*exp)->a++;
 		(*exp)->b++;
 	}
-	if (CURRENT_CHAR)
+	if ((*exp)->raw[(*exp)->a])
 	{
-		(*exp)->new[(*exp)->b] = CURRENT_CHAR;
+		(*exp)->new[(*exp)->b] = (*exp)->raw[(*exp)->a];
 		(*exp)->a++;
 		(*exp)->b++;
 	}

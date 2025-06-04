@@ -11,23 +11,44 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
 #include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
 
-t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
+static size_t	varlen(char *s, bool *braces)
+{
+	size_t	i;
+
+	if (*s == '$')
+		s++;
+	if (*s == '{')
+		s++;
+	i = 0;
+	if (*braces == false)
+	{
+		if (s[0] == '?')
+			return (1);
+		while (ft_isalnum(s[i]))
+			i++;
+	}
+	else if (*braces == true)
+	{
+		while ((s[i] != '}'))
+			i++;
+		i++;
+		*braces = false;
+	}
+	return (i);
+}
+
+t_exit	ft_insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 {
 	char	*prefix;
 	char	*suffix;
 	char	*temp;
 	size_t	len;
 
-	len = varlen(&CURRENT_CHAR, (*exp)->braces);
+	len = varlen(&(*exp)->raw[(*exp)->a], &(*exp)->braces);
 	prefix = ft_substr((*exp)->raw, 0, index);
-	suffix = ft_strdup(&CURRENT_CHAR + len + 1);
+	suffix = ft_strdup(&(*exp)->raw[(*exp)->a] + len + 1);
 	if (!prefix || !suffix)
 		return (ERROR);
 	temp = ft_concatenate(prefix, insert, suffix);
@@ -43,37 +64,4 @@ t_exit	insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	ft_free_and_null((void *)&(*exp)->raw);
 	(*exp)->raw = temp;
 	return (VAR_FOUND);
-}
-
-t_exit	remove_var_from_string(char **s, size_t index)
-{
-	size_t	a;
-
-	a = 0;
-	while (ft_isalnum((*s)[index + a + 1]))
-		a++;
-	ft_strlcpy(&(*s)[index], &(*s)[index + a + 1], ft_strlen(&(*s)[index]));
-	return (VAR_NOT_FOUND);
-}
-
-size_t	varlen(char *s, bool braces)
-{
-	size_t	i;
-
-	if (*s == '$')
-		s++;
-	if (*s == '{')
-		s++;
-	i = 0;
-	if (braces == false)
-	{
-		if (s[0] == '?')
-			return (1);
-		while (ft_isalnum(s[i]))
-			i++;
-	}
-	else if (braces == true)
-		while ((s[i] != '}'))
-			i++;
-	return (i);
 }
