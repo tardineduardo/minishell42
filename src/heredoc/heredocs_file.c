@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 22:08:42 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:27:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*ft_create_hd_filepath(int *hd_count_int, char **filepath)
 	hd_count_str = ft_itoa(*hd_count_int);
 	if (!hd_count_str)
 		return (NULL);
-	*filepath = ft_strjoin("ms_temp_heredoc_", hd_count_str);
+	*filepath = ft_strjoin("/tmp/ms_temp_heredoc_", hd_count_str);
 	ft_free_and_null((void *)&hd_count_str);
 	if (!(*filepath))
 		return (NULL);

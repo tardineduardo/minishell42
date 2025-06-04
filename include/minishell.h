@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 19:41:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:24:50 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 # define MINISHELL_H
 
 # include "../libs/libft/libft.h"
-# include <assert.h>						// REMOVE LATER
-# include <stdlib.h>						// for malloc etc
-# include <readline/readline.h>				// for readline
-# include <readline/history.h>				// for history
-# include <signal.h>						// handle signals
+# include <assert.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
 # include <sys/stat.h>					
 # include <termios.h>
 

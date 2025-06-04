@@ -6,14 +6,14 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 19:41:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:24:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
-# include <sys/types.h>						// for wait when executing cmds
+# include <sys/types.h>
 # include "minishell.h"
 
 //redir control
