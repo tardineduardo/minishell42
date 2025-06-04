@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 16:40:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:30:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@
 # include <string.h>
 # include <limits.h>
 
-typedef struct s_hdc_mem t_hdc_mem;
-typedef struct s_tok_mem t_tok_mem;
-typedef struct s_exp_mem t_exp_mem;
-typedef struct s_rdl_mem t_rdl_mem;
-typedef struct s_env_mem t_env_mem;
-typedef struct s_par_mem t_par_mem;
-typedef struct s_ast_mem t_ast_mem;
+typedef struct s_hdc_mem	t_hdc_mem;
+typedef struct s_tok_mem	t_tok_mem;
+typedef struct s_exp_mem	t_exp_mem;
+typedef struct s_rdl_mem	t_rdl_mem;
+typedef struct s_env_mem	t_env_mem;
+typedef struct s_par_mem	t_par_mem;
+typedef struct s_ast_mem	t_ast_mem;
 
 typedef enum e_quote
 {
@@ -39,7 +39,7 @@ typedef enum e_quote
 	Q_SINGLE,
 	Q_DOUBLE,
 	Q_NULL,
-}	t_quote;		//compartilhado por expand e heredoc. tentar tirar daqui.
+}	t_quote;
 
 typedef enum e_mode
 {
@@ -48,9 +48,23 @@ typedef enum e_mode
 	HEREDOC,
 	DELIMITER,
 	INIT_MODE,
-}	t_mode;			//compartilhado por expand e heredoc. tentar tirar daqui.
+}	t_mode;
 
-typedef struct	s_mem
+typedef enum e_node_mode
+{
+	NODE_COMMAND,
+	NODE_PIPELINE,
+	NODE_LOGICAL,
+	NODE_SUBSHELL
+}	t_node_mode;
+
+typedef enum e_logical_op
+{
+	OP_AND,
+	OP_OR
+}	t_logical_op;
+
+typedef struct s_mem
 {
 	t_rdl_mem		*readline;
 	t_hdc_mem		*heredoc;
@@ -62,34 +76,6 @@ typedef struct	s_mem
 }	t_mem;
 
 extern volatile int	g_signal;
-
-void	ft_init_minishell_memory(t_mem **mem, char **envp);
-void	ft_clean_mem_loop(t_mem **mem);
-void	ft_clear_mem_and_exit(t_mem **mem);
-
-// handle signals
-void	handle_signal_prompt(int signo);
-void	handle_signal_cmd(int signo);
-void	signal_before_wait(void);
-void	signal_after_wait(void);
-void	signal_child_process(void);
-void	signal_start(void);
-
-int		ft_count_items(char **str_arr);
-
-typedef enum e_node_mode
-{
-	NODE_COMMAND,
-	NODE_PIPELINE,
-	NODE_LOGICAL,
-	NODE_SUBSHELL
-}	node_mode;
-
-typedef enum e_logical_op
-{
-	OP_AND,
-	OP_OR
-}	logical_op;
 
 typedef struct s_cmd_node t_cmd_node;
 
@@ -113,7 +99,7 @@ typedef struct s_pipe_info
 
 typedef struct s_logical_data
 {
-	logical_op	op;
+	t_logical_op	op;
 	t_ast_node	*left;
 	t_ast_node	*right;
 }	t_logical_data;
@@ -135,7 +121,7 @@ typedef struct s_block_node
 
 typedef struct s_ast_node
 {
-	node_mode 		type;
+	t_node_mode 		type;
 	union
 	{
 		t_block_node	*block_node;
@@ -156,10 +142,25 @@ typedef struct s_input_node
 	char	*name;
 }	t_input_node;
 
+void		ft_init_minishell_memory(t_mem **mem, char **envp);
+void		ft_clean_mem_loop(t_mem **mem);
+void		ft_clear_mem_and_exit(t_mem **mem);
+
+// handle signals
+void		handle_signal_prompt(int signo);
+void		handle_signal_cmd(int signo);
+void		heredoc_signal(void);
+void		signal_before_wait(void);
+void		signal_after_wait(void);
+void		signal_child_process(void);
+void		signal_start(void);
+
+int			ft_count_items(char **str_arr);
+
 t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
 void		ft_create_arr_and_expd(t_list **cmdlst, t_block_node **cmd, t_mem **mem);
 void		ft_free_ast(t_ast_node **node);
-int	only_redir(t_block_node *cmd, t_mem **mem);
+int			only_redir(t_block_node *cmd, t_mem **mem);
 
 //error handlers
 void	ft_handle_exec_error(const char *context);

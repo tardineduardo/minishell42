@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 17:04:33 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:30:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 volatile sig_atomic_t	g_signal;
 
-int	ft_exti_code_tester(int res, t_mem **mem, int point)
+int	ft_exit_code_tester(int res, t_mem **mem, int point)
 {
 	if (g_signal == 2)
 	{
@@ -59,13 +59,13 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		res = ft_readline(&mem);
-		if (ft_exti_code_tester(res, &mem, 0) != 0)
+		if (ft_exit_code_tester(res, &mem, 0) != 0)
 			continue ;
 		res = ft_parsing(&mem);
-		if (ft_exti_code_tester(res, &mem, 0) != 0)
+		if (ft_exit_code_tester(res, &mem, 0) != 0)
 			continue ;
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
-		if (ft_exti_code_tester(res, &mem, 1) != 0)
+		if (ft_exit_code_tester(res, &mem, 1) != 0)
 			continue ;
 		ft_clean_mem_loop(&mem);
 	}
