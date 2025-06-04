@@ -98,7 +98,7 @@ bool	copy_char_copy_next_and_increment(t_exp_mem **exp);
 bool	skip_slash_copy_next_and_increment(t_exp_mem **exp);
 void	skip_char_no_copy(t_exp_mem **exp);
 void	copy_value_and_increment(t_exp_mem **exp);
-size_t	varlen(char *s, bool braces);
+size_t	varlen(char *s, bool *braces);
 
 //reset
 void	reset_parameters(t_mem **mem);
