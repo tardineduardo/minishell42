@@ -13,7 +13,7 @@
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
 
-static bool	ft_is_char_escaped_rdl(char *s, int index)
+static bool	ft_ft_is_char_escaped_rdl(char *s, int index)
 {
 	int	count;
 
@@ -31,9 +31,9 @@ static bool	ft_is_char_escaped_rdl(char *s, int index)
 	return (false);
 }
 
-static void	ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
+static void	ft_ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
 {
-	if ((c == '\'' || c == '\"') && !ft_is_char_escaped_rdl(s, index))
+	if ((c == '\'' || c == '\"') && !ft_ft_is_char_escaped_rdl(s, index))
 	{
 		if (*quote == Q_OFF)
 		{
@@ -59,7 +59,7 @@ bool	ft_has_unclosed_quotes(char *s)
 	quote = Q_OFF;
 	while (s[a])
 	{
-		ft_update_quote_flag_rdl(s[a], &quote, a, s);
+		ft_ft_update_quote_flag_rdl(s[a], &quote, a, s);
 		a++;
 	}
 	if (quote != Q_OFF)
