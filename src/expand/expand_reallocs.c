@@ -13,7 +13,7 @@
 #include "../../include/minishell.h"
 #include "../../include/expand.h"
 
-static size_t	varlen(char *s, bool braces)
+static size_t	varlen(char *s, bool *braces)
 {
 	size_t	i;
 
@@ -22,16 +22,20 @@ static size_t	varlen(char *s, bool braces)
 	if (*s == '{')
 		s++;
 	i = 0;
-	if (braces == false)
+	if (*braces == false)
 	{
 		if (s[0] == '?')
 			return (1);
 		while (ft_isalnum(s[i]))
 			i++;
 	}
-	else if (braces == true)
+	else if (*braces == true)
+	{
 		while ((s[i] != '}'))
 			i++;
+		i++;
+		*braces = false;
+	}
 	return (i);
 }
 
@@ -42,7 +46,7 @@ t_exit	ft_insert_var_in_string(char *insert, size_t index, t_exp_mem **exp)
 	char	*temp;
 	size_t	len;
 
-	len = varlen(&(*exp)->raw[(*exp)->a], (*exp)->braces);
+	len = varlen(&(*exp)->raw[(*exp)->a], &(*exp)->braces);
 	prefix = ft_substr((*exp)->raw, 0, index);
 	suffix = ft_strdup(&(*exp)->raw[(*exp)->a] + len + 1);
 	if (!prefix || !suffix)
