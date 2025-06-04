@@ -11,13 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
-#include "../../include/expand.h"
-#include "../../include/parsing.h"
 #include "../../include/environs.h"
-#include "../../include/readline.h"
-#include "../../include/execution.h"
 
 void	*ft_env_syscall_error(char *message)
 {

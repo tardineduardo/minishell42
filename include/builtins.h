@@ -17,4 +17,8 @@ int		ft_unset(t_list **envlist, char *variable);
 bool	ft_is_valid_varname(char *var, char *variable_value);
 int		ft_error_export(char *variable);
 
+//needed for SHELL=minishell
+void	*ft_ms_env_add(t_list **envlist, char *var, char *val);
+char	*ft_get_env_value(t_list **envlist, char *env_variable);
+
 #endif

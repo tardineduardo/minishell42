@@ -11,13 +11,20 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
-#include "../../include/expand.h"
-#include "../../include/parsing.h"
 #include "../../include/environs.h"
-#include "../../include/readline.h"
-#include "../../include/execution.h"
+
+t_env_node	*ft_init_env_node(char *var, char *val, bool isvisible)
+{
+	t_env_node	*new;
+
+	new = malloc(sizeof(t_env_node));
+	if (!new)
+		return (ft_env_syscall_error("Init node malloc error"));
+	new->variable = var;
+	new->value = val;
+	new->visible = isvisible;
+	return (new);
+}
 
 void	ft_del_env_node(void *content)
 {
