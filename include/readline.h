@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:54:54 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 17:57:47 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:14:20 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,5 @@ bool	ft_has_unclosed_quotes(char *s);
 bool	ft_has_unclosed_curly(char *s);
 bool	ft_is_char_escaped_rdl(char *s, int index);
 void	ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s);
-
 
 #endif
