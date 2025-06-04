@@ -3,6 +3,7 @@ MAIN 		=  	src/minishell.c \
 READLINE 	=	src/readline/readline.c \
 				src/readline/readline_memory.c \
 				src/readline/readline_quotes.c \
+				src/readline/readline_curly.c \
 
 HEREDOC 	=	src/heredoc/heredocs.c \
 				src/heredoc/heredocs_file.c \

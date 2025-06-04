@@ -6,14 +6,14 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:43:01 by eduribei          #+#    #+#             */
-/*   Updated: 2025/05/31 20:49:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:14:50 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/readline.h"
 
-static bool	ft_is_char_escaped_rdl(char *s, int index)
+bool	ft_is_char_escaped_rdl(char *s, int index)
 {
 	int	count;
 
@@ -31,8 +31,7 @@ static bool	ft_is_char_escaped_rdl(char *s, int index)
 	return (false);
 }
 
-static void	ft_update_quote_flag_rdl(char c, t_quote *quote,
-	int index, char *s)
+void	ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s)
 {
 	if ((c == '\'' || c == '\"') && !ft_is_char_escaped_rdl(s, index))
 	{
@@ -64,6 +63,10 @@ bool	ft_has_unclosed_quotes(char *s)
 		a++;
 	}
 	if (quote != Q_OFF)
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: syntax error: unclosed quotes.\n");
 		return (true);
+	}
 	return (false);
 }
