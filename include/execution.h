@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 18:59:40 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:41:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define EXECUTION_H
 
 # include <sys/types.h>						// for wait when executing cmds
-# include <sys/wait.h>						// for wait when executing cmds
 # include "minishell.h"
 
 //redir control
@@ -47,9 +46,6 @@ int			exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem);
 
 int			ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem);
 
-//execution utils
-char		**ft_expand_cmd_arr(char **cmd_arr, t_mem **mem);
-
 //execution single cmd
 int			exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem);
 
@@ -71,7 +67,6 @@ t_ast_node	*create_logical_node(t_logical_op op,
 t_ast_node	*create_group_node(t_ast_node *body);
 
 //ast parsing
-t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
 t_ast_node	*parse_logical_or(t_list **parlst, t_mem **mem);
 t_ast_node	*parse_logical_and(t_list **parlst, t_mem **mem);
 t_ast_node	*parse_pipeline(t_list **parlst, t_mem **mem);
@@ -81,7 +76,10 @@ t_ast_node	*parse_command(t_list **parlst, t_mem **mem);
 int			ft_error_handler(char *err_msg,
 				char *world, int exit_code, t_mem **mem);
 void		ft_handle_exec_error(const char *context);
-//error handlers
-void		ft_handle_exec_error(const char *context);
+
+void		ft_create_arr_and_expd(t_list **cmdlst,
+				t_block_node **cmd, t_mem **mem);
+
+int			only_redir(t_block_node *cmd, t_mem **mem);
 
 #endif

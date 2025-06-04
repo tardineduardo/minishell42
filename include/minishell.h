@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 19:01:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:41:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,9 +160,6 @@ void		signal_start(void);
 int			ft_count_items(char **str_arr);
 
 t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
-void		ft_create_arr_and_expd(t_list **cmdlst,
-				t_block_node **cmd, t_mem **mem);
 void		ft_free_ast(t_ast_node **node);
-int			only_redir(t_block_node *cmd, t_mem **mem);
 
 #endif

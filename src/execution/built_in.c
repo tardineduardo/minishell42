@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:21:27 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 22:00:55 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:30:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@ bool	is_built_in(char **cmd_arr)
 	else
 		return (false);
 }
-
-// void	ft_handle_exec_error(const char *context)
-// {
-// 	perror(context);
-// 	exit(EXIT_FAILURE);
-// }
 
 int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 {

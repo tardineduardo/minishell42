@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:42:45 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 16:32:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:52:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	*ft_ms_env_add(t_list **envlist, char *var, char *val)
 	return (*envlist);
 }
 
-void	ft_export_list(t_list **envlist)
+int	ft_export_list(t_list **envlist)
 {
 	t_list		*trav;
 	t_env_node	*envnode;
@@ -77,6 +77,7 @@ void	ft_export_list(t_list **envlist)
 				envnode->value);
 		trav = trav->next;
 	}
+	return (EXIT_SUCCESS);
 }
 
 int	ft_export(t_list **envlist, char *variable_value)
@@ -88,7 +89,7 @@ int	ft_export(t_list **envlist, char *variable_value)
 	if (!envlist)
 		return (EXIT_FAILURE);
 	if (!variable_value)
-		ft_export_list(envlist);
+		return (ft_export_list(envlist));
 	if (variable_value[0] == '=')
 		return (ft_error_export(variable_value));
 	if (!ft_get_var_and_value(variable_value, &var, &val))
