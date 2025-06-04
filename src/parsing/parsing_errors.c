@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing_errors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,9 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/checks.h"
 
 void	*ft_par_syscall_error(t_par_mem **par, char *ftname)
 {

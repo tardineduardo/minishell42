@@ -46,7 +46,7 @@ void	ft_del_cmd_nodes(void *content)
 	free(cmdnode);
 }
 
-void	free_block_node(void *ptr)
+void	ft_free_block_node(void *ptr)
 {
 	t_block_node	*blk;
 

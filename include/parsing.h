@@ -38,7 +38,7 @@ typedef enum e_oper
 typedef struct s_cmd_node
 {
 	char		*cmdvalue;
-}				t_cmd_node;
+}	t_cmd_node;
 
 typedef struct s_redirs_node
 {
@@ -46,7 +46,7 @@ typedef struct s_redirs_node
 	char			*name;
 	bool			create;
 	int				err;
-}					t_redirs_node;
+}	t_redirs_node;
 
 typedef struct s_par_node
 {
@@ -60,7 +60,7 @@ typedef struct s_par_mem
 	t_list			*parlst;
 	int				errnmb;
 	t_oper			oper;
-}					t_par_mem;
+}	t_par_mem;
 
 typedef struct s_ast_mem
 {
@@ -82,12 +82,12 @@ void			ft_del_redir_node(void *content);
 void			*ft_init_ast_memory(t_mem **mem);
 void			ft_clear_ast_mem(t_ast_mem **ast);
 t_list			*ft_iterative_pipeline_parse(t_list **parlst,
-		t_mem **mem, t_ast_node *node);
+					t_mem **mem, t_ast_node *node);
 
-void	ft_free_command(t_ast_node **node);
-void	ft_free_pipe(t_ast_node **node);
-void	ft_free_logical(t_ast_node **node);
-void	ft_free_subshell(t_ast_node **node);
-void	free_block_node(void *ptr);
+void			ft_free_command(t_ast_node **node);
+void			ft_free_pipe(t_ast_node **node);
+void			ft_free_logical(t_ast_node **node);
+void			ft_free_subshell(t_ast_node **node);
+void			ft_free_block_node(void *ptr);
 
 #endif
