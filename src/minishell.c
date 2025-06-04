@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/03 20:22:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:04:33 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,49 +21,52 @@
 
 volatile sig_atomic_t	g_signal;
 
+int	ft_exti_code_tester(int res, t_mem **mem, int point)
+{
+	if (g_signal == 2)
+	{
+		g_signal = 0;
+		res = 130;
+		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
+		ft_clean_mem_loop(mem);
+		return (0);
+	}
+	if (point == 0 && res != 0)
+	{
+		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
+		ft_clean_mem_loop(mem);
+		return (1);
+	}
+	else if (point == 1 && res != -1)
+	{
+		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
+		ft_clean_mem_loop(mem);
+		return (1);
+	}
+	return (0);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mem		*mem;
-	t_list		*head_parlst;
 	int			res;
 
 	(void)argc;
 	(void)argv;
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
+	signal_start();
 	while (1)
 	{
-		g_signal = 0;
-		signal(SIGINT, handle_signal_prompt);
-		signal(SIGQUIT, SIG_IGN);
 		res = ft_readline(&mem);
-		if (ft_strlen((*mem).readline->line) == 0)
-		{
-			ft_clean_mem_loop(&mem);
+		if (ft_exti_code_tester(res, &mem, 0) != 0)
 			continue ;
-		}
-		if (res != 0)
-		{
-			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
-			ft_clean_mem_loop(&mem);
-			continue ;
-		}
 		res = ft_parsing(&mem);
-		if (res != 0)
-		{
-			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
-			ft_clean_mem_loop(&mem);
+		if (ft_exti_code_tester(res, &mem, 0) != 0)
 			continue ;
-		}
-		head_parlst = mem->parsing->parlst;
-		parse_expression(&head_parlst, &mem);
 		res = ft_execute(&(*mem).environs->envlist, &mem->ast->root, &mem);
-		if (res != -1)
-		{
-			ft_ms_env_update_exit_code(&(*mem).environs->envlist, "?", res);
-			ft_clean_mem_loop(&mem);
+		if (ft_exti_code_tester(res, &mem, 1) != 0)
 			continue ;
-		}
 		ft_clean_mem_loop(&mem);
 	}
 	ft_clear_mem_and_exit(&mem);

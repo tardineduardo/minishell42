@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 12:43:10 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:36:19 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,13 @@ int	ft_parsing(t_mem **mem)
 {
 	t_par_mem	*par;
 	t_tok_mem	*tok;
+	t_list		*head_parlst;
 
 	tok = (*mem)->tokenize;
 	par = (*mem)->parsing;
 	(*mem)->parsing->errnmb = 0;
 	ft_create_parlst(&tok->toklst, &par->parlst, &par);
+	head_parlst = (*mem)->parsing->parlst;
+	parse_expression(&head_parlst, mem);
 	return (par->errnmb);
 }

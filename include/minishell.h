@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 17:00:14 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:40:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	handle_signal_cmd(int signo);
 void	signal_before_wait(void);
 void	signal_after_wait(void);
 void	signal_child_process(void);
+void	signal_start(void);
 
 int		ft_count_items(char **str_arr);
 
