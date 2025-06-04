@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:43:01 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 17:57:23 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:14:50 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ bool	ft_has_unclosed_quotes(char *s)
 	if (quote != Q_OFF)
 	{
 		ft_dprintf(STDERR_FILENO,
-		"minishell: syntax error: unclosed quotes.\n");
+			"minishell: syntax error: unclosed quotes.\n");
 		return (true);
 	}
 	return (false);
