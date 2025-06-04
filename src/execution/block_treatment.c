@@ -6,12 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:22:44 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/21 14:05:49 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:11:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
+#include "../../include/execution.h"
 
 int	ft_count_items(char **str_arr)
 {
@@ -23,7 +24,7 @@ int	ft_count_items(char **str_arr)
 	return (i);
 }
 
-char	**get_path_options(t_list **ms_env)
+char	**get_path_options(char **cmd_arr, t_list **ms_env, t_mem **mem)
 {
 	t_env_node	*cur_env;
 	t_list		*cur_node;
@@ -40,6 +41,7 @@ char	**get_path_options(t_list **ms_env)
 		}
 		cur_node = cur_node->next;
 	}
+	ft_error_handler("%s: No such file or directory\n", cmd_arr[0], 127, mem);
 	return (NULL);
 }
 
@@ -70,14 +72,16 @@ bool	is_already_executable(char *cmd_arr)
 	return (false);
 }
 
-char	**update_cmd_arr(t_list **ms_env, char **cmd_arr)
+char	**update_cmd_arr(t_list **ms_env, char **cmd_arr, t_mem **mem)
 {
 	char	**path_options;
 	char	*right_option;
 
 	if (!is_already_executable(cmd_arr[0]))
 	{
-		path_options = get_path_options(ms_env);
+		path_options = get_path_options(cmd_arr, ms_env, mem);
+		if (!path_options)
+			ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem);
 		right_option = get_right_path(path_options, cmd_arr[0]);
 		if (!right_option)
 		{

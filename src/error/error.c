@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_errors.c                                   :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/19 12:43:10 by luide-ca         ###   ########.fr       */
+/*   Created: 2025/06/02 16:29:59 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/06/02 16:59:01 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/tokenize.h"
 
-void	*ft_par_syscall_error(t_par_mem **par, char *ftname)
+void	ft_handle_exec_error(const char *context)
 {
-	(*par)->errnmb = errno;
-	ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", ftname, strerror(errno));
-	return (NULL);
+	perror(context);
+	exit(EXIT_FAILURE);
+}
+
+int	ft_error_handler(char *err_msg, char *world, int exit_code, t_mem **mem)
+{
+	ft_dprintf(2, err_msg, world);
+	ft_clear_mem_and_exit(mem);
+	exit(exit_code);
 }

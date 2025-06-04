@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_ast.c                                         :+:      :+:    :+:   */
+/*   ast_memory.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:49:10 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/28 15:15:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/03 17:43:59 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,19 @@ void	ft_del_redirs_nodes(void *content)
 		ft_free_and_null((void *)&redir_node);
 }
 
-void	free_block_node(void *ptr)
+void	ft_del_cmd_nodes(void *content)
+{
+	t_cmd_node	*cmdnode;
+
+	if (!content)
+		return ;
+	cmdnode = (t_cmd_node *)content;
+	if (cmdnode->cmdvalue)
+		free(cmdnode->cmdvalue);
+	free(cmdnode);
+}
+
+void	ft_free_block_node(void *ptr)
 {
 	t_block_node	*blk;
 
@@ -49,53 +61,24 @@ void	free_block_node(void *ptr)
 		ft_lstclear(&blk->input_lst, NULL);
 	if (blk->cmd_arr)
 		ft_free_and_null_str_array(&blk->cmd_arr);
+	if (blk->cmd_lst)
+		ft_lstclear(&blk->cmd_lst, ft_del_cmd_nodes);
 	free(blk);
 }
 
 void	ft_free_ast(t_ast_node **node)
 {
-	t_block_node	*blk;
-	t_pipe_info		*pipe;
-	t_logical_data	*log;
-	t_subshell_data	*sub;
-
 	if (!(*node))
 		return ;
 	if ((*node)->type == NODE_COMMAND)
-	{
-		blk = (*node)->block_node;
-		if (blk)
-			free_block_node(blk);
-	}
+		ft_free_command(node);
 	else if ((*node)->type == NODE_PIPELINE)
-	{
-		pipe = (*node)->pipeline;
-		if (pipe)
-		{
-			ft_lstclear(&pipe->cmds, free_block_node);
-			free(pipe);
-		}
-	}
+		ft_free_pipe(node);
 	else if ((*node)->type == NODE_LOGICAL)
-	{
-		log = (*node)->logical;
-		if (log)
-		{
-			ft_free_ast(&log->left);
-			ft_free_ast(&log->right);
-			free(log);
-		}
-	}
+		ft_free_logical(node);
 	else if ((*node)->type == NODE_SUBSHELL)
-	{
-		sub = (*node)->subshell;
-		if (sub)
-		{
-			ft_free_ast(&sub->body);
-			free(sub);
-		}
-	}
-	ft_free_and_null((void**)node);
+		ft_free_subshell(node);
+	ft_free_and_null((void **)node);
 }
 
 void	ft_clear_ast_mem(t_ast_mem **ast)

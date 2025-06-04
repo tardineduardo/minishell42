@@ -6,19 +6,39 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:05:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/28 16:38:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:58:54 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
-#include "../../include/expand.h"
 #include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
-#include "../../include/builtins.h"
 #include "../../include/execution.h"
+
+int	only_redir(t_block_node *cmd, t_mem **mem)
+{
+	pid_t	pid;
+	int		res;
+	int		status;
+
+	if (cmd->redirs_lst != NULL)
+	{
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			exit(1);
+		}
+		if (pid == 0)
+		{
+			res = pipe_fd_control_only_redir(cmd, mem);
+			ft_clear_mem_and_exit(mem);
+			exit(res);
+		}
+		waitpid(pid, &status, 0);
+		return (print_child_statuses(NULL, &status));
+	}
+	return (0);
+}
 
 int	single_ext_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
@@ -44,8 +64,7 @@ int	single_ext_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	signal_before_wait();
 	waitpid(pid, &status, 0);
 	signal_after_wait();
-	res = print_child_statuses(NULL, &status);
-	return (res);
+	return (print_child_statuses(NULL, &status));
 }
 
 int	single_built_in(t_list **ms_env, t_block_node *cmd, t_mem **mem)
@@ -76,24 +95,14 @@ int	exec_single_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 {
 	int		res;
 
-	if (cmd->cmd_arr[0] == NULL)
-	{
-		pid_t pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(1);
-		}
-		if (pid == 0) {
-			int res = pipe_fd_control_only_redir(cmd, mem);
-			ft_clear_mem_and_exit(mem);
-			exit(res);
-		}
-		int status;
-		waitpid(pid, &status, 0);
-		return print_child_statuses(NULL, &status);
-	}
-	if (!is_built_in(cmd->cmd_arr))
+	if (ft_lstsize(cmd->cmd_lst) == 1
+		&& ft_strcmp(((t_cmd_node *)cmd->cmd_lst->content)->cmdvalue, "") == 0
+		&& cmd->redirs_lst == NULL)
+		return (0);
+	ft_create_arr_and_expd(&cmd->cmd_lst, &cmd, mem);
+	if (cmd->cmd_arr == NULL)
+		return (only_redir(cmd, mem));
+	else if (!is_built_in(cmd->cmd_arr))
 		res = single_ext_cmd(ms_env, cmd, mem);
 	else
 		res = single_built_in(ms_env, cmd, mem);

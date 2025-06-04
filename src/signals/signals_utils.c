@@ -1,31 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   signals_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 16:38:15 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/14 16:42:23 by luide-ca         ###   ########.fr       */
+/*   Created: 2025/06/03 20:19:19 by luide-ca          #+#    #+#             */
+/*   Updated: 2025/06/04 17:07:58 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	error_control(char *msg)
+#include "../../include/minishell.h"
+
+void	signal_before_wait(void)
 {
-	if ()
-	{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
 
-	}
-	else if ()
-	{
+void	signal_after_wait(void)
+{
+	signal(SIGINT, handle_signal_prompt);
+	signal(SIGQUIT, SIG_IGN);
+}
 
-	}
-	else if ()
-	{
+void	signal_child_process(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-	}
-	else if ()
-	{
-		
-	}	
+void	signal_start(void)
+{
+	signal(SIGINT, handle_signal_prompt);
+	signal(SIGQUIT, SIG_IGN);
 }

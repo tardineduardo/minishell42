@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_steps.c                                     :+:      :+:    :+:   */
+/*   expand_steps_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,86 +11,104 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
 #include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
 
-// used by heredoc
-// used by token->process_unquoted_sequence
-// used by token->process_inside_double_quoted
-bool	handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
+static bool	ft_condition(t_exp_mem **exp, int mode)
 {
-	t_exit	exit;
-
-	if (CURRENT_CHAR != '$' || NEXT_CHAR == '\0' || ft_isspace(NEXT_CHAR))
-		return (false);
-	if (NEXT_CHAR == '{')
+	if (mode == 1)
 	{
-		(*exp)->braces = true;
-		skip_char_no_copy(exp);
-	}
-	if (NEXT_CHAR && (ft_isalnum(NEXT_CHAR) || NEXT_CHAR == '?'))
-	{
-		exit = try_to_expand_variable(exp, mem);
-		if (!exit)
-		{
-			(*exp)->exit = exit;
-			return (false);					// INDICA ALGUM SYS ERROR 
-		}
-		if (exit == VAR_FOUND)
-		{
-			copy_value_and_increment(exp);
+		if ((*exp)->raw[(*exp)->a] != '$'
+			|| (*exp)->raw[(*exp)->a + 1] == '\0'
+			|| ft_isspace((*exp)->raw[(*exp)->a + 1]))
 			return (true);
-		}
-		return (true);						// VARIABLE NOT FOUND, NAO É ERRO
+	}
+	else if (mode == 2)
+	{
+		if ((*exp)->raw[(*exp)->a + 1]
+			&& (ft_isalnum((*exp)->raw[(*exp)->a + 1])
+				|| (*exp)->raw[(*exp)->a + 1] == '?'))
+			return (true);
 	}
 	return (false);
 }
 
-// used by token->process_unquoted_sequence
-// used by token->process_inside_double_quoted -> NOT DELIM
-// used by delim->process_unquoted_sequence - -> NOT DELIM
-// used by heredoc->process_unquoted_sequence
-bool	handle_backslash(t_exp_mem **exp, t_mode mode, t_quote quote)
+static t_exit	remove_var_from_string(char **s, size_t index)
 {
-	if (CURRENT_CHAR != '\\' || NEXT_CHAR == '\0')
-		return (false);
-	if (mode == TOKEN && quote == Q_OFF)
-	{
-		if (NEXT_CHAR == '\\')
-			return (copy_char_copy_next_and_increment(exp));
-		else
-			return (skip_slash_copy_next_and_increment(exp));
-	}
-	if (mode == TOKEN && quote == Q_DOUBLE)
-	{
-		if (ft_strchr("\\\"\'$", NEXT_CHAR))
-			return (skip_slash_copy_next_and_increment(exp));
-	}
-	if (mode == HEREDOC && (*exp)->hd_mode == EXPAND)
-	{
-		if (ft_strchr("\\$", NEXT_CHAR))
-			return (skip_slash_copy_next_and_increment(exp));
-	}
-	return (false);
+	size_t	a;
+
+	a = 0;
+	while (ft_isalnum((*s)[index + a + 1]))
+		a++;
+	ft_strlcpy(&(*s)[index], &(*s)[index + a + 1], ft_strlen(&(*s)[index]));
+	return (VAR_NOT_FOUND);
 }
 
-t_exit	try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
+t_exit	ft_try_to_expand_variable(t_exp_mem **exp, t_mem **mem)
 {
 	char	**value;
 	t_exit	exit;
 
 	value = &(*exp)->value;
-	exit = get_variable_value(&CURRENT_CHAR, value, mem);
+	exit = ft_get_variable_value(&(*exp)->raw[(*exp)->a], value, mem);
 	if (exit == VAR_FOUND)
-		return (insert_var_in_string(*value, (*exp)->a, exp));
+		return (ft_insert_var_in_string(*value, (*exp)->a, exp));
 	else if (exit == VAR_NOT_FOUND)
 		return (remove_var_from_string(&(*exp)->raw, (*exp)->a));
 	else if (exit == BAD_SUBSTITUITION)
 		return (BAD_SUBSTITUITION);
 	else
 		return (ERROR);
+}
+
+bool	ft_handle_dollar_sign(t_exp_mem **exp, t_mem **mem)
+{
+	t_exit	exit;
+
+	if (ft_condition(exp, 1))
+		return (false);
+	if ((*exp)->raw[(*exp)->a + 1] == '{')
+	{
+		(*exp)->braces = true;
+		ft_skip_char_no_copy(exp);
+	}
+	if (ft_condition(exp, 2))
+	{
+		exit = ft_try_to_expand_variable(exp, mem);
+		if (!exit)
+		{
+			(*exp)->exit = exit;
+			return (false);
+		}
+		if (exit == VAR_FOUND)
+		{
+			ft_copy_value_and_increment(exp);
+			return (true);
+		}
+		return (true);
+	}
+	return (false);
+}
+
+bool	ft_handle_backslash(t_exp_mem **exp, t_mode mode, t_quote quote)
+{
+	if ((*exp)->raw[(*exp)->a] != '\\' || (*exp)->raw[(*exp)->a + 1] == '\0')
+		return (false);
+	if (mode == TOKEN && quote == Q_OFF)
+	{
+		if ((*exp)->raw[(*exp)->a + 1] == '\\')
+			return (ft_copy_char_copy_next_and_increment(exp));
+		else
+			return (ft_skip_slash_copy_next_and_increment(exp));
+	}
+	if (mode == TOKEN && quote == Q_DOUBLE)
+	{
+		if (ft_strchr("\\\"\'$", (*exp)->raw[(*exp)->a + 1]))
+			return (ft_skip_slash_copy_next_and_increment(exp));
+	}
+	if (mode == HEREDOC && (*exp)->hd_mode == EXPAND)
+	{
+		if (ft_strchr("\\$", (*exp)->raw[(*exp)->a + 1]))
+			return (ft_skip_slash_copy_next_and_increment(exp));
+	}
+	return (false);
 }

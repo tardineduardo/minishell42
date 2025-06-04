@@ -6,51 +6,27 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:38:39 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/expand.h"
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/parsing.h"
 
-void	*ft_tokenize(char **line, t_mem **mem)
+static t_tok_node	*ft_init_tknd(char *str, t_tok_node *node, t_tok_mem **tok)
 {
-	t_tok_mem	*tok;
-	t_tok_exit	exit;
-
-	tok = (*mem)->tokenize;
-	tok->remain = ft_strdup(*line);
-	while (1)
-	{
-		exit = ft_tokenize_remain(&tok->remain, &tok, mem);
-		if (exit == TOK_ERROR)
-			return (NULL);
-		if (exit == TOK_END)
-			break ;
-	}
-	ft_free_and_null((void *)&tok->remain);
-	return (mem);
+	node->value = ft_strdup(str);
+	if (!node->value)
+		return (NULL);
+	node->oper = ft_get_oper(str);
+	node->heredoc_path = NULL;
+	ft_index_for_parsing(str, node, tok);
+	ft_free_and_null((void *)&str);
+	return (node);
 }
 
-t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok, t_mem **mem)
-{
-	int			token_limit;
-	t_tok_exit	detach_exit;
-
-	token_limit = ft_find_token_limit((*remain), tok);
-	detach_exit = ft_append_tknde(remain, tok, token_limit, mem);
-	(*tok)->index_count += token_limit;
-	if (detach_exit == TOK_ERROR)
-		return (TOK_ERROR);
-	if (detach_exit == TOK_END)
-		return (TOK_END);
-	return (TOK_CONTINUE);
-}
-
-t_tok_exit	ft_append_tknde(char **rem, t_tok_mem **tok, int tklimit, t_mem **m)
+static t_tok_exit	ft_append_tknde(char **rem, t_tok_mem **tok, int tklimit)
 {
 	t_tok_node	*toknode;
 	t_dlist		*append;
@@ -67,33 +43,64 @@ t_tok_exit	ft_append_tknde(char **rem, t_tok_mem **tok, int tklimit, t_mem **m)
 	if (!append)
 		return (TOK_ERROR);
 	ft_dlstadd_back(&(*tok)->toklst, append);
-	if (!ft_init_heredoc(toknode, tok, m))
-		return (TOK_ERROR);
 	temp = *rem;
 	*rem = ft_strdup(&(*rem)[tklimit]);
 	ft_free_and_null((void *)&temp);
-	(*tok)->index_count += ft_count_spaces(*rem);
 	ft_strtrim_overwrite(rem, "\t ");
 	if (!(*rem)[0])
 		return (TOK_END);
 	return (TOK_CONTINUE);
 }
 
-t_tok_node	*ft_init_tknd(char *newstr, t_tok_node *node, t_tok_mem **tok)
+static t_tok_exit	ft_tokenize_remain(char **remain, t_tok_mem **tok)
 {
-	node->value = ft_strdup(newstr);
-	if (!node->value)
-		return (NULL);
-	node->oper = ft_get_oper(newstr);
-	node->heredoc_path = NULL;
-	capture_values_for_parsing_later(newstr, node, tok);
-	ft_free_and_null((void *)&newstr);
-	return (node);
+	int			token_limit;
+	t_tok_exit	detach_exit;
+
+	token_limit = ft_find_token_limit((*remain), tok);
+	detach_exit = ft_append_tknde(remain, tok, token_limit);
+	if (detach_exit == TOK_ERROR)
+		return (TOK_ERROR);
+	if (detach_exit == TOK_END)
+		return (TOK_END);
+	return (TOK_CONTINUE);
 }
 
-t_tok_node	*ft_init_heredoc(t_tok_node *node, t_tok_mem **tok, t_mem **mem)
+static int	ft_capture_heredocs(t_tok_mem **tok, t_mem **mem)
 {
-	if (!process_heredoc(node, tok, mem))
-		return (NULL);
-	return (node);
+	t_dlist		*trav;
+	t_tok_node	*node;
+
+	trav = (*tok)->toklst;
+	while (trav)
+	{
+		node = (t_tok_node *)trav->content;
+		if (!ft_process_heredoc(node, tok, mem))
+			return ((*tok)->errnmb);
+		trav = trav->next;
+	}
+	return (0);
+}
+
+int	ft_tokenize(char **line, t_mem **mem)
+{
+	t_tok_mem	*tok;
+	t_tok_exit	exit;
+
+	tok = (*mem)->tokenize;
+	tok->remain = ft_strdup(*line);
+	while (1)
+	{
+		exit = ft_tokenize_remain(&tok->remain, &tok);
+		if (exit == TOK_ERROR)
+			return (1);
+		if (exit == TOK_END)
+			break ;
+	}
+	ft_free_and_null((void *)&tok->remain);
+	if (ft_check_syntax(tok->toklst, &tok) != 0)
+		return (tok->errnmb);
+	if (ft_capture_heredocs(&tok, mem) != 0)
+		return (tok->errnmb);
+	return (0);
 }

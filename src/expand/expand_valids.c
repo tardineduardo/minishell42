@@ -11,14 +11,9 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
 #include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
 
-bool	is_closing_quote(char c, t_quote *quote)
+bool	ft_is_closing_quote(char c, t_quote *quote)
 {
 	if (c == '\'' && *quote == Q_SINGLE)
 	{
@@ -33,7 +28,7 @@ bool	is_closing_quote(char c, t_quote *quote)
 	return (false);
 }
 
-bool	is_char_escaped(char *string, int a)
+bool	ft_is_char_escaped(char *string, int a)
 {
 	int	escapecount;
 
@@ -51,7 +46,7 @@ bool	is_char_escaped(char *string, int a)
 	return (false);
 }
 
-t_delim	is_delim_normal_or_quoted(char *s)
+t_delim	ft_is_delim_normal_or_quoted(char *s)
 {
 	int	a;
 	int	escapecount;

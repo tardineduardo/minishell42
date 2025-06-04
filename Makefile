@@ -1,6 +1,9 @@
 MAIN 		=  	src/minishell.c \
 
 READLINE 	=	src/readline/readline.c \
+				src/readline/readline_memory.c \
+				src/readline/readline_quotes.c \
+				src/readline/readline_curly.c \
 
 HEREDOC 	=	src/heredoc/heredocs.c \
 				src/heredoc/heredocs_file.c \
@@ -14,6 +17,8 @@ TOKEN 		=	src/tokenize/tokenize_helpers.c \
 				src/tokenize/tokenize_limits.c \
 				src/tokenize/tokenize_memory.c \
 				src/tokenize/tokenize_operators.c \
+				src/tokenize/tokenize_syntax_cases.c \
+				src/tokenize/tokenize_syntax.c \
 				src/tokenize/tokenize.c \
 
 EXPAND		=	src/expand/expand_findvar.c \
@@ -32,14 +37,14 @@ ENVIRON 	=	src/environs/environs_errors.c \
 PARSER		=	src/parsing/parsing_command.c \
 				src/parsing/parsing_errors.c \
 				src/parsing/parsing_memory.c \
-				src/parsing/parsing_syntax_cases.c \
-				src/parsing/parsing_syntax.c \
 				src/parsing/parsing_valids.c \
 				src/parsing/parsing.c \
 
 AST 		=	src/ast/init_ast.c \
-				src/ast/parse_ast.c \
-				src/ast/free_ast.c \
+				src/ast/ast_parse.c \
+				src/ast/ast_parse_utils.c \
+				src/ast/ast_memory.c \
+				src/ast/ast_memory_utils.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \
@@ -50,9 +55,12 @@ EXECUTE		= 	src/execution/execution.c \
 				src/execution/built_in.c \
 				src/execution/ext_cmd.c \
 				src/execution/redir_control.c \
+				src/execution/redir_control_utils.c \
+				src/execution/redir_control_utils_2.c \
 				src/execution/exit_code.c \
 
-SIGNALS		= 	src/signals.c \
+SIGNALS		= 	src/signals/signals.c \
+				src/signals/signals_utils.c \
 
 BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_pwd.c \
@@ -61,8 +69,9 @@ BUILTIN 	=	src/built-ins/ft_env.c \
 				src/built-ins/ft_cd.c \
 				src/built-ins/ft_unset.c \
 				src/built-ins/ft_export.c \
+				src/built-ins/utils.c \
 
-CHECK		= 	src/checks.c \
+ERROR		=	src/error/error.c \
 
 OBJS_SRC =	$(MAIN:.c=.o) \
 			$(HEREDOC:.c=.o) \
@@ -76,7 +85,7 @@ OBJS_SRC =	$(MAIN:.c=.o) \
 			$(AST:.c=.o) \
 			$(EXECUTE:.c=.o) \
 			$(SIGNALS:.c=.o) \
-			$(CHECK:.c=.o) \
+			$(ERROR:.c=.o) \
 
 CC = cc
 RM = rm -f

@@ -6,12 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:21:27 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/23 15:54:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/02 22:00:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/builtins.h"
+#include "../../include/execution.h"
 
 bool	is_built_in(char **cmd_arr)
 {
@@ -27,16 +28,19 @@ bool	is_built_in(char **cmd_arr)
 		return (false);
 }
 
+// void	ft_handle_exec_error(const char *context)
+// {
+// 	perror(context);
+// 	exit(EXIT_FAILURE);
+// }
+
 int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 {
 	int		res;
 
 	res = -1;
 	if (!cmd_arr || !cmd_arr[0])
-	{
-		perror("cmd_arr built-in executor");
-		exit(EXIT_FAILURE);
-	}
+		ft_handle_exec_error("built-in executor");
 	if (ft_strncmp(cmd_arr[0], "pwd", 3) == 0)
 		res = ft_pwd(ms_env);
 	else if (ft_strncmp(cmd_arr[0], "echo", 4) == 0)
@@ -44,7 +48,7 @@ int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 	else if (ft_strncmp(cmd_arr[0], "env", 3) == 0)
 		res = ft_env(*ms_env);
 	else if (ft_strncmp(cmd_arr[0], "cd", 2) == 0)
-		res = ft_cd(ms_env, cmd_arr, mem);
+		res = ft_cd(ms_env, cmd_arr);
 	else if (ft_strncmp(cmd_arr[0], "export", 5) == 0)
 		res = ft_export(ms_env, cmd_arr[1]);
 	else if (ft_strncmp(cmd_arr[0], "unset", 5) == 0)
@@ -52,9 +56,6 @@ int	exec_built_in(t_list **ms_env, char	**cmd_arr, t_mem **mem)
 	else if (ft_strncmp(cmd_arr[0], "exit", 4) == 0)
 		ft_exit(cmd_arr, mem);
 	else
-	{
-		perror("built-in executor");
-		exit(EXIT_FAILURE);
-	}
+		ft_handle_exec_error("built-in executor");
 	return (res);
 }

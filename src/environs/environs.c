@@ -3,73 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   environs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:10:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/25 18:29:53 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:23:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
-#include "../../include/expand.h"
-#include "../../include/parsing.h"
 #include "../../include/environs.h"
-#include "../../include/readline.h"
-#include "../../include/execution.h"
+#include "../../include/builtins.h"
 
-void	*ft_init_environs(t_env_mem **env, char **envp)
+static int	ft_env_varlen(char *s)
 {
-	char *var;
-	char *val;
+	int	a;
 
-	var = NULL;
-	val = NULL;
-	if (!envp)
-		return (NULL);
-	if (!(*envp))
-		return (envp);
-	while (*envp != NULL)
-	{
-		if (!ft_get_var_and_value(*envp, &var, &val))
-			return(NULL);
-		(*env)->new_node = ft_init_env_node(var, val, true);
-		if (!(*env)->new_node)
-			return (NULL);
-		if (!ft_add_to_envlist(&(*env)->envlist, (*env)->new_node))
-			return (NULL);
-		envp++;
-	}
-	return ((*env)->envlist);
+	a = 0;
+	while (s[a] != '\0' && s[a] != '=')
+		a++;
+	return (a);
 }
 
-void	*ft_get_var_and_value(char *envp, char **var, char **val)
+static int	ft_set_shell(t_list **envlist)
 {
-	char *equal_sign;
-	
-	equal_sign = ft_strchr(envp, '=');
-	if (equal_sign)
-		*val = ft_strdup(equal_sign + 1);
-	else
-		*val = ft_strdup("");
-	*var = ft_substr(envp, 0, ft_env_varlen(envp));
-	if (!*val || !*var)
-		return (NULL);
-	return(envp);
-}
+	char	*dir;
+	char	*shell;
 
-t_env_node	*ft_init_env_node(char *var, char *val, bool isvisible)
-{
-	t_env_node	*new;
-
-	new = malloc(sizeof(t_env_node));
-	if (!new)
-		return (ft_env_syscall_error("Init node malloc error"));
-	new->variable = var;
-	new->value = val;
-	new->visible = isvisible;
-	return (new);
+	dir = ft_get_env_value(envlist, "PWD");
+	if (!dir)
+		return (1);
+	shell = ft_concatenate("SHELL=", dir, "/minshell");
+	if (!shell)
+		return (1);
+	ft_export(envlist, shell);
+	free(shell);
+	return (0);
 }
 
 t_list	*ft_add_to_envlist(t_list **envlist, t_env_node *new_node)
@@ -83,12 +51,44 @@ t_list	*ft_add_to_envlist(t_list **envlist, t_env_node *new_node)
 	return (*envlist);
 }
 
-int ft_env_varlen(char *s)
+void	*ft_get_var_and_value(char *envp, char **var, char **val)
 {
-	int a;
+	char	*equal_sign;
 
-	a = 0;
-	while (s[a] != '\0' && s[a] != '=')
-		a++;
-	return (a);
+	equal_sign = ft_strchr(envp, '=');
+	if (equal_sign)
+		*val = ft_strdup(equal_sign + 1);
+	else
+		*val = ft_strdup("");
+	*var = ft_substr(envp, 0, ft_env_varlen(envp));
+	if (!*val || !*var)
+		return (NULL);
+	return (envp);
+}
+
+void	*ft_init_environs(t_env_mem **env, char **envp)
+{
+	char	*var;
+	char	*val;
+
+	var = NULL;
+	val = NULL;
+	if (!envp)
+		return (NULL);
+	if (!(*envp))
+		return (envp);
+	while (*envp != NULL)
+	{
+		if (!ft_get_var_and_value(*envp, &var, &val))
+			return (NULL);
+		(*env)->new_node = ft_init_env_node(var, val, true);
+		if (!(*env)->new_node)
+			return (NULL);
+		if (!ft_add_to_envlist(&(*env)->envlist, (*env)->new_node))
+			return (NULL);
+		envp++;
+	}
+	if (ft_set_shell(&(*env)->envlist) != 0)
+		return (NULL);
+	return ((*env)->envlist);
 }

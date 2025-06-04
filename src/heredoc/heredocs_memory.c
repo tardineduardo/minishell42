@@ -6,13 +6,12 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/30 19:15:02 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/01 15:27:14 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
-#include "../../include/expand.h"
 
 void	*ft_init_hdc_memory(t_mem **mem)
 {
@@ -21,8 +20,6 @@ void	*ft_init_hdc_memory(t_mem **mem)
 		return (NULL);
 	(*mem)->heredoc->delim = NULL;
 	(*mem)->heredoc->filepath = NULL;
-	(*mem)->heredoc->looptemp = NULL;
-	(*mem)->heredoc->loopinput = NULL;
 	(*mem)->heredoc->mode = INIT_MODE;
 	return ((*mem)->heredoc);
 }
