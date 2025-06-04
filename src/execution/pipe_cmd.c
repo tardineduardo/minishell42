@@ -6,18 +6,11 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:45:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:58:41 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
-#include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
-#include "../../include/builtins.h"
 #include "../../include/execution.h"
 
 void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,

@@ -6,14 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:13:01 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:55:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/environs.h"
 #include "../../include/execution.h"
-#include <sys/stat.h>
 
 int	ft_malloc_env_arr(t_list **ms_env, t_mem **mem)
 {

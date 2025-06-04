@@ -6,18 +6,11 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 17:12:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:59:05 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/heredoc.h"
-#include "../../include/tokenize.h"
-#include "../../include/expand.h"
-#include "../../include/parsing.h"
-#include "../../include/environs.h"
-#include "../../include/readline.h"
-#include "../../include/builtins.h"
 #include "../../include/execution.h"
 
 int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)

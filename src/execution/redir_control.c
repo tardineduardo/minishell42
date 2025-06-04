@@ -6,15 +6,12 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:40:20 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:00:06 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/parsing.h"
-#include "../../include/expand.h"
 #include "../../include/execution.h"
-#include <termios.h>
 
 bool	save_termios(struct termios *saved)
 {

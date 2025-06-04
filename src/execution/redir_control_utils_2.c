@@ -6,13 +6,11 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:09:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 17:11:58 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:58:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/parsing.h"
-#include "../../include/expand.h"
 #include "../../include/execution.h"
 
 void	test_input_redir(char *expanded_name, t_mem **mem)

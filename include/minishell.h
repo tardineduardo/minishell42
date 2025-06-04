@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 17:30:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:01:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <readline/readline.h>				// for readline
 # include <readline/history.h>				// for history
 # include <signal.h>						// handle signals
+# include <sys/stat.h>					
+# include <termios.h>
 
 # include <unistd.h>
 # include <sys/wait.h>
@@ -75,11 +77,11 @@ typedef struct s_mem
 	t_ast_mem		*ast;
 }	t_mem;
 
-extern volatile int	g_signal;
+extern volatile int			g_signal;
 
-typedef struct s_cmd_node t_cmd_node;
+typedef struct s_cmd_node	t_cmd_node;
 
-typedef struct s_ast_node t_ast_node;
+typedef struct s_ast_node	t_ast_node;
 
 typedef struct s_pipe_data
 {
@@ -100,8 +102,8 @@ typedef struct s_pipe_info
 typedef struct s_logical_data
 {
 	t_logical_op	op;
-	t_ast_node	*left;
-	t_ast_node	*right;
+	t_ast_node		*left;
+	t_ast_node		*right;
 }	t_logical_data;
 
 typedef struct s_subshell_data
@@ -121,13 +123,13 @@ typedef struct s_block_node
 
 typedef struct s_ast_node
 {
-	t_node_mode 		type;
+	t_node_mode	type;
 	union
 	{
 		t_block_node	*block_node;
 		t_pipe_info		*pipeline;
 		t_logical_data	*logical;
-		t_subshell_data *subshell;
+		t_subshell_data	*subshell;
 	};
 }	t_ast_node;
 
@@ -158,10 +160,9 @@ void		signal_start(void);
 int			ft_count_items(char **str_arr);
 
 t_ast_node	*parse_expression(t_list **parlst, t_mem **mem);
-void		ft_create_arr_and_expd(t_list **cmdlst, t_block_node **cmd, t_mem **mem);
+void		ft_create_arr_and_expd(t_list **cmdlst,
+				t_block_node **cmd, t_mem **mem);
 void		ft_free_ast(t_ast_node **node);
 int			only_redir(t_block_node *cmd, t_mem **mem);
 
-//error handlers
-void	ft_handle_exec_error(const char *context);
 #endif

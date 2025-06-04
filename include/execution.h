@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 17:21:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:59:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ t_ast_node	*parse_command(t_list **parlst, t_mem **mem);
 
 int			ft_error_handler(char *err_msg,
 				char *world, int exit_code, t_mem **mem);
+void		ft_handle_exec_error(const char *context);
+//error handlers
 void		ft_handle_exec_error(const char *context);
 
 #endif
