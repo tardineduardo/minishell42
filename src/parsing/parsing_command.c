@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/03 20:15:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:09:37 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
-#include "../../include/checks.h"
 
 static t_redirs_node	*ft_inits(t_par_node **parnd, t_par_mem **par)
 {

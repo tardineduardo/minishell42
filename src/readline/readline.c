@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:42:22 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/02 22:28:26 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:51:56 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,9 @@ int	ft_readline(t_mem **mem)
 		exit(0);
 	}
 	if (ft_has_unclosed_quotes(rdl->line))
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: syntax error: unclosed quote\n");
 		return (1);
-	}
+	if (ft_has_unclosed_curly(rdl->line))
+		return (1);
 	tokresult = ft_tokenize(&rdl->line, mem);
 	if (tokresult != 0)
 		return (tokresult);
