@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 18:55:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:27:36 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_malloc_env_arr(t_list **ms_env, t_mem **mem)
 {
 	int			lst_size;
 
-	lst_size = ft_lstsize(*ms_env);
+	lst_size = ft_lstsize_env(*ms_env);
 	if (!(*mem)->environs)
 		return (1);
 	(*mem)->environs->ms_env_cpy = calloc((lst_size + 1), sizeof(char *));
@@ -73,9 +73,13 @@ char	**ft_ms_env_arr(t_list **ms_env, t_mem **mem)
 	while (cur_list_node)
 	{
 		env_node = cur_list_node->content;
-		if (ft_fill_env_arr(env_node->variable, env_node->value, i, mem) != 0)
-			return (NULL);
-		i++;
+		if (env_node->visible == true)
+		{
+			if (ft_fill_env_arr(env_node->variable,
+					env_node->value, i, mem) != 0)
+				return (NULL);
+			i++;
+		}
 		cur_list_node = cur_list_node->next;
 	}
 	(*mem)->environs->ms_env_cpy[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 20:24:22 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:26:44 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ void		ft_create_arr_and_expd(t_list **cmdlst,
 				t_block_node **cmd, t_mem **mem);
 
 int			only_redir(t_block_node *cmd, t_mem **mem);
+int			ft_lstsize_env(t_list *lst);
 
 #endif

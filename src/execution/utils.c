@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:45:01 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/02 16:20:40 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:25:59 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,22 @@ void	ft_create_arr_and_expd(t_list **cmdlst, t_block_node **cmd, t_mem **mem)
 		(*cmd)->cmd_arr = copy_value_to_cmd_arr(cmdlst, (*cmd)->cmd_arr);
 	}
 	return ;
+}
+
+int	ft_lstsize_env(t_list *lst)
+{
+	int			counter;
+	t_list		*trav;
+	t_env_node	*env_node;
+
+	trav = lst;
+	counter = 0;
+	while (trav != NULL)
+	{
+		env_node = trav->content;
+		if (env_node->visible == true)
+			counter++;
+		trav = trav->next;
+	}
+	return (counter);
 }
