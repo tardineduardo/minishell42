@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:42:22 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 17:51:56 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:14:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,9 @@ int	ft_readline(t_mem **mem)
 	rdl = (*mem)->readline;
 	rdl->count = ++line_number;
 	rdl->line = readline(YELLOW "Minishell> " RESET);
+	if (g_signal == SIGINT)
+		return (130);
+	ft_addhist(rdl->line);
 	if (!rdl->line)
 	{
 		ft_clear_mem_and_exit(mem);
@@ -93,6 +96,5 @@ int	ft_readline(t_mem **mem)
 		return (tokresult);
 	if (!ft_rdl_input_loop(mem))
 		return (1);
-	ft_addhist(rdl->line);
 	return (0);
 }

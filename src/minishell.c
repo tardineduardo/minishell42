@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/05 09:54:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:15:57 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,7 @@ volatile sig_atomic_t	g_signal;
 int	ft_exit_code_tester(int res, t_mem **mem, int point)
 {
 	if (g_signal == 2)
-	{
 		g_signal = 0;
-		res = 130;
-		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
-		ft_clean_mem_loop(mem);
-		return (1);
-	}
 	if (point == 0 && res != 0)
 	{
 		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
@@ -90,7 +84,8 @@ void	ft_clean_mem_loop(t_mem **mem)
 	ft_lstclear(&par->parlst, ft_del_par_node);
 	ft_free_ast(&ast->root);
 	ft_free_and_null((void *)&hd->delim);
-	ft_free_and_null((void *)&cap->line);
+	if (cap->line)
+		ft_free_and_null((void *)&cap->line);
 	ft_free_and_null((void *)&tok->remain);
 	tok->block_count = 0;
 	tok->get_delimiter = false;
