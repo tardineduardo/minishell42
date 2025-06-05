@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/04 17:30:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 09:54:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_exit_code_tester(int res, t_mem **mem, int point)
 		res = 130;
 		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
 		ft_clean_mem_loop(mem);
-		return (0);
+		return (1);
 	}
 	if (point == 0 && res != 0)
 	{
