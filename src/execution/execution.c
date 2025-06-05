@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 18:59:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 15:35:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,6 @@ int	execute_command(t_list **ms_env, t_block_node *cur_cmd, t_mem **mem)
 	else
 		exec_external_cmd(ms_env, cur_cmd, mem);
 	return (res);
-}
-
-int	signal_statuses(int index, int *status)
-{
-	int	sig;
-
-	if (WIFSIGNALED(status[index]))
-	{
-		sig = WTERMSIG(status[index]);
-		if (sig == SIGPIPE)
-			ft_dprintf(STDERR_FILENO, " Broken pipe\n");
-		if (sig == SIGQUIT)
-		{
-			ft_printf("Quit (core dumped)\n");
-			return (128 + sig);
-		}
-		return (128 + sig);
-	}
-	return (0);
 }
 
 int	print_child_statuses(t_pipe_data *p, int *status)
@@ -73,23 +54,19 @@ int	ft_exec_subshell(t_list **ms_env, t_ast_node **root, t_mem **mem)
 	int		status;
 	pid_t	pid;
 
-	if ((*root)->type == NODE_SUBSHELL)
+	pid = fork();
+	if (pid == 0)
 	{
-		pid = fork();
-		if (pid == 0)
-		{
-			ret = ft_execute(ms_env, &(*root)->subshell->body, mem);
-			exit(ret);
-		}
-		else
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				return (WEXITSTATUS(status));
-			return (1);
-		}
+		ret = ft_execute(ms_env, &(*root)->subshell->body, mem);
+		exit(ret);
 	}
-	return (0);
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		return (1);
+	}
 }
 
 int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
@@ -114,7 +91,7 @@ int	ft_execute(t_list **ms_env, t_ast_node **root, t_mem **mem)
 		return (0);
 	}
 	else if ((*root)->type == NODE_SUBSHELL)
-		return (ft_exec_subshell(ms_env, &(*root)->subshell->body, mem));
+		res = ft_exec_subshell(ms_env, root, mem);
 	else if ((*root)->type == NODE_PIPELINE)
 		res = exec_pipeline(ms_env, &(*root)->pipeline->cmds,
 				(*root)->pipeline->cmd_count, mem);

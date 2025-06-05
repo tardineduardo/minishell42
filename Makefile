@@ -4,6 +4,7 @@ READLINE 	=	src/readline/readline.c \
 				src/readline/readline_memory.c \
 				src/readline/readline_quotes.c \
 				src/readline/readline_curly.c \
+				src/readline/readline_paren.c \
 
 HEREDOC 	=	src/heredoc/heredocs.c \
 				src/heredoc/heredocs_file.c \
@@ -48,6 +49,7 @@ AST 		=	src/ast/init_ast.c \
 				src/ast/ast_utils.c \
 
 EXECUTE		= 	src/execution/execution.c \
+				src/execution/execution_utils.c \
 				src/execution/single_cmd.c \
 				src/execution/pipe_cmd.c \
 				src/execution/utils.c \

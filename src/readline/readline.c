@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:42:22 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/05 14:14:40 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/05 15:36:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,20 @@ static char	*ft_rdl_input_loop(t_mem **mem)
 	return (rdl->line);
 }
 
+bool	ft_quotes_paren_curly_checker(char *line)
+{
+	bool	res;
+
+	res = false;
+	if (ft_has_unclosed_quotes(line))
+		res = true;
+	if (ft_has_unclosed_paren(line))
+		res = true;
+	if (ft_has_unclosed_curly(line))
+		res = true;
+	return (res);
+}
+
 int	ft_readline(t_mem **mem)
 {
 	t_rdl_mem	*rdl;
@@ -87,9 +101,7 @@ int	ft_readline(t_mem **mem)
 		ft_clear_mem_and_exit(mem);
 		exit(0);
 	}
-	if (ft_has_unclosed_quotes(rdl->line))
-		return (1);
-	if (ft_has_unclosed_curly(rdl->line))
+	if (ft_quotes_paren_curly_checker(rdl->line))
 		return (1);
 	tokresult = ft_tokenize(&rdl->line, mem);
 	if (tokresult != 0)
