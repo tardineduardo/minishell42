@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_steps_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/03/08 12:50:28 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:02:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ bool	ft_handle_backslash(t_exp_mem **exp, t_mode mode, t_quote quote)
 {
 	if ((*exp)->raw[(*exp)->a] != '\\' || (*exp)->raw[(*exp)->a + 1] == '\0')
 		return (false);
-	if (mode == TOKEN && quote == Q_OFF) 
+	if (mode == TOKEN && quote == Q_OFF)
 		return (ft_skip_slash_copy_next_and_increment(exp));
 	if (mode == TOKEN && quote == Q_DOUBLE)
 	{

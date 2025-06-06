@@ -6,34 +6,31 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 19:00:06 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:56:40 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/execution.h"
 
-bool	save_termios(struct termios *saved)
+int	pipe_fd_control_subshell(t_pipe_data *pipe_data, int pipefd[2], t_mem **mem)
 {
-	if (isatty(STDIN_FILENO))
+	(void)mem;
+	if (pipe_data->i > 0)
 	{
-		if (tcgetattr(STDIN_FILENO, saved) == 0)
-			return (true);
+		dup2(pipe_data->prev_fd, STDIN_FILENO);
+		close(pipe_data->prev_fd);
 	}
-	return (false);
+	if (pipe_data->i < pipe_data->num_cmds - 1)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	return (0);
 }
 
-bool	restore_termios(struct termios *saved)
-{
-	if (isatty(STDIN_FILENO))
-	{
-		if (tcsetattr(STDIN_FILENO, TCSANOW, saved) == 0)
-			return (true);
-	}
-	return (false);
-}
-
-int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd,
+int	pipe_core_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd,
 		int pipefd[2], t_mem **mem)
 {
 	struct termios	old_termios;
@@ -59,6 +56,19 @@ int	pipe_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd,
 	}
 	if (has_termios)
 		restore_termios(&old_termios);
+	return (res);
+}
+
+int	pipe_fd_control_for_ast_node(t_pipe_data *p, t_ast_node *cmd_node,
+		int pipefd[2], t_mem **mem)
+{
+	int				res;
+	t_block_node	*cur_cmd;
+
+	if (cmd_node->type != NODE_COMMAND)
+		return (pipe_fd_control_subshell(p, pipefd, mem));
+	cur_cmd = cmd_node->block_node;
+	res = pipe_core_fd_control(p, cur_cmd, pipefd, mem);
 	return (res);
 }
 
