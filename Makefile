@@ -5,6 +5,7 @@ READLINE 	=	src/readline/readline.c \
 				src/readline/readline_quotes.c \
 				src/readline/readline_curly.c \
 				src/readline/readline_paren.c \
+				src/readline/readline_backslash.c \
 
 HEREDOC 	=	src/heredoc/heredocs.c \
 				src/heredoc/heredocs_file.c \

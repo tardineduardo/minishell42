@@ -70,18 +70,17 @@ static char	*ft_rdl_input_loop(t_mem **mem)
 	return (rdl->line);
 }
 
-bool	ft_quotes_paren_curly_checker(char *line)
+bool	ft_syntax_is_valid(char *line)
 {
-	bool	res;
-
-	res = false;
 	if (ft_has_unclosed_quotes(line))
-		res = true;
+		return (false);
 	if (ft_has_unclosed_paren(line))
-		res = true;
+		return (false);
 	if (ft_has_unclosed_curly(line))
-		res = true;
-	return (res);
+		return (false);
+	if (ft_ends_with_backslash(line))
+		return (false);
+	return (true);
 }
 
 int	ft_readline(t_mem **mem)
@@ -101,7 +100,7 @@ int	ft_readline(t_mem **mem)
 		ft_clear_mem_and_exit(mem);
 		exit(0);
 	}
-	if (ft_quotes_paren_curly_checker(rdl->line))
+	if (!ft_syntax_is_valid(rdl->line))
 		return (1);
 	tokresult = ft_tokenize(&rdl->line, mem);
 	if (tokresult != 0)

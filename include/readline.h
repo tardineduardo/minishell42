@@ -31,6 +31,7 @@ void	ft_clear_rdl_mem(t_rdl_mem **rdl);
 bool	ft_has_unclosed_quotes(char *s);
 bool	ft_has_unclosed_curly(char *s);
 bool	ft_has_unclosed_paren(char *s);
+bool	ft_ends_with_backslash(char *s);
 bool	ft_is_char_escaped_rdl(char *s, int index);
 void	ft_update_quote_flag_rdl(char c, t_quote *quote, int index, char *s);
 
