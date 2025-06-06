@@ -80,13 +80,13 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *start,
 	t_tok_node	*tok;
 	t_dlist		*wilds;
 
-	tok = (t_tok_node *)wildnode->content;
+	tok = (t_tok_node *)end->content;
 	pattern = tok->value;
 	wilds = ft_get_file(pattern, end);
 	if (!wilds)
 		return (1);
-	ft_dlst_quick_destroy_node(toklist, wildnode, ft_del_token_node);
 	ft_dlstinsert_between(toklist, wilds, start, end);
+	(void)wildnode;
 	return (0);
 }
 
@@ -117,3 +117,4 @@ int	ft_wildcards(t_dlist **toklist)
 	}
 	return (0);
 }
+//	ft_dlst_quick_destroy_node(toklist, wildnode, ft_del_token_node);

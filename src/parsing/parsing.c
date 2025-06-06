@@ -17,6 +17,8 @@
 void print_debug_parsing(t_list **parslst);
 void	ft_print_oper_par(t_oper oper);
 void print_redir_list(t_list *redirs);
+void	ft_debug_print_array_of_strings_line(char **array, int fd);
+
 
 
 
@@ -138,7 +140,20 @@ int	ft_parsing(t_mem **mem)
 	return (par->errnmb);
 }
 
+void	ft_debug_print_array_of_strings_line(char **array, int fd)
+{
+	int	a;
 
+	a = 0;
+	while (array[a] != NULL)
+	{
+		ft_dprintf(fd, "\"%s\"", array[a]);
+		a++;
+
+		if(array[a])
+			ft_dprintf(fd, " ");
+	}
+}
 
 
 
