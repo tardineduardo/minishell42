@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 20:01:03 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:17:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	exec_child_core(t_pipe_data *p, t_list **ms_env,
 	t_block_node	*cmd;
 	int				res;
 
+	res = 0;
 	signal_child_process();
 	if (cmd_node->type == NODE_COMMAND)
 	{
@@ -43,7 +44,6 @@ void	exec_child_core(t_pipe_data *p, t_list **ms_env,
 void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
 	t_ast_node *cmd_node, t_mem **mem)
 {
-	t_block_node	*cmd;
 	pid_t			pid;
 	int				res;
 
