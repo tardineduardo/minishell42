@@ -239,6 +239,8 @@ t_dlist	*ft_dlstlast(t_dlist *lst);
 t_dlist	*ft_dlstmap(t_dlist *lst, void *(*f)(void *), void (*del)(void *));
 t_dlist	*ft_dlstnew(void *content);
 int		ft_dlstsize(t_dlist *lst);
+void	ft_dlstinsert_between(t_dlist **lst, t_dlist *insert,
+			t_dlist *start, t_dlist *end);
 
 //lists - dclist
 t_dll	*ft_dclstnew(void *content);

@@ -76,5 +76,6 @@ bool		ft_redirects_are_complete(t_dlist *trav, t_tok_mem **tok);
 bool		ft_subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 bool		ft_logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 bool		ft_pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
+int			ft_wildcards(t_dlist **toklist);
 
 #endif
