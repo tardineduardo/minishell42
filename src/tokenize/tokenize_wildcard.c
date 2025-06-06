@@ -124,3 +124,52 @@ int	ft_wildcards(t_dlist **toklist)
 	return (0);
 }
 
+
+
+
+
+
+// static t_dlist	*ft_get_file(char *pattern, t_dlist *end)
+// {
+// 	DIR				*folder;
+// 	struct dirent	*item;
+// 	t_dlist			*wildlst;
+// 	t_dlist			*new;
+// 	char			*str;
+// 	size_t			len_name;
+// 	size_t			len_pat;
+
+// 	folder = opendir(".");
+// 	if (!folder)
+// 		return (NULL);
+// 	wildlst = NULL;
+// 	item = readdir(folder);
+// 	while (item)
+// 	{
+// 		len_name = ft_strlen(item->d_name);
+// 		len_pat = ft_strlen(pattern);
+// 		if (len_name >= len_pat)
+// 		{
+// 			if (ft_strncmp(
+// 					item->d_name + (len_name - len_pat),
+// 					pattern,
+// 					len_pat) == 0)
+// 			{
+// 				new = ft_new_toklst_node(item->d_name, end);
+// 				if (!new)
+// 					return (closedir(folder), NULL);
+// 				ft_dlstadd_back(&wildlst, new);
+// 			}
+// 		}
+// 		item = readdir(folder);
+// 	}
+// 	if (!wildlst)
+// 	{
+// 		str = ((t_tok_node *)end->content)->value;
+// 		new = ft_new_toklst_node(ft_concatenate("\'", str, "\'"), end);
+// 		if (!new)
+// 			return (closedir(folder), NULL);
+// 		ft_dlstadd_back(&wildlst, new);
+// 	}
+// 	return (closedir(folder), wildlst);
+// }
