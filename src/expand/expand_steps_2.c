@@ -93,13 +93,8 @@ bool	ft_handle_backslash(t_exp_mem **exp, t_mode mode, t_quote quote)
 {
 	if ((*exp)->raw[(*exp)->a] != '\\' || (*exp)->raw[(*exp)->a + 1] == '\0')
 		return (false);
-	if (mode == TOKEN && quote == Q_OFF)
-	{
-		if ((*exp)->raw[(*exp)->a + 1] == '\\')
-			return (ft_copy_char_copy_next_and_increment(exp));
-		else
-			return (ft_skip_slash_copy_next_and_increment(exp));
-	}
+	if (mode == TOKEN && quote == Q_OFF) 
+		return (ft_skip_slash_copy_next_and_increment(exp));
 	if (mode == TOKEN && quote == Q_DOUBLE)
 	{
 		if (ft_strchr("\\\"\'$", (*exp)->raw[(*exp)->a + 1]))
