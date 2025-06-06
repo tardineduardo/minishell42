@@ -85,7 +85,7 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *start,
 	wilds = ft_get_file(pattern, end);
 	if (!wilds)
 		return (1);
-	ft_dlstinsert_between(toklist, wilds, start, end);
+	ft_dlstinsert_between(toklist, wilds, start, end->next);
 	(void)wildnode;
 	return (0);
 }
@@ -117,4 +117,4 @@ int	ft_wildcards(t_dlist **toklist)
 	}
 	return (0);
 }
-//	ft_dlst_quick_destroy_node(toklist, wildnode, ft_del_token_node);
+
