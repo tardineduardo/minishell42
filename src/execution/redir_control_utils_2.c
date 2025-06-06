@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:09:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 18:58:42 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:56:32 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,24 @@ void	teste_output_redir(char *expanded_name, bool create, t_mem **mem)
 			ft_error_handler("%s: Permission denied\n", expanded_name, 1, mem);
 		close(fd);
 	}
+}
+
+bool	save_termios(struct termios *saved)
+{
+	if (isatty(STDIN_FILENO))
+	{
+		if (tcgetattr(STDIN_FILENO, saved) == 0)
+			return (true);
+	}
+	return (false);
+}
+
+bool	restore_termios(struct termios *saved)
+{
+	if (isatty(STDIN_FILENO))
+	{
+		if (tcsetattr(STDIN_FILENO, TCSANOW, saved) == 0)
+			return (true);
+	}
+	return (false);
 }

@@ -6,19 +6,48 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 18:58:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:01:03 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/execution.h"
 
-void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
-	t_block_node *cmd, t_mem **mem)
+void	exec_child_core(t_pipe_data *p, t_list **ms_env,
+	t_ast_node *cmd_node, t_mem **mem)
 {
-	pid_t	pid;
-	int		res;
+	t_block_node	*cmd;
+	int				res;
 
+	signal_child_process();
+	if (cmd_node->type == NODE_COMMAND)
+	{
+		cmd = cmd_node->block_node;
+		res = pipe_fd_control_for_ast_node(p, cmd_node, p->pipefd, mem);
+		ft_create_arr_and_expd(&cmd->cmd_lst, &cmd, mem);
+		if (cmd->cmd_arr != NULL)
+			res = execute_command(ms_env, cmd, mem);
+	}
+	else if (cmd_node->type == NODE_SUBSHELL)
+	{
+		res = pipe_fd_control_subshell(p, p->pipefd, mem);
+		res = ft_execute(ms_env, &cmd_node->subshell->body, mem);
+	}
+	if (cmd_node->type == NODE_COMMAND
+		&& (cmd_node->block_node->cmd_arr == NULL
+			|| is_built_in(cmd_node->block_node->cmd_arr)))
+		ft_clear_mem_and_exit(mem);
+	exit(res);
+}
+
+void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
+	t_ast_node *cmd_node, t_mem **mem)
+{
+	t_block_node	*cmd;
+	pid_t			pid;
+	int				res;
+
+	res = 0;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -27,16 +56,7 @@ void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
 	}
 	p->child_pids[p->i] = pid;
 	if (pid == 0)
-	{
-		signal_child_process();
-		ft_create_arr_and_expd(&cmd->cmd_lst, &cmd, mem);
-		res = pipe_fd_control(p, cmd, p->pipefd, mem);
-		if (cmd->cmd_arr != NULL)
-			res = execute_command(ms_env, cmd, mem);
-		if (cmd->cmd_arr == NULL || is_built_in(cmd->cmd_arr))
-			ft_clear_mem_and_exit(mem);
-		exit(res);
-	}
+		exec_child_core(p, ms_env, cmd_node, mem);
 }
 
 int	wait_for_all_children(t_pipe_data p)
@@ -74,7 +94,7 @@ int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 	{
 		if (p.i < num_cmds - 1 && pipe(p.pipefd) == -1)
 			ft_handle_exec_error("pipe");
-		exec_child_pipe_cmd(&p, env, (t_block_node *)node->content, mem);
+		exec_child_pipe_cmd(&p, env, (t_ast_node *)node->content, mem);
 		if (p.i > 0)
 			close(p.prev_fd);
 		p.prev_fd = p.pipefd[0];

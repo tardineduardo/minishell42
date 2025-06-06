@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/05 14:37:17 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:01:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,16 @@
 # include "minishell.h"
 
 //redir control
-int			pipe_fd_control(t_pipe_data *pipe_data,
-				t_block_node *cur_cmd, int pipefd[2], t_mem **mem);
 int			pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem);
 int			pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem);
+
+int			pipe_fd_control_for_ast_node(t_pipe_data *pipe_data,
+				t_ast_node *cmd_node, int pipefd[2], t_mem **mem);
+
+int			pipe_fd_control_subshell(t_pipe_data *pipe_data,
+				int pipefd[2], t_mem **mem);
+bool		restore_termios(struct termios *saved);
+bool		save_termios(struct termios *saved);
 
 //redir utils
 int			redir_files_validation(t_list **redir_lst, t_mem **mem);

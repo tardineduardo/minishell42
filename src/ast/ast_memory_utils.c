@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ast_memory_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:43:28 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/03 17:44:59 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 18:15:23 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,37 @@ void	ft_free_command(t_ast_node **node)
 	}
 }
 
+void	ft_free_ast_content(void *content)
+{
+	t_ast_node	*node;
+
+	node = (t_ast_node *)content;
+	if (node)
+	{
+		if (node->type == NODE_COMMAND)
+			ft_free_block_node(node->block_node);
+		else if (node->type == NODE_SUBSHELL)
+		{
+			if (node->subshell)
+			{
+				ft_free_ast(&node->subshell->body);
+				free(node->subshell);
+			}
+		}
+		free(node);
+	}
+}
+
 void	ft_free_pipe(t_ast_node **node)
 {
-	t_pipe_info		*pipe;
+	t_pipe_info	*pipe;
 
 	if ((*node)->type == NODE_PIPELINE)
 	{
 		pipe = (*node)->pipeline;
 		if (pipe)
 		{
-			ft_lstclear(&pipe->cmds, ft_free_block_node);
+			ft_lstclear(&pipe->cmds, ft_free_ast_content);
 			free(pipe);
 		}
 	}
