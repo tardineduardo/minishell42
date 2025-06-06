@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_syntax.c                                  :+:      :+:    :+:   */
+/*   tokenize_wildcard.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/05/31 23:38:32 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:06:40 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,22 +101,25 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *start,
 
 
 
-int	ft_wildcards(t_dlist **toklist)
+int	ft_wildcards(t_dlist **toklist, t_tok_mem **tkmem)
 {
 	t_dlist		*trav;
-	t_dlist		*start;
-	t_dlist		*end;
 	t_tok_node	*tok;
+	int			*res;
 
 	trav = *toklist;
 	while (trav)
 	{
 		tok = (t_tok_node *)trav->content;
-		if (tok && tok->oper == WILD_R)
-		{
-			start = trav->prev;
-			end = trav->next;
-			if (ft_expand_wild(toklist, start, trav, end) != 0)
+		if (!tok)
+			return (1);
+		res = ft_has_valid_wildcard(trav);
+		if (res == 1 || res == 3)
+			return (1);
+		if (res == 2)
+			return (0);
+		
+			(ft_expand_wild(toklist, start, trav, end) != 0)
 				return (1);
 		}
 		trav = trav->next;
@@ -125,6 +128,37 @@ int	ft_wildcards(t_dlist **toklist)
 }
 
 
+static bool ft_print_wild_error_and_return(void)
+{
+	
+
+
+}
+
+int ft_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
+{
+	t_tok_node	*currtok;
+	t_tok_node	*prevtok;
+	char		*st;
+	int			ct;
+
+	currtok = (t_tok_node *)trav->content;
+	if (!currtok)
+		return (1);
+	ct = ft_split_count(st, '*');
+	if (!ft_strchr('*', st))
+		return (2); //2 - nowildcards
+	st = currtok->value;
+	if (ct > 2 || (ct == 2 && (st[0] == '*' || st[ft_strlen(st) - 1] == '*')))
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: error: invalid wildcard format.");
+		ft_dprintf(STDERR_FILENO, " use *pat, pat*, *pat* or pat*pat.\n");
+	int			errnmb;
+		(*tkmem)->errnum; 
+		return (3);
+	}
+	return (0);
+}
 
 
 

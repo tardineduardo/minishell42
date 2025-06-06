@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 01:14:56 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:02:05 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define E_NO_SUPPRT 1
 # define E_INVAL_OPS 2
 # define E_NO_SUBSHE 1
-# define NBOPERATORS 14
+# define NBOPERATORS 13
 
 typedef enum e_tok_exit
 {

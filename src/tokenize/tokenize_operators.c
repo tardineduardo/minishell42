@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 00:48:41 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:01:59 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,9 @@ void	*ft_init_operators(t_tok_mem **tok)
 	(*tok)->operators[8] = ft_strdup(">");
 	(*tok)->operators[9] = ft_strdup("|");
 	(*tok)->operators[10] = ft_strdup("&");
-	(*tok)->operators[11] = ft_strdup("*");
-	(*tok)->operators[12] = ft_strdup("(");
-	(*tok)->operators[13] = ft_strdup(")");
-	(*tok)->operators[14] = NULL;
+	(*tok)->operators[11] = ft_strdup("(");
+	(*tok)->operators[12] = ft_strdup(")");
+	(*tok)->operators[13] = NULL;
 	if (!ft_check_success(tok))
 		return (NULL);
 	return (tok);

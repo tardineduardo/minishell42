@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 23:38:39 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:59:00 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	ft_tokenize(char **line, t_mem **mem)
 	ft_debug_list(&tok->toklst);	
 	ft_printf("\n");
 	
-	if (ft_wildcards(&tok->toklst) != 0)
+	if (ft_wildcards(&tok->toklst, &tok) != 0)
 		return (tok->errnmb);
 
 	//DPOIS DE WILDCARD
