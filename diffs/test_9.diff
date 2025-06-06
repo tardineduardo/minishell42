@@ -1,0 +1,8 @@
+--- out/bash/test_9.txt	2025-06-05 21:06:07.635072368 -0300
++++ out/minishell/test_9.txt	2025-06-05 21:06:07.637770703 -0300
+@@ -1 +1,3 @@
+-abc\ def
++[33mMinishell> [0mecho "abc\ def"
++[33mMinishell> [0mexit
++[33mMinishell> [0m
+\ No newline at end of file
