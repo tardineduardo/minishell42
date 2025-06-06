@@ -50,27 +50,33 @@ static t_dlist	*ft_get_file(char *pattern, t_dlist *end)
 	struct dirent	*item;
 	t_dlist			*wildlst;
 	t_dlist			*new;
+	char			*str;
 
 	folder = opendir(".");
 	if (!folder)
 		return (NULL);
 	wildlst = NULL;
+	item = readdir(folder);
 	while ((item))
 	{
 		if (ft_strnstr(item->d_name, pattern, ft_strlen(item->d_name)))
 		{
 			new = ft_new_toklst_node(item->d_name, end);
 			if (!new)
-			{
-				closedir(folder);
-				return (NULL);
-			}
+				return (closedir(folder), NULL);
 			ft_dlstadd_back(&wildlst, new);
 		}
 		item = readdir(folder);
 	}
-	closedir(folder);
-	return (wildlst);
+	if (!wildlst)
+	{
+		str = ((t_tok_node *)end->content)->value;
+		new = ft_new_toklst_node(ft_concatenate("\'", str, "\'"), end);
+		if (!new)
+			return (closedir(folder), NULL);
+		ft_dlstadd_back(&wildlst, new);
+	}
+	return (closedir(folder), wildlst);
 }
 
 static int	ft_expand_wild(t_dlist **toklist, t_dlist *start,

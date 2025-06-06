@@ -108,10 +108,15 @@ int	ft_tokenize(char **line, t_mem **mem)
 		return (tok->errnmb);
 	if (ft_capture_heredocs(&tok, mem) != 0)
 		return (tok->errnmb);
+	
+	//ANTES DE WILDCARD
+	ft_debug_list(&tok->toklst);	
+	ft_printf("\n");
+	
 	if (ft_wildcards(&tok->toklst) != 0)
 		return (tok->errnmb);
 
-
+	//DPOIS DE WILDCARD
 	ft_debug_list(&tok->toklst);	
 	return (0);
 }

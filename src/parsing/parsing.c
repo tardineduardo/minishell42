@@ -136,7 +136,12 @@ int	ft_parsing(t_mem **mem)
 		head_parlst = (*mem)->parsing->parlst;
 		parse_expression(&head_parlst, mem);
 	}
+	
+	
+	//DEBUG
 	print_debug_parsing(&par->parlst);
+	ft_printf("\n");
+
 	return (par->errnmb);
 }
 
