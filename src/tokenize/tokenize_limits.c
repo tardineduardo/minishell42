@@ -74,11 +74,11 @@ int	ft_find_token_limit(char *str, t_tok_mem **tok)
 			break ;
 		if (ft_handle_quotes(str, tok, &i))
 			continue ;
-		// if (str[i] == '\\')
-		// {
-		// 	i += 2;
-		// 	continue ;
-		// }
+		if (str[i] == '\\')
+		{
+			i += 2;
+			continue ;
+		}
 		op_len = ft_handle_operator(str, tok, i);
 		if (op_len != -1)
 			return (op_len);
