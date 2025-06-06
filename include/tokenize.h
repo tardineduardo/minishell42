@@ -19,7 +19,7 @@
 # define E_NO_SUPPRT 1
 # define E_INVAL_OPS 2
 # define E_NO_SUBSHE 1
-# define NBOPERATORS 12
+# define NBOPERATORS 14
 
 typedef enum e_tok_exit
 {
