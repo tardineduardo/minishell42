@@ -42,7 +42,7 @@ bool	ft_redirects_are_complete(t_dlist *trav, t_tok_mem **tok)
 		if (!trav->next)
 			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
 		next = (t_tok_node *)trav->next->content;
-		if (!next || (next->oper != WORD && next->oper != WILD_R))
+		if (!next || next->oper != WORD)
 			return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(next), tok));
 	}
 	return (true);
@@ -52,26 +52,17 @@ bool	ft_subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
 	t_tok_node	*next;
-	t_tok_node	*prev;
 
 	tknd = (t_tok_node *)trav->content;
 	if (tknd->oper == GSTART_O)
 	{
+		if (!trav->next)
+			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
 		next = (t_tok_node *)trav->next->content;
-		if (next->oper == GEND_O)
-			return (ft_tok_syntax_error(E_INVAL_OPS, ")", tok));
+		if (!ft_is_word(next))
+			return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(next), tok));
 		if (next->oper == GSTART_O)
 			return (ft_tok_syntax_error(E_NO_SUBSHE, "((", tok));
-		if (!ft_is_word(next) && !ft_is_redir(next))
-			return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(next), tok));
-	}
-	else if (tknd->oper == GEND_O)
-	{
-		if (!trav->prev)
-			return (ft_tok_syntax_error(E_INVAL_OPS, ")", tok));
-		prev = (t_tok_node *)trav->prev->content;
-		if (prev->oper == GSTART_O || prev->oper != WORD)
-			return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(prev), tok));
 	}
 	return (true);
 }
@@ -79,22 +70,19 @@ bool	ft_subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 bool	ft_logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok)
 {
 	t_tok_node	*tknd;
-	t_tok_node	*prev;
 	t_tok_node	*next;
 
 	tknd = (t_tok_node *)trav->content;
-	if (tknd->oper != AND_O && tknd->oper != OR_O)
-		return (true);
-	if (!trav->prev)
-		return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(tknd), tok));
-	if (!trav->next)
-		return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
-	prev = (t_tok_node *)trav->prev->content;
-	next = (t_tok_node *)trav->next->content;
-	if (prev->oper != WORD && prev->oper != GEND_O)
-		return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(prev), tok));
-	if (next->oper != WORD && next->oper != GSTART_O)
-		return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(next), tok));
+	if (tknd->oper == AND_O || tknd->oper == OR_O)
+	{
+		if (!trav->prev)
+			return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(tknd), tok));
+		if (!trav->next)
+			return (ft_tok_syntax_error(E_INVAL_OPS, "newline", tok));
+		next = (t_tok_node *)trav->next->content;
+		if (!ft_is_word(next) && next->oper != GSTART_O)
+			return (ft_tok_syntax_error(E_INVAL_OPS, ft_getop(next), tok));
+	}
 	return (true);
 }
 
