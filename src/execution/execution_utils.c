@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 14:36:33 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 22:07:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 19:05:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,14 @@ int	signal_statuses(int index, int *status)
 			ft_printf("Quit (core dumped)\n");
 			return (128 + sig);
 		}
+		else if (sig == SIGPIPE)
+		{
+			// Broken pipe is normal in pipelines, don't print error
+			// Just return the appropriate exit code
+			return (128 + sig);
+		}
+		// For other signals, you might want to print them
+		// but SIGPIPE is common and expected in shell pipelines
 		return (128 + sig);
 	}
 	return (0);
@@ -40,6 +48,11 @@ int	signal_statuses_subshell(int status)
 		if (sig == SIGQUIT)
 		{
 			ft_printf("Quit (core dumped)\n");
+			return (128 + sig);
+		}
+		else if (sig == SIGPIPE)
+		{
+			// Don't print anything for broken pipe in subshells either
 			return (128 + sig);
 		}
 		return (128 + sig);

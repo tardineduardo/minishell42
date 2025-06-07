@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 16:50:19 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:02:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ bool		restore_termios(struct termios *saved);
 bool		save_termios(struct termios *saved);
 
 //redir utils
-int			redir_files_validation(t_list **redir_lst, t_mem **mem, bool sngl_bi);
+int			redir_files_validation(t_list **redir_lst,
+				t_mem **mem, bool sngl_bi);
 int			file_input_handler(t_list **input_lst, t_mem **mem);
 int			file_output_handler(t_list **output_lst, t_mem **mem);
 void		fd_input_redir(t_list **input_lst, t_mem **mem);
@@ -81,7 +82,7 @@ t_ast_node	*parse_command_or_group(t_list **parlst, t_mem **mem);
 t_ast_node	*parse_command(t_list **parlst, t_mem **mem);
 
 int			ft_error_handler(char *err_msg,
-				char *world, int exit_code, t_mem **mem, bool sngl_bi);
+				char *world, int exit_code, t_mem **mem);
 void		ft_handle_exec_error(const char *context);
 
 void		ft_create_arr_and_expd(t_list **cmdlst,

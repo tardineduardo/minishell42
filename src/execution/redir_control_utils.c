@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:39:05 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 16:49:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 17:35:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,39 @@
 #include "../../include/expand.h"
 #include "../../include/execution.h"
 
-int redir_files_validation(t_list **redir_lst, t_mem **mem, bool sngl_bi)
+int	redir_files_validation(t_list **redir_lst, t_mem **mem, bool sngl_bi)
 {
-    char            *cur_red_expd;
-    t_list          *cur_node_redir;
-    t_redirs_node   *cur_redir;
-    int             last_error = 0;
+	char			*cur_red_expd;
+	t_list			*cur_node_redir;
+	t_redirs_node	*cur_redir;
+	int				last_error;
+	int				result;
 
-    if (redir_lst == NULL || *redir_lst == NULL)
-        return (-1);
-    cur_node_redir = *redir_lst;
-    while (cur_node_redir)
-    {
-        cur_redir = cur_node_redir->content;
-        cur_red_expd = ft_expand(&cur_redir->name, TOKEN, mem);
-        if (cur_redir->type == IN_R || cur_redir->type == HDC_R)
-        {
-            int result = test_input_redir(cur_red_expd, mem, sngl_bi);
-            if (result != 0)
-                last_error = result;
-        }
-        else if (cur_redir->type == OUT_R || cur_redir->type == APPD_R)
-        {
-            int result = teste_output_redir(cur_red_expd, cur_redir->create, mem, sngl_bi);
-            if (result != 0)
-                last_error = result;
-        }
-        cur_node_redir = cur_node_redir->next;
-    }
-    return (last_error);
+	last_error = 0;
+	result = 0;
+	if (redir_lst == NULL || *redir_lst == NULL)
+		return (-1);
+	cur_node_redir = *redir_lst;
+	while (cur_node_redir)
+	{
+		cur_redir = cur_node_redir->content;
+		cur_red_expd = ft_expand(&cur_redir->name, TOKEN, mem);
+		if (cur_redir->type == IN_R || cur_redir->type == HDC_R)
+		{
+			result = test_input_redir(cur_red_expd, mem, sngl_bi);
+			if (result != 0)
+				last_error = result;
+		}
+		else if (cur_redir->type == OUT_R || cur_redir->type == APPD_R)
+		{
+			result = teste_output_redir(cur_red_expd,
+					cur_redir->create, mem, sngl_bi);
+			if (result != 0)
+				last_error = result;
+		}
+		cur_node_redir = cur_node_redir->next;
+	}
+	return (last_error);
 }
 
 int	file_input_handler(t_list **input_lst, t_mem **mem)

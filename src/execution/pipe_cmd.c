@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 13:50:14 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:54:20 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ int	wait_for_all_children(t_pipe_data p)
 	int	status;
 
 	i = 0;
-	if (p.prev_fd != 0)
-		close(p.prev_fd);
+	// if (p.prev_fd != 0)
+	// 	close(p.prev_fd);
 	while (i < p.num_cmds)
 	{
 		if (p.child_pids[i] > 0)
@@ -102,5 +102,7 @@ int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 		p.i++;
 		node = node->next;
 	}
+	if (p.prev_fd != 0)
+		close(p.prev_fd);
 	return (wait_for_all_children(p));
 }
