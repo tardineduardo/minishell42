@@ -21,23 +21,23 @@
 # define E_NO_SUBSHE 1
 # define NBOPERATORS 13
 
-typedef	enum e_wcexit
+typedef enum e_wcexit
 {
 	W_SUCCESS,
-	W_SYS_ERROR = 1,
+	W_ERROR = 1,
 	W_NO_ENTRIES,
 	W_INVALID,
 	W_ENTRIES_FOUND,
+}	t_wcexit;
 
-} t_wcexit;
-
-typedef	enum e_wccase
+typedef enum e_wccase
 {
 	PAT_STR,
 	PAT_END,	
 	PAT_MID,
 	PAT_EDG,
-} t_wccase;
+	LIST_ALL,
+}	t_wccase;
 
 typedef enum e_tok_exit
 {

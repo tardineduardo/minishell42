@@ -20,8 +20,8 @@ int	ft_check_syntax(t_dlist *toklst, t_tok_mem **tok)
 	trav = toklst;
 	while (trav)
 	{
-		// if (!ft_operators_are_supported(trav, tok))
-		// 	return (1);
+		if (!ft_operators_are_supported(trav, tok))
+			return (1);
 		if (!ft_redirects_are_complete(trav, tok))
 			return (1);
 		if (!ft_subshell_opers_are_correct(trav, tok))
