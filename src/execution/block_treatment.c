@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:22:44 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/03 16:11:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 15:35:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	**get_path_options(char **cmd_arr, t_list **ms_env, t_mem **mem)
 		}
 		cur_node = cur_node->next;
 	}
-	ft_error_handler("%s: No such file or directory\n", cmd_arr[0], 127, mem);
+	ft_error_handler("%s: No such file or directory\n", cmd_arr[0], 127, mem, false);
 	return (NULL);
 }
 
@@ -81,7 +81,7 @@ char	**update_cmd_arr(t_list **ms_env, char **cmd_arr, t_mem **mem)
 	{
 		path_options = get_path_options(cmd_arr, ms_env, mem);
 		if (!path_options)
-			ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem);
+			ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem, false);
 		right_option = get_right_path(path_options, cmd_arr[0]);
 		if (!right_option)
 		{

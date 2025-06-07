@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 20:49:10 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 15:50:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	pipe_core_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd,
 	bool			has_termios;
 
 	has_termios = save_termios(&old_termios);
-	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
+	res = redir_files_validation(&cur_cmd->redirs_lst, mem, false);
 	if (cur_cmd->input_lst != NULL)
 		fd_input_redir(&cur_cmd->input_lst, mem);
 	else if (pipe_data->i > 0)
@@ -85,7 +85,14 @@ int	pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem)
 	bool			has_termios;
 
 	has_termios = save_termios(&old_termios);
-	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
+	if (!is_built_in(cur_cmd->cmd_arr))
+		res = redir_files_validation(&cur_cmd->redirs_lst, mem, false);
+	else
+	{
+		res = redir_files_validation(&cur_cmd->redirs_lst, mem, true);
+		if (res != 0)
+			return (res);
+	}
 	if (!is_built_in(cur_cmd->cmd_arr))
 	{
 		if (cur_cmd->input_lst != NULL)
@@ -105,7 +112,7 @@ int	pipe_fd_control_only_redir(t_block_node *cur_cmd, t_mem **mem)
 	bool			has_termios;
 
 	has_termios = save_termios(&old_termios);
-	res = redir_files_validation(&cur_cmd->redirs_lst, mem);
+	res = redir_files_validation(&cur_cmd->redirs_lst, mem, false);
 	if (cur_cmd->input_lst != NULL)
 		fd_input_redir(&cur_cmd->input_lst, mem);
 	if (cur_cmd->output_lst != NULL)

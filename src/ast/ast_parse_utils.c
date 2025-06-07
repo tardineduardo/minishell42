@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:53:05 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 19:58:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 15:33:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_list	*ft_iterative_pipeline_parse(t_list **parlst,
 		right = parse_command_or_group(parlst, mem);
 		if (!right || (right->type != NODE_COMMAND
 				&& right->type != NODE_SUBSHELL))
-			ft_error_handler(" Invalid pipeline structure\n", "node", 1, mem);
+			ft_error_handler(" Invalid pipeline structure\n", "node", 1, mem, false);
 		new_node = ft_lstnew(right);
 		if (!new_node)
 		{

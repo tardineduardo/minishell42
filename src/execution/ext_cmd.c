@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 21:20:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 15:35:38 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ void	ft_check_cmd_arr_first_pos(char *world, t_mem **mem)
 	struct stat	sb;
 
 	if (access(world, F_OK) != 0)
-		ft_error_handler("%s: No such file or directory\n", world, 127, mem);
+		ft_error_handler("%s: No such file or directory\n", world, 127, mem, false);
 	if (access(world, X_OK) != 0)
-		ft_error_handler("%s: Permission denied\n", world, 126, mem);
+		ft_error_handler("%s: Permission denied\n", world, 126, mem, false);
 	if (stat(world, &sb) != 0)
 	{
 		perror(world);
@@ -101,7 +101,7 @@ void	ft_check_cmd_arr_first_pos(char *world, t_mem **mem)
 		exit(127);
 	}
 	if (S_ISDIR(sb.st_mode))
-		ft_error_handler("%s: Is a directory\n", world, 126, mem);
+		ft_error_handler("%s: Is a directory\n", world, 126, mem, false);
 }
 
 void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
@@ -116,9 +116,9 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	{
 		cmd_arr = update_cmd_arr(ms_env, cmd_arr, mem);
 		if (!cmd_arr)
-			ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem);
+			ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem, false);
 	}
 	ms_env_arr = ft_ms_env_arr(ms_env, mem);
 	if (execve(cmd_arr[0], cmd_arr, ms_env_arr) == -1)
-		ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem);
+		ft_error_handler("%s: command not found\n", cmd_arr[0], 127, mem, false);
 }

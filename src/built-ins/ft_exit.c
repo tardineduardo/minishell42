@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 17:11:46 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/03 19:56:46 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 16:31:10 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int	ft_exit(char **cmd_arr, t_mem **mem)
 	(void)mem;
 	size_cmd_arr = ft_count_items(cmd_arr);
 	if (size_cmd_arr > 2)
-		ft_error_handler("%s: too many arguments\n", cmd_arr[0], 1, mem);
+		ft_error_handler("%s: too many arguments\n", cmd_arr[0], 1, mem, false);
 	if (cmd_arr[1] != NULL)
 	{
 		if (!ft_is_numeric(cmd_arr[1]))
 			ft_error_handler("%s: numeric argument required\n",
-				cmd_arr[0], 2, mem);
+				cmd_arr[0], 2, mem, false);
 		exit_code = ft_atoi(cmd_arr[1]);
 		ft_clear_mem_and_exit(mem);
 		exit((unsigned char)exit_code);
