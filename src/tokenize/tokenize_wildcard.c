@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 23:48:31 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 01:05:11 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ static bool	ft_match_end(char *filename, char *pattern, int lenf, int lenp)
 	char	*substr;
 	int		lensub;
 
-	lensub = ft_strlen(substr);
-	substr = &filename[lenf - lenp];
 	if (lenp > lenf)
 		return (false);
+	substr = &filename[lenf - lenp];
+	lensub = ft_strlen(substr);
 	if (ft_strncmp(substr, pattern, lensub) == 0)
 		return (true);
 	return (false);
@@ -90,18 +90,21 @@ static bool	ft_is_a_wildcard_match(char *filename, char *pattern, t_wccase type)
 {
 	int	lenf;
 	int lenp;
+	char *pattt;
 
 	if (!filename || !pattern)
 		return (false);
 
+	pattt = ft_strtrim(pattern, "* \t");
+
 	lenf = ft_strlen(filename);
-	lenp = ft_strlen(pattern);
+	lenp = ft_strlen(pattt);
 	if (type == PAT_STR)
-		return (ft_match_sta(filename, pattern, lenp));
+		return (ft_match_sta(filename, pattt, lenp));
 	if (type == PAT_END)
-		return (ft_match_end(filename, pattern, lenf, lenp));
+		return (ft_match_end(filename, pattt, lenf, lenp));
 	if (type == PAT_MID)
-		return (ft_match_mid(filename, pattern, lenp));
+		return (ft_match_mid(filename, pattt, lenp));
 	return (ft_match_edg(filename, pattern, lenf));
 }
 
@@ -131,7 +134,7 @@ static t_dlist	*ft_new_toklst_node(char *filename, t_dlist *end)
 	return (new);
 }
 
-static t_dlist	*ft_get_file(char *pattern, t_dlist *next, t_wccase type)
+static t_dlist	*ft_get_file(char *pattern, t_dlist *curr, t_wccase type)
 {
 	DIR				*folder;
 	struct dirent	*item;
@@ -148,17 +151,17 @@ static t_dlist	*ft_get_file(char *pattern, t_dlist *next, t_wccase type)
 	{
 		if (ft_is_a_wildcard_match(item->d_name, pattern, type))
 		{
-			new = ft_new_toklst_node(item->d_name, next);
+			new = ft_new_toklst_node(item->d_name, curr);
 			if (!new)
 				return (closedir(folder), NULL);
 			ft_dlstadd_back(&wildlst, new);
-			item = readdir(folder);
 		}
+		item = readdir(folder);
 	}
 	if (!wildlst)
 	{
-		str = ((t_tok_node *)next->content)->value;
-		new = ft_new_toklst_node(ft_concatenate("\'", str, "\'"), next);
+		str = ((t_tok_node *)curr->content)->value;
+		new = ft_new_toklst_node(ft_concatenate("\'", str, "\'"), curr);
 		if (!new)
 			return (closedir(folder), NULL);
 		ft_dlstadd_back(&wildlst, new);
@@ -176,7 +179,7 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev, t_dli
 	tok = (t_tok_node *)trav->content;
 	pattern = tok->value;
 	type = get_pattern_type(pattern);
-	wilds = ft_get_file(pattern, next, type);
+	wilds = ft_get_file(pattern, trav, type);
 	if (!wilds)
 		return (1);
 	ft_dlstinsert_between(toklist, wilds, prev, next);
@@ -187,8 +190,8 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev, t_dli
 static int ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
 {
 	t_tok_node	*currtok;
-	char		*st;
 	int			ct;
+	char		*st;
 
 	currtok = (t_tok_node *)trav->content;
 	if (!currtok)
@@ -196,10 +199,10 @@ static int ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
 		(*tkmem)->errnmb = 1;
 		return (1);
 	}
-	ct = ft_split_count(st, '*');
-	if (!ft_strchr(st, '*'))
-		return (2);
 	st = currtok->value;
+	ct = ft_split_count(currtok->value, '*');
+	if (!ft_strchr(currtok->value, '*'))
+		return (2);
 	if (ct > 2 || (ct == 2 && (st[0] == '*' || st[ft_strlen(st) - 1] == '*')))
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: error: invalid wildcard format.");
