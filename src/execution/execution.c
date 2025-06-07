@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:08:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 22:04:29 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 13:50:15 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,11 @@ int	ft_exec_subshell(t_list **ms_env, t_ast_node **root, t_mem **mem)
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGPIPE, SIG_IGN);
 		ret = ft_execute(ms_env, &(*root)->subshell->body, mem);
 		exit(ret);
 	}
 	else
 	{
-		signal(SIGPIPE, SIG_IGN);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));

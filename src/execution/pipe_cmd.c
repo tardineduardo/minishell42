@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 20:48:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 13:50:14 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
 	p->child_pids[p->i] = pid;
 	if (pid == 0)
 		exec_child_core(p, ms_env, cmd_node, mem);
-	signal(SIGPIPE, SIG_IGN);
 }
 
 int	wait_for_all_children(t_pipe_data p)
