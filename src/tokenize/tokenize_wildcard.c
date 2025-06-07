@@ -5,24 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 15:43:56 by eduribei         ###   ########.fr       */
+/*   Created: 2025/04/07 15:49:30 by eduribei          #+#    #+#             */
+/*   Updated: 2025/06/07 18:27:40 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/tokenize.h"
-
-static bool	ft_is_asterisk(char *token)
-{
-	while (*token)
-	{
-		if (*token != '*' && *token != ' ' && *token != '\t')
-			return (false);
-		token++;
-	}
-	return (true);
-}
+#include "../../include/expand.h"
 
 static t_dlist	*ft_get_file(char *token, t_dlist *curr, t_wccase type)
 {
@@ -70,34 +60,6 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev,
 	ft_del_token_node(trav->content);
 	free(trav);
 	return (0);
-}
-
-static t_wcexit ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
-{
-	t_tok_node	*currtok;
-	int			ct;
-	char		*st;
-
-	currtok = (t_tok_node *)trav->content;
-	if (!currtok)
-	{
-		(*tkmem)->errnmb = 1;
-		return (W_ERROR);
-	}
-	st = currtok->value;
-	if (ft_is_asterisk(st))
-		return (W_SUCCESS);
-	ct = ft_split_count(currtok->value, '*');
-	if (!ft_strchr(currtok->value, '*'))
-		return (W_NO_WILD);
-	if (ct > 2 || (ct == 2 && (st[0] == '*' || st[ft_strlen(st) - 1] == '*')))
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: error: invalid wildcard format.");
-		ft_dprintf(STDERR_FILENO, " use *pat, pat*, *pat* or pat*pat.\n");
-		(*tkmem)->errnmb = 1;
-		return (W_ERROR);
-	}
-	return (W_SUCCESS);
 }
 
 int	ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem)

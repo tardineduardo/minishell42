@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 15:40:46 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:06:32 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,3 @@ bool	ft_is_a_wildcard_match(char *filename, char *token, t_wccase type)
 	free(pattern);
 	return (result);
 }
-
