@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 14:59:09 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 15:43:56 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,172 +24,32 @@ static bool	ft_is_asterisk(char *token)
 	return (true);
 }
 
-static t_wccase	get_token_type(char *token)
-{
-	int	count;
-	int	len;
-
-	len = ft_strlen(token);
-	count = ft_split_count(token, '*');
-	if (count == 1 && token[0] == '*' && token[len - 1] != '*')
-		return (PAT_END);
-	else if (count == 1 && token[0] != '*' && token[len - 1] == '*')
-		return (PAT_STR);
-	else if (count == 1 && token[0] == '*' && token[len - 1] == '*')
-		return (PAT_MID);
-	else if (count == 2 && token[0] != '*' && token[len - 1] != '*')
-		return (PAT_EDG);
-	else
-		return (LIST_ALL);
-}
-
-static bool	ft_match_mid(char *filename, char *token, int lenf)
-{
-	if (ft_strnstr(filename, token, lenf))
-		return (true);
-	return (false);
-}
-
-static bool	ft_match_sta(char *filename, char *token, int lenp)
-{
-	if (ft_strncmp(filename, token, lenp) == 0)
-		return (true);
-	return (false);
-}
-
-static bool	ft_match_end(char *filename, char *token, int lenf, int lenp)
-{
-	char	*substr;
-	int		lensub;
-
-	if (lenp > lenf)
-		return (false);
-	substr = &filename[lenf - lenp];
-	lensub = ft_strlen(substr);
-	if (ft_strncmp(substr, token, lensub) == 0)
-		return (true);
-	return (false);
-}
-
-static bool	ft_match_edg(char *filename, char *token, int lenf)
-{
-	char	**edges;
-
-	edges = ft_split_char(token, '*');
-	if (ft_match_sta(filename, edges[0], ft_strlen(edges[0]))
-		&& ft_match_end(filename, edges[1], lenf, ft_strlen(edges[1])))
-	{
-		ft_free_str_array(edges);
-		return (true);
-	}
-	ft_free_str_array(edges);
-	return (false);
-}
-
-static bool	ft_is_a_wildcard_match(char *filename, char *token, t_wccase type)
-{
-	int		lenf;
-	int		lenp;
-	char	*pattern;
-	bool	result;
-
-	if (ft_strcmp(filename, ".") == 0 || ft_strcmp(filename, "..") == 0)
-		return (false);
-	pattern = ft_strtrim(token, "* \t");
-	if (!pattern)
-		return (false);
-	lenf = ft_strlen(filename);
-	lenp = ft_strlen(pattern);
-	result = false;
-	if (type == PAT_STR)
-		result = ft_match_sta(filename, pattern, lenp);
-	else if (type == PAT_END)
-		result = ft_match_end(filename, pattern, lenf, lenp);
-	else if (type == PAT_MID)
-		result = ft_match_mid(filename, pattern, lenf);
-	else if (type == PAT_EDG)
-		result = ft_match_edg(filename, token, lenf);
-	else if (type == LIST_ALL)
-		result = true;
-	free(pattern);
-	return (result);
-}
-
-static t_dlist	*ft_new_toklst_node(char *filename, t_dlist *end)
-{
-	t_dlist		*new;
-	t_tok_node	*node;
-
-	node = malloc(sizeof(t_tok_node));
-	if (!node)
-		return (NULL);
-	node->oper = WORD;
-	node->block_index = ((t_tok_node *)end->content)->block_index;
-	node->value = ft_strdup(filename);
-	node->heredoc_path = NULL;
-	if (!node->value)
-	{
-		free(node);
-		return (NULL);
-	}
-	new = ft_dlstnew(node);
-	if (!new)
-	{
-		free(node->value);
-		free(node);
-	}
-	return (new);
-}
-
 static t_dlist	*ft_get_file(char *token, t_dlist *curr, t_wccase type)
 {
-	DIR				*folder;
-	struct dirent	*item;
-	t_dlist			*wildlst;
-	t_dlist			*new;
-	char			*str;
-	char			*joined;
+	t_wild_mem		wild;
 
-	folder = opendir(".");
-	if (!folder)
-		return (NULL);
-	wildlst = NULL;
-	item = readdir(folder);
-	while ((item))
+	wild.folder = opendir(".");
+	wild.wildlst = NULL;
+	wild.item = readdir(wild.folder);
+	while ((wild.item))
 	{
-		if (ft_is_a_wildcard_match(item->d_name, token, type))
+		if (ft_is_a_wildcard_match((wild.item)->d_name, token, type))
 		{
-			new = ft_new_toklst_node(item->d_name, curr);
-			if (!new)
-			{
-				ft_dlstclear(&wildlst, ft_del_token_node);
-				closedir(folder);
-				return (NULL);
-			}
-			ft_dlstadd_back(&wildlst, new);
+			wild.new = ft_new_toklst_node((wild.item)->d_name, curr);
+			ft_dlstadd_back(&wild.wildlst, wild.new);
 		}
-		item = readdir(folder);
+		wild.item = readdir(wild.folder);
 	}
-	if (!wildlst)
+	if (!wild.wildlst)
 	{
-		str = ((t_tok_node *)curr->content)->value;
-		joined = ft_concatenate("'", str, "'");
-		if (!joined)
-		{
-			closedir(folder);
-			return (NULL);
-		}
-		new = ft_new_toklst_node(joined, curr);
-		free(joined);
-		if (!new)
-		{
-			closedir(folder);
-			return (NULL);
-		}
-		ft_dlstadd_back(&wildlst, new);
+		wild.str = ((t_tok_node *)curr->content)->value;
+		wild.joined = ft_concatenate("'", wild.str, "'");
+		wild.new = ft_new_toklst_node(wild.joined, curr);
+		free(wild.joined);
+		ft_dlstadd_back(&wild.wildlst, wild.new);
 	}
-	closedir(folder);
-	return (wildlst);
+	closedir(wild.folder);
+	return (wild.wildlst);
 }
 
 static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev,
