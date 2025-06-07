@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:10:35 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 20:17:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:48:36 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	exec_child_core(t_pipe_data *p, t_list **ms_env,
 	}
 	else if (cmd_node->type == NODE_SUBSHELL)
 	{
-		res = pipe_fd_control_subshell(p, p->pipefd, mem);
+		res = pipe_fd_control_subshell(p, p->pipefd);
 		res = ft_execute(ms_env, &cmd_node->subshell->body, mem);
 	}
 	if (cmd_node->type == NODE_COMMAND
@@ -57,6 +57,7 @@ void	exec_child_pipe_cmd(t_pipe_data *p, t_list **ms_env,
 	p->child_pids[p->i] = pid;
 	if (pid == 0)
 		exec_child_core(p, ms_env, cmd_node, mem);
+	signal(SIGPIPE, SIG_IGN);
 }
 
 int	wait_for_all_children(t_pipe_data p)
@@ -65,7 +66,7 @@ int	wait_for_all_children(t_pipe_data p)
 	int	status;
 
 	i = 0;
-	if (p.i == p.num_cmds && p.prev_fd != 0)
+	if (p.prev_fd != 0)
 		close(p.prev_fd);
 	while (i < p.num_cmds)
 	{
@@ -102,7 +103,5 @@ int	exec_pipeline(t_list **env, t_list **cmds, int num_cmds, t_mem **mem)
 		p.i++;
 		node = node->next;
 	}
-	if (p.prev_fd != 0)
-		close(p.prev_fd);
 	return (wait_for_all_children(p));
 }

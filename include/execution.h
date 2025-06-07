@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/06 20:01:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:36:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int			pipe_fd_control_for_ast_node(t_pipe_data *pipe_data,
 				t_ast_node *cmd_node, int pipefd[2], t_mem **mem);
 
 int			pipe_fd_control_subshell(t_pipe_data *pipe_data,
-				int pipefd[2], t_mem **mem);
+				int pipefd[2]);
 bool		restore_termios(struct termios *saved);
 bool		save_termios(struct termios *saved);
 
