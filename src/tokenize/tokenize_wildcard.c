@@ -13,18 +13,18 @@
 #include "../../include/minishell.h"
 #include "../../include/tokenize.h"
 
-#include <sys/types.h>
-#include <dirent.h>
-
-
-static bool ft_is_asterisk(char *token)
+static bool	ft_is_asterisk(char *token)
 {
-
-
-
+	while (*token)
+	{
+		if (*token != '*' && *token != ' ' && *token != '\t')
+			return (false);
+		token++;
+	}
+	return (true);
 }
 
-static t_wccase get_token_type(char *token)
+static t_wccase	get_token_type(char *token)
 {
 	int	count;
 	int	len;
@@ -41,18 +41,11 @@ static t_wccase get_token_type(char *token)
 		return (PAT_EDG);
 	else
 		return (LIST_ALL);
-
 }
 
-
-
-
-
-
-
-static bool	ft_match_mid(char *filename, char *token, int lenp)
+static bool	ft_match_mid(char *filename, char *token, int lenf)
 {
-	if (ft_strnstr(filename, token, lenp))
+	if (ft_strnstr(filename, token, lenf))
 		return (true);
 	return (false);
 }
@@ -80,11 +73,10 @@ static bool	ft_match_end(char *filename, char *token, int lenf, int lenp)
 
 static bool	ft_match_edg(char *filename, char *token, int lenf)
 {
-	char **edges;
+	char	**edges;
 
 	edges = ft_split_char(token, '*');
-
-	if (ft_match_sta(filename, edges[0], ft_strlen(edges[0])) 
+	if (ft_match_sta(filename, edges[0], ft_strlen(edges[0]))
 		&& ft_match_end(filename, edges[1], lenf, ft_strlen(edges[1])))
 	{
 		ft_free_str_array(edges);
@@ -96,24 +88,29 @@ static bool	ft_match_edg(char *filename, char *token, int lenf)
 
 static bool	ft_is_a_wildcard_match(char *filename, char *token, t_wccase type)
 {
-	int	lenf;
-	int lenp;
-	char *pattern;
+	int		lenf;
+	int		lenp;
+	char	*pattern;
+	bool	result;
 
 	if (!filename || !token)
 		return (false);
-
 	pattern = ft_strtrim(token, "* \t");
-
+	if (!pattern)
+		return (false);
 	lenf = ft_strlen(filename);
 	lenp = ft_strlen(pattern);
+	result = false;
 	if (type == PAT_STR)
-		return (ft_match_sta(filename, pattern, lenp));
-	if (type == PAT_END)
-		return (ft_match_end(filename, pattern, lenf, lenp));
-	if (type == PAT_MID)
-		return (ft_match_mid(filename, pattern, lenp));
-	return (ft_match_edg(filename, token, lenf));
+		result = ft_match_sta(filename, pattern, lenp);
+	else if (type == PAT_END)
+		result = ft_match_end(filename, pattern, lenf, lenp);
+	else if (type == PAT_MID)
+		result = ft_match_mid(filename, pattern, lenf);
+	else
+		result = ft_match_edg(filename, token, lenf);
+	free(pattern);
+	return (result);
 }
 
 static t_dlist	*ft_new_toklst_node(char *filename, t_dlist *end)
@@ -149,6 +146,7 @@ static t_dlist	*ft_get_file(char *token, t_dlist *curr, t_wccase type)
 	t_dlist			*wildlst;
 	t_dlist			*new;
 	char			*str;
+	char			*joined;
 
 	folder = opendir(".");
 	if (!folder)
@@ -161,7 +159,11 @@ static t_dlist	*ft_get_file(char *token, t_dlist *curr, t_wccase type)
 		{
 			new = ft_new_toklst_node(item->d_name, curr);
 			if (!new)
-				return (closedir(folder), NULL);
+			{
+				ft_dlstclear(&wildlst, ft_del_token_node);
+				closedir(folder);
+				return (NULL);
+			}
 			ft_dlstadd_back(&wildlst, new);
 		}
 		item = readdir(folder);
@@ -169,15 +171,27 @@ static t_dlist	*ft_get_file(char *token, t_dlist *curr, t_wccase type)
 	if (!wildlst)
 	{
 		str = ((t_tok_node *)curr->content)->value;
-		new = ft_new_toklst_node(ft_concatenate("\'", str, "\'"), curr);
+		joined = ft_concatenate("'", str, "'");
+		if (!joined)
+		{
+			closedir(folder);
+			return (NULL);
+		}
+		new = ft_new_toklst_node(joined, curr);
+		free(joined);
 		if (!new)
-			return (closedir(folder), NULL);
+		{
+			closedir(folder);
+			return (NULL);
+		}
 		ft_dlstadd_back(&wildlst, new);
 	}
-	return (closedir(folder), wildlst);
+	closedir(folder);
+	return (wildlst);
 }
 
-static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev, t_dlist *next)
+static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev,
+				t_dlist *next)
 {
 	char		*token;
 	t_tok_node	*tok;
@@ -191,9 +205,10 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev, t_dli
 	if (!wilds)
 		return (1);
 	ft_dlstinsert_between(toklist, wilds, prev, next);
+	ft_del_token_node(trav->content);
+	free(trav);
 	return (0);
 }
-
 
 static t_wcexit ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
 {
@@ -208,22 +223,25 @@ static t_wcexit ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
 		return (W_ERROR);
 	}
 	st = currtok->value;
+	if (ft_is_asterisk(st))
+		return (W_SUCCESS);
 	ct = ft_split_count(currtok->value, '*');
 	if (!ft_strchr(currtok->value, '*'))
-		return (W_NO_ENTRIES);
+		return (W_NO_WILD);
 	if (ct > 2 || (ct == 2 && (st[0] == '*' || st[ft_strlen(st) - 1] == '*')))
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: error: invalid wildcard format.");
 		ft_dprintf(STDERR_FILENO, " use *pat, pat*, *pat* or pat*pat.\n");
 		(*tkmem)->errnmb = 1;
-		return (W_INVALID);
+		return (W_ERROR);
 	}
-	return (W_ENTRIES_FOUND);
+	return (W_SUCCESS);
 }
 
 int	ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem)
 {
 	t_dlist		*trav;
+	t_dlist		*next;
 	t_tok_node	*tok;
 	t_wcexit	res;
 
@@ -234,18 +252,17 @@ int	ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem)
 		if (!tok)
 			return (1);
 		res = ft_token_has_valid_wildcard(trav, tkmem);
-		if (res == 1)
+		if (res == W_ERROR)
 			return (1);
-		if (res == 2)
+		if (res == W_NO_WILD)
 		{
 			trav = trav->next;
 			continue ;
 		}
-
-		if (ft_expand_wild(toklist, trav, trav->prev, trav->next) != 0)
-			return (W_ERROR);
-		trav = trav->next;
+		next = trav->next;
+		if (ft_expand_wild(toklist, trav, trav->prev, trav->next) == W_ERROR)
+			return (1);
+		trav = next;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
-

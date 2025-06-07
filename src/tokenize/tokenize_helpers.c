@@ -58,8 +58,6 @@ char	*ft_getop(t_tok_node *tok)
 		return (">>");
 	if (tok->oper == HDC_R)
 		return ("<<");
-	if (tok->oper == WILD_R)
-		return ("*");
 	else
 		return (NULL);
 }

@@ -32,20 +32,16 @@ void	*ft_init_operators(t_tok_mem **tok)
 	(*tok)->operators = malloc((NBOPERATORS + 1) * sizeof(char *));
 	if (!(*tok)->operators)
 		return (NULL);
-	(*tok)->operators[0] = ft_strdup("<<<");
-	(*tok)->operators[1] = ft_strdup(">>");
-	(*tok)->operators[2] = ft_strdup("<<");
-	(*tok)->operators[3] = ft_strdup("&&");
-	(*tok)->operators[4] = ft_strdup("||");
-	(*tok)->operators[5] = ft_strdup("2>");
-	(*tok)->operators[6] = ft_strdup("&>");
-	(*tok)->operators[7] = ft_strdup("<");
-	(*tok)->operators[8] = ft_strdup(">");
-	(*tok)->operators[9] = ft_strdup("|");
-	(*tok)->operators[10] = ft_strdup("&");
-	(*tok)->operators[11] = ft_strdup("(");
-	(*tok)->operators[12] = ft_strdup(")");
-	(*tok)->operators[13] = NULL;
+	(*tok)->operators[0] = ft_strdup(">>");
+	(*tok)->operators[1] = ft_strdup("<<");
+	(*tok)->operators[2] = ft_strdup("&&");
+	(*tok)->operators[3] = ft_strdup("||");
+	(*tok)->operators[4] = ft_strdup("<");
+	(*tok)->operators[5] = ft_strdup(">");
+	(*tok)->operators[6] = ft_strdup("|");
+	(*tok)->operators[7] = ft_strdup("(");
+	(*tok)->operators[8] = ft_strdup(")");
+	(*tok)->operators[9] = NULL;
 	if (!ft_check_success(tok))
 		return (NULL);
 	return (tok);

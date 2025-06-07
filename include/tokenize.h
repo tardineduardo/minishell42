@@ -19,13 +19,13 @@
 # define E_NO_SUPPRT 1
 # define E_INVAL_OPS 2
 # define E_NO_SUBSHE 1
-# define NBOPERATORS 13
+# define NBOPERATORS 9
 
 typedef enum e_wcexit
 {
-	W_SUCCESS,
-	W_ERROR = 1,
-	W_NO_ENTRIES,
+	W_SUCCESS = 0,
+	W_ERROR,
+	W_NO_WILD,
 	W_INVALID,
 	W_ENTRIES_FOUND,
 }	t_wcexit;
