@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 00:51:12 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 14:40:36 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ t_oper	ft_get_oper(char *value)
 		return (APPD_R);
 	else if (ft_strcmp("<<", value) == 0)
 		return (HDC_R);
-	else if (ft_strcmp("*", value) == 0)
-		return (WILD_R);
 	return (WORD);
 }
 

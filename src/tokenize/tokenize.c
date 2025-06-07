@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/06 23:10:46 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 14:35:28 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 #include "../../include/heredoc.h"
 #include "../../include/tokenize.h"
 
-
 void ft_debug_list(t_dlist **head);
 void ft_debug_indexes(t_dlist **head);
 void	ft_print_oper(t_oper oper);
-
 
 static t_tok_node	*ft_init_tknd(char *str, t_tok_node *node, t_tok_mem **tok)
 {
@@ -104,6 +102,11 @@ int	ft_tokenize(char **line, t_mem **mem)
 			break ;
 	}
 	ft_free_and_null((void *)&tok->remain);
+
+	//ANTES DE WILDCARD
+	ft_debug_list(&tok->toklst);	
+	ft_printf("\n");
+
 	if (ft_check_syntax(tok->toklst, &tok) != 0)
 		return (tok->errnmb);
 	if (ft_capture_heredocs(&tok, mem) != 0)

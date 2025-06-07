@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 01:05:11 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 14:59:09 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static bool	ft_is_a_wildcard_match(char *filename, char *token, t_wccase type)
 	char	*pattern;
 	bool	result;
 
-	if (!filename || !token)
+	if (ft_strcmp(filename, ".") == 0 || ft_strcmp(filename, "..") == 0)
 		return (false);
 	pattern = ft_strtrim(token, "* \t");
 	if (!pattern)
@@ -107,8 +107,10 @@ static bool	ft_is_a_wildcard_match(char *filename, char *token, t_wccase type)
 		result = ft_match_end(filename, pattern, lenf, lenp);
 	else if (type == PAT_MID)
 		result = ft_match_mid(filename, pattern, lenf);
-	else
+	else if (type == PAT_EDG)
 		result = ft_match_edg(filename, token, lenf);
+	else if (type == LIST_ALL)
+		result = true;
 	free(pattern);
 	return (result);
 }
