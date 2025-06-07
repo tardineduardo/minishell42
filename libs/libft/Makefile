@@ -128,7 +128,7 @@ LISTS =	lists/slist/ft_lstadd_back.c \
 		lists/dlist/ft_dlstmap.c \
 		lists/dlist/ft_dlstnew.c \
 		lists/dlist/ft_dlstsize.c \
-		lists/dlist/ft_dlstinsert_between.c	\
+		lists/dlist/ft_dlstinsert_between.c \
 
 OBJS =	$(PRINT:.c=.o) \
 		$(CONV:.c=.o) \

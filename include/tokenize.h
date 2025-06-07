@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/06 19:02:05 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/06 23:44:06 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,24 @@
 # define E_INVAL_OPS 2
 # define E_NO_SUBSHE 1
 # define NBOPERATORS 13
+
+typedef	enum e_wcexit
+{
+	W_SUCCESS,
+	W_SYS_ERROR = 1,
+	W_NO_ENTRIES,
+	W_INVALID,
+	W_ENTRIES_FOUND,
+
+} t_wcexit;
+
+typedef	enum e_wccase
+{
+	PAT_STR,
+	PAT_END,	
+	PAT_MID,
+	PAT_EDG,
+} t_wccase;
 
 typedef enum e_tok_exit
 {
@@ -76,6 +94,6 @@ bool		ft_redirects_are_complete(t_dlist *trav, t_tok_mem **tok);
 bool		ft_subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 bool		ft_logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 bool		ft_pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
-int			ft_wildcards(t_dlist **toklist);
+int			ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem);
 
 #endif
