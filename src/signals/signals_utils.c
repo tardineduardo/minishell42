@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 20:19:19 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 20:25:33 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:34:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	signal_child_process(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	signal(SIGPIPE, SIG_DFL);
 	signal(SIGPIPE, SIG_DFL);
 }
 

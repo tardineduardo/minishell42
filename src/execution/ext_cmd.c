@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:24:16 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 19:03:40 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:36:12 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ void	exec_external_cmd(t_list **ms_env, t_block_node *cmd, t_mem **mem)
 	char		**ms_env_arr;
 
 	cmd_arr = cmd->cmd_arr;
-	signal(SIGPIPE, SIG_IGN);
 	if (ft_strchr(cmd_arr[0], '/'))
 		ft_check_cmd_arr_first_pos(cmd_arr[0], mem);
 	else
