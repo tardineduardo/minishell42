@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 18:25:51 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:30:20 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_wcexit	ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem)
 	st = currtok->value;
 	res = ft_validations_wc(currtok, st, tkmem);
 	if (res != W_SUCCESS)
-		return (W_ERROR);
+		return (res);
 	ct = ft_split_count(currtok->value, '*');
 	if (ct > 2 || (ct == 2 && (st[0] == '*' || st[ft_strlen(st) - 1] == '*')))
 	{

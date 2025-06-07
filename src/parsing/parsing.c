@@ -6,21 +6,12 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 15:51:52 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:36:16 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/tokenize.h"
-
-
-void print_debug_parsing(t_list **parslst);
-void	ft_print_oper_par(t_oper oper);
-void print_redir_list(t_list *redirs);
-void	ft_debug_print_array_of_strings_line(char **array, int fd);
-
-
-
 
 static void	*initloop(int a, t_par_node **pnd, t_dlist **tklst, t_par_mem **par)
 {
