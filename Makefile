@@ -21,6 +21,10 @@ TOKEN 		=	src/tokenize/tokenize_helpers.c \
 				src/tokenize/tokenize_operators.c \
 				src/tokenize/tokenize_syntax_cases.c \
 				src/tokenize/tokenize_syntax.c \
+				src/tokenize/tokenize_wildcard.c \
+				src/tokenize/tokenize_wildcard_helpers.c \
+				src/tokenize/tokenize_wildcard_match.c \
+				src/tokenize/tokenize_wildcard_validations.c \
 				src/tokenize/tokenize.c \
 
 EXPAND		=	src/expand/expand_findvar.c \

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/05 14:15:57 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:27:36 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ void	ft_clean_mem_loop(t_mem **mem)
 	ft_free_and_null((void *)&tok->remain);
 	tok->block_count = 0;
 	tok->get_delimiter = false;
+	tok->errnmb = 0;
 	return ;
 }

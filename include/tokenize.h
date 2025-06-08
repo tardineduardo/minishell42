@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 01:14:56 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:24:53 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,25 @@
 # define E_NO_SUPPRT 1
 # define E_INVAL_OPS 2
 # define E_NO_SUBSHE 1
-# define NBOPERATORS 14
+# define NBOPERATORS 9
+
+typedef enum e_wcexit
+{
+	W_SUCCESS = 0,
+	W_ERROR,
+	W_NO_WILD,
+	W_INVALID,
+	W_ENTRIES_FOUND,
+}	t_wcexit;
+
+typedef enum e_wccase
+{
+	PAT_STR,
+	PAT_END,	
+	PAT_MID,
+	PAT_EDG,
+	LIST_ALL,
+}	t_wccase;
 
 typedef enum e_tok_exit
 {
@@ -47,6 +65,17 @@ typedef struct s_tok_mem
 	int			errnmb;
 	bool		get_delimiter;
 }	t_tok_mem;
+
+typedef struct s_wild_mem
+{
+	DIR				*folder;
+	struct dirent	*item;
+	t_dlist			*wildlst;
+	t_dlist			*new;
+	char			*str;
+	char			*joined;
+}	t_wild_mem;
+
 
 int			ft_tokenize(char **line, t_mem **mem);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
@@ -76,5 +105,12 @@ bool		ft_redirects_are_complete(t_dlist *trav, t_tok_mem **tok);
 bool		ft_subshell_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 bool		ft_logic_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
 bool		ft_pipe_opers_are_correct(t_dlist *trav, t_tok_mem **tok);
+
+//wildcard
+int			ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem);
+t_wcexit	ft_token_has_valid_wildcard(t_dlist *trav, t_tok_mem **tkmem);
+bool		ft_is_a_wildcard_match(char *filename, char *token, t_wccase type);
+t_dlist		*ft_new_toklst_node(char *filename, t_dlist *end);
+t_wccase	get_token_type(char *token);
 
 #endif

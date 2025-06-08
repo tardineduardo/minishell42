@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/01 23:38:39 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:05:00 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ int	ft_tokenize(char **line, t_mem **mem)
 	if (ft_check_syntax(tok->toklst, &tok) != 0)
 		return (tok->errnmb);
 	if (ft_capture_heredocs(&tok, mem) != 0)
+		return (tok->errnmb);
+	if (ft_expand_wildcards(&tok->toklst, &tok) != 0)
 		return (tok->errnmb);
 	return (0);
 }
