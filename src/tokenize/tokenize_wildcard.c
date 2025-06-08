@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/08 14:52:44 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/08 15:02:46 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ static int	ft_check_conditon(t_wcexit res, t_dlist *trav, t_tok_mem **tkmem)
 {
 	t_tok_node	*prevnode;
 
+	if (res == W_NO_WILD)
+		return (0);
 	if (res == W_ERROR)
 		return (1);
 	if (trav->prev)
