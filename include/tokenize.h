@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 21:41:58 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/07 18:24:53 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/08 14:51:37 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ typedef struct s_wild_mem
 	char			*str;
 	char			*joined;
 }	t_wild_mem;
-
 
 int			ft_tokenize(char **line, t_mem **mem);
 int			ft_find_token_limit(char *str, t_tok_mem **tok);
