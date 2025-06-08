@@ -60,6 +60,7 @@ EXECUTE		= 	src/execution/execution.c \
 				src/execution/redir_control.c \
 				src/execution/redir_control_utils.c \
 				src/execution/redir_control_utils_2.c \
+				src/execution/redir_control_utils_3.c \
 				src/execution/exit_code.c \
 
 SIGNALS		= 	src/signals/signals.c \

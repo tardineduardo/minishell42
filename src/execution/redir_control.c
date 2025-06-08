@@ -6,34 +6,34 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:28:25 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 15:50:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 17:34:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/execution.h"
 
-int pipe_fd_control_subshell(t_pipe_data *pipe_data, int pipefd[2])
+int	pipe_fd_control_subshell(t_pipe_data *pipe_data, int pipefd[2])
 {
-    if (pipe_data->i > 0)
-    {
-        dup2(pipe_data->prev_fd, STDIN_FILENO);
-        close(pipe_data->prev_fd);
-    }
-    if (pipe_data->i < pipe_data->num_cmds - 1)
-    {
-        dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[1]);
-        close(pipefd[0]);
-    }
-    else
-    {
-        if (pipefd[1] != -1)
-            close(pipefd[1]);
-        if (pipefd[0] != -1)
-            close(pipefd[0]);
-    }
-    return (0);
+	if (pipe_data->i > 0)
+	{
+		dup2(pipe_data->prev_fd, STDIN_FILENO);
+		close(pipe_data->prev_fd);
+	}
+	if (pipe_data->i < pipe_data->num_cmds - 1)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+		close(pipefd[0]);
+	}
+	else
+	{
+		if (pipefd[1] != -1)
+			close(pipefd[1]);
+		if (pipefd[0] != -1)
+			close(pipefd[0]);
+	}
+	return (0);
 }
 
 int	pipe_core_fd_control(t_pipe_data *pipe_data, t_block_node *cur_cmd,
