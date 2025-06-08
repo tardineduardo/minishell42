@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/07 18:27:40 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/06/08 15:02:46 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,27 @@ static int	ft_expand_wild(t_dlist **toklist, t_dlist *trav, t_dlist *prev,
 	return (0);
 }
 
+static int	ft_check_conditon(t_wcexit res, t_dlist *trav, t_tok_mem **tkmem)
+{
+	t_tok_node	*prevnode;
+
+	if (res == W_NO_WILD)
+		return (0);
+	if (res == W_ERROR)
+		return (1);
+	if (trav->prev)
+	{
+		prevnode = (t_tok_node *)trav->prev->content;
+		if (res == W_SUCCESS && ft_is_redir(prevnode))
+		{
+			ft_dprintf(STDERR_FILENO, "minishell: error: ambiguous redirect.\n");
+			(*tkmem)->errnmb = 1;
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem)
 {
 	t_dlist		*trav;
@@ -76,7 +97,7 @@ int	ft_expand_wildcards(t_dlist **toklist, t_tok_mem **tkmem)
 		if (!tok)
 			return (1);
 		res = ft_token_has_valid_wildcard(trav, tkmem);
-		if (res == W_ERROR)
+		if (ft_check_conditon(res, trav, tkmem) != 0)
 			return (1);
 		if (res == W_NO_WILD)
 		{
