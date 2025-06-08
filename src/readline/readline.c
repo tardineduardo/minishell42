@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 20:42:22 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/05 15:36:14 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/08 19:02:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,15 @@ int	ft_readline(t_mem **mem)
 
 	rdl = (*mem)->readline;
 	rdl->count = ++line_number;
-	rdl->line = readline(YELLOW "Minishell> " RESET);
-	if (g_signal == SIGINT)
-		return (130);
-	ft_addhist(rdl->line);
+	rdl->line = readline("Minishell> ");
 	if (!rdl->line)
 	{
 		ft_clear_mem_and_exit(mem);
 		exit(0);
 	}
+	if (g_signal == SIGINT)
+		return (130);
+	ft_addhist(rdl->line);
 	if (!ft_syntax_is_valid(rdl->line))
 		return (1);
 	tokresult = ft_tokenize(&rdl->line, mem);
