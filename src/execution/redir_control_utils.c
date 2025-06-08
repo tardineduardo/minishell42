@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:39:05 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 17:35:28 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:00:34 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,35 +17,22 @@
 
 int	redir_files_validation(t_list **redir_lst, t_mem **mem, bool sngl_bi)
 {
-	char			*cur_red_expd;
-	t_list			*cur_node_redir;
+	t_list			*cur_node;
 	t_redirs_node	*cur_redir;
 	int				last_error;
 	int				result;
 
-	last_error = 0;
-	result = 0;
 	if (redir_lst == NULL || *redir_lst == NULL)
 		return (-1);
-	cur_node_redir = *redir_lst;
-	while (cur_node_redir)
+	last_error = 0;
+	cur_node = *redir_lst;
+	while (cur_node)
 	{
-		cur_redir = cur_node_redir->content;
-		cur_red_expd = ft_expand(&cur_redir->name, TOKEN, mem);
-		if (cur_redir->type == IN_R || cur_redir->type == HDC_R)
-		{
-			result = test_input_redir(cur_red_expd, mem, sngl_bi);
-			if (result != 0)
-				last_error = result;
-		}
-		else if (cur_redir->type == OUT_R || cur_redir->type == APPD_R)
-		{
-			result = teste_output_redir(cur_red_expd,
-					cur_redir->create, mem, sngl_bi);
-			if (result != 0)
-				last_error = result;
-		}
-		cur_node_redir = cur_node_redir->next;
+		cur_redir = cur_node->content;
+		result = process_redirection(cur_redir, mem, sngl_bi);
+		if (result != 0)
+			last_error = result;
+		cur_node = cur_node->next;
 	}
 	return (last_error);
 }

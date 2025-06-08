@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:09:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 18:09:19 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:56:22 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 int	test_input_redir(char *expanded_name, t_mem **mem, bool sngl_bi)
 {
 	int			fd;
-	struct stat	sb;
 
 	if (access(expanded_name, F_OK) != 0)
 	{
@@ -29,30 +28,11 @@ int	test_input_redir(char *expanded_name, t_mem **mem, bool sngl_bi)
 			ft_error_handler("%s: No such file or directory\n",
 				expanded_name, 1, mem);
 	}
-	stat(expanded_name, &sb);
-	if (S_ISDIR(sb.st_mode))
-	{
-		if (sngl_bi == true)
-		{
-			ft_dprintf(2, "%s: Is a directory\n", expanded_name);
-			return (126);
-		}
-		else
-			ft_error_handler("%s: Is a directory\n",
-				expanded_name, 126, mem);
-	}
+	if (test_directory(expanded_name, mem, sngl_bi) == 126)
+		return (126);
 	fd = open(expanded_name, O_RDONLY);
-	if (fd == -1)
-	{
-		if (sngl_bi == true)
-		{
-			ft_dprintf(2, "%s: Permission denied\n", expanded_name);
-			return (1);
-		}
-		else
-			ft_error_handler("%s: Permission denied\n",
-				expanded_name, 1, mem);
-	}
+	if (fd == -1 && test_permission(expanded_name, mem, sngl_bi) == 1)
+		return (1);
 	close(fd);
 	return (0);
 }
@@ -61,63 +41,24 @@ int	teste_output_redir(char *expanded_name, bool create, t_mem **mem,
 			bool sngl_bi)
 {
 	int			fd;
-	struct stat	sb;
 
 	if (create == false)
 	{
-		stat(expanded_name, &sb);
-		if (S_ISDIR(sb.st_mode))
-		{
-			if (sngl_bi == true)
-			{
-				ft_dprintf(2, "%s: Is a directory\n", expanded_name);
-				return (126);
-			}
-			else
-				ft_error_handler("%s: Is a directory\n",
-					expanded_name, 126, mem);
-		}
+		if (test_directory(expanded_name, mem, sngl_bi) == 126)
+			return (126);
 		fd = open(expanded_name, O_WRONLY | O_APPEND | O_CREAT, 0644);
-		if (fd == -1)
-		{
-			if (sngl_bi == true)
-			{
-				ft_dprintf(2, "%s: Permission denied\n", expanded_name);
-				return (1);
-			}
-			else
-				ft_error_handler("%s: Permission denied\n",
-					expanded_name, 1, mem);
-		}
+		if (fd == -1 && test_permission(expanded_name, mem, sngl_bi) == 1)
+			return (1);
 		else
 			close(fd);
 	}
 	else
 	{
-		stat(expanded_name, &sb);
-		if (S_ISDIR(sb.st_mode))
-		{
-			if (sngl_bi == true)
-			{
-				ft_dprintf(2, "%s: Is a directory\n", expanded_name);
-				return (126);
-			}
-			else
-				ft_error_handler("%s: Is a directory\n",
-					expanded_name, 126, mem);
-		}
+		if (test_directory(expanded_name, mem, sngl_bi) == 126)
+			return (126);
 		fd = open(expanded_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (fd == -1)
-		{
-			if (sngl_bi == true)
-			{
-				ft_dprintf(2, "%s: Permission denied\n", expanded_name);
-				return (1);
-			}
-			else
-				ft_error_handler("%s: Permission denied\n",
-					expanded_name, 1, mem);
-		}
+		if (fd == -1 && test_permission(expanded_name, mem, sngl_bi) == 1)
+			return (1);
 		else
 			close(fd);
 	}

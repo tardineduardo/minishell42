@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:14:40 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/07 18:02:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:05:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <sys/types.h>
 # include "minishell.h"
+# include "parsing.h"
 
 //redir control
 int			pipe_fd_control_single_cmd(t_block_node *cur_cmd, t_mem **mem);
@@ -94,4 +95,14 @@ int			ft_lstsize_env(t_list *lst);
 int			signal_statuses(int index, int *status);
 int			signal_statuses_subshell(int status);
 
+int			test_directory(char *expanded_name,
+				t_mem **mem, bool sngl_bi);
+int			test_permission(char *expanded_name,
+				t_mem **mem, bool sngl_bi);
+int			process_input_redir(char *expanded,
+				t_mem **mem, bool sngl_bi);
+int			process_output_redir(t_redirs_node *redir,
+				char *expanded, t_mem **mem, bool sngl_bi);
+int			process_redirection(t_redirs_node *redir,
+				t_mem **mem, bool sngl_bi);
 #endif
