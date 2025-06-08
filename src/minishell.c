@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 20:52:35 by eduribei          #+#    #+#             */
-/*   Updated: 2025/06/07 21:27:36 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/08 19:02:03 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,12 @@ volatile sig_atomic_t	g_signal;
 int	ft_exit_code_tester(int res, t_mem **mem, int point)
 {
 	if (g_signal == 2)
+	{
 		g_signal = 0;
+		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", 130);
+		ft_clean_mem_loop(mem);
+		return (1);
+	}
 	if (point == 0 && res != 0)
 	{
 		ft_ms_env_update_exit_code(&(*mem)->environs->envlist, "?", res);
@@ -49,9 +54,9 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	mem = NULL;
 	ft_init_minishell_memory(&mem, envp);
-	signal_start();
 	while (1)
 	{
+		signal_start();
 		res = ft_readline(&mem);
 		if (ft_exit_code_tester(res, &mem, 0) != 0)
 			continue ;
