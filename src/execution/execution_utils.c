@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 14:36:33 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/05 14:37:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:39:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	signal_statuses(int index, int *status)
 	if (WIFSIGNALED(status[index]))
 	{
 		sig = WTERMSIG(status[index]);
-		if (sig == SIGPIPE)
-			ft_dprintf(STDERR_FILENO, " Broken pipe\n");
 		if (sig == SIGQUIT)
 		{
 			ft_printf("Quit (core dumped)\n");
@@ -39,8 +37,6 @@ int	signal_statuses_subshell(int status)
 	if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		if (sig == SIGPIPE)
-			ft_dprintf(STDERR_FILENO, " Broken pipe\n");
 		if (sig == SIGQUIT)
 		{
 			ft_printf("Quit (core dumped)\n");

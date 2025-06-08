@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:52 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 17:21:48 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:55:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,14 @@ t_ast_node	*create_logical_node(t_logical_op op,
 
 	node = malloc(sizeof(t_ast_node));
 	logical = malloc(sizeof(t_logical_data));
+	if (!node || !logical)
+	{
+		if (node)
+			free(node);
+		if (logical)
+			free(logical);
+		return (NULL);
+	}
 	node->type = NODE_LOGICAL;
 	logical->op = op;
 	logical->left = left;
@@ -78,7 +86,14 @@ t_ast_node	*create_group_node(t_ast_node *body)
 	t_ast_node	*node;
 
 	node = malloc(sizeof(t_ast_node));
+	if (!node)
+		return (NULL);
 	node->subshell = malloc(sizeof(t_subshell_data));
+	if (!node->subshell)
+	{
+		free(node);
+		return (NULL);
+	}
 	node->type = NODE_SUBSHELL;
 	node->subshell->body = body;
 	return (node);

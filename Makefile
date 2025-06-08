@@ -5,6 +5,7 @@ READLINE 	=	src/readline/readline.c \
 				src/readline/readline_quotes.c \
 				src/readline/readline_curly.c \
 				src/readline/readline_paren.c \
+				src/readline/readline_backslash.c \
 
 HEREDOC 	=	src/heredoc/heredocs.c \
 				src/heredoc/heredocs_file.c \
@@ -63,6 +64,7 @@ EXECUTE		= 	src/execution/execution.c \
 				src/execution/redir_control.c \
 				src/execution/redir_control_utils.c \
 				src/execution/redir_control_utils_2.c \
+				src/execution/redir_control_utils_3.c \
 				src/execution/exit_code.c \
 
 SIGNALS		= 	src/signals/signals.c \
